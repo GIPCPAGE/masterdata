@@ -80,6 +80,46 @@
     "endLine": 24
   },
   {
+    "outputFile": "Organization-ExempleDebiteurEPSPublic.json",
+    "fshName": "ExempleDebiteurEPSPublic",
+    "fshType": "Instance",
+    "fshFile": "examples\\ExempleDebiteurEPSPublic.fsh",
+    "startLine": 5,
+    "endLine": 59
+  },
+  {
+    "outputFile": "Organization-ExempleDebiteurPersonnePhysique.json",
+    "fshName": "ExempleDebiteurPersonnePhysique",
+    "fshType": "Instance",
+    "fshFile": "examples\\ExempleDebiteurPersonnePhysique.fsh",
+    "startLine": 5,
+    "endLine": 51
+  },
+  {
+    "outputFile": "Organization-ExempleFournisseurEPS.json",
+    "fshName": "ExempleFournisseurEPS",
+    "fshType": "Instance",
+    "fshFile": "examples\\ExempleFournisseurEPS.fsh",
+    "startLine": 5,
+    "endLine": 46
+  },
+  {
+    "outputFile": "Organization-ExempleFournisseurRIDET.json",
+    "fshName": "ExempleFournisseurRIDET",
+    "fshType": "Instance",
+    "fshFile": "examples\\ExempleFournisseurRIDET.fsh",
+    "startLine": 5,
+    "endLine": 45
+  },
+  {
+    "outputFile": "Organization-ExempleFournisseurTVA.json",
+    "fshName": "ExempleFournisseurTVA",
+    "fshType": "Instance",
+    "fshFile": "examples\\ExempleFournisseurTVA.fsh",
+    "startLine": 5,
+    "endLine": 42
+  },
+  {
     "outputFile": "StructureDefinition-debiteur-profile.json",
     "fshName": "DebiteurProfile",
     "fshType": "Profile",
