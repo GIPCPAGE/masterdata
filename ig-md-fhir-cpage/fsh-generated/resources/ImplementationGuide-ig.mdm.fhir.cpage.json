@@ -1,10 +1,10 @@
 {
   "resourceType": "ImplementationGuide",
   "id": "ig.mdm.fhir.cpage",
-  "url": "https://www.cpage.fr/ig/masterdata/ImplementationGuide/ig.mdm.fhir.cpage",
+  "url": "https://www.cpage.fr/ig/masterdata/cpage/ImplementationGuide/ig.mdm.fhir.cpage",
   "version": "0.1.0",
   "name": "IGMdmFhirCPage",
-  "title": "IG FHIR CPage - Masterdata",
+  "title": "Masterdata - IG FHIR CPage",
   "status": "draft",
   "date": "2026-02-11",
   "publisher": "CPage",
@@ -46,20 +46,180 @@
   ],
   "dependsOn": [
     {
-      "id": "igmdmfhircommon",
       "packageId": "ig.mdm.fhir.common",
-      "uri": "https://www.cpage.fr/ig/masterdata/ImplementationGuide/ig.md.fhir.common",
-      "version": "dev"
+      "version": "dev",
+      "uri": "https://www.cpage.fr/ig/masterdata/tiers/ImplementationGuide/ig.mdm.fhir.common",
+      "id": "ig_mdm_fhir_common"
     }
   ],
   "definition": {
     "resource": [
       {
         "reference": {
-          "reference": "StructureDefinition/tiers-cpage-profile"
+          "reference": "StructureDefinition/cpage-debtor-asap"
         },
-        "name": "Tiers Spécialisé pour CPage ",
-        "description": "Profil spécialisé Tiers pour CPage, dérivé de FR Core Organization, avec ajout d'un identifiant interne ETIER et de la TVA intracom.",
+        "name": "ASAP débiteur (CPage)",
+        "description": "Paramètres ASAP : désactiver génération ASAP dématérialisé, forcer impression CEN (DBT.ASAPDT, DBT.FCENDT).",
+        "exampleBoolean": false
+      },
+      {
+        "reference": {
+          "reference": "StructureDefinition/cpage-supplier-chorus"
+        },
+        "name": "Chorus fournisseur",
+        "description": "Informations Chorus : assujetti, type d'identifiant, identifiant (FOU.CHORFO, FOU.TIDCFO, FOU.IDCHFO).",
+        "exampleBoolean": false
+      },
+      {
+        "reference": {
+          "reference": "StructureDefinition/cpage-supplier-class2"
+        },
+        "name": "Comptabilité Fournisseur - Classe 2",
+        "description": "Lettre budgétaire et compte tiers classe 2 (FOU.LBU2FO, FOU.CPT2FO).",
+        "exampleBoolean": false
+      },
+      {
+        "reference": {
+          "reference": "StructureDefinition/cpage-supplier-class6"
+        },
+        "name": "Comptabilité Fournisseur - Classe 6",
+        "description": "Lettre budgétaire et compte tiers classe 6 (FOU.LBU6FO, FOU.CPT6FO).",
+        "exampleBoolean": false
+      },
+      {
+        "reference": {
+          "reference": "StructureDefinition/cpage-debtor-account"
+        },
+        "name": "Compte tiers débiteur (CPage)",
+        "description": "Lettre budgétaire et compte de tiers débiteur (DBT.LBTIDT, DBT.CPTIDT).",
+        "exampleBoolean": false
+      },
+      {
+        "reference": {
+          "reference": "StructureDefinition/cpage-supplier-payment"
+        },
+        "name": "Conditions de paiement fournisseur",
+        "description": "Délai de paiement, jour spécifique de paiement, montant minimum de commande (FOU.DEPAFO, FOU.JOSPFO, FOU.MTMIFO).",
+        "exampleBoolean": false
+      },
+      {
+        "reference": {
+          "reference": "StructureDefinition/cpage-supplier-internal"
+        },
+        "name": "Flags internes CPage fournisseur",
+        "description": "Drapeaux internes d'exploitation (FOU.EXTRFO, FOU.MAJ_FO, etc.).",
+        "exampleBoolean": false
+      },
+      {
+        "reference": {
+          "reference": "StructureDefinition/cpage-debtor-associated-supplier"
+        },
+        "name": "Fournisseur associé (CPage)",
+        "description": "Référence vers le fournisseur associé au débiteur (DBT.NUFODT). Pointe vers une Organization de profil CPageSupplierOrganization.",
+        "exampleBoolean": false
+      },
+      {
+        "reference": {
+          "reference": "StructureDefinition/cpage-debtor-externalid"
+        },
+        "name": "Identifiant externe débiteur (CPage)",
+        "description": "Identifiant externe du débiteur utilisé pour les interfaces (DBT.IDEXDT).",
+        "exampleBoolean": false
+      },
+      {
+        "reference": {
+          "reference": "StructureDefinition/cpage-supplier-procurement"
+        },
+        "name": "Marchés publics / groupement d'achat",
+        "description": "Assujetti code marchés publics, groupement d'achat, escomptable (FOU.TCMPFO, FOU.GACHFO, FOU.ESCOFO).",
+        "exampleBoolean": false
+      },
+      {
+        "reference": {
+          "reference": "CodeSystem/cpage-residency-codesystem"
+        },
+        "name": "Résidence (CPage - Débiteur)",
+        "description": "Codes de résidence du débiteur selon la codification CPage (RESIDT).",
+        "exampleBoolean": false
+      },
+      {
+        "reference": {
+          "reference": "StructureDefinition/cpage-debtor-residency"
+        },
+        "name": "Résidence débiteur (CPage)",
+        "description": "Code résident / non résident / étranger du débiteur (DBT.RESIDT) : R (Résident), N (Non-résident), E (Étranger).",
+        "exampleBoolean": false
+      },
+      {
+        "reference": {
+          "reference": "StructureDefinition/cpage-debiteur-profile"
+        },
+        "name": "Tiers Débiteur (CPage)",
+        "description": "Profil CPage pour un tiers débiteur. Hérite du profil DebiteurProfile (conforme GEF/KERD) et ajoute les extensions métier CPage issues de la table ECO.DBT (rôle débiteur).",
+        "exampleBoolean": false
+      },
+      {
+        "reference": {
+          "reference": "StructureDefinition/cpage-fournisseur-profile"
+        },
+        "name": "Tiers Fournisseur (CPage)",
+        "description": "Profil CPage pour un tiers fournisseur. Hérite du profil FournisseurProfile (conforme GEF/EFOU) et ajoute les extensions métier CPage issues de la table ECO.FOU (rôle fournisseur).",
+        "exampleBoolean": false
+      },
+      {
+        "reference": {
+          "reference": "CodeSystem/cpage-validity-codesystem"
+        },
+        "name": "Validité (CPage)",
+        "description": "Codes de validité utilisés dans CPage (VALITI, INVADT, VALIFO).",
+        "exampleBoolean": false
+      },
+      {
+        "reference": {
+          "reference": "StructureDefinition/cpage-validity"
+        },
+        "name": "Validité CPage",
+        "description": "Code validité CPage (VALITI / INVADT / VALIFO) : V (Valide) / I (Invalide).",
+        "exampleBoolean": false
+      },
+      {
+        "reference": {
+          "reference": "ValueSet/cpage-residency-valueset"
+        },
+        "name": "ValueSet Résidence CPage",
+        "description": "Codes RESIDT : R (Résident), N (Non-résident), E (Étranger).",
+        "exampleBoolean": false
+      },
+      {
+        "reference": {
+          "reference": "ValueSet/cpage-validity-valueset"
+        },
+        "name": "ValueSet Validité CPage",
+        "description": "Codes de validité : V (Valide) ou I (Invalide).",
+        "exampleBoolean": false
+      },
+      {
+        "reference": {
+          "reference": "ValueSet/cpage-euzone-valueset"
+        },
+        "name": "ValueSet Zone Europe CPage",
+        "description": "Codes EUROTI : F (France), O (Europe hors France), A (Autre).",
+        "exampleBoolean": false
+      },
+      {
+        "reference": {
+          "reference": "CodeSystem/cpage-euzone-codesystem"
+        },
+        "name": "Zone Europe (CPage)",
+        "description": "Classification européenne du tiers selon CPage (EUROTI).",
+        "exampleBoolean": false
+      },
+      {
+        "reference": {
+          "reference": "StructureDefinition/cpage-euzone"
+        },
+        "name": "Zone Europe CPage",
+        "description": "Classification européenne du tiers : F (France) / O (Europe hors France) / A (Autre). Correspond au champ EUROTI.",
         "exampleBoolean": false
       }
     ],
@@ -75,17 +235,7 @@
         },
         {
           "nameUrl": "downloads.html",
-          "title": "Téléchargement du guide",
-          "generation": "markdown"
-        },
-        {
-          "nameUrl": "cpage-supplier/cpage-supplier.html",
-          "title": "Fournisseurs CPage",
-          "generation": "markdown"
-        },
-        {
-          "nameUrl": "cpage-establishment/cpage-establishment.html",
-          "title": "Établissements CPage (FINESS)",
+          "title": "Téléchargements",
           "generation": "markdown"
         }
       ]

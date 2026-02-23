@@ -1,12 +1,13 @@
 // =============================================
 // Profil CPage Supplier Organization
+// Hérite du profil GEF FournisseurProfile
 // =============================================
 
 Profile: CPageFournisseurProfile
-Parent: CPageTiersProfile
+Parent: FournisseurProfile
 Id: cpage-fournisseur-profile
 Title: "Tiers Fournisseur (CPage)"
-Description: "Profil CPage pour un tiers fournisseur. Hérite du profil TiersProfile générique et ajoute les extensions métier issues de la table ECO.FOU (rôle fournisseur)."
+Description: "Profil CPage pour un tiers fournisseur. Hérite du profil FournisseurProfile (conforme GEF/EFOU) et ajoute les extensions métier CPage issues de la table ECO.FOU (rôle fournisseur)."
 
 // Extensions CPage spécifiques
 * extension contains

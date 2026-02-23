@@ -1,12 +1,13 @@
 // =============================================
 // Profil CPage Debtor Organization
+// Hérite du profil GEF DebiteurProfile
 // =============================================
 
 Profile: CPageDebiteurProfile
-Parent: CPageTiersProfile
+Parent: DebiteurProfile
 Id: cpage-debiteur-profile
 Title: "Tiers Débiteur (CPage)"
-Description: "Profil CPage pour un tiers débiteur. Hérite du profil TiersProfile générique et ajoute les extensions métier issues de la table ECO.DBT (rôle débiteur)."
+Description: "Profil CPage pour un tiers débiteur. Hérite du profil DebiteurProfile (conforme GEF/KERD) et ajoute les extensions métier CPage issues de la table ECO.DBT (rôle débiteur)."
 
 // Extensions CPage spécifiques
 * extension contains

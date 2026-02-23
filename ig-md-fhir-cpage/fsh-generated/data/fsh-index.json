@@ -1,10 +1,170 @@
 [
   {
-    "outputFile": "StructureDefinition-tiers-cpage-profile.json",
-    "fshName": "TiersCPageProfile",
+    "outputFile": "CodeSystem-cpage-euzone-codesystem.json",
+    "fshName": "CPageEUZoneCodeSystem",
+    "fshType": "CodeSystem",
+    "fshFile": "codesystems\\CPageEUZoneCodeSystem.fsh",
+    "startLine": 5,
+    "endLine": 14
+  },
+  {
+    "outputFile": "CodeSystem-cpage-residency-codesystem.json",
+    "fshName": "CPageResidencyCodeSystem",
+    "fshType": "CodeSystem",
+    "fshFile": "codesystems\\CPageResidencyCodeSystem.fsh",
+    "startLine": 5,
+    "endLine": 14
+  },
+  {
+    "outputFile": "CodeSystem-cpage-validity-codesystem.json",
+    "fshName": "CPageValidityCodeSystem",
+    "fshType": "CodeSystem",
+    "fshFile": "codesystems\\CPageValidityCodeSystem.fsh",
+    "startLine": 5,
+    "endLine": 13
+  },
+  {
+    "outputFile": "StructureDefinition-cpage-debiteur-profile.json",
+    "fshName": "CPageDebiteurProfile",
     "fshType": "Profile",
-    "fshFile": "profiles\\TiersCPageProfile.fsh",
-    "startLine": 1,
-    "endLine": 5
+    "fshFile": "profiles\\CPageDebiteurProfile.fsh",
+    "startLine": 6,
+    "endLine": 31
+  },
+  {
+    "outputFile": "StructureDefinition-cpage-debtor-account.json",
+    "fshName": "CPageDebtorAccount",
+    "fshType": "Extension",
+    "fshFile": "extensions\\CPageDebtorAccountExtension.fsh",
+    "startLine": 5,
+    "endLine": 18
+  },
+  {
+    "outputFile": "StructureDefinition-cpage-debtor-asap.json",
+    "fshName": "CPageDebtorAsap",
+    "fshType": "Extension",
+    "fshFile": "extensions\\CPageDebtorAsapExtension.fsh",
+    "startLine": 5,
+    "endLine": 18
+  },
+  {
+    "outputFile": "StructureDefinition-cpage-debtor-associated-supplier.json",
+    "fshName": "CPageDebtorAssociatedSupplier",
+    "fshType": "Extension",
+    "fshFile": "extensions\\CPageDebtorAssociatedSupplierExtension.fsh",
+    "startLine": 5,
+    "endLine": 14
+  },
+  {
+    "outputFile": "StructureDefinition-cpage-debtor-externalid.json",
+    "fshName": "CPageDebtorExternalId",
+    "fshType": "Extension",
+    "fshFile": "extensions\\CPageDebtorExternalIdExtension.fsh",
+    "startLine": 5,
+    "endLine": 13
+  },
+  {
+    "outputFile": "StructureDefinition-cpage-debtor-residency.json",
+    "fshName": "CPageDebtorResidency",
+    "fshType": "Extension",
+    "fshFile": "extensions\\CPageDebtorResidencyExtension.fsh",
+    "startLine": 5,
+    "endLine": 14
+  },
+  {
+    "outputFile": "StructureDefinition-cpage-euzone.json",
+    "fshName": "CPageEUZone",
+    "fshType": "Extension",
+    "fshFile": "extensions\\CPageEUZoneExtension.fsh",
+    "startLine": 5,
+    "endLine": 14
+  },
+  {
+    "outputFile": "StructureDefinition-cpage-fournisseur-profile.json",
+    "fshName": "CPageFournisseurProfile",
+    "fshType": "Profile",
+    "fshFile": "profiles\\CPageFournisseurProfile.fsh",
+    "startLine": 6,
+    "endLine": 34
+  },
+  {
+    "outputFile": "StructureDefinition-cpage-supplier-chorus.json",
+    "fshName": "CPageSupplierChorus",
+    "fshType": "Extension",
+    "fshFile": "extensions\\CPageSupplierChorusExtension.fsh",
+    "startLine": 5,
+    "endLine": 21
+  },
+  {
+    "outputFile": "StructureDefinition-cpage-supplier-class2.json",
+    "fshName": "CPageSupplierAccountingClass2",
+    "fshType": "Extension",
+    "fshFile": "extensions\\CPageSupplierAccountingClass2Extension.fsh",
+    "startLine": 5,
+    "endLine": 18
+  },
+  {
+    "outputFile": "StructureDefinition-cpage-supplier-class6.json",
+    "fshName": "CPageSupplierAccountingClass6",
+    "fshType": "Extension",
+    "fshFile": "extensions\\CPageSupplierAccountingClass6Extension.fsh",
+    "startLine": 5,
+    "endLine": 18
+  },
+  {
+    "outputFile": "StructureDefinition-cpage-supplier-internal.json",
+    "fshName": "CPageSupplierInternalFlags",
+    "fshType": "Extension",
+    "fshFile": "extensions\\CPageSupplierInternalFlagsExtension.fsh",
+    "startLine": 5,
+    "endLine": 18
+  },
+  {
+    "outputFile": "StructureDefinition-cpage-supplier-payment.json",
+    "fshName": "CPageSupplierPaymentTerms",
+    "fshType": "Extension",
+    "fshFile": "extensions\\CPageSupplierPaymentTermsExtension.fsh",
+    "startLine": 5,
+    "endLine": 21
+  },
+  {
+    "outputFile": "StructureDefinition-cpage-supplier-procurement.json",
+    "fshName": "CPageSupplierPublicProcurement",
+    "fshType": "Extension",
+    "fshFile": "extensions\\CPageSupplierPublicProcurementExtension.fsh",
+    "startLine": 5,
+    "endLine": 21
+  },
+  {
+    "outputFile": "StructureDefinition-cpage-validity.json",
+    "fshName": "CPageValidity",
+    "fshType": "Extension",
+    "fshFile": "extensions\\CPageValidityExtension.fsh",
+    "startLine": 5,
+    "endLine": 14
+  },
+  {
+    "outputFile": "ValueSet-cpage-euzone-valueset.json",
+    "fshName": "CPageEUZoneValueSet",
+    "fshType": "ValueSet",
+    "fshFile": "valuesets\\CPageEUZoneValueSet.fsh",
+    "startLine": 5,
+    "endLine": 10
+  },
+  {
+    "outputFile": "ValueSet-cpage-residency-valueset.json",
+    "fshName": "CPageResidencyValueSet",
+    "fshType": "ValueSet",
+    "fshFile": "valuesets\\CPageResidencyValueSet.fsh",
+    "startLine": 5,
+    "endLine": 10
+  },
+  {
+    "outputFile": "ValueSet-cpage-validity-valueset.json",
+    "fshName": "CPageValidityValueSet",
+    "fshType": "ValueSet",
+    "fshFile": "valuesets\\CPageValidityValueSet.fsh",
+    "startLine": 5,
+    "endLine": 10
   }
 ]
