@@ -18,6 +18,30 @@ Description: "Liste des codes postaux français. Un code postal peut couvrir plu
 * ^copyright = "Source: La Poste - Base Officielle des Codes Postaux"
 * ^purpose = "Valider et normaliser les codes postaux dans les adresses. Permet la vérification de cohérence entre code postal et commune."
 
+// Propriétés pour gestion historique et temporalité
+* ^property[0].code = #effectiveDate
+* ^property[=].uri = "http://hl7.org/fhir/concept-properties#effectiveDate"
+* ^property[=].description = "Date de mise en service du code postal"
+* ^property[=].type = #dateTime
+
+* ^property[+].code = #deprecationDate
+* ^property[=].uri = "http://hl7.org/fhir/concept-properties#deprecationDate"
+* ^property[=].description = "Date de suppression du code postal"
+* ^property[=].type = #dateTime
+
+* ^property[+].code = #status
+* ^property[=].uri = "http://hl7.org/fhir/concept-properties#status"
+* ^property[=].description = "Statut : active, inactive, deprecated"
+* ^property[=].type = #code
+
+* ^property[+].code = #replacedBy
+* ^property[=].description = "Code postal de remplacement (si changement)"
+* ^property[=].type = #code
+
+* ^property[+].code = #communeInsee
+* ^property[=].description = "Code(s) commune(s) INSEE desservie(s) par ce code postal (séparés par des virgules si plusieurs)"
+* ^property[=].type = #string
+
 // =============================================
 // Codes postaux principaux (échantillon)
 // =============================================
@@ -27,10 +51,34 @@ Description: "Liste des codes postaux français. Un code postal peut couvrir plu
 
 // Paris (75)
 * #75001 "Paris 1er arrondissement"
+  * ^property[0].code = #status
+  * ^property[=].valueCode = #active
+  * ^property[+].code = #communeInsee
+  * ^property[=].valueString = "75056"
+
 * #75002 "Paris 2e arrondissement"
+  * ^property[0].code = #status
+  * ^property[=].valueCode = #active
+  * ^property[+].code = #communeInsee
+  * ^property[=].valueString = "75056"
+
 * #75003 "Paris 3e arrondissement"
+  * ^property[0].code = #status
+  * ^property[=].valueCode = #active
+  * ^property[+].code = #communeInsee
+  * ^property[=].valueString = "75056"
+
 * #75004 "Paris 4e arrondissement"
+  * ^property[0].code = #status
+  * ^property[=].valueCode = #active
+  * ^property[+].code = #communeInsee
+  * ^property[=].valueString = "75056"
+
 * #75005 "Paris 5e arrondissement"
+  * ^property[0].code = #status
+  * ^property[=].valueCode = #active
+  * ^property[+].code = #communeInsee
+  * ^property[=].valueString = "75056"
 * #75006 "Paris 6e arrondissement"
 * #75007 "Paris 7e arrondissement"
 * #75008 "Paris 8e arrondissement"

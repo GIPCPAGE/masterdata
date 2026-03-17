@@ -18,6 +18,35 @@ Description: "Liste des communes françaises selon le Code Officiel Géographiqu
 * ^copyright = "Source: INSEE - Code Officiel Géographique (COG)"
 * ^purpose = "Identifier de manière unique les communes françaises dans les adresses et localisations. Basé sur le référentiel officiel INSEE mis à jour annuellement."
 
+// Propriétés pour gestion historique et temporalité
+* ^property[0].code = #effectiveDate
+* ^property[=].uri = "http://hl7.org/fhir/concept-properties#effectiveDate"
+* ^property[=].description = "Date d'entrée en vigueur de la commune (création ou modification)"
+* ^property[=].type = #dateTime
+
+* ^property[+].code = #deprecationDate
+* ^property[=].uri = "http://hl7.org/fhir/concept-properties#deprecationDate"
+* ^property[=].description = "Date de suppression ou fusion de la commune"
+* ^property[=].type = #dateTime
+
+* ^property[+].code = #status
+* ^property[=].uri = "http://hl7.org/fhir/concept-properties#status"
+* ^property[=].description = "Statut de la commune : active, inactive (fusionnée), deprecated (supprimée)"
+* ^property[=].type = #code
+
+* ^property[+].code = #replacedBy
+* ^property[=].description = "Code INSEE de la commune de remplacement (en cas de fusion)"
+* ^property[=].type = #code
+
+* ^property[+].code = #parent
+* ^property[=].uri = "http://hl7.org/fhir/concept-properties#parent"
+* ^property[=].description = "Code département (2 premiers chiffres du code commune)"
+* ^property[=].type = #code
+
+* ^property[+].code = #region
+* ^property[=].description = "Code région INSEE (nouvelle région 2016+)"
+* ^property[=].type = #code
+
 // =============================================
 // Communes principales (échantillon)
 // =============================================
@@ -27,10 +56,44 @@ Description: "Liste des communes françaises selon le Code Officiel Géographiqu
 
 // Métropoles
 * #75056 "Paris"
+  * ^property[0].code = #status
+  * ^property[=].valueCode = #active
+  * ^property[+].code = #parent
+  * ^property[=].valueCode = #75
+  * ^property[+].code = #region
+  * ^property[=].valueCode = #11
+
 * #13055 "Marseille"
+  * ^property[0].code = #status
+  * ^property[=].valueCode = #active
+  * ^property[+].code = #parent
+  * ^property[=].valueCode = #13
+  * ^property[+].code = #region
+  * ^property[=].valueCode = #93
+
 * #69123 "Lyon"
+  * ^property[0].code = #status
+  * ^property[=].valueCode = #active
+  * ^property[+].code = #parent
+  * ^property[=].valueCode = #69
+  * ^property[+].code = #region
+  * ^property[=].valueCode = #84
+
 * #31555 "Toulouse"
+  * ^property[0].code = #status
+  * ^property[=].valueCode = #active
+  * ^property[+].code = #parent
+  * ^property[=].valueCode = #31
+  * ^property[+].code = #region
+  * ^property[=].valueCode = #76
+
 * #06088 "Nice"
+  * ^property[0].code = #status
+  * ^property[=].valueCode = #active
+  * ^property[+].code = #parent
+  * ^property[=].valueCode = #06
+  * ^property[+].code = #region
+  * ^property[=].valueCode = #93
 * #44109 "Nantes"
 * #67482 "Strasbourg"
 * #34172 "Montpellier"
@@ -162,3 +225,44 @@ Description: "Liste des communes françaises selon le Code Officiel Géographiqu
 * #13001 "Aix-en-Provence"
 * #13004 "Arles"
 * #13119 "Vitrolles"
+
+// =============================================
+// EXEMPLES DE COMMUNES FUSIONNÉES (Historique)
+// =============================================
+// Illustration de la gestion temporelle
+
+// Exemple 1: Commune fusionnée en 2019
+// Les Clayes-sous-Bois (78165) a fusionné avec Villepreux (78674) 
+// pour créer Les Clayes-sous-Bois (commune nouvelle conservant le code 78165)
+* #78165 "Les Clayes-sous-Bois"
+  * ^property[0].code = #status
+  * ^property[=].valueCode = #active
+  * ^property[+].code = #effectiveDate
+  * ^property[=].valueDateTime = "2019-01-01"
+  * ^property[+].code = #parent
+  * ^property[=].valueCode = #78
+  * ^designation.language = #fr
+  * ^designation.value = "Commune nouvelle issue de la fusion Les Clayes-sous-Bois + Villepreux"
+
+* #78674 "Villepreux"
+  * ^property[0].code = #status
+  * ^property[=].valueCode = #inactive
+  * ^property[+].code = #deprecationDate
+  * ^property[=].valueDateTime = "2019-01-01"
+  * ^property[+].code = #replacedBy
+  * ^property[=].valueCode = #78165
+  * ^property[+].code = #parent
+  * ^property[=].valueCode = #78
+  * ^designation.language = #fr
+  * ^designation.value = "Commune déléguée fusionnée dans Les Clayes-sous-Bois"
+
+// Exemple 2: Commune créée récemment (2024)
+* #14472 "Mouen"
+  * ^property[0].code = #status
+  * ^property[=].valueCode = #active
+  * ^property[+].code = #effectiveDate
+  * ^property[=].valueDateTime = "2024-01-01"
+  * ^property[+].code = #parent
+  * ^property[=].valueCode = #14
+  * ^designation.language = #fr
+  * ^designation.value = "Commune nouvelle créée en 2024"

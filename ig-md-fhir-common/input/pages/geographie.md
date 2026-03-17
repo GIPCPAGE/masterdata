@@ -116,6 +116,291 @@ GET [base]/Organization?address-postalcode=75014
 
 ---
 
+## Gestion de l'Historique et Temporalité
+
+### Pourquoi l'Historique ?
+
+Les communes et codes postaux **changent dans le temps** :
+
+**Communes** :
+- **Fusions** : 2 ou plusieurs communes fusionnent (ex: communes nouvelles)
+- **Créations** : Nouvelle commune créée
+- **Suppressions** : Commune rattachée à une autre
+- **Changements de nom** : Rare mais existe
+
+**Codes postaux** :
+- **Création** : Nouveau code postal attribué
+- **Suppression** : Code postal obsolète
+- **Redécoupage** : Modification des zones desservies
+
+**Impact métier** :
+- Adresses historiques doivent rester valides
+- Statistiques doivent tenir compte des changements territoriaux
+- Factures anciennes gardent les codes d'époque
+
+---
+
+### Propriétés Temporelles CodeSystem
+
+#### Communes INSEE
+
+| Propriété | Type | Description | Exemple |
+|-----------|------|-------------|---------|
+| **status** | code | Active, inactive, deprecated | `active` |
+| **effectiveDate** | dateTime | Date d'entrée en vigueur | `2019-01-01` |
+| **deprecationDate** | dateTime | Date de suppression/fusion | `2024-01-01` |
+| **replacedBy** | code | Code commune de remplacement | `78165` |
+| **parent** | code | Code département (2 chiffres) | `75` |
+| **region** | code | Code région INSEE (2016+) | `11` |
+
+#### Codes Postaux
+
+| Propriété | Type | Description | Exemple |
+|-----------|------|-------------|---------|
+| **status** | code | Active, inactive, deprecated | `active` |
+| **effectiveDate** | dateTime | Date de mise en service | `2020-06-01` |
+| **deprecationDate** | dateTime | Date de suppression | `2023-12-31` |
+| **replacedBy** | code | Code postal de remplacement | `75015` |
+| **communeInsee** | string | Code(s) commune(s) desservie(s) | `75056` ou `75056,92012` |
+
+---
+
+### Exemples d'Utilisation Historique
+
+#### Exemple 1 : Commune Fusionnée
+
+**Cas réel** : Villepreux (78674) a fusionné avec Les Clayes-sous-Bois (78165) le 1er janvier 2019.
+
+```json
+{
+  "code": "78674",
+  "display": "Villepreux",
+  "property": [
+    {
+      "code": "status",
+      "valueCode": "inactive"
+    },
+    {
+      "code": "deprecationDate",
+      "valueDateTime": "2019-01-01"
+    },
+    {
+      "code": "replacedBy",
+      "valueCode": "78165"
+    }
+  ]
+}
+```
+
+**Utilisation** :
+- Adresse postée **avant 2019** : 78674 Villepreux ✅ Valide
+- Adresse postée **après 2019** : 78165 Les Clayes-sous-Bois ✅ Valide
+- Recherche historique : Trouver toutes les adresses Villepreux → Rediriger vers 78165
+
+---
+
+#### Exemple 2 : Commune Nouvellement Créée
+
+**Cas** : Mouen (14472) créée le 1er janvier 2024.
+
+```json
+{
+  "code": "14472",
+  "display": "Mouen",
+  "property": [
+    {
+      "code": "status",
+      "valueCode": "active"
+    },
+    {
+      "code": "effectiveDate",
+      "valueDateTime": "2024-01-01"
+    },
+    {
+      "code": "parent",
+      "valueCode": "14"
+    }
+  ]
+}
+```
+
+**Utilisation** :
+- Adresse postée **avant 2024** : 14472 ❌ N'existait pas encore
+- Adresse postée **après 2024** : 14472 Mouen ✅ Valide
+
+---
+
+### Requêtes API avec Filtres Temporels
+
+#### Trouver Communes Actives Seulement
+
+```http
+GET [base]/CodeSystem/communes-insee-cs/$lookup?code=78674&property=status
+
+Response:
+{
+  "parameter": [{
+    "name": "property",
+    "part": [
+      {"name": "code", "valueCode": "status"},
+      {"name": "value", "valueCode": "inactive"}
+    ]
+  }]
+}
+```
+
+#### Trouver Commune de Remplacement
+
+```http
+GET [base]/CodeSystem/communes-insee-cs/$lookup?code=78674&property=replacedBy
+
+Response:
+{
+  "parameter": [{
+    "name": "property",
+    "part": [
+      {"name": "code", "valueCode": "replacedBy"},
+      {"name": "value", "valueCode": "78165"}
+    ]
+  }]
+}
+```
+
+#### Valider Adresse à Une Date Donnée
+
+**Question** : Le code postal 75014 était-il valide le 15 mars 2020 ?
+
+```http
+GET [base]/CodeSystem/codes-postaux-cs/$validate-code
+  ?code=75014
+  &date=2020-03-15
+
+Response:
+{
+  "parameter": [{
+    "name": "result",
+    "valueBoolean": true
+  }]
+}
+```
+
+---
+
+### Cas d'Usage Métier
+
+#### Cas 1 : Validation Facture Historique
+
+**Problème** : Facture émise en 2018 avec commune "Villepreux (78674)". Est-elle valide ?
+
+**Solution** :
+1. Lookup code 78674
+2. Vérifier `deprecationDate` = 2019-01-01
+3. Date facture (2018) < deprecationDate ✅ **Valide**
+
+#### Cas 2 : Migration Base Adresses
+
+**Problème** : Mettre à jour toutes les adresses avec communes fusionnées.
+
+**Requête** :
+```sql
+SELECT * FROM addresses 
+WHERE commune_insee IN (
+  SELECT code FROM communes 
+  WHERE status = 'inactive' 
+  AND replacedBy IS NOT NULL
+)
+```
+
+**Action** : Pour chaque adresse, remplacer par `replacedBy`.
+
+#### Cas 3 : Statistiques Territoriales
+
+**Problème** : Compter le nombre de fournisseurs par commune en 2023.
+
+**Solution** : Utiliser les codes commune **valides au 31/12/2023** :
+- Si `effectiveDate` ≤ 2023-12-31
+- ET (`deprecationDate` > 2023-12-31 OU absent)
+
+---
+
+### Maintenance Annuelle
+
+#### Procédure de Mise à Jour
+
+**Janvier** : INSEE publie le nouveau millésime COG
+
+**Étapes** :
+
+1. **Télécharger** nouveau fichier INSEE
+```bash
+cd scripts
+python generate_communes_fsh.py
+```
+
+2. **Vérifier les changements**
+```bash
+git diff input/fsh/codesystems/CommunesINSEECodeSystem.fsh
+```
+
+Repérer les communes :
+- Nouvelles (`effectiveDate` = année courante)
+- Fusionnées (`status` = inactive, `replacedBy` renseigné)
+- Modifiées (changement de nom)
+
+3. **Recompiler**
+```bash
+npx sushi .
+```
+
+4. **Tester** :
+- Vérifier que anciennes communes fusionnées ont `replacedBy`
+- Valider que nouvelles communes ont `effectiveDate`
+- Tester requêtes `$lookup` et `$validate-code`
+
+5. **Déployer** :
+```bash
+git commit -m "feat(geo): Mise à jour COG 2025 - X communes fusionnées, Y nouvelles"
+git push
+```
+
+---
+
+### Codes Région INSEE (2016+)
+
+Depuis 2016, la France a **13 régions métropolitaines** + 5 DROM.
+
+| Code | Région |
+|------|--------|
+| **11** | Île-de-France |
+| **24** | Centre-Val de Loire |
+| **27** | Bourgogne-Franche-Comté |
+| **28** | Normandie |
+| **32** | Hauts-de-France |
+| **44** | Grand Est |
+| **52** | Pays de la Loire |
+| **53** | Bretagne |
+| **75** | Nouvelle-Aquitaine |
+| **76** | Occitanie |
+| **84** | Auvergne-Rhône-Alpes |
+| **93** | Provence-Alpes-Côte d'Azur |
+| **94** | Corse |
+| **01** | Guadeloupe |
+| **02** | Martinique |
+| **03** | Guyane |
+| **04** | La Réunion |
+| **06** | Mayotte |
+
+**Utilisation** : Statistiques régionales, rapports géographiques.
+
+**Recherche par région** :
+```http
+GET [base]/CodeSystem/communes-insee-cs/$lookup?property=region&value=11
+```
+
+Retourne toutes les communes d'Île-de-France.
+
+---
+
 ## Cohérence Code Postal ↔ Commune
 
 ### Règle de Validation

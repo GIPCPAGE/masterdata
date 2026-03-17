@@ -50,6 +50,35 @@ Description: "Liste complète des communes françaises selon le Code Officiel G�
 * ^purpose = "Identifier de manière unique les communes françaises dans les adresses et localisations. Permet la validation des codes commune INSEE et la normalisation des adresses."
 * ^count = {count}
 
+// Propriétés pour gestion historique et temporalité
+* ^property[0].code = #effectiveDate
+* ^property[=].uri = "http://hl7.org/fhir/concept-properties#effectiveDate"
+* ^property[=].description = "Date d'entrée en vigueur de la commune (création ou modification)"
+* ^property[=].type = #dateTime
+
+* ^property[+].code = #deprecationDate
+* ^property[=].uri = "http://hl7.org/fhir/concept-properties#deprecationDate"
+* ^property[=].description = "Date de suppression ou fusion de la commune"
+* ^property[=].type = #dateTime
+
+* ^property[+].code = #status
+* ^property[=].uri = "http://hl7.org/fhir/concept-properties#status"
+* ^property[=].description = "Statut de la commune : active, inactive (fusionnée), deprecated (supprimée)"
+* ^property[=].type = #code
+
+* ^property[+].code = #replacedBy
+* ^property[=].description = "Code INSEE de la commune de remplacement (en cas de fusion)"
+* ^property[=].type = #code
+
+* ^property[+].code = #parent
+* ^property[=].uri = "http://hl7.org/fhir/concept-properties#parent"
+* ^property[=].description = "Code département (2 premiers chiffres du code commune)"
+* ^property[=].type = #code
+
+* ^property[+].code = #region
+* ^property[=].description = "Code région INSEE (nouvelle région 2016+)"
+* ^property[=].type = #code
+
 // =============================================
 // Liste complète des communes françaises
 // =============================================
@@ -88,18 +117,36 @@ def parse_communes_insee(csv_content):
         # LIBELLE: Nom de la commune
         # DEP: Département
         # REG: Région
+        # TYPECOM: Type (COM=commune active, COMD=commune déléguée, ARM=arrondissement)
+        # DATE_CREAT: Date de création (AAAA-MM-JJ)
+        # DATE_EFFET: Date de prise d'effet pour fusion/modification
         
         code_commune = row.get('COM', '').strip()
         nom_commune = row.get('LIBELLE', '').strip()
+        dept = row.get('DEP', '').strip()
+        region = row.get('REG', '').strip()
+        type_com = row.get('TYPECOM', 'COM').strip()
+        date_creat = row.get('DATE_CREAT', '').strip()
         
-        # Filtrer les lignes valides
+        # Filtrer les lignes valides (communes actives)
         if code_commune and len(code_commune) == 5 and nom_commune:
             # Échapper les guillemets dans le nom
             nom_commune_escaped = nom_commune.replace('"', '\\"')
-            communes.append((code_commune, nom_commune_escaped))
+            
+            # Déterminer le statut
+            status = 'active' if type_com == 'COM' else 'inactive'
+            
+            communes.append({
+                'code': code_commune,
+                'nom': nom_commune_escaped,
+                'dept': dept,
+                'region': region,
+                'status': status,
+                'date_creat': date_creat
+            })
     
     print(f"✅ {len(communes)} communes parsées")
-    return sorted(communes, key=lambda x: x[0])
+    return sorted(communes, key=lambda x: x['code'])
 
 
 def generate_fsh_file(communes, output_file):
@@ -119,9 +166,35 @@ def generate_fsh_file(communes, output_file):
         )
         f.write(header)
         
-        # Communes
-        for code, nom in communes:
+        # Communes avec propriétés
+        for commune in communes:
+            code = commune['code']
+            nom = commune['nom']
+            dept = commune['dept']
+            region = commune['region']
+            status = commune['status']
+            date_creat = commune['date_creat']
+            
             f.write(f'* #{code} "{nom}"\n')
+            
+            # Propriétés
+            if status:
+                f.write(f'  * ^property[0].code = #status\n')
+                f.write(f'  * ^property[=].valueCode = #{status}\n')
+            
+            if dept:
+                f.write(f'  * ^property[+].code = #parent\n')
+                f.write(f'  * ^property[=].valueCode = #{dept}\n')
+            
+            if region:
+                f.write(f'  * ^property[+].code = #region\n')
+                f.write(f'  * ^property[=].valueCode = #{region}\n')
+            
+            if date_creat:
+                f.write(f'  * ^property[+].code = #effectiveDate\n')
+                f.write(f'  * ^property[=].valueDateTime = "{date_creat}"\n')
+            
+            f.write('\n')
     
     print(f"✅ Fichier généré avec {count} communes")
     print(f"📄 Fichier: {output_file}")
