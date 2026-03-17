@@ -7,20 +7,23 @@ Source: Base Adresse Nationale (BAN) ou fichier La Poste HEXASIMAL
 URL: https://datanova.laposte.fr/datasets/laposte-hexasmal
 
 Usage:
-    python generate_codes_postaux_fsh.py [fichier_csv]
+    python generate_codes_postaux_fsh.py [fichier_csv] [--format json|fsh]
 
 Output:
-    input/fsh/codesystems/CodesPostauxCodeSystem_full.fsh
+    --format fsh: input/fsh/codesystems/CodesPostauxCodeSystem_full.fsh (codes uniquement)
+    --format json: fsh-generated/resources/CodeSystem-codes-postaux-cs-full.json (avec propriétés)
 """
 
 import csv
 import sys
+import json
 import urllib.request
 from datetime import datetime
 from collections import OrderedDict
 
 # Configuration
-OUTPUT_FILE = "../input/fsh/codesystems/CodesPostauxCodeSystem_full.fsh"
+OUTPUT_FILE_FSH = "../input/fsh/codesystems/CodesPostauxCodeSystem_full.fsh"
+OUTPUT_FILE_JSON = "../fsh-generated/resources/CodeSystem-codes-postaux-cs-full.json"
 LA_POSTE_URL = "https://datanova.laposte.fr/data-fair/api/v1/datasets/laposte-hexasmal/raw"
 
 FSH_HEADER = """// =============================================
@@ -133,7 +136,7 @@ def parse_codes_postaux_csv(csv_file):
 
 
 def generate_fsh_file(codes_postaux, output_file):
-    """Génère le fichier FSH complet."""
+    """Génère le fichier FSH complet (codes uniquement, sans propriétés)."""
     print(f"📝 Génération du fichier FSH: {output_file}")
     
     year = datetime.now().year
@@ -149,11 +152,124 @@ def generate_fsh_file(codes_postaux, output_file):
         )
         f.write(header)
         
-        # Codes postaux
+        # Codes postaux (codes uniquement)
         for code, libelle in codes_postaux:
             f.write(f'* #{code} "{libelle}"\n')
     
-    print(f"✅ Fichier généré avec {count} codes postaux")
+    print(f"✅ Fichier FSH généré avec {count} codes postaux (codes uniquement)")
+    print(f"📄 Fichier: {output_file}")
+
+
+def generate_json_file(codes_postaux, output_file):
+    """Génère le fichier JSON complet avec toutes les propriétés."""
+    print(f"📝 Génération du fichier JSON: {output_file}")
+    
+    year = datetime.now().year
+    date = datetime.now().strftime("%Y-%m-%d")
+    # Parse arguments
+    csv_file = None
+    output_format = 'json'  # Par défaut JSON pour les propriétés
+    
+    i = 1
+    while i < len(sys.argv):
+        if sys.argv[i] == '--format':
+            output_format = sys.argv[i+1] if i+1 < len(sys.argv) else 'json'
+            i += 2
+        elif not sys.argv[i].startswith('--'):
+            csv_file = sys.argv[i]
+            i += 1
+        else:
+            i += 1
+    
+    try:
+        # Vérifier si un fichier CSV est fourni en argument
+        if csv_file:
+            print(f"📁 Utilisation du fichier local: {csv_file}")
+            codes_postaux = parse_codes_postaux_csv(csv_file)
+        else:
+            # Télécharger depuis La Poste
+            csv_content = download_laposte_data()
+            codes_postaux = parse_codes_postaux_laposte(csv_content)
+        
+        # Générer le fichier (FSH ou JSON)
+        if output_format == 'json':
+            generate_json_file(codes_postaux, OUTPUT_FILE_JSON)
+        else:
+            generate_fsh_file(codes_postaux, OUTPUT_FILE_FSH)
+        
+        print("\n" + "=" * 60)
+        print("✅ Génération terminée avec succès !")
+        print("=" * 60)
+        
+        if output_format == 'json':
+            print(f"\nProchaines étapes:")
+            print(f"1. Vérifier le fichier: {OUTPUT_FILE_JSON}")
+            print(f"2. Copier vers fsh-generated/resources/ si nécessaire")
+            print(f"3. Recompiler l'IG")
+            print(f"\nNote: Le fichier JSON contient toutes les propriétés (status, communeInsee, etc.)")
+        else:
+            print(f"\nProchaines étapes:")
+            print(f"1. Vérifier le fichier: {OUTPUT_FILE_FSH}")
+            print(f"2. Compiler avec SUSHI: npx sushi .")
+            print(f"3. Supprimer l'ancien fichier CodesPostauxCodeSystem.fsh")
+            print(f"4. Renommer _full.fsh en .fsh")
+            print(f"\nNote: Format FSH ne contient que les codes (pas de propriétés)e HEXASIMAL {year}. Données publiques sous Licence Ouverte 2.0",
+        "caseSensitive": True,
+        "content": "complete",
+        "count": count,
+        "property": [
+            {
+                "code": "status",
+                "uri": "http://hl7.org/fhir/concept-properties#status",
+                "description": "Statut du code postal : active, inactive, deprecated",
+                "type": "code"
+            },
+            {
+                "code": "effectiveDate",
+                "uri": "http://hl7.org/fhir/concept-properties#effectiveDate",
+                "description": "Date de mise en service",
+                "type": "dateTime"
+            },
+            {
+                "code": "deprecationDate",
+                "uri": "http://hl7.org/fhir/concept-properties#deprecationDate",
+                "description": "Date de suppression",
+                "type": "dateTime"
+            },
+            {
+                "code": "replacedBy",
+                "description": "Code postal de remplacement",
+                "type": "code"
+            },
+            {
+                "code": "communeInsee",
+                "description": "Code INSEE de la commune principale",
+                "type": "string"
+            }
+        ],
+        "concept": []
+    }
+    
+    # Ajouter les concepts avec propriétés
+    for code, libelle in codes_postaux:
+        concept = {
+            "code": code,
+            "display": libelle,
+            "property": [
+                {
+                    "code": "status",
+                    "valueCode": "active"  # Par défaut tous actifs dans HEXASIMAL
+                }
+            ]
+        }
+        
+        codesystem["concept"].append(concept)
+    
+    # Écrire le JSON
+    with open(output_file, 'w', encoding='utf-8') as f:
+        json.dump(codesystem, f, ensure_ascii=False, indent=2)
+    
+    print(f"✅ Fichier JSON généré avec {count} codes postaux et propriétés")
     print(f"📄 Fichier: {output_file}")
 
 
