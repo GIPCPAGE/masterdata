@@ -46,39 +46,20 @@ Description: "Liste des codes postaux français. Un code postal peut couvrir plu
 // Codes postaux principaux (échantillon)
 // =============================================
 // NOTE: Ce fichier contient un échantillon représentatif.
-// Pour la liste complète, utiliser le script
-// generate_codes_postaux_fsh.py fourni dans /scripts/
+// Pour la liste complète, utiliser le script generate_codes_postaux_fsh.py
+//
+// IMPORTANT: Les valeurs de propriétés (status, communeInsee, dates, etc.)
+// pour chaque code postal seront ajoutées via le script de génération Python
+// qui produit un fichier JSON complet avec toutes les propriétés.
+// Les propriétés sont déclarées ci-dessus mais les valeurs individuelles
+// nécessitent un format JSON non supporté directement en FSH.
 
 // Paris (75)
 * #75001 "Paris 1er arrondissement"
-  * ^property[0].code = #status
-  * ^property[=].valueCode = #active
-  * ^property[+].code = #communeInsee
-  * ^property[=].valueString = "75056"
-
 * #75002 "Paris 2e arrondissement"
-  * ^property[0].code = #status
-  * ^property[=].valueCode = #active
-  * ^property[+].code = #communeInsee
-  * ^property[=].valueString = "75056"
-
 * #75003 "Paris 3e arrondissement"
-  * ^property[0].code = #status
-  * ^property[=].valueCode = #active
-  * ^property[+].code = #communeInsee
-  * ^property[=].valueString = "75056"
-
 * #75004 "Paris 4e arrondissement"
-  * ^property[0].code = #status
-  * ^property[=].valueCode = #active
-  * ^property[+].code = #communeInsee
-  * ^property[=].valueString = "75056"
-
 * #75005 "Paris 5e arrondissement"
-  * ^property[0].code = #status
-  * ^property[=].valueCode = #active
-  * ^property[+].code = #communeInsee
-  * ^property[=].valueString = "75056"
 * #75006 "Paris 6e arrondissement"
 * #75007 "Paris 7e arrondissement"
 * #75008 "Paris 8e arrondissement"

@@ -53,47 +53,19 @@ Description: "Liste des communes françaises selon le Code Officiel Géographiqu
 // NOTE: Ce fichier contient un échantillon représentatif.
 // Pour la liste complète (~36 000 communes), utiliser le script
 // generate_communes_fsh.py fourni dans /scripts/
+//
+// IMPORTANT: Les valeurs de propriétés (status, effectiveDate, parent, region, etc.)
+// pour chaque commune seront ajoutées via le script de génération Python
+// qui produit un fichier JSON complet avec toutes les propriétés.
+// Les propriétés sont déclarées ci-dessus mais les valeurs individuelles
+// nécessitent un format JSON non supporté directement en FSH.
 
 // Métropoles
 * #75056 "Paris"
-  * ^property[0].code = #status
-  * ^property[=].valueCode = #active
-  * ^property[+].code = #parent
-  * ^property[=].valueCode = #75
-  * ^property[+].code = #region
-  * ^property[=].valueCode = #11
-
 * #13055 "Marseille"
-  * ^property[0].code = #status
-  * ^property[=].valueCode = #active
-  * ^property[+].code = #parent
-  * ^property[=].valueCode = #13
-  * ^property[+].code = #region
-  * ^property[=].valueCode = #93
-
 * #69123 "Lyon"
-  * ^property[0].code = #status
-  * ^property[=].valueCode = #active
-  * ^property[+].code = #parent
-  * ^property[=].valueCode = #69
-  * ^property[+].code = #region
-  * ^property[=].valueCode = #84
-
 * #31555 "Toulouse"
-  * ^property[0].code = #status
-  * ^property[=].valueCode = #active
-  * ^property[+].code = #parent
-  * ^property[=].valueCode = #31
-  * ^property[+].code = #region
-  * ^property[=].valueCode = #76
-
 * #06088 "Nice"
-  * ^property[0].code = #status
-  * ^property[=].valueCode = #active
-  * ^property[+].code = #parent
-  * ^property[=].valueCode = #06
-  * ^property[+].code = #region
-  * ^property[=].valueCode = #93
 * #44109 "Nantes"
 * #67482 "Strasbourg"
 * #34172 "Montpellier"
@@ -230,39 +202,14 @@ Description: "Liste des communes françaises selon le Code Officiel Géographiqu
 // EXEMPLES DE COMMUNES FUSIONNÉES (Historique)
 // =============================================
 // Illustration de la gestion temporelle
+// Note: Les valeurs de propriétés (status, dates, etc.) seront ajoutées
+// via le script de génération Python qui produit du JSON
 
 // Exemple 1: Commune fusionnée en 2019
 // Les Clayes-sous-Bois (78165) a fusionné avec Villepreux (78674) 
 // pour créer Les Clayes-sous-Bois (commune nouvelle conservant le code 78165)
 * #78165 "Les Clayes-sous-Bois"
-  * ^property[0].code = #status
-  * ^property[=].valueCode = #active
-  * ^property[+].code = #effectiveDate
-  * ^property[=].valueDateTime = "2019-01-01"
-  * ^property[+].code = #parent
-  * ^property[=].valueCode = #78
-  * ^designation.language = #fr
-  * ^designation.value = "Commune nouvelle issue de la fusion Les Clayes-sous-Bois + Villepreux"
-
 * #78674 "Villepreux"
-  * ^property[0].code = #status
-  * ^property[=].valueCode = #inactive
-  * ^property[+].code = #deprecationDate
-  * ^property[=].valueDateTime = "2019-01-01"
-  * ^property[+].code = #replacedBy
-  * ^property[=].valueCode = #78165
-  * ^property[+].code = #parent
-  * ^property[=].valueCode = #78
-  * ^designation.language = #fr
-  * ^designation.value = "Commune déléguée fusionnée dans Les Clayes-sous-Bois"
 
 // Exemple 2: Commune créée récemment (2024)
 * #14472 "Mouen"
-  * ^property[0].code = #status
-  * ^property[=].valueCode = #active
-  * ^property[+].code = #effectiveDate
-  * ^property[=].valueDateTime = "2024-01-01"
-  * ^property[+].code = #parent
-  * ^property[=].valueCode = #14
-  * ^designation.language = #fr
-  * ^designation.value = "Commune nouvelle créée en 2024"
