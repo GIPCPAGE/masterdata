@@ -1,4 +1,5 @@
 #!/usr/bin/env python3
+# -*- coding: utf-8 -*-
 """
 Script de génération de la liste complète des codes postaux français
 depuis la base officielle La Poste.
@@ -20,6 +21,12 @@ import json
 import urllib.request
 from datetime import datetime
 from collections import OrderedDict
+import io
+
+# Forcer l'encodage UTF-8 pour la sortie console Windows
+if sys.platform == 'win32':
+    sys.stdout = io.TextIOWrapper(sys.stdout.buffer, encoding='utf-8')
+    sys.stderr = io.TextIOWrapper(sys.stderr.buffer, encoding='utf-8')
 
 # Configuration
 OUTPUT_FILE_FSH = "../input/fsh/codesystems/CodesPostauxCodeSystem_full.fsh"
@@ -66,8 +73,18 @@ def download_laposte_data():
     
     try:
         with urllib.request.urlopen(LA_POSTE_URL) as response:
-            content = response.read().decode('utf-8')
-            print(f"✅ Téléchargement réussi ({len(content)} caractères)")
+            # Essayer plusieurs encodages (ISO-8859-1 pour données françaises)
+            content = None
+            for encoding in ['utf-8', 'iso-8859-1', 'latin-1', 'cp1252']:
+                try:
+                    content = response.read().decode(encoding)
+                    print(f"✅ Téléchargement réussi ({len(content)} caractères, encodage: {encoding})")
+                    break
+                except UnicodeDecodeError:
+                    response = urllib.request.urlopen(LA_POSTE_URL)  # Retry
+                    continue
+            if content is None:
+                raise Exception("Impossible de décoder le fichier avec les encodages standards")
             return content
     except Exception as e:
         print(f"❌ Erreur de téléchargement: {e}")
@@ -80,33 +97,50 @@ def parse_codes_postaux_laposte(csv_content):
     """Parse le fichier CSV La Poste et retourne les codes postaux uniques."""
     print("📊 Parsing des codes postaux...")
     
-    # Dictionnnaire pour éviter doublons et stocker le libellé principal
+    # Dictionnaire pour éviter doublons et stocker le libellé principal
     codes_postaux = OrderedDict()
-    csv_reader = csv.DictReader(csv_content.splitlines(), delimiter=';')
+    lines = csv_content.strip().splitlines()
+    
+    if not lines:
+        raise Exception("Fichier CSV vide")
+    
+    # Lire l'en-tête
+    csv_reader = csv.DictReader(lines, delimiter=';')
+    
+    # Debug: afficher les colonnes disponibles
+    first_row = True
     
     for row in csv_reader:
-        # Format HEXASIMAL:
+        if first_row:
+            print(f"🔍 Colonnes CSV: {list(row.keys())}")
+            first_row = False
+        
+        # Format HEXASIMAL officiel:
         # Code_postal: Code postal (5 chiffres)
-        # Nom_commune: Nom de la commune
+        # Nom_de_la_commune: Nom de la commune
+        # Libellé_d_acheminement: Libellé postal
         # Ligne_5: Complément adresse (arrondissement, etc.)
         
         code_postal = row.get('Code_postal', '').strip()
-        nom_commune = row.get('Nom_commune', '').strip()
+        nom_commune = row.get('Nom_de_la_commune', '').strip()
+        libelle_acheminement = row.get('Libellé_d_acheminement', '').strip() or row.get("Libellé_d'acheminement", '').strip()
         ligne_5 = row.get('Ligne_5', '').strip()
         
         # Filtrer les lignes valides
         if code_postal and len(code_postal) == 5 and code_postal.isdigit():
-            # Construire le libellé
-            if ligne_5:
-                libelle = f"{nom_commune} - {ligne_5}"
-            else:
+            # Construire le libellé (priorité: Libellé acheminement > Ligne_5 > Nom commune)
+            if libelle_acheminement:
+                libelle = libelle_acheminement
+            elif ligne_5:
+                libelle = ligne_5
+            elif nom_commune:
                 libelle = nom_commune
+            else:
+                libelle = f"Code postal {code_postal}"  # Fallback
             
             # Éviter doublons (garder le premier libellé)
             if code_postal not in codes_postaux:
-                # Échapper les guillemets
-                libelle_escaped = libelle.replace('"', '\\"')
-                codes_postaux[code_postal] = libelle_escaped
+                codes_postaux[code_postal] = libelle
     
     print(f"✅ {len(codes_postaux)} codes postaux uniques parsés")
     return list(codes_postaux.items())
@@ -166,54 +200,28 @@ def generate_json_file(codes_postaux, output_file):
     
     year = datetime.now().year
     date = datetime.now().strftime("%Y-%m-%d")
-    # Parse arguments
-    csv_file = None
-    output_format = 'json'  # Par défaut JSON pour les propriétés
+    count = len(codes_postaux)
     
-    i = 1
-    while i < len(sys.argv):
-        if sys.argv[i] == '--format':
-            output_format = sys.argv[i+1] if i+1 < len(sys.argv) else 'json'
-            i += 2
-        elif not sys.argv[i].startswith('--'):
-            csv_file = sys.argv[i]
-            i += 1
-        else:
-            i += 1
-    
-    try:
-        # Vérifier si un fichier CSV est fourni en argument
-        if csv_file:
-            print(f"📁 Utilisation du fichier local: {csv_file}")
-            codes_postaux = parse_codes_postaux_csv(csv_file)
-        else:
-            # Télécharger depuis La Poste
-            csv_content = download_laposte_data()
-            codes_postaux = parse_codes_postaux_laposte(csv_content)
-        
-        # Générer le fichier (FSH ou JSON)
-        if output_format == 'json':
-            generate_json_file(codes_postaux, OUTPUT_FILE_JSON)
-        else:
-            generate_fsh_file(codes_postaux, OUTPUT_FILE_FSH)
-        
-        print("\n" + "=" * 60)
-        print("✅ Génération terminée avec succès !")
-        print("=" * 60)
-        
-        if output_format == 'json':
-            print(f"\nProchaines étapes:")
-            print(f"1. Vérifier le fichier: {OUTPUT_FILE_JSON}")
-            print(f"2. Copier vers fsh-generated/resources/ si nécessaire")
-            print(f"3. Recompiler l'IG")
-            print(f"\nNote: Le fichier JSON contient toutes les propriétés (status, communeInsee, etc.)")
-        else:
-            print(f"\nProchaines étapes:")
-            print(f"1. Vérifier le fichier: {OUTPUT_FILE_FSH}")
-            print(f"2. Compiler avec SUSHI: npx sushi .")
-            print(f"3. Supprimer l'ancien fichier CodesPostauxCodeSystem.fsh")
-            print(f"4. Renommer _full.fsh en .fsh")
-            print(f"\nNote: Format FSH ne contient que les codes (pas de propriétés)e HEXASIMAL {year}. Données publiques sous Licence Ouverte 2.0",
+    # Structure de base du CodeSystem JSON
+    codesystem = {
+        "resourceType": "CodeSystem",
+        "id": "codes-postaux-cs",
+        "url": "https://www.cpage.fr/ig/masterdata/geo/CodeSystem/codes-postaux-cs",
+        "version": f"{year}.1.0",
+        "name": "CodesPostauxCodeSystem",
+        "title": "Codes Postaux français (La Poste)",
+        "status": "active",
+        "experimental": False,
+        "date": date,
+        "publisher": "CPage",
+        "contact": [{
+            "telecom": [{
+                "system": "url",
+                "value": "https://www.cpage.fr"
+            }]
+        }],
+        "description": "Liste complète des codes postaux français selon la base HEXASIMAL de La Poste. Un code postal peut couvrir plusieurs communes, et une grande commune peut avoir plusieurs codes postaux.",
+        "copyright": f"Source: La Poste - Base HEXASIMAL {year}. Données publiques sous Licence Ouverte 2.0",
         "caseSensitive": True,
         "content": "complete",
         "count": count,
@@ -265,7 +273,7 @@ def generate_json_file(codes_postaux, output_file):
         
         codesystem["concept"].append(concept)
     
-    # Écrire le JSON
+    # Écrire le JSON avec encodage UTF-8
     with open(output_file, 'w', encoding='utf-8') as f:
         json.dump(codesystem, f, ensure_ascii=False, indent=2)
     
@@ -276,13 +284,27 @@ def generate_json_file(codes_postaux, output_file):
 def main():
     """Point d'entrée principal."""
     print("=" * 60)
-    print("📮 Générateur de CodeSystem Codes Postaux pour FHIR")
+    print("Generateur de CodeSystem Codes Postaux pour FHIR")
     print("=" * 60)
+    
+    # Parse arguments
+    csv_file = None
+    output_format = 'json'  # Par défaut JSON pour les propriétés
+    
+    i = 1
+    while i < len(sys.argv):
+        if sys.argv[i] == '--format':
+            output_format = sys.argv[i+1] if i+1 < len(sys.argv) else 'json'
+            i += 2
+        elif not sys.argv[i].startswith('--'):
+            csv_file = sys.argv[i]
+            i += 1
+        else:
+            i += 1
     
     try:
         # Vérifier si un fichier CSV est fourni en argument
-        if len(sys.argv) > 1:
-            csv_file = sys.argv[1]
+        if csv_file:
             print(f"📁 Utilisation du fichier local: {csv_file}")
             codes_postaux = parse_codes_postaux_csv(csv_file)
         else:
@@ -290,17 +312,29 @@ def main():
             csv_content = download_laposte_data()
             codes_postaux = parse_codes_postaux_laposte(csv_content)
         
-        # Générer le fichier FSH
-        generate_fsh_file(codes_postaux, OUTPUT_FILE)
+        # Générer le fichier (FSH ou JSON)
+        if output_format == 'json':
+            generate_json_file(codes_postaux, OUTPUT_FILE_JSON)
+        else:
+            generate_fsh_file(codes_postaux, OUTPUT_FILE_FSH)
         
         print("\n" + "=" * 60)
         print("✅ Génération terminée avec succès !")
         print("=" * 60)
-        print(f"\nProchaines étapes:")
-        print(f"1. Vérifier le fichier: {OUTPUT_FILE}")
-        print(f"2. Compiler avec SUSHI: npx sushi .")
-        print(f"3. Supprimer l'ancien fichier CodesPostauxCodeSystem.fsh")
-        print(f"4. Renommer _full.fsh en .fsh")
+        
+        if output_format == 'json':
+            print(f"\nProchaines étapes:")
+            print(f"1. Vérifier le fichier: {OUTPUT_FILE_JSON}")
+            print(f"2. Copier vers fsh-generated/resources/ si nécessaire")
+            print(f"3. Recompiler l'IG")
+            print(f"\nNote: Le fichier JSON contient toutes les propriétés (status, communeInsee, etc.)")
+        else:
+            print(f"\nProchaines étapes:")
+            print(f"1. Vérifier le fichier: {OUTPUT_FILE_FSH}")
+            print(f"2. Compiler avec SUSHI: npx sushi .")
+            print(f"3. Supprimer l'ancien fichier CodesPostauxCodeSystem.fsh")
+            print(f"4. Renommer _full.fsh en .fsh")
+            print(f"\nNote: Format FSH ne contient que les codes (pas de propriétés)")
         
     except Exception as e:
         print(f"\n❌ Erreur: {e}")

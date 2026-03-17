@@ -99,8 +99,18 @@ def download_insee_data():
     
     try:
         with urllib.request.urlopen(INSEE_COG_URL, context=ssl_context) as response:
-            content = response.read().decode('utf-8')
-            print(f"✅ Téléchargement réussi ({len(content)} caractères)")
+            # Essayer plusieurs encodages (ISO-8859-1 pour données françaises)
+            data = response.read()
+            content = None
+            for encoding in ['utf-8', 'iso-8859-1', 'latin-1', 'cp1252']:
+                try:
+                    content = data.decode(encoding)
+                    print(f"✅ Téléchargement réussi ({len(content)} caractères, encodage: {encoding})")
+                    break
+                except UnicodeDecodeError:
+                    continue
+            if content is None:
+                raise Exception("Impossible de décoder le fichier avec les encodages standards")
             return content
     except Exception as e:
         print(f"❌ Erreur de téléchargement: {e}")
