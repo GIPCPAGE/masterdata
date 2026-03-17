@@ -1,4 +1,5 @@
 #!/usr/bin/env python3
+# -*- coding: utf-8 -*-
 """
 Script de génération de la liste complète des communes françaises
 depuis les données officielles INSEE (Code Officiel Géographique).
@@ -20,6 +21,12 @@ import ssl
 import json
 import sys
 from datetime import datetime
+import io
+
+# Forcer l'encodage UTF-8 pour la sortie console Windows
+if sys.platform == 'win32':
+    sys.stdout = io.TextIOWrapper(sys.stdout.buffer, encoding='utf-8')
+    sys.stderr = io.TextIOWrapper(sys.stderr.buffer, encoding='utf-8')
 
 # URLs des données officielles INSEE
 INSEE_COG_URL = "https://www.insee.fr/fr/statistiques/fichier/6800675/v_commune_2024.csv"
@@ -123,7 +130,9 @@ def parse_communes_insee(csv_content):
     print("📊 Parsing des données INSEE...")
     
     communes = []
-    csv_reader = csv.DictReader(csv_content.splitlines(), delimiter=',')
+    # Essayer différents délimiteurs (INSEE utilise souvent ; ou ,)
+    delimiter = ';' if ';' in csv_content.splitlines()[0] else ','
+    csv_reader = csv.DictReader(csv_content.splitlines(), delimiter=delimiter)
     
     for row in csv_reader:
         # Format INSEE COG:
@@ -306,18 +315,32 @@ def generate_json_file(communes, output_file):
 def main():
     """Point d'entrée principal."""
     print("=" * 60)
-    print("🇫🇷 Générateur de CodeSystem Communes INSEE pour FHIR")
+    print("Generateur de CodeSystem Communes INSEE pour FHIR")
     print("=" * 60)
     
     # Parse arguments
+    csv_file = None
     output_format = 'json'  # Par défaut JSON pour les propriétés
-    if len(sys.argv) > 1:
-        if sys.argv[1] == '--format':
-            output_format = sys.argv[2] if len(sys.argv) > 2 else 'json'
+    
+    i = 1
+    while i < len(sys.argv):
+        if sys.argv[i] == '--format':
+            output_format = sys.argv[i+1] if i+1 < len(sys.argv) else 'json'
+            i += 2
+        elif not sys.argv[i].startswith('--'):
+            csv_file = sys.argv[i]
+            i += 1
+        else:
+            i += 1
     
     try:
-        # Étape 1: Télécharger les données
-        csv_content = download_insee_data()
+        # Étape 1: Télécharger ou lire les données
+        if csv_file:
+            print(f"📁 Utilisation du fichier local: {csv_file}")
+            with open(csv_file, 'r', encoding='utf-8') as f:
+                csv_content = f.read()
+        else:
+            csv_content = download_insee_data()
         
         # Étape 2: Parser les communes
         communes = parse_communes_insee(csv_content)
