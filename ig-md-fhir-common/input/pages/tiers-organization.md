@@ -1,487 +1,472 @@
-# TiersProfile - Profil de Base GEF
+# Structure des Organisations
 
 ## Vue d'ensemble
 
-**TiersProfile** est le profil de base pour toutes les organisations conformes aux interfaces GEF (Gestion Économique et Financière). Il hérite de **FR Core Organization** et ajoute les extensions et identifiants nécessaires pour la conformité avec les messages EFOU et KERD.
-
-## Héritage et architecture
-
-```
-Organization (FHIR R4)
-    ↓
-FRCoreOrganizationProfile (FR Core 2.1.0)
-    ↓
-TiersProfile (ce profil - base GEF)
-    ↓
-    ├── FournisseurProfile (conforme EFOU 262 chars)
-    └── DebiteurProfile (conforme KERD CSV)
-        ↓
-        ├── CPageFournisseurProfile (extensions CPage métier)
-        └── CPageDebiteurProfile (extensions CPage métier)
-```
-
-## Ce que FR Core apporte
-
-TiersProfile **hérite automatiquement** de FR Core Organization :
-
-### Slices identifier FR Core
-
-| Slice | System | Format | Description | OID |
-|-------|--------|--------|-------------|-----|
-| **siren** | urn:oid:1.2.250.1.24.3.1 | 9 chiffres | Numéro SIREN | Officiel ANS |
-| **siret** | urn:oid:1.2.250.1.24.3.2 | 14 chiffres | Numéro SIRET | Officiel ANS |
-| **finess** | https://finess.esante.gouv.fr | 9 caractères | Identifiant FINESS | Officiel ANS |
-
-Ces slices sont **déjà validés et contraints** par FR Core (format, cardinalité, type).
+Cette page explique comment structurer les informations des **organisations tierces** (fournisseurs, clients, organismes payeurs) dans le référentiel. Chaque organisation est représentée par une ressource **Organization** enrichie d'extensions métier.
 
 ---
 
-## Ce que TiersProfile ajoute (Phase 1 GEF)
+## Architeckture des Profils
 
-### Nouveaux identifier slices (6 total)
+### Hiérarchie
 
-| Slice | System | Type v2-0203 | Cardinality | Description | GEF Code | Juridiction | Source Oracle |
-|-------|--------|--------------|-------------|-------------|----------|-------------|---------------|
-| **etierId** | urn:oid:1.2.250.1.999.1.1.1 | RI (Resource Identifier) | 0..* MS | Identifiant interne ETIER | - | FR (interne) | ECO.ETIER.IDTITI |
-| **tva** | (Selon pays UE) | TAX (Tax ID) | 0..1 MS | TVA intracommunautaire | GEF #05 | UE | ECO.ETIER.TVAITI |
-| **nir** | urn:oid:1.2.250.1.213.1.4.8 | NI (National ID) | 0..1 MS | NIR personne physique (15 car) | GEF #04 | FR | KERD pos 15 |
-| **horsUE** | (Selon pays) | TAX (Tax ID) | 0..1 MS | Identifiant hors Union Européenne | GEF #06 | Monde | KERD pos 15 |
-| **tahiti** | http://cpage.org/fhir/NamingSystem/tahiti-identifier | TAX (Tax ID) | 0..1 MS | Identifiant Polynésie française | GEF #07 | PF | KERD pos 15 |
-| **ridet** | http://cpage.org/fhir/NamingSystem/ridet-identifier | TAX (Tax ID) | 0..1 MS | RIDET Nouvelle-Calédonie (7 car) | GEF #08 | NC | KERD pos 15 |
-
-#### Notes sur les identifiants
-
-1. **etierId** : Identifiant interne CPage, hérité de l'ancien système Oracle ECO (ETIER.IDTITI). Peut apparaître plusieurs fois (historique, synchronisations).
-
-2. **tva** : Numéro de TVA intracommunautaire. Le system dépend du pays UE (ex: France `urn:oid:1.2.250.1.24.1.3`, Allemagne `DE...`).
-
-3. **nir** : Numéro d'Inscription au Répertoire (Sécurité sociale française, 15 caractères). Utilisé pour les personnes physiques (Catégorie TG #01).
-
-4. **horsUE** : Pour les organisations hors Union Européenne. Le system dépend du pays (ex: Swiss UID, US TIN, etc.).
-
-5. **tahiti** et **ridet** : URIs **temporaires** en attente d'OID officiels :
-   - **Tahiti** : Contacter DGEN (Direction Générale de l'Économie Numérique) ou ISPF (Institut de la Statistique de la Polynésie Française)
-   - **RIDET** : Contacter https://www.ridet.nc/
-
-### Extensions GEF Phase 1 (4 extensions)
-
-#### 1. Extension tiersRole
-
-**Extension** : TiersRoleExtension  
-**URL** : `https://www.cpage.fr/ig/masterdata/tiers/StructureDefinition/tiers-role-extension`  
-**Cardinalité** : 0..* MS  
-**Type** : Coding (NOT CodeableConcept - utiliser `valueCoding`)  
-**ValueSet** : TiersRoleVS (supplier | debtor)
-
-Qualifie le(s) rôle(s) métier d'une organisation (fournisseur, débiteur, ou les deux).
-
-```fsh
-* extension contains TiersRoleExtension named tiersRole 0..* MS
-* extension[tiersRole].valueCoding = TiersRoleCS#supplier
+```
+Organization (Standard FHIR R4)
+    ↓ hérite de
+FR Core Organization (France officiel)
+    ↓ hérite de
+Organisation Tierce (profil de base)
+    ↓ se spécialise en
+    ├── Profil Fournisseur (suppliers)
+    ├── Profil Client (debtors/buyers)
+    └── Profil Payeur Santé (health insurance payers)
 ```
 
-#### 2. Extension tgCategory
+### Approche Multi-Rôles
 
-**Extension** : GEFTGCategoryExtension  
-**URL** : `https://www.cpage.fr/ig/masterdata/tiers/StructureDefinition/gef-tg-category`  
-**Cardinalité** : 0..1 MS  
-**Type** : CodeableConcept  
-**ValueSet** : GEFTGCategoryVS (24 codes : 00, 01, 20-29, 50, 60-65, 70-74)
+**Une organisation = une seule fiche** avec plusieurs rôles possibles.
 
-Catégorie de Tiers Géré selon les secteurs d'activité GEF (État, collectivités, EPS, organismes sociaux, retraite, etc.).
+**Exemple** : Une clinique peut être à la fois :
+- **Fournisseur** (vend des consultations)
+- **Client** (achète des médicaments)
 
-```fsh
-* extension contains GEFTGCategory named tgCategory 0..1 MS
-* extension[tgCategory].valueCodeableConcept = GEFTGCategoryCS#27 "EPS"
-```
-
-**Références GEF** :
-- EFOU position 237 (1 caractère)
-- KERD position 8 (2 caractères numériques 00-74)
-
-#### 3. Extension legalNature
-
-**Extension** : GEFLegalNatureExtension  
-**URL** : `https://www.cpage.fr/ig/masterdata/tiers/StructureDefinition/gef-legal-nature`  
-**Cardinalité** : 0..1 MS  
-**Type** : CodeableConcept  
-**ValueSet** : GEFLegalNatureVS (12 codes : 00-11)
-
-Nature juridique de l'organisation (particulier, société, association, État, collectivité, etc.).
-
-```fsh
-* extension contains GEFLegalNature named legalNature 0..1 MS
-* extension[legalNature].valueCodeableConcept = GEFLegalNatureCS#09 "Collectivité territoriale-EPL-EPS"
-```
-
-**Références GEF** :
-- EFOU position 238 (2 caractères numériques 00-11)
-- KERD position 9 (2 caractères numériques 00-11)
-
-**Règle métier** : La combinaison Catégorie TG + Nature juridique est validée par le module métier GEF (voir [Terminologies - Règles métier](terminologies.html#règles-métier-globales)).
-
-#### 4. Extension bankAccount
-
-**Extension** : GEFBankAccountExtension  
-**URL** : `https://www.cpage.fr/ig/masterdata/tiers/StructureDefinition/gef-bank-account`  
-**Cardinalité** : 0..* MS (TiersProfile), **1..* MS** (DebiteurProfile - OBLIGATOIRE pour débiteurs)  
-**Type** : Complex avec 6 sub-extensions
-
-Informations bancaires complètes (RIB français et/ou IBAN international).
-
-##### Sub-extensions
-
-| Sub-extension | Type | MaxLength | Description | EFOU/KERD |
-|---------------|------|-----------|-------------|-----------|
-| **bankCode** | string | 5 | Code banque (RIB français) | EMAF RIB |
-| **branchCode** | string | 5 | Code guichet (RIB français) | EMAF RIB |
-| **accountNumber** | string | 11 | Numéro de compte (RIB français) | EMAF RIB |
-| **ribKey** | string | 2 | Clé RIB (RIB français) | EMAF RIB |
-| **iban** | string | 34 | IBAN international | KERD IBAN |
-| **bic** | string | 11 | BIC/SWIFT | KERD BIC |
-
-```fsh
-* extension contains GEFBankAccount named bankAccount 0..* MS
-* extension[bankAccount][0].extension[bankCode].valueString = "30002"
-* extension[bankAccount][0].extension[branchCode].valueString = "00550"
-* extension[bankAccount][0].extension[accountNumber].valueString = "00000123456"
-* extension[bankAccount][0].extension[ribKey].valueString = "11"
-* extension[bankAccount][0].extension[iban].valueString = "FR7630002005500000012345611"
-* extension[bankAccount][0].extension[bic].valueString = "SOGEFRPPXXX"
-```
-
-**Notes** :
-- **RIB complet** : Les 4 champs (bankCode + branchCode + accountNumber + ribKey) sont requis ensemble pour un RIB valide
-- **IBAN seul** : Suffit pour les comptes étrangers UE (ex: Allemagne DE89...)
-- **Multiple bankAccount** : Possible (0..*), indexer avec [0], [1], etc.
+Au lieu de créer 2 fiches distinctes, on crée **1 fiche avec 2 rôles**.
 
 ---
 
-## Structure complète du TiersProfile
+## Profil de Base : Organisation Tierce
 
-### Identifiants (6 slices FR Core + GEF)
+### Structure des Informations
+
+#### 1. Identifiants Officiels
+
+Plusieurs types d'identifiants selon la juridiction :
+
+| Type | Exemple | Utilisation |
+|------|---------|-------------|
+| **SIRET** | 12345678901234 | Établissements en France (le plus courant) |
+| **SIREN** | 123456789 | Entreprises françaises (9 chiffres) |
+| **FINESS** | 750712184 | Établissements de santé et médico-sociaux |
+| **NIR** | 123456789012345 | Personnes physiques (Sécurité Sociale) |
+| **TVA UE** | DE123456789 | Fournisseurs Union Européenne |
+| **Identifiant interne** | ETIER123456 | Référence interne au système |
+
+**Règle** : Toujours renseigner au minimum un identifiant officiel (SIRET, FINESS, ou autre).
+
+---
+
+#### 2. Informations Générales
+
+| Information | Obligatoire | Description | Exemple |
+|-------------|-------------|-------------|---------|
+| **Nom** | Oui | Raison sociale officielle | "Centre Hospitalier Universitaire de Paris" |
+| **Alias** | Non | Nom commercial ou abrégé | "CHU Paris" |
+| **Actif** | Non | Organisation active ou fermée | true / false |
+| **Adresse** | Recommandé | Adresse du siège social | "1 Avenue de l'Hôpital, 75001 Paris" |
+| **Téléphone** | Recommandé | Numéro principal | "01 40 12 34 56" |
+| **Email** | Recommandé | Email de contact | "contact@chu-paris.fr" |
+| **Site web** | Optionnel | URL du site | "https://www.chu-paris.fr" |
+
+---
+
+#### 3. Catégorisation
+
+Chaque organisation doit être qualifiée par :
+
+**a) Rôle(s) métier** - Obligatoire, peut être multiple
+
+| Rôle | Signification |
+|------|--------------|
+| **Fournisseur** (supplier) | Fournit des biens ou services |
+| **Client** (debtor) | Achète des biens ou services |
+| **Payeur** (payer) | Rembourse les soins (CPAM, mutuelles) |
+
+**b) Catégorie d'organisation** - Optionnelle mais recommandée
+
+| Catégorie | Exemples |
+|-----------|----------|
+| Personne physique | Médecin libéral, patient |
+| Établissement Public de Santé (EPS) | CHU, hôpital public |
+| Personne morale de droit privé | Société, entreprise |
+| Caisse Sécurité Sociale | CPAM, MSA |
+| Mutuelle | MGEN, Mutuelle d'Alsace |
+
+**c) Nature juridique** - Optionnelle
+
+| Nature juridique | Exemples |
+|-----------------|----------|
+| Société | SA, SARL, SAS |
+| Association | Association loi 1901 |
+| Collectivité - EPS | Hôpital public, région, département |
+| CAM | Caisse Assurance Maladie |
+
+Voir [Classifications et nomenclatures](terminologies.html) pour la liste complète.
+
+---
+
+#### 4. Coordonnées Bancaires
+
+**Information critique** pour les paiements et règlements.
+
+##### Formats acceptés
+
+**Format français (RIB)** : 4 informations requises ensemble
+- Code banque (5 chiffres)
+- Code guichet (5 chiffres)
+- Numéro de compte (11 caractères)
+- Clé RIB (2 chiffres)
+
+**Format international (IBAN + BIC)** :
+- IBAN : FR7630002005500000012345611 (34 caractères max)
+- BIC/SWIFT : SOGEFRPPXXX (11 caractères max)
+
+##### Règles métier
+
+- **Fournisseurs** : Coordonnées bancaires recommandées (pour virements)
+- **Clients** : Coordonnées bancaires **obligatoires** (pour recevoir paiements)
+- **Payeurs** : Pas de coordonnées bancaires (ne communiquent pas leur RIB)
+
+##### Multi-comptes
+
+Une organisation peut avoir **plusieurs comptes bancaires** :
+- Compte principal (virements standards)
+- Compte secondaire (gros montants, opérations spécifiques)
+
+**Exemple** : Un hôpital avec un compte pour les règlements fournisseurs et un autre pour les recettes patients.
+
+---
+
+## Profils Spécialisés
+
+### 1. Profil Fournisseur (Supplier)
+
+**Utilisation** : Entreprises et établissements qui fournissent des biens ou services.
+
+#### Informations supplémentaires
+
+**Code fournisseur** : Référence unique dans le système (ex: "FRSUP123456")
+
+**Paramètres comptables** :
+- Compte de gestion (comptabilité analytique)
+- Compte classe 2 (immobilisations)
+- Compte classe 6 (charges)
+
+**Conditions de paiement** :
+- Délai de règlement (ex: 60 jours)
+- Jour de paiement (ex: le 10 du mois)
+- Montant minimum (ex: factures ≥ 1000 €)
+
+**Options bancaires** :
+- **EDI** (Échange de Données Informatisé) : automatisation virements
+- **Affacturage** : cession de créances à un organisme financier
+- **Moyens de paiement acceptés** : virement, chèque, espèces
+
+#### Cas d'usage
+
+**Laboratoire pharmaceutique** : Fournit des médicaments, délai de paiement 60 jours, virement SEPA uniquement.
+
+---
+
+### 2. Profil Client (Debtor)
+
+**Utilisation** : Organisations qui achètent des biens ou services.
+
+#### Informations supplémentaires
+
+**Code client** : Référence unique (ex: "DEBCHU0001")
+
+**Type de client** :
+- **Normal** : Client régulier, compte permanent
+- **Occasionnel** : Client ponctuel, transaction unique
+
+**Résidence fiscale** :
+- **Résident** (France) : TVA et fiscalité française standard
+- **Non-résident** : Obligation de retenue à la source possible
+
+**Paramètres** :
+- Compte de gestion comptable
+- Autorisation assurances (paiement direct mutuelles)
+- Centralisation des commandes (achats groupés)
+
+**Localisation géographique** :
+- **France** : Métropole et DROM
+- **Europe** : Union Européenne hors France
+- **Autre** : Hors UE
+
+⚠️ **Coordonnées bancaires OBLIGATOIRES** (pour recevoir les paiements)
+
+#### Cas d'usage
+
+**CHU acheteur** : Achète des équipements, compte permanent (Normal), résident fiscal français, autorise paiements directs mutuelles.
+
+---
+
+### 3. Profil Payeur Santé (Health Insurance Payer)
+
+**Utilisation** : Organismes qui remboursent les prestations de soins (CPAM, mutuelles).
+
+#### Informations supplémentaires
+
+**Type de payeur** :
+- **RO** (Régime Obligatoire) : Sécurité Sociale, MSA, RSI
+- **RC** (Régime Complémentaire) : Mutuelles, prévoyances
+
+**Identification organisme** :
+- Code centre (ex: 750 = Paris)
+- Numéro caisse (ex: 75001)
+- Numéro organisme national (ex: 007501)
+
+**Régime d'assurance** :
+- Sécurité Sociale (SS)
+- Mutualité Sociale Agricole (MSA)
+- Mutuelle (MUTUELLE)
+- Prévoyance (PREVOYANCE)
+
+**Paramètres** :
+- **Délai de prise en charge** : 90 jours (CPAM), 60 jours (mutuelles)
+- **Éclatement des factures** : oui/non (facturation détaillée par acte)
+
+⚠️ **Pas de coordonnées bancaires** (les payeurs ne communiquent pas leur RIB)
+
+#### Cas d'usage
+
+**CPAM** : Régime Obligatoire, Sécurité Sociale, délai 90 jours, pas d'éclatement factures.  
+**MGEN** : Régime Complémentaire, Mutuelle, délai 60 jours, éclatement factures activé.
+
+---
+
+## Cas Particuliers
+
+### Organisations Multi-Rôles
+
+**Problème** : Une clinique vend des consultations (fournisseur) ET achète des médicaments (client). Faut-il créer 2 fiches ?
+
+**Réponse** : NON. Créer **une seule fiche** avec **2 rôles** : supplier + debtor.
+
+**Avantages** :
+- Pas de duplication d'informations (adresse, contacts, identifiants)
+- Historique unique de toutes les transactions
+- Gestion simplifiée des relations commerciales
+
+**Exemple concret** :
 
 ```
-identifier:
-  - [etierId] (0..* MS) : Identifiant interne ETIER (urn:oid:1.2.250.1.999.1.1.1)
-  - [siren] (0..1 MS) : SIREN 9 chiffres (hérité FR Core)
-  - [siret] (0..1 MS) : SIRET 14 chiffres (hérité FR Core)
-  - [finess] (0..1 MS) : FINESS 9 caractères (hérité FR Core)
-  - [tva] (0..1 MS) : TVA intracommunautaire (GEF #05)
-  - [nir] (0..1 MS) : NIR 15 caractères personne physique (GEF #04)
-  - [horsUE] (0..1 MS) : Identifiant hors Union Européenne (GEF #06)
-  - [tahiti] (0..1 MS) : Identifiant Polynésie française (GEF #07, URI temporaire)
-  - [ridet] (0..1 MS) : RIDET 7 caractères Nouvelle-Calédonie (GEF #08, URI temporaire)
-```
-
-### Extension GEFIdentifierType sur identifier
-
-Sur tous les identifier slices, une extension qualifie le type selon GEF :
-
-```fsh
-* identifier.extension contains GEFIdentifierType named gefType 0..1 MS
-* identifier[siret].extension[gefType].valueCodeableConcept = GEFIdentifierTypeCS#01 "SIRET"
-```
-
-**Mapping GEF Identifier Codes** :
-- #01 SIRET → identifier[siret]
-- #02 SIREN → identifier[siren]
-- #03 FINESS → identifier[finess]
-- #04 NIR → identifier[nir]
-- #05 TVA → identifier[tva]
-- #06 Hors UE → identifier[horsUE]
-- #07 Tahiti → identifier[tahiti]
-- #08 RIDET → identifier[ridet]
-- #09 En cours d'immatriculation → (à créer selon besoin)
-
-### Éléments de base (Organization FHIR)
-
-| Élément | Cardinalité | Description | Source Oracle ECO | GEF Références |
-|---------|-------------|-------------|-------------------|----------------|
-| **name** | 1..1 MS | Raison sociale | ETIER.NORSTI | EFOU pos 18-32, KERD nom |
-| **alias** | 0..* MS | Nom complémentaire | ETIER.COMPTI | EFOU pos 50-32 |
-| **active** | 0..1 MS | Tiers actif/inactif | ETIER.VALITI (V=true, I=false) | - |
-| **address** | 0..* MS | Adresse du siège | AL1STI, AL2STI, AL3STI, CPOSTI, BDISTI, PAYSTI | EFOU pos 82-146, KERD adresse |
-| **telecom** | 0..* MS | Contacts (phone/email/web) | TELETI, MAILTI, SITETI | EFOU pos 183-220 |
-
-### Extensions métier GEF (4 extensions Phase 1)
-
-```
-extension[tiersRole] (0..* MS):
-  - valueCoding.code in { "supplier", "debtor" }
-
-extension[tgCategory] (0..1 MS):
-  - valueCodeableConcept from GEFTGCategoryVS (24 codes : 00-74)
-
-extension[legalNature] (0..1 MS):
-  - valueCodeableConcept from GEFLegalNatureVS (12 codes : 00-11)
-
-extension[bankAccount] (0..* MS):
-  - extension[bankCode] (0..1) : string maxLength 5
-  - extension[branchCode] (0..1) : string maxLength 5
-  - extension[accountNumber] (0..1) : string maxLength 11
-  - extension[ribKey] (0..1) : string maxLength 2
-  - extension[iban] (0..1) : string maxLength 34
-  - extension[bic] (0..1) : string maxLength 11
+Clinique du Parc
+├── Rôle 1 : Fournisseur
+│   ├── Code fournisseur : FRSUP999
+│   └── Conditions paiement : 60 jours
+└── Rôle 2 : Client
+    ├── Code client : DEBCLP001
+    └── Type : Normal (compte permanent)
 ```
 
 ---
 
-## Exemples d'instances
+### Succursales et Sites Secondaires
 
-### Exemple 1 : Fournisseur EPS avec SIRET et RIB complet
+**Problème** : Un hôpital a plusieurs campus. Comment les gérer ?
 
-```fsh
-Instance: ExempleFournisseurEPS
-InstanceOf: FournisseurProfile
-Title: "Exemple Fournisseur EPS - CHU Paris"
-Description: "Hôpital public fournisseur avec SIRET, Catégorie TG #27 EPS, RIB+IBAN+BIC complet"
+**Réponse** : Créer une fiche pour chaque site avec une **relation hiérarchique** (`partOf`).
 
-* identifier[etierId].value = "ETIER123456"
-* identifier[siret].value = "12345678901234"
+**Exemple** :
 
-* name = "Centre Hospitalier Universitaire de Paris"
-* alias = "CHU Paris"
-* active = true
-
-* address.line = "1 Avenue de l'Hôpital"
-* address.city = "Paris"
-* address.postalCode = "75001"
-* address.country = "FR"
-
-* telecom[0].system = #phone
-* telecom[0].value = "0140123456"
-* telecom[1].system = #email
-* telecom[1].value = "contact@chu-paris.fr"
-
-* extension[tiersRole].valueCoding = TiersRoleCS#supplier
-* extension[tgCategory].valueCodeableConcept = GEFTGCategoryCS#27 "EPS"
-* extension[legalNature].valueCodeableConcept = GEFLegalNatureCS#09 "Collectivité territoriale-EPL-EPS"
-
-* extension[bankAccount][0].extension[bankCode].valueString = "30002"
-* extension[bankAccount][0].extension[branchCode].valueString = "00550"
-* extension[bankAccount][0].extension[accountNumber].valueString = "00000123456"
-* extension[bankAccount][0].extension[ribKey].valueString = "11"
-* extension[bankAccount][0].extension[iban].valueString = "FR7630002005500000012345611"
-* extension[bankAccount][0].extension[bic].valueString = "SOGEFRPPXXX"
+```
+Clinique du Parc (siège)
+├── Campus Raspail (succursale)
+│   ├── Usage : Point de livraison
+│   └── SIRET propre : 12345678900002
+└── Campus Montparnasse (succursale)
+    ├── Usage : Facturation + Correspondance
+    └── SIRET propre : 12345678900003
 ```
 
-**Conformité GEF** :
-- ✅ EFOU position 223-14 SIRET
-- ✅ EFOU position 237 Catégorie TG #27
-- ✅ EFOU position 238 Nature juridique #09
-- ✅ EMAF RIB complet (4 champs)
+**Usages possibles** :
+- **Point de livraison** : Réception marchandises
+- **Facturation** : Adresse facturation
+- **Correspondance** : Courrier administratif
+
+**Important** : `partOf` est une **relation organisationnelle** (dans les données), pas un héritage technique.
 
 ---
 
-### Exemple 2 : Fournisseur TVA Union Européenne
+### Personnes Physiques
 
-```fsh
-Instance: ExempleFournisseurTVA
-InstanceOf: FournisseurProfile
-Title: "Exemple Fournisseur TVA UE - MedTech GmbH"
-Description: "Fournisseur allemand avec TVA intracommunautaire, Catégorie TG #50, IBAN DE"
+**Utilisation** : Médecins libéraux, patients, artisans.
 
-* identifier[etierId].value = "ETIER789012"
-* identifier[tva].value = "DE123456789"
+**Spécificités** :
+- **Civilité OBLIGATOIRE** : M, MME, MLLE, etc.
+- **Prénom OBLIGATOIRE** : "Jean", "Marie", etc.
+- **Catégorie** : Personne physique (01)
+- **Nature juridique** : Particulier (01) ou Artisan-Commerçant-Agriculteur (02)
+- **Identifiant** : NIR (Numéro Sécurité Sociale, 15 caractères)
 
-* name = "MedTech Solutions GmbH"
-* alias = "MedTech"
-* active = true
-
-* address.line = "Berliner Straße 123"
-* address.city = "Berlin"
-* address.postalCode = "10115"
-* address.country = "DE"
-
-* telecom[0].system = #phone
-* telecom[0].value = "+4930123456"
-
-* extension[tiersRole].valueCoding = TiersRoleCS#supplier
-* extension[tgCategory].valueCodeableConcept = GEFTGCategoryCS#50 "Personne morale de droit privé"
-* extension[legalNature].valueCodeableConcept = GEFLegalNatureCS#03 "Société"
-
-* extension[bankAccount][0].extension[iban].valueString = "DE89370400440532013000"
-* extension[bankAccount][0].extension[bic].valueString = "COBADEFFXXX"
+**Exemple** : Dr Jean Dupont, médecin libéral
+```
+Nom : Monsieur Jean Dupont
+Civilité : M
+Prénom : Jean
+Catégorie : Personne physique (01)
+Nature juridique : Artisan-Commerçant-Agriculteur (02)
+NIR : 123456789012345
 ```
 
-**Conformité GEF** :
-- ✅ KERD position 15 TVA intracommunautaire (GEF #05)
-- ✅ KERD position 8 Catégorie TG #50
-- ✅ KERD IBAN étranger mandatory pour UE
-
 ---
 
-### Exemple 3 : Débiteur personne physique avec NIR
+### Organisations Étrangères
 
-```fsh
-Instance: ExempleDebiteurPersonnePhysique
-InstanceOf: DebiteurProfile
-Title: "Exemple Débiteur Personne Physique - Jean Dupont"
-Description: "Personne physique débiteur avec NIR, Civilité M, Type débiteur N"
+#### Union Européenne
 
-* identifier[etierId].value = "ETIER345678"
-* identifier[nir].value = "123456789012345"
+**Identifiant** : TVA intracommunautaire (ex: DE123456789 pour Allemagne)  
+**IBAN** : Format pays UE (ex: DE89...)  
+**Fiscalité** : Autoliquidation TVA par l'acheteur français
 
-* name = "Monsieur Jean Dupont"
-* active = true
-
-* address.line = "15 Rue de la République"
-* address.city = "Lyon"
-* address.postalCode = "69001"
-* address.country = "FR"
-* address.extension[localization].valueCode = GEFAddressLocalizationCS#FRANCE
-
-* telecom[0].system = #phone
-* telecom[0].value = "0612345678"
-
-* extension[tiersRole].valueCoding = TiersRoleCS#debtor
-* extension[tgCategory].valueCodeableConcept = GEFTGCategoryCS#01 "Personne physique"
-* extension[legalNature].valueCodeableConcept = GEFLegalNatureCS#01 "Particulier"
-
-// Phase 2 Extensions (DebiteurProfile)
-* extension[debtorType].valueCode = GEFDebtorTypeCS#N
-* extension[personDetails].extension[civility].valueCode = GEFCivilityCS#M
-* extension[personDetails].extension[firstName].valueString = "Jean"
-
-* extension[bankAccount][0].extension[iban].valueString = "FR7612345678901234567890123"
-* extension[bankAccount][0].extension[bic].valueString = "CRLYFRPPXXX"
+**Exemple** : MedTech Solutions GmbH (Allemagne)
+```
+TVA UE : DE123456789
+Pays : DE (Allemagne)
+IBAN : DE89370400440532013000
 ```
 
-**Conformité GEF** :
-- ✅ KERD position 15 NIR (GEF #04) 15 caractères
-- ✅ KERD position 8 Catégorie TG #01 (Personne physique)
-- ✅ KERD position 10 Civilité M (OBLIGATOIRE si Catégorie TG #01)
-- ✅ KERD position 11 Prénom "Jean"
-- ✅ KERD position 2 Type débiteur N
-- ✅ KERD IBAN mandatory (1..* MS sur DebiteurProfile)
+#### Hors Union Européenne
+
+**Identifiant** : Selon pays (Swiss UID, US TIN, etc.)  
+**Fiscalité** : Réglementations internationales spécifiques
+
+**Pays spécifiques gérés** :
+- **Polynésie Française** : Identifiant Tahiti (DGEN/ISPF)
+- **Nouvelle-Calédonie** : RIDET (7 caractères)
 
 ---
 
-### Exemple 4 : Fournisseur RIDET Nouvelle-Calédonie
+## Règles de
 
-```fsh
-Instance: ExempleFournisseurRIDET
-InstanceOf: FournisseurProfile
-Title: "Exemple Fournisseur RIDET NC - SCME Nouméa"
-Description: "Fournisseur Nouvelle-Calédonie avec RIDET, Catégorie TG #50"
+ Cohérence
 
-* identifier[etierId].value = "ETIER567890"
-* identifier[ridet].value = "1234567"
+### 1. Combinaisons Catégorie + Nature Juridique
 
-* name = "Société Calédonienne de Materiel Médical"
-* alias = "SCMM"
-* active = true
+Certaines combinaisons sont **obligatoires** pour maintenir la cohérence :
 
-* address.line = "10 Avenue du Pacifique"
-* address.city = "Nouméa"
-* address.postalCode = "98800"
-* address.country = "NC"
+| Catégorie | Nature juridique autorisée |
+|-----------|---------------------------|
+| Personne physique | Particulier, Artisan-Commerçant-Agriculteur |
+| EPS (Hôpital public) | Collectivité - EPS |
+| Personne morale privé | Société, Association |
+| Caisse Sécurité Sociale | CAM, Caisse complémentaire |
+| Mutuelle | Caisse complémentaire, Association |
 
-* telecom[0].system = #phone
-* telecom[0].value = "+68712345"
+Voir [Classifications - Règles de cohérence](terminologies.html#règles-de-cohérence) pour la liste complète.
 
-* extension[tiersRole].valueCoding = TiersRoleCS#supplier
-* extension[tgCategory].valueCodeableConcept = GEFTGCategoryCS#50 "Personne morale de droit privé"
-* extension[legalNature].valueCodeableConcept = GEFLegalNatureCS#03 "Société"
+---
 
-* extension[bankAccount][0].extension[bankCode].valueString = "18506"
-* extension[bankAccount][0].extension[accountNumber].valueString = "98765432101"
+### 2. Identifiants Selon Type d'Organisation
+
+| Type d'organisation | Identifiant obligatoire |
+|---------------------|------------------------|
+| Personne physique | NIR (15 caractères) |
+| Établissement de santé | FINESS (9 caractères) |
+| Entreprise française | SIRET (14 chiffres) ou SIREN (9 chiffres) |
+| Fournisseur UE | TVA intracommunautaire |
+
+---
+
+### 3. Civilité et Prénom
+
+**SI** Catégorie = Personne physique  
+**ALORS** Civilité + Prénom **OBLIGATOIRES**
+
+**SINON** (organisation)  
+**ALORS** Civilité + Prénom **OMIS**
+
+---
+
+## Exemples Complets
+
+### Exemple 1 : Hôpital Public Fournisseur
+
+```
+Nom : Centre Hospitalier Universitaire de Paris
+Alias : CHU Paris
+Identifiant SIRET : 12345678901234
+Identifiant FINESS : 750712184
+
+Rôle : Fournisseur (supplier)
+Catégorie : Établissement Public de Santé (27)
+Nature juridique : Collectivité - EPS (09)
+
+Adresse : 1 Avenue de l'Hôpital, 75001 Paris, France
+Téléphone : 01 40 12 34 56
+Email : contact@chu-paris.fr
+
+Coordonnées bancaires :
+- IBAN : FR7630002005500000012345611
+- BIC : SOGEFRPPXXX
 ```
 
-**Conformité GEF** :
-- ✅ KERD position 15 RIDET (GEF #08) 7 caractères Nouvelle-Calédonie
-- ✅ KERD country = "NC" (ISO 3166 Nouvelle-Calédonie)
-- ⚠️ RIDET URI temporaire (attente OID officiel https://www.ridet.nc/)
+---
+
+### Exemple 2 : Entreprise Pharmaceutique Multi-Rôles
+
+```
+Nom : Laboratoires Pharmaceutiques Durand
+Alias : LPD SA
+Identifiant SIRET : 42512345600018
+
+Rôles : Fournisseur (supplier) + Client (debtor)
+Catégorie : Personne morale de droit privé (50)
+Nature juridique : Société (03)
+
+Code fournisseur : FRSUP123456
+Délai paiement : 60 jours
+Moyens paiement : Virement, Virement externe
+
+Code client : DEBLPD001
+Type client : Normal (régulier)
+Résidence fiscale : Résident (France)
+
+Coordonnées bancaires : (multiples)
+Compte 1 (principal) : FR7612345678901234567890123
+Compte 2 (numéraire) : FR7698765432109876543210987
+```
 
 ---
 
-## Profils dérivés
+### Exemple 3 : CPAM (Organisme Payeur)
 
-### FournisseurProfile (conforme EFOU)
+```
+Nom : Caisse Primaire d'Assurance Maladie de Paris
+Alias : CPAM Paris
+Identifiant FINESS : 750000001
 
-Hérite de TiersProfile et ajoute :
-- Extension GEFIdentifierType sur `identifier` (qualifier le type SIRET/SIREN/etc.)
-- Documentation complète des positions EFOU 1-262
+Rôle : Payeur (payer) uniquement
+Catégorie : Caisse Sécurité Sociale régime général (60)
+Nature juridique : CAM (04)
 
-Voir [FournisseurProfile](StructureDefinition-fournisseur-profile.html)
+Type payeur : RO (Régime Obligatoire)
+Régime : Sécurité Sociale (SS)
+Code centre : 750
+Numéro caisse : 75001
+Numéro organisme : 007501
 
-### DebiteurProfile (conforme KERD)
+Délai prise en charge : 90 jours
+Éclatement factures : Non
 
-Hérite de TiersProfile et ajoute :
-- **bankAccount 1..* MS** (OBLIGATOIRE pour débiteurs)
-- **7 extensions Phase 2** : debtorType (1..1 MS O/N), publicAccountingCounterpart, regieCode, chorusIdentifierType, debtorFlags, personDetails, addressLocalization
-- Documentation complète des colonnes CSV KERD
-
-Voir [DebiteurProfile](StructureDefinition-debiteur-profile.html)
-
----
-
-## Règles métier importantes
-
-### 1. Combinaison Catégorie TG + Nature juridique
-
-Le module métier GEF valide les combinaisons autorisées. Exemples :
-
-| Catégorie TG | Code | Natures juridiques autorisées | Codes |
-|--------------|------|-------------------------------|-------|
-| Inconnue | 00 | Toutes | 00-11 |
-| Personne physique | 01 | Inconnue, Particulier, Artisan-Commerçant | 00, 01, 02 |
-| EPS | 27 | Collectivité territoriale-EPL-EPS | 09 |
-| Personne morale privé | 50 | Société, Association | 03, 06 |
-
-Voir [Terminologies - Règles métier](terminologies.html#règles-métier-globales) pour la liste complète.
-
-### 2. Identifiant obligatoire selon Catégorie TG
-
-- **Catégorie TG #01** (Personne physique) → **NIR obligatoire** (identifier[nir])
-- **Catégorie TG #27** (EPS) → **FINESS recommandé** (identifier[finess])
-- **Catégorie TG #50** (Personne morale privé) → **SIRET/SIREN obligatoire** (identifier[siret] ou identifier[siren])
-
-### 3. RIB vs IBAN
-
-- **RIB complet** (bankCode + branchCode + accountNumber + ribKey) : Comptes français
-- **IBAN seul** : Comptes étrangers UE (suffisant)
-- **bankAccount 1..* MS** : OBLIGATOIRE pour DebiteurProfile (domiciliation recettes)
-
-### 4. GEFPersonDetails obligatoire si Catégorie TG = 01
-
-Si Catégorie TG #01 (Personne physique), l'extension GEFPersonDetails avec civility + firstName est **obligatoire** (règle métier KERD position 10-11).
-
-Voir [DebiteurProfile - Extensions Phase 2](StructureDefinition-debiteur-profile.html#phase-2-extensions-debitorat).
+⚠️ Pas de coordonnées bancaires (non communiquées)
+```
 
 ---
 
-## Liens vers ressources FHIR
+## Liens Utiles
 
-### Profils
-- **TiersProfile** : [StructureDefinition](StructureDefinition-tiers-profile.html)
-- **FournisseurProfile** : [StructureDefinition](StructureDefinition-fournisseur-profile.html)
-- **DebiteurProfile** : [StructureDefinition](StructureDefinition-debiteur-profile.html)
+### Documentation des Profils
 
-### Extensions Phase 1
-- **TiersRoleExtension** : [StructureDefinition](StructureDefinition-tiers-role-extension.html)
-- **GEFTGCategoryExtension** : [StructureDefinition](StructureDefinition-gef-tg-category.html)
-- **GEFLegalNatureExtension** : [StructureDefinition](StructureDefinition-gef-legal-nature.html)
-- **GEFBankAccountExtension** : [StructureDefinition](StructureDefinition-gef-bank-account.html)
-- **GEFIdentifierTypeExtension** : [StructureDefinition](StructureDefinition-gef-identifier-type.html)
+- [Profil Organisation Tierce](StructureDefinition-tiers-profile.html) - Profil de base
+- [Profil Fournisseur](StructureDefinition-fournisseur-profile.html) - Spécialisation supplier
+- [Profil Client](StructureDefinition-debiteur-profile.html) - Spécialisation debtor
+- [Profil Payeur Santé](StructureDefinition-payeur-sante-profile.html) - Spécialisation payer
 
-### Terminologies
-- **GEFIdentifierTypeCS** (9 codes) : [CodeSystem](CodeSystem-gef-identifier-type-cs.html)
-- **GEFTGCategoryCS** (24 codes) : [CodeSystem](CodeSystem-gef-tg-category-cs.html)
-- **GEFLegalNatureCS** (12 codes) : [CodeSystem](CodeSystem-gef-legal-nature-cs.html)
-- **TiersRoleCS** (2 codes) : [CodeSystem](CodeSystem-tiers-role-cs.html)
+### Voir Aussi
 
-### NamingSystems
-- **TahitiIdentifierNamingSystem** : [NamingSystem](NamingSystem-tahiti-identifier-ns.html) (URI temporaire)
-- **RIDETIdentifierNamingSystem** : [NamingSystem](NamingSystem-ridet-identifier-ns.html) (URI temporaire)
-
-### Instances de test
-- **ExempleFournisseurEPS** : [Organization](Organization-ExempleFournisseurEPS.html)
-- **ExempleFournisseurTVA** : [Organization](Organization-ExempleFournisseurTVA.html)
-- **ExempleDebiteurPersonnePhysique** : [Organization](Organization-ExempleDebiteurPersonnePhysique.html)
-- **ExempleDebiteurEPSPublic** : [Organization](Organization-ExempleDebiteurEPSPublic.html)
-- **ExempleFournisseurRIDET** : [Organization](Organization-ExempleFournisseurRIDET.html)
-
-### FR Core Organization
-- **FRCoreOrganizationProfile** : [HL7 France](https://hl7.fr/ig/fhir/core/StructureDefinition-fr-core-organization.html)
+- [Guide d'implémentation](index.html) - Vue d'ensemble du référentiel
+- [Classifications et nomenclatures](terminologies.html) - Tous les codes et catégories
+- [Exemples d'utilisation](examples.html) - Cas concrets détaillés
+- [Rechercher dans le référentiel](search-parameters.html) - Critères de recherche

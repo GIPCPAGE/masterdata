@@ -1,420 +1,453 @@
-# Exemples d'Usage - Cas Pratiques
+# Exemples d'Utilisation
 
 ## Vue d'ensemble
 
-Cette page présente des **exemples concrets d'utilisation** des profils Tiers dans des cas réels de gestion hospitalière. Chaque exemple illustre une situation métier spécifique avec les données FHIR correspondantes et les mappings GEF associés.
+Cette page présente des **exemples concrets** d'organisations tierces dans des contextes de santé réels. Chaque exemple illustre comment structurer les informations selon que l'organisation est un **fournisseur**, un **client**, un **organisme payeur**, ou une **combinaison de plusieurs rôles**.
 
 ---
 
-## Exemple 1 : Tiers Multi-Rôles Complet
+## Exemple 1 : Organisation Multi-Rôles
 
-### Contexte métier
+### Situation
 
-**Multiservices Santé et Logistique (MSL)** est une entreprise qui :
-- **Fournit** des équipements médicaux (rôle supplier)
-- **Achète** des prestations d'entretien (rôle debtor)
-- **Gère** des remboursements santé pour ses employés (rôle payer)
+**Multiservices Santé et Logistique (MSL)** est une entreprise qui entretient plusieurs types de relations avec un établissement de santé :
+
+- **Fournit** des équipements médicaux (défibrillateurs, lits hospitaliers)
+- **Achète** des prestations de maintenance et d'entretien
+- **Gère** les remboursements santé pour ses propres employés
 
 ### Profil utilisé
 
-[TiersProfile](StructureDefinition-tiers-profile.html) - Profil de base permettant le multi-rôle
+[Organisation Tierce (TiersProfile)](StructureDefinition-tiers-profile.html) - Profil de base multi-rôles
 
-### Fichier FSH
+### Ressource FHIR
 
-[ExempleTiersComplet.fsh](Organization-ExempleTiersComplet.html)
+[ExempleTiersComplet](Organization-ExempleTiersComplet.html)
 
 ### Points clés
 
-✅ **Multi-rôle simultané** : Un seul Organization avec 3 rôles  
-✅ **Extensions conditionnelles** : Fournisseur (code + comptabilité + paiement) + Débiteur (code + paramètres) + Payeur (santé)  
-✅ **Domiciliation bancaire** : 1 compte avec EDI activé, moyens de paiement multiples  
-✅ **Identifiants multiples** : SIRET + FINESS + etierId  
+✅ **Trois rôles simultanés** dans une seule fiche organisation
+✅ **Extensions spécifiques** à chaque rôle (paramètres fournisseur + client + payeur)
+✅ **Compte bancaire unique** avec moyens de paiement multiples
+✅ **Identifiants officiels** : SIRET, FINESS, identifiant interne
 
-### Cas d'usage
+### Avantages métier
 
-- ✅ Recherche multi-critères : `?tiers-role=supplier&tiers-role=debtor&tiers-role=payer`
-- ✅ Facturation bidirectionnelle : Émet factures (fournisseur) ET reçoit factures (débiteur)
-- ✅ Gestion consolidée : Une seule fiche pour tous les échanges
+- **Une seule fiche** pour gérer toutes les interactions
+- **Historique cohérent** des échanges commerciaux
+- **Recherche simplifiée** : trouver l'organisation quel que soit le contexte
+
+**Exemple de recherche** : Trouver toutes les organisations qui sont à la fois fournisseurs ET clients
+```http
+GET [base]/Organization?tiers-role=supplier&tiers-role=debtor
+```
 
 ---
 
-## Exemple 2 : Tiers Double Rôle (Fournisseur + Débiteur)
+## Exemple 2 : Fournisseur et Client Simultanément
 
-### Contexte métier
+### Situation
 
-**Clinique du Parc (CDP)** est un établissement de santé privé qui :
-- **Vend** des consultations et actes médicaux à d'autres établissements (rôle supplier)
-- **Achète** des médicaments et équipements auprès de laboratoires (rôle debtor)
+**Clinique du Parc** est un établissement de santé privé qui :
+
+- **Vend** des consultations spécialisées à d'autres hôpitaux
+- **Achète** des médicaments et du matériel médical
 
 ### Profil utilisé
 
-[TiersProfile](StructureDefinition-tiers-profile.html) avec double rôle
+[Organisation Tierce (TiersProfile)](StructureDefinition-tiers-profile.html) avec double rôle
 
-### Fichier FSH
+### Ressource FHIR
 
-[ExempleTiersDoubleRole.fsh](Organization-ExempleTiersDoubleRole.html)
+[ExempleTiersDoubleRole](Organization-ExempleTiersDoubleRole.html)
 
 ### Points clés
 
-✅ **Échanges bidirectionnels** : Client ET fournisseur du même partenaire  
-✅ **Comptes bancaires multiples** : Compte principal (virements standards) + Compte gros montant  
-✅ **Classification GEF** : TG Category #03 (Clinique), Nature juridique SAS  
-✅ **Extensions distinctes** : Paramètres fournisseur distincts des paramètres débiteur  
+✅ **Échanges bidirectionnels** : peut être à la fois créancier et débiteur du même partenaire
+✅ **Comptes bancaires multiples** : compte standard + compte pour gros montants
+✅ **Catégorie** : Clinique privée (établissement de santé)
+✅ **Paramètres distincts** : conditions commerciales différentes selon le rôle
 
-### Cas d'usage
+### Cas d'usage pratique
 
-- ✅ Conventions inter-établissements : Échange de prestations médicales
-- ✅ Gestion complexe achats/ventes : Délais paiement différents selon le sens
-- ✅ Rapprochement comptable : Soldes créditeurs ET débiteurs simultanés
+**Conventions inter-établissements** : Deux hôpitaux échangent des prestations médicales (cardiologie contre orthopédie par exemple). Chacun est à la fois fournisseur et client de l'autre.
+
+**Gestion comptable** : Le système doit gérer simultanément :
+- Les factures émises (créances) pour les consultations vendues
+- Les factures reçues (dettes) pour les achats de médicaments
 
 ---
 
-## Exemple 3 : Succursale avec partOf
+## Exemple 3 : Établissement avec Succursale
 
-### Contexte métier
+### Situation
 
-**Centre Médical Raspail - Annexe Montparnasse** est une succursale rattachée à la **Clinique du Parc**. Elle sert de :
-- Point de livraison pour fournitures médicales
-- Adresse de facturation pour consultations externes
+**Centre Médical Raspail - Annexe Montparnasse** est un site secondaire de la **Clinique du Parc**. Cette succursale sert de :
+
+- Point de livraison pour les fournitures médicales
+- Adresse de facturation pour les consultations externes
 
 ### Profil utilisé
 
-[TiersProfile](StructureDefinition-tiers-profile.html) avec `partOf` + extension `succursaleUsage`
+[Organisation Tierce (TiersProfile)](StructureDefinition-tiers-profile.html) avec relation hiérarchique
 
-### Fichier FSH
+### Ressource FHIR
 
-[ExempleSuccursale.fsh](Organization-ExempleSuccursale.html)
+[ExempleSuccursale](Organization-ExempleSuccursale.html)
 
 ### Points clés
 
-✅ **Relation hiérarchique** : `partOf` référence l'établissement principal  
-✅ **Usage qualifié** : Extension `succursaleUsage` = POINT_LIVRAISON + FACTURATION  
-✅ **SIRET distinct** : La succursale a son propre SIRET (différent du siège)  
-✅ **Compte bancaire local** : Domiciliation peut différer de l'établissement parent  
+✅ **Relation hiérarchique** : référence à l'établissement parent via `partOf`
+✅ **Usage qualifié** : marqué comme "point de livraison" et "adresse de facturation"
+✅ **SIRET distinct** : chaque site a son propre numéro SIRET
+✅ **Coordonnées locales** : adresse, téléphone et compte bancaire spécifiques
 
-### Distinction : partOf vs héritageProfile
+### Distinction importante : Relation vs Héritage
 
-| Concept | Type | Exemple | Moment |
-|---------|------|---------|--------|
-| **partOf** | Relation d'instance (runtime) | Succursale → Siège | Données |
-| **Parent: TiersProfile** | Héritage de profil (compile-time) | FournisseurProfile → TiersProfile | Définition |
+| Type | Nature | Exemple | Moment d'application |
+|------|--------|---------|----------------------|
+| **partOf** | Relation organisationnelle | Succursale → Siège | Dans les données (runtime) |
+| **Parent: TiersProfile** | Héritage technique | FournisseurProfile → TiersProfile | À la définition (design) |
 
-**partOf** n'est PAS un héritage ! C'est une référence organisationnelle.
+⚠️ **partOf n'est PAS un héritage technique** ! C'est une référence qui indique qu'une organisation fait partie d'une autre organisation.
 
-### Cas d'usage
+### Cas d'usage pratique
 
-- ✅ Gestion multi-sites : Établissement avec plusieurs adresses opérationnelles
-- ✅ Logistique : Livraisons directes sur sites secondaires
-- ✅ Facturation décentralisée : Chaque site émet ses propres factures
+**Gestion multi-sites** : Un hôpital universitaire avec plusieurs campus doit gérer les livraisons sur chaque site tout en centralisant la facturation au siège.
 
 ---
 
-## Exemple 4 : Fournisseur Complet (EFOU)
+## Exemple 4 : Fournisseur de Médicaments
 
-### Contexte métier
+### Situation
 
-**Laboratoires Pharmaceutiques Durand (LPD)** est un fournisseur de médicaments avec :
-- Paramètres comptables complets (comptes lettre classe 2 et 6)
-- Délais de paiement négociés : 60 jours, paiement le 10
-- Affacturage activé
-- Moyens de paiement : Virements + Virements externes
+**Laboratoires Pharmaceutiques Durand (LPD)** fournit des médicaments aux établissements de santé avec :
+
+- Délais de paiement négociés : 60 jours, règlement le 10 du mois
+- Facturation électronique activée
+- Plusieurs moyens de paiement acceptés (virements, virements externes)
 
 ### Profil utilisé
 
-[FournisseurProfile](StructureDefinition-fournisseur-profile.html) - Conforme EFOU GEF
+[Profil Fournisseur (FournisseurProfile)](StructureDefinition-fournisseur-profile.html)
 
-### Fichier FSH
+### Ressource FHIR
 
-[ExempleFournisseurComplet.fsh](Organization-ExempleFournisseurComplet.html)
+[ExempleFournisseurComplet](Organization-ExempleFournisseurComplet.html)
 
 ### Points clés
 
-✅ **Mapping EFOU complet** : Toutes positions 1-262 couvertes  
-✅ **Comptabilité détaillée** : Compte classe 2 (4011LPD) + classe 6 (6012MED)  
-✅ **Conditions paiement** : Délai 60j, jour 10, montant min 1000€, taux transitaire 3.5%, escomptable  
-✅ **Banking avancé** : EDI + Affacturage + 2 comptes (standard + numéraire/chèque)  
+✅ **Conditions de paiement détaillées** : délai, jour de règlement, montant minimum
+✅ **Paramètres comptables** : comptes de gestion pour la comptabilité analytique
+✅ **Domiciliation bancaire** : échange de données informatisé (EDI) pour les virements
+✅ **Affacturage** : possibilité de céder les créances à un organisme financier
 
-### Mapping GEF EFOU
+### Cas d'usage pratique
 
-| Position EFOU | Longueur | Mapping FHIR |
-|---------------|----------|--------------|
-| 4-14 | 14 | identifier[etierId].value (FRNS0000123456) |
-| 18-32 | 32 | name (Laboratoires Pharmaceutiques Durand) |
-| 50-32 | 32 | alias (LPD SA) |
-| 82-146 | 64 | address (rue, complément, CP, ville) |
-| 183-203 | 20 | telecom[phone] (+33147896543) |
-| 203-223 | 20 | telecom[fax] (+33147896544) |
-| 223-14 | 14 | identifier[siret].value (42512345600018) |
-| 237 | 1 | extension[tgCategory] (26 = Entreprise) |
-| 239-5 | 5 | identifier.extension[gefType] (05 = TVA UE) |
-
-### Cas d'usage
-
-- ✅ Import EFOU → FHIR : Synchronisation depuis système financier GEF
-- ✅ Validation paiements : Vérification conditions contractuelles avant règlement
-- ✅ Affacturage : Cession créances au factor selon flag activé
+**Validation avant paiement** : Avant de régler une facture de 50 000 €, le système vérifie :
+- Le délai de 60 jours est-il respecté ?
+- Le montant dépasse-t-il le minimum négocié (1000 €) ?
+- L'affacturage est-il activé (auquel cas payer le factor, pas le fournisseur) ?
 
 ---
 
-## Exemple 5 : Débiteur Complet (KERD)
+## Exemple 5 : Client Acheteur (Établissement Public)
 
-### Contexte métier
+### Situation
 
-**CHU Necker-Enfants Malades** est un débiteur (établissement acheteur) avec :
-- Type débiteur : Normal (N) - compte permanent
-- Résidence fiscale : Résident (R)
-- Autorisation assurances : Oui
-- Force impression COH (Commande Ouverte Hôpital) : Oui
-- 2 comptes bancaires (virements standards + gros montants)
+**CHU Necker-Enfants Malades** achète des prestations et équipements auprès d'autres organisations. Caractéristiques :
+
+- Type : Client permanent (compte actif en continu)
+- Résidence fiscale : France (résident fiscal)
+- Autorisation : peut faire intervenir des assurances
+- Centralisation : commandes groupées pour plusieurs services
 
 ### Profil utilisé
 
-[DebiteurProfile](StructureDefinition-debiteur-profile.html) - Conforme KERD GEF
+[Profil Débiteur (DebiteurProfile)](StructureDefinition-debiteur-profile.html)
 
-### Fichier FSH
+### Ressource FHIR
 
-[ExempleDebiteurComplet.fsh](Organization-ExempleDebiteurComplet.html)
+[ExempleDebiteurComplet](Organization-ExempleDebiteurComplet.html)
 
 ### Points clés
 
-✅ **Mapping KERD complet** : Tous champs CSV couverts  
-✅ **Paramètres comptables** : Compte lettre 411NECKER pour recettes  
-✅ **Type débiteur** : Normal (vs Occasionnel = compte temporaire)  
-✅ **Banking obligatoire** : RIB 1..* MS (au moins un compte requis pour recettes)  
-✅ **Gestion avancée** : Autorisation assurances + COH pour centralisation achats  
+✅ **Type client** : Normal = compte permanent (vs occasionnel = compte temporaire)
+✅ **Coordonnées bancaires requises** : nécessaires pour recevoir les paiements
+✅ **Gestion des assurances** : peut accepter les paiements directs par les mutuelles
+✅ **Centralisation des achats** : commandes ouvertes pour plusieurs départements
 
-### Mapping GEF KERD (CSV)
+### Cas d'usage pratique
 
-| Champ KERD | Mapping FHIR |
-|------------|--------------|
-| Code débiteur | extension[codeDebiteur].value (DEBNECKER01) |
-| Raison sociale | name (Centre Hospitalier Universitaire Necker) |
-| SIRET | identifier[siret].value (78912345600011) |
-| FINESS | identifier[finess].value (920023456) |
-| Type débiteur | extension[debtorType].value (N = Normal) |
-| Type résident | extension[parametres].extension[typeResident] (R) |
-| Compte lettre | extension[parametres].extension[compteLettre] (411NECKER) |
-| RIB (obligatoire) | extension[bankAccount] 1..* MS |
-| Code banque | extension[bankAccount].extension[bankCode] (30001) |
-| IBAN | extension[bankAccount].extension[iban] (FR76...) |
-
-### Cas d'usage
-
-- ✅ Import KERD → FHIR : Synchronisation depuis système financier GEF
-- ✅ Gestion recettes : Encaissement prestations vendues à autres établissements
-- ✅ Autorisation assurances : Paiement direct par mutuelles autorisé
+**Encaissement de recettes** : Le CHU vend des prestations médicales à d'autres établissements (consultations spécialisées, analyses de laboratoire). Le système doit :
+- Identifier le compte bancaire pour recevoir les virements
+- Enregistrer les paiements reçus en comptabilité
+- Permettre aux mutuelles de régler directement si autorisé
 
 ---
 
-## Exemple 6 : Payeur Santé CPAM (Régime Obligatoire)
+## Exemple 6 : Organisme Payeur - Sécurité Sociale (CPAM)
 
-### Contexte métier
+### Situation
 
-**CPAM de Paris** est un organisme payeur d'assurance maladie du régime obligatoire qui :
-- Rembourse les prestations de soins sur présentation FSE
-- Appartient au grand régime Sécurité Sociale (SS)
-- Gère le centre 750 (Paris), caisse 75001
-- Délai de prise en charge : 90 jours
+**CPAM de Paris** est la caisse primaire d'assurance maladie qui :
+
+- Rembourse les prestations de soins aux patients assurés
+- Appartient au régime obligatoire de Sécurité Sociale
+- Gère les feuilles de soins électroniques (FSE)
+- Applique un délai de prise en charge de 90 jours
 
 ### Profil utilisé
 
-[PayeurSanteProfile](StructureDefinition-payeur-sante-profile.html) - Payeur régime obligatoire
+[Profil Payeur Santé (PayeurSanteProfile)](StructureDefinition-payeur-sante-profile.html) - Régime obligatoire
 
-### Fichier FSH
+### Ressource FHIR
 
-[ExemplePayeurSanteCPAM.fsh](Organization-ExemplePayeurSanteCPAM.html)
+[ExemplePayeurSanteCPAM](Organization-ExemplePayeurSanteCPAM.html)
 
 ### Points clés
 
-✅ **Rôle unique** : Uniquement `payer` (pas supplier ni debtor)  
-✅ **Extension payeurSante requise** : 1..1 MS  
-✅ **Type payeur** : RO (Régime Obligatoire)  
-✅ **Grand régime** : SS (Sécurité Sociale)  
-✅ **Pas de RIB** : extension[bankAccount] 0..0 (les payeurs ne fournissent pas leur compte)  
+✅ **Rôle unique** : Payeur uniquement (pas fournisseur ni client)
+✅ **Type** : Régime Obligatoire (RO) = assurance maladie de base
+✅ **Régime** : Sécurité Sociale (SS)
+✅ **Identifiants spécifiques** : code centre (750 = Paris), numéro caisse (75001)
+✅ **Pas de coordonnées bancaires** : les organismes payeurs ne communiquent pas leur RIB
 
-### Paramètres spécifiques
+### Paramètres importants
 
-| Extension | Valeur | Signification |
-|-----------|--------|---------------|
-| typePayeur | RO | Régime Obligatoire (vs RC = Complémentaire) |
-| codeCentre | 750 | Centre Paris |
-| numeroCaisse | 75001 | Caisse primaire 75001 |
-| grandRegime | SS | Sécurité Sociale |
-| numeroOrganisme | 007501 | Identifiant national organisme |
-| flagEclatement | false | Pas d'éclatement des factures par acte |
-| delaiPec | 90 | Délai prise en charge 90 jours |
+| Information | Valeur | Signification |
+|-------------|--------|---------------|
+| Type payeur | RO | Régime Obligatoire (couverture de base) |
+| Code centre | 750 | Centre géographique Paris |
+| Numéro caisse | 75001 | Caisse primaire identifiant |
+| Régime | Sécurité Sociale | Grand régime national |
+| Délai prise en charge | 90 jours | Durée maximale de traitement des demandes |
 
-### Cas d'usage
+### Cas d'usage pratique
 
-- ✅ Télétransmission FSE : Envoi feuilles de soins électroniques pour remboursement
-- ✅ Gestion tiers-payant : Paiement direct établissement sans avance patient
-- ✅ Suivi délais PEC : Alertes si dépassement 90 jours
+**Télétransmission de FSE** : L'établissement envoie électroniquement les feuilles de soins à la CPAM pour remboursement. Le système doit :
+- Identifier le bon organisme payeur selon l'adresse du patient
+- Transmettre les actes médicaux facturés
+- Suivre le délai de 90 jours pour la prise en charge
+- Relancer si dépassement du délai
+
+**Tiers-payant** : Le patient ne paie rien, la CPAM règle directement l'établissement.
 
 ---
 
-## Exemple 7 : Payeur Santé Mutuelle (Régime Complémentaire)
+## Exemple 7 : Organisme Payeur - Mutuelle Complémentaire (MGEN)
 
-### Contexte métier
+### Situation
 
-**MGEN (Mutuelle Générale de l'Éducation Nationale)** est une mutuelle complémentaire qui :
-- Complète les remboursements Sécurité Sociale
-- Appartient au grand régime Mutuelle
-- Applique l'éclatement des factures par acte
+**MGEN (Mutuelle Générale de l'Éducation Nationale)** est une mutuelle qui :
+
+- Complète les remboursements de la Sécurité Sociale
+- Appartient au régime complémentaire
+- Applique un éclatement des factures par acte médical
 - Délai de prise en charge : 60 jours
 
 ### Profil utilisé
 
-[PayeurSanteProfile](StructureDefinition-payeur-sante-profile.html) - Payeur régime complémentaire
+[Profil Payeur Santé (PayeurSanteProfile)](StructureDefinition-payeur-sante-profile.html) - Régime complémentaire
 
-### Fichier FSH
+### Ressource FHIR
 
-[ExemplePayeurSanteMutuelle.fsh](Organization-ExemplePayeurSanteMutuelle.html)
+[ExemplePayeurSanteMutuelle](Organization-ExemplePayeurSanteMutuelle.html)
 
 ### Points clés
 
-✅ **Type payeur** : RC (Régime Complémentaire)  
-✅ **Grand régime** : MUTUELLE (vs SS pour CPAM)  
-✅ **Éclatement activé** : flagEclatement = true  
-✅ **Délai PEC plus court** : 60 jours (vs 90 jours CPAM)  
-✅ **TG Category** : #63 (Mutuelle)  
+✅ **Type** : Régime Complémentaire (RC) = couverture supplémentaire
+✅ **Régime** : Mutuelle (vs Sécurité Sociale)
+✅ **Éclatement activé** : factures détaillées acte par acte
+✅ **Délai plus court** : 60 jours (vs 90 jours pour la CPAM)
+✅ **Catégorie** : Mutuelle (vs Assurance maladie pour CPAM)
 
-### Différences RO vs RC
+### Différences Régime Obligatoire vs Complémentaire
 
-| Critère | CPAM (RO) | MGEN (RC) |
-|---------|-----------|-----------|
-| Type payeur | RO | RC |
-| Grand régime | SS | MUTUELLE |
-| TG Category | #60 (Assurance maladie) | #63 (Mutuelle) |
-| Éclatement factures | false | true |
-| Délai PEC | 90 jours | 60 jours |
-| Ordre paiement | 1er (obligatoire) | 2ème (après RO) |
+| Critère | CPAM (Régime Obligatoire) | MGEN (Régime Complémentaire) |
+|---------|---------------------------|------------------------------|
+| Type | RO | RC |
+| Régime | Sécurité Sociale | Mutuelle |
+| Catégorie | Assurance maladie | Mutuelle |
+| Éclatement factures | Non | Oui (détail par acte) |
+| Délai traitement | 90 jours | 60 jours |
+| Ordre remboursement | 1er (obligatoire) | 2ème (après RO) |
+| Adhésion | Automatique (salariés) | Volontaire |
 
-### Cas d'usage
+### Cas d'usage pratique
 
-- ✅ Facturation complémentaire : Envoi après remboursement CPAM
-- ✅ Tiers-payant intégral : CPAM + Mutuelle = 0€ reste à charge patient
-- ✅ Éclatement par acte : Facturation détaillée acte par acte (vs globale)
+**Tiers-payant intégral** : 
+1. Patient consulte, facture totale 100 €
+2. CPAM rembourse 70 € (régime obligatoire)
+3. MGEN rembourse 30 € (régime complémentaire)
+4. Patient : 0 € de reste à charge
+
+**Éclatement par acte** : La MGEN demande une facturation détaillée :
+- Consultation : 25 €
+- Radiographie : 40 €
+- Analyses : 35 €
+
+Au lieu d'une facture globale de 100 €.
 
 ---
 
-## Exemple 8 : Recherches Combinées
+## Exemple 8 : Société Étrangère avec TVA Intracommunautaire
 
-### Scénario 1 : Trouver tous les fournisseurs EPS actifs
+### Situation
+
+**MedTech Solutions GmbH** est un fournisseur allemand d'équipements médicaux qui :
+
+- Vend des appareils de diagnostic en France
+- Possède un numéro de TVA intracommunautaire (Allemagne)
+- Facture sans TVA française (autoliquidation par l'acheteur)
+
+### Profil utilisé
+
+[Profil Fournisseur (FournisseurProfile)](StructureDefinition-fournisseur-profile.html)
+
+### Ressource FHIR
+
+[ExempleFournisseurTVA](Organization-ExempleFournisseurTVA.html)
+
+### Points clés
+
+✅ **Numéro TVA UE** : DE123456789 (Allemagne)
+✅ **Pays** : DE (Allemagne selon ISO 3166-1)
+✅ **Catégorie** : Personne morale de droit privé
+✅ **Nature juridique** : Société (GmbH = SARL allemande)
+
+### Cas d'usage pratique
+
+**Facturation internationale (UE)** :
+- Fournisseur allemand émet facture HT (sans TVA)
+- Acheteur français applique l'autoliquidation de TVA
+- Déclaration fiscale : TVA déclarée en France par l'acheteur
+
+**Rapprochement bancaire** : 
+- Virement reçu depuis compte IBAN allemand (DE89...)
+- Recherche par IBAN pour identifier MedTech Solutions
+- Lettrage automatique de la facture
+
+---
+
+## Exemples de Recherches Combinées
+
+### Scénario 1 : Tous les fournisseurs établissements publics de santé
+
+**Besoin métier** : Trouver les hôpitaux publics qui vendent des prestations.
 
 ```http
-GET [base]/Organization?tiers-role=supplier
-  &tiers-category=16
-  &active=true
+GET [base]/Organization?tiers-role=supplier&tiers-category=27
 ```
 
-**Résultat** : Établissements publics de santé ayant le rôle fournisseur (vendent prestations ou médicaments).
+**Critères** :
+- `tiers-role=supplier` : rôle fournisseur
+- `tiers-category=27` : Établissement Public de Santé (EPS)
 
 ---
 
-### Scénario 2 : Identifier les débiteurs non-résidents
+### Scénario 2 : Clients non-résidents fiscaux
+
+**Besoin métier** : Identifier les organisations étrangères pour appliquer la retenue à la source.
 
 ```http
-GET [base]/Organization?tiers-role=debtor
-  &debiteur-type-resident=NR
+GET [base]/Organization?tiers-role=debtor&debiteur-type-resident=NR
 ```
 
-**Résultat** : Débiteurs non-résidents fiscaux (obligation retenue à la source).
+**Critères** :
+- `tiers-role=debtor` : rôle client/acheteur
+- `debiteur-type-resident=NR` : Non-Résident fiscal
 
 ---
 
-### Scénario 3 : Lister tous les payeurs régime obligatoire
+### Scénario 3 : Tous les régimes obligatoires d'assurance maladie
+
+**Besoin métier** : Lister les organismes de Sécurité Sociale pour transmission FSE.
 
 ```http
-GET [base]/Organization?tiers-role=payer
-  &payeur-type=RO
+GET [base]/Organization?tiers-role=payer&payeur-type=RO
 ```
 
-**Résultat** : CPAM, MSA, RSI, CNAV (régimes obligatoires uniquement, exclut mutuelles).
+**Résultat** : CPAM, MSA, RSI, CNAV (régimes obligatoires uniquement, exclut les mutuelles).
 
 ---
 
-### Scénario 4 : Trouver un tiers par IBAN
+### Scénario 4 : Rapprochement bancaire
+
+**Besoin métier** : Identifier qui a émis un virement reçu.
 
 ```http
 GET [base]/Organization?bank-account-iban=FR7630004000020000012345678
 ```
 
-**Résultat** : Tiers propriétaire du compte bancaire (rapprochement virement).
+**Utilité** : Lettrage automatique des virements en comptabilité.
 
 ---
 
-### Scénario 5 : Tiers multi-rôles (supplier ET debtor)
+### Scénario 5 : Organisations multi-rôles (fournisseur ET client)
+
+**Besoin métier** : Gérer les établissements avec relations commerciales bidirectionnelles.
 
 ```http
-GET [base]/Organization?tiers-role=supplier
-  &tiers-role=debtor
+GET [base]/Organization?tiers-role=supplier&tiers-role=debtor
 ```
 
-**Résultat** : Organisations ayant les DEUX rôles simultanément (échanges bidirectionnels).
+**Résultat** : Organisations ayant les deux rôles simultanément (échanges croisés de prestations).
 
 ---
 
-## Bonnes Pratiques d'Implémentation
+## Bonnes Pratiques
 
-### 1. Validation avant création
+### 1. Vérifier avant de créer
 
-Toujours vérifier l'existence du tiers par recherches :
-
-```http
-# Vérifier si code fournisseur existe déjà
-GET [base]/Organization?fournisseur-code:exact={nouveau_code}
-
-# Résultat vide = OK pour créer
-# Résultat non vide = Doublon, refuser ou fusionner
-```
-
-### 2. Gestion des doublons
-
-Identifier doublons potentiels par SIRET avant import :
+Toujours rechercher si l'organisation existe déjà :
 
 ```http
+# Recherche par SIRET
 GET [base]/Organization?identifier=urn:oid:1.2.250.1.24.3.2|85211234500018
 ```
 
-### 3. Synchronisation bidirectionnelle GEF ↔ FHIR
+Si résultat vide : OK pour créer une nouvelle fiche
+Si résultat trouvé : Risque de doublon, utiliser la fiche existante
 
-**Import EFOU → FHIR** :
-1. Parser EFOU ligne 262 caractères
-2. Créer Organization conforme FournisseurProfile
-3. Mapper positions EFOU → extensions FHIR
+---
 
-**Export FHIR → EFOU** :
-1. Récupérer Organization par `?tiers-role=supplier`
-2. Extraire extensions FournisseurProfile
-3. Formater sortie texte fixe 262 caractères
+### 2. Privilégier le multi-rôle
 
-### 4. Multi-rôle : Une resource, multiples extensions
+**Plutôt que** : Créer 3 fiches séparées (une fournisseur, une client, une payeur)
 
-```json
-{
-  "resourceType": "Organization",
-  "extension": [
-    {"url": "tiersRole", "valueCode": "supplier"},
-    {"url": "tiersRole", "valueCode": "debtor"},
-    {"url": "codeFournisseur", "valueString": "FRSUP123"},
-    {"url": "codeDebiteur", "valueString": "DEB456"},
-    {"url": "comptabilite", ...},
-    {"url": "parametres", ...}
-  ]
-}
-```
+**Préférer** : Une seule fiche avec 3 rôles
 
 **Avantages** :
-- ✅ Pas de duplication données
-- ✅ Historique unifié
-- ✅ Gestion relations simplifiée
+- Pas de duplication de données (adresse, contacts, identifiants)
+- Historique unifié de toutes les transactions
+- Gestion simplifiée des relations commerciales
+
+---
+
+### 3. Utiliser les identifiants officiels
+
+Privilégier dans l'ordre :
+1. **SIRET** (entreprises françaises) : le plus fiable
+2. **FINESS** (établissements de santé) : obligatoire secteur santé
+3. **TVA intracommunautaire** (UE) : pour fournisseurs européens
+4. **Identifiant interne** : en dernier recours
+
+---
+
+### 4. Maintenir les coordonnées à jour
+
+**Informations critiques à vérifier régulièrement** :
+- Adresse (déménagements)
+- Coordonnées bancaires (changements de compte)
+- Contacts téléphone/email (départs de personnel)
+- Statut actif/inactif (fermetures, fusions)
 
 ---
 
 ## Voir aussi
 
-- [SearchParameters](search-parameters.html) - Critères de recherche détaillés
-- [TiersProfile](StructureDefinition-tiers-profile.html) - Documentation profil de base
-- [Multi-rôles](tiers-multi-roles.html) - Explications concept multi-rôle
-- [Héritage vs partOf](heritage-vs-partof.html) - Distinction entre concepts
-- [Index](index.html) - Retour à l'accueil
+- [Rechercher dans le référentiel](search-parameters.html) - Tous les critères de recherche disponibles
+- [Guide d'implémentation](index.html) - Vue d'ensemble du référentiel
+- [Classifications et nomenclatures](terminologies.html) - Codes et catégories utilisés
+- [Documentation technique des profils](StructureDefinition-tiers-profile.html) - Spécifications détaillées

@@ -1,497 +1,463 @@
-# Terminologies GEF
+# Classifications et Nomenclatures
 
-Cette page documente les **8 CodeSystems** et **8 ValueSets** définis dans l'IG Tiers MDM pour la conformité aux interfaces GEF (Gestion Économique et Financière).
+## Vue d'ensemble
 
-## Navigation rapide
+Cette page documente les **classifications** et **nomenclatures** utilisées pour qualifier et catégoriser les organisations tierces dans le référentiel. Ces codes permettent de structurer les informations selon des critères métier standardisés.
 
-- [Phase 1 - Terminologies Fondations](#phase-1---terminologies-fondations)
-  - [GEFIdentifierTypeCS](#gefidentifiertypecs---types-didentifiants-gef-9-codes) (9 codes)
-  - [GEFTGCategoryCS](#geftgcategorycs---catégories-tg-24-codes) (24 codes)
-  - [GEFLegalNatureCS](#geflegalnaturecs---natures-juridiques-12-codes) (12 codes)
-  - [TiersRoleCS](#tiersrolecs---rôles-tiers-2-codes) (2 codes)
-- [Phase 2 - Terminologies Débitorat](#phase-2---terminologies-débitorat)
-  - [GEFDebtorTypeCS](#gefdebtortypecs---types-débiteur-2-codes) (2 codes)
-  - [GEFCivilityCS](#gefcivilitycs---civilités-5-codes) (5 codes)
-  - [GEFChorusIdentifierTypeCS](#gefchorusidentifiertypecs---types-identifiant-chorus-8-codes) (8 codes)
-  - [GEFAddressLocalizationCS](#gefaddresslocalizationcs---localisation-adresse-3-codes) (3 codes)
+Le référentiel utilise **12 classifications principales** regroupant **100+ codes** pour caractériser les fournisseurs, clients et organismes payeurs.
 
 ---
 
-## Phase 1 - Terminologies Fondations
+## Navigation
 
-### GEFIdentifierTypeCS - Types d'identifiants GEF (9 codes)
-
-**ID** : `gef-identifier-type-cs`  
-**URL** : `https://www.cpage.fr/ig/masterdata/tiers/CodeSystem/gef-identifier-type-cs`  
-**Status** : Active  
-**Content** : Complete
-
-#### Description
-
-Types d'identifiants organisationnels et personnels utilisés dans les messages GEF (EFOU, KERD).
-
-#### Codes
-
-| Code | Libellé | Longueur | Références | Système OID/URI | Juridiction |
-|------|---------|----------|------------|----------------|-------------|
-| **01** | SIRET | 14 caractères | EFOU position 223, KERD position 15 | urn:oid:1.2.250.1.24.3.2 | FR |
-| **02** | SIREN | 9 caractères | KERD position 15 | urn:oid:1.2.250.1.24.3.1 | FR |
-| **03** | FINESS | 9 caractères | KERD position 15 | https://finess.esante.gouv.fr | FR |
-| **04** | NIR | 15 caractères | KERD position 15, personne physique | urn:oid:1.2.250.1.213.1.4.8 | FR |
-| **05** | TVA Intracommunautaire | Variable | KERD position 15, UE hors France | (Selon pays UE) | UE |
-| **06** | Hors UE | Variable | KERD position 15, hors Europe | (Selon pays) | Monde |
-| **07** | Tahiti | Variable | KERD position 15, Polynésie française | http://cpage.org/fhir/NamingSystem/tahiti-identifier (temp) | PF |
-| **08** | RIDET | 7 caractères | KERD position 15, Nouvelle-Calédonie | http://cpage.org/fhir/NamingSystem/ridet-identifier (temp) | NC |
-| **09** | En cours d'immatriculation | - | KERD position 15, provisoire | - | - |
-
-#### Notes importantes
-
-- **Codes 07 et 08** : URIs temporaires en attente d'OID officiels (Tahiti : DGEN/ISPF, RIDET : https://www.ridet.nc/)
-- **Code 09** : Exclut de GEFChorusIdentifierTypeCS (non valide pour CHORUS)
-- **Usage** : Extension GEFIdentifierTypeExtension sur `identifier.extension`
-
-#### Exemple d'utilisation
-
-```fsh
-// Fournisseur avec SIRET
-* identifier[siret].value = "12345678901234"
-* identifier[siret].extension contains GEFIdentifierType named gefType 0..1
-* identifier[siret].extension[gefType].valueCodeableConcept = GEFIdentifierTypeCS#01
-
-// Débiteur avec NIR
-* identifier[nir].value = "123456789012345"
-* identifier[nir].extension contains GEFIdentifierType named gefType 0..1
-* identifier[nir].extension[gefType].valueCodeableConcept = GEFIdentifierTypeCS#04
-```
+- [Types d'Identifiants](#types-didentifiants---9-codes)
+- [Catégories d'Organisations](#catégories-dorganisations---24-codes)
+- [Natures Juridiques](#natures-juridiques---12-codes)
+- [Rôles](#rôles---3-codes)
+- [Types de Clients](#types-de-clients---2-codes)
+- [Civilités](#civilités---5-codes)
+- [Localisations Géographiques](#localisations-géographiques---3-codes)
+- [Usages des Succursales](#usages-des-succursales---3-codes)
+- [Moyens de Paiement](#moyens-de-paiement---4-codes)
+- [Régimes d'Assurance](#régimes-dassurance---6-codes)
+- [Types d'Organismes Payeurs](#types-dorganismes-payeurs---2-codes)
+- [Types de Résidents Fiscaux](#types-de-résidents-fiscaux---2-codes)
 
 ---
 
-### GEFTGCategoryCS - Catégories TG (24 codes)
+## Types d'Identifiants - 9 codes
 
-**ID** : `gef-tg-category-cs`  
-**URL** : `https://www.cpage.fr/ig/masterdata/tiers/CodeSystem/gef-tg-category-cs`  
-**Status** : Active  
-**Content** : Complete
+### Description
 
-#### Description
+Les différents **types d'identifiants** utilisés pour identifier officiellement les organisations selon leur juridiction.
 
-Classification des organisations par **Catégorie de Tiers Gérés (TG)** selon les secteurs d'activité et statuts juridiques du système GEF.
+### Codes
 
-#### Codes par secteur
+| Code | Type d'identifiant | Longueur | Juridiction | Description |
+|------|-------------------|----------|-------------|-------------|
+| **01** | SIRET | 14 chiffres | France | Identifiant établissement (9 SIREN + 5 NIC) |
+| **02** | SIREN | 9 chiffres | France | Identifiant entreprise unique |
+| **03** | FINESS | 9 caractères | France | Identifiant établissements de santé et médico-sociaux |
+| **04** | NIR | 15 caractères | France | Numéro Sécurité Sociale (personnes physiques uniquement) |
+| **05** | TVA Intracommunautaire | Variable | Union Européenne | Numéro TVA hors France (ex: DE123456789) |
+| **06** | Hors UE | Variable | International | Identifiant fiscal pays hors Europe (ex: Swiss UID, US TIN) |
+| **07** | Tahiti | Variable | Polynésie Française | Identifiant Tahiti (DGEN/ISPF) |
+| **08** | RIDET | 7 caractères | Nouvelle-Calédonie | Répertoire d'Identification des Entreprises et des Établissements |
+| **09** | En cours d'immatriculation | - | Provisoire | Organisme en attente d'immatriculation officielle |
 
-##### Secteur : Inconnu / Générique
+### Utilisation pratique
 
-| Code | Libellé | Description |
-|------|---------|-------------|
-| **00** | Catégorie TG inconnue | Catégorie non renseignée ou indéterminée |
-| **01** | Personne physique | Individu (patient, personne privée) |
-| **50** | Personne morale de droit privé | Société, entreprise, association, etc. |
+**Recherche d'une organisation** : Utiliser le SIRET en priorité (le plus fiable)  
+**Établissements de santé** : FINESS obligatoire  
+**Fournisseurs européens** : TVA intracommunautaire  
+**Personnes physiques** : NIR (médecins libéraux, patients)
 
-##### Secteur : État et collectivités (20-29)
+---
 
-| Code | Libellé | Description |
-|------|---------|-------------|
-| **20** | État | Ministères, services de l'État français |
-| **21** | Région | Conseils régionaux |
-| **22** | Département | Conseils départementaux |
-| **23** | Commune | Mairies, communes françaises |
+## Catégories d'Organisations - 24 codes
+
+### Description
+
+Classification des organisations par **secteur d'activité** et **statut** : administration publique, santé, organismes sociaux, retraite, secteur privé.
+
+### Codes par secteur
+
+#### Inconnu / Générique
+
+| Code | Catégorie | Exemples |
+|------|-----------|----------|
+| **00** | Catégorie inconnue | Non renseigné |
+| **01** | Personne physique | Patient, médecin libéral, individu |
+| **50** | Personne morale de droit privé | Entreprise, société commerciale, SARL, SA |
+
+#### État et Collectivités Territoriales (20-29)
+
+| Code | Catégorie | Exemples |
+|------|-----------|----------|
+| **20** | État | Ministère de la Santé, Préfecture |
+| **21** | Région | Conseil Régional Île-de-France |
+| **22** | Département | Conseil Départemental Val-de-Marne |
+| **23** | Commune | Mairie de Paris, Commune de Lyon |
 | **24** | CCAS | Centre Communal d'Action Sociale |
 | **25** | Autre établissement public local | EPL hors santé |
-| **26** | Centre de rééducation fonctionnelle | CRF spécialisés |
-| **27** | EPS | Établissement Public de Santé (hôpitaux publics) |
-| **28** | ENSP | École Nationale de la Santé Publique |
+| **26** | Centre de rééducation fonctionnelle | CRF spécialisé |
+| **27** | Établissement public de santé (EPS) | CHU, Hôpital public |
+| **28** | École nationale de santé publique | ENSP, école formation |
 | **29** | Autre établissement public de l'État | EPA, EPIC |
 
-##### Secteur : Organismes sociaux (60-65)
+#### Organismes Sociaux et Assurance Maladie (60-65)
 
-| Code | Libellé | Description |
-|------|---------|-------------|
-| **60** | Caisse de sécurité sociale régime général | CPAM, CNAM |
-| **61** | Caisse de sécurité sociale du régime agricole | MSA (Mutualité Sociale Agricole) |
-| **62** | Caisse de sécurité sociale des travailleurs non-salariés | TNS |
-| **63** | Mutuelle | Mutuelles complémentaires santé |
-| **64** | Tiers payant | Organismes tiers payant |
+| Code | Catégorie | Exemples |
+|------|-----------|----------|
+| **60** | Caisse Sécurité Sociale régime général | CPAM, CNAM |
+| **61** | Caisse Sécurité Sociale régime agricole | MSA (Mutualité Sociale Agricole) |
+| **62** | Caisse travailleurs non-salariés | TNS, RSI |
+| **63** | Mutuelle | MGEN, Mutuelle d'Alsace |
+| **64** | Tiers payant | Organisme tiers payant |
 | **65** | Autres organismes sociaux | CAF, autres |
 
-##### Secteur : Retraite (70-74)
+#### Organismes de Retraite et Emploi (70-74)
 
-| Code | Libellé | Description |
-|------|---------|-------------|
+| Code | Catégorie | Exemples |
+|------|-----------|----------|
 | **70** | CNRACL | Caisse Nationale de Retraite des Agents des Collectivités Locales |
-| **71** | IRCANTEC | Institution de Retraite Complémentaire des Agents Non Titulaires de l'État et des Collectivités |
-| **72** | ASSEDIC | Association pour l'Emploi dans l'Industrie et le Commerce (chômage) |
-| **73** | Caisses mutuelles | Caisses mutuelles de retraite |
-| **74** | Autres organismes de retraite | Autres caisses |
+| **71** | IRCANTEC | Retraite Complémentaire Agents Non Titulaires |
+| **72** | ASSEDIC | Pôle Emploi (ancien nom) |
+| **73** | Caisses mutuelles retraite | Caisses mutuelles |
+| **74** | Autres organismes de retraite | Autres régimes |
 
-#### Références
+### Utilisation pratique
 
-- **EFOU** : Position 237 (1 caractère → "0"-"9" dizaines puis unités)
-- **KERD** : Position 8 (2 caractères numériques 00-74)
+**Recherche par secteur** :
+- Tous les hôpitaux publics : code **27**
+- Toutes les mutuelles : code **63**
+- Toutes les entreprises privées : code **50**
 
-#### Règle métier
-
-La combinaison Catégorie TG + Nature Juridique (GEFLegalNatureCS) est validée dans le module métier GEF. Exemples de combinaisons valides :
-
-- **Catégorie #01** (Personne physique) → Natures juridiques autorisées : 00 (Inconnue), 01 (Particulier), 02 (Artisan-Commerçant-Agriculteur)
-- **Catégorie #27** (EPS) → Natures juridiques autorisées : 09 (Collectivité territoriale-EPL-EPS)
-- **Catégorie #50** (Personne morale privé) → Natures juridiques autorisées : 03 (Société), 06 (Association)
-
-#### Exemple d'utilisation
-
-```fsh
-// EPS (hôpital public)
-* extension contains GEFTGCategory named tgCategory 0..1 MS
-* extension[tgCategory].valueCodeableConcept = GEFTGCategoryCS#27 "EPS"
-* extension contains GEFLegalNature named legalNature 0..1 MS
-* extension[legalNature].valueCodeableConcept = GEFLegalNatureCS#09 "Collectivité territoriale-EPL-EPS"
-
-// Personne physique
-* extension[tgCategory].valueCodeableConcept = GEFTGCategoryCS#01 "Personne physique"
-* extension[legalNature].valueCodeableConcept = GEFLegalNatureCS#01 "Particulier"
-```
+**Combinaison avec nature juridique** : Certaines combinaisons sont obligatoires (voir section [Règles de Cohérence](#règles-de-cohérence))
 
 ---
 
-### GEFLegalNatureCS - Natures juridiques (12 codes)
+## Natures Juridiques - 12 codes
 
-**ID** : `gef-legal-nature-cs`  
-**URL** : `https://www.cpage.fr/ig/masterdata/tiers/CodeSystem/gef-legal-nature-cs`  
-**Status** : Active  
-**Content** : Complete
+### Description
 
-#### Description
+Classification selon le **statut juridique** de l'organisation : société, association, établissement public, etc.
 
-Classification des organisations par **nature juridique** selon le droit français et les statuts administratifs GEF.
+### Codes
 
-#### Codes
-
-| Code | Libellé | Description | Exemples |
-|------|---------|-------------|----------|
-| **00** | Nature juridique inconnue | Non renseignée | - |
-| **01** | Particulier | Personne physique | Patient, individu |
-| **02** | Artisan-Commerçant-Agriculteur | Personne physique profession libérale/indépendante | Auto-entrepreneur, médecin libéral |
-| **03** | Société | Personne morale droit privé | SA, SARL, SAS, EURL, SCI |
-| **04** | CAM | Caisse d'Assurance Maladie | CPAM locale |
+| Code | Nature juridique | Description | Exemples |
+|------|-----------------|-------------|----------|
+| **00** | Inconnue | Non renseignée | - |
+| **01** | Particulier | Personne physique | Patient individuel |
+| **02** | Artisan-Commerçant-Agriculteur | Personne physique professionnelle | Médecin libéral, auto-entrepreneur |
+| **03** | Société | Personne morale de droit privé | SA, SARL, SAS, EURL, SCI |
+| **04** | Caisse Assurance Maladie | Organisme Sécurité Sociale | CPAM locale |
 | **05** | Caisse complémentaire | Organisme complémentaire santé | Mutuelle, surcomplémentaire |
-| **06** | Association | Association loi 1901 | Association humanitaire, culturelle |
-| **07** | État | Services de l'État français | Ministères, préfectures |
-| **08** | EPA ou EPIC | Établissement Public Administratif ou Industriel et Commercial | France Télévisions, SNCF |
-| **09** | Collectivité territoriale-EPL-EPS | Collectivités et établissements publics locaux/santé | Région, Département, Hôpital public (EPS) |
-| **10** | État étranger-Ambassade | Représentations diplomatiques | Ambassade d'Allemagne, Consulat |
+| **06** | Association | Association loi 1901 | Association humanitaire, sportive |
+| **07** | État | Services de l'État | Ministères, services centraux |
+| **08** | EPA ou EPIC | Établissement Public Administratif ou Industriel | France Télévisions, SNCF |
+| **09** | Collectivité territoriale - Établissement public local ou de santé | Collectivités et EPS | Région, Département, Hôpital public |
+| **10** | État étranger - Ambassade | Représentations diplomatiques | Ambassade, Consulat |
 | **11** | CAF | Caisse d'Allocations Familiales | CAF départementale |
 
-#### Références
+### Utilisation pratique
 
-- **EFOU** : Position 238 (2 caractères numériques 00-11)
-- **KERD** : Position 9 (2 caractères numériques 00-11)
-
-#### Règle métier
-
-La combinaison avec Catégorie TG (GEFTGCategoryCS) est contrôlée par le module métier GEF (voir section précédente).
-
-#### Exemple d'utilisation
-
-```fsh
-// Hôpital public EPS
-* extension contains GEFLegalNature named legalNature 0..1 MS
-* extension[legalNature].valueCodeableConcept = GEFLegalNatureCS#09 "Collectivité territoriale-EPL-EPS"
-
-// Société privée
-* extension[legalNature].valueCodeableConcept = GEFLegalNatureCS#03 "Société"
-```
+**Hôpital public** : Nature juridique **09** (Collectivité - EPS)  
+**Entreprise privée** : Nature juridique **03** (Société)  
+**Mutuelle** : Nature juridique **05** (Caisse complémentaire)  
+**Association** : Nature juridique **06** (Association loi 1901)
 
 ---
 
-### TiersRoleCS - Rôles Tiers (2 codes)
+## Rôles - 3 codes
 
-**ID** : `tiers-role-cs`  
-**URL** : `https://www.cpage.fr/ig/masterdata/tiers/CodeSystem/tiers-role-cs`  
-**Status** : Active  
-**Content** : Complete
+### Description
 
-#### Description
+Les **rôles métier** d'une organisation dans le référentiel. Une organisation peut avoir plusieurs rôles simultanément.
 
-Rôle générique d'une organisation dans le contexte Master Data Management (fournisseur, débiteur, ou les deux).
+### Codes
 
-#### Codes
+| Code | Rôle | Description |
+|------|------|-------------|
+| **supplier** | Fournisseur | Fournit des biens ou services (pharmaceutiques, équipements, prestations) |
+| **debtor** | Client | Achète des biens ou services |
+| **payer** | Organisme payeur | Rembourse les prestations de soins (CPAM, mutuelles) |
 
-| Code | Libellé | Définition | Profil associé |
-|------|---------|------------|----------------|
-| **supplier** | Fournisseur | Fournit des biens/services (présence dans ECO.FOU, message EFOU) | FournisseurProfile |
-| **debtor** | Débiteur | Client ou acheteur (présence dans ECO.DBT, message KERD) | DebiteurProfile |
+### Utilisation pratique
 
-#### Usage
-
-- **Extension** : TiersRoleExtension sur Organization
-- **Type** : Coding (NOT CodeableConcept - corriger avec `valueCoding`)
-- **Cardinality** : 0..* MS (une organisation peut avoir les deux rôles)
-
-#### Exemple d'utilisation
-
-```fsh
-// Fournisseur
-* extension contains TiersRoleExtension named tiersRole 0..* MS
-* extension[tiersRole].valueCoding = TiersRoleCS#supplier
-
-// Débiteur
-* extension[tiersRole].valueCoding = TiersRoleCS#debtor
-
-// Les deux (ex: hôpital fournisseur et débiteur)
-Instance: HopitalBidirectionnel
-InstanceOf: TiersProfile
-* extension[tiersRole][0].valueCoding = TiersRoleCS#supplier
-* extension[tiersRole][1].valueCoding = TiersRoleCS#debtor
-```
+**Multi-rôle** : Une organisation peut être à la fois fournisseur ET client (ex: clinique qui vend et achète)  
+**Recherche** : Trouver toutes les organisations fournisseurs : `?tiers-role=supplier`  
+**Organismes payeurs** : Uniquement rôle "payer", pas fournisseur ni client
 
 ---
 
-## Phase 2 - Terminologies Débitorat
+## Types de Clients - 2 codes
 
-### GEFDebtorTypeCS - Types débiteur (2 codes)
+### Description
 
-**ID** : `gef-debtor-type-cs`  
-**URL** : `https://www.cpage.fr/ig/masterdata/tiers/CodeSystem/gef-debtor-type-cs`  
-**Status** : Active  
-**Content** : Complete
+Classification de la **fréquence des transactions** avec un client.
 
-#### Description
+### Codes
 
-Classification de la fréquence/régularité d'un débiteur dans le message KERD.
+| Code | Type | Description | Utilisation |
+|------|------|-------------|-------------|
+| **O** | Occasionnel | Client ponctuel, transaction unique ou rare | Patient externe unique, prestation exceptionnelle |
+| **N** | Normal | Client régulier, transactions récurrentes | Organisme social, entreprise partenaire permanent |
 
-#### Codes
+### Utilisation pratique
 
-| Code | Libellé | Description | Usage |
-|------|---------|-------------|-------|
-| **O** | Occasionnel | Débiteur ponctuel, transaction unique ou rare | Patient externe ponctuel |
-| **N** | Normal | Débiteur régulier, transactions récurrentes | Organisme social, entreprise partenaire |
-
-#### Références
-
-- **KERD** : Position 2 (1 caractère : "O" ou "N")
-
-#### Règle métier
-
-- **Cardinality** : 1..1 MS sur DebiteurProfile (OBLIGATOIRE)
-- Détermine la fréquence de mise à jour des données débiteur dans GEF
-
-#### Exemple d'utilisation
-
-```fsh
-// Débiteur normal (régulier)
-Profile: DebiteurProfile
-* extension contains GEFDebtorType named debtorType 1..1 MS
-
-Instance: CPAMDebiteur
-InstanceOf: DebiteurProfile
-* extension[debtorType].valueCode = GEFDebtorTypeCS#N
-```
+**Client occasionnel** : Compte temporaire, un seul achat  
+**Client normal** : Compte permanent, achats réguliers, conventions établies
 
 ---
 
-### GEFCivilityCS - Civilités (5 codes)
+## Civilités - 5 codes
 
-**ID** : `gef-civility-cs`  
-**URL** : `https://www.cpage.fr/ig/masterdata/tiers/CodeSystem/gef-civility-cs`  
-**Status** : Active  
-**Content** : Complete
+### Description
 
-#### Description
+Civilités pour les **personnes physiques uniquement** (catégorie 01).
 
-Civilités pour les personnes physiques (débiteurs de Catégorie TG = 01).
+### Codes
 
-#### Codes
-
-| Code | Libellé | Description |
-|------|---------|-------------|
+| Code | Civilité | Utilisation |
+|------|----------|-------------|
 | **M** | Monsieur | Personne de sexe masculin |
 | **MME** | Madame | Personne de sexe féminin |
 | **MLLE** | Mademoiselle | Jeune femme non mariée (usage traditionnel) |
 | **METMME** | Monsieur et Madame | Couple (compte joint, courrier commun) |
 | **MOUMME** | Monsieur ou Madame | Indéterminé ou neutre |
 
-#### Références
+### Règle
 
-- **KERD** : Position 10 (6 caractères max, valeurs : "M", "MME", "MLLE", "METMME", "MOUMME")
+**Obligatoire** si Catégorie = 01 (Personne physique)  
+**Omis** si organisation (catégories 20-29, 50, 60-74)
 
-#### Règle métier
+---
 
-- **OBLIGATOIRE** si Catégorie TG = 01 (Personne physique)
-- Utilisée dans GEFPersonDetailsExtension (sub-extension `civility`)
-- Si Catégorie TG ≠ 01, cette extension est omise
+## Localisations Géographiques - 3 codes
 
-#### Exemple d'utilisation
+### Description
 
-```fsh
-// Personne physique avec civilité
-Instance: JeanDupont
-InstanceOf: DebiteurProfile
-* extension[tgCategory].valueCodeableConcept = GEFTGCategoryCS#01 "Personne physique"
-* extension contains GEFPersonDetails named personDetails 0..1 MS
-* extension[personDetails].extension[civility].valueCode = GEFCivilityCS#M
-* extension[personDetails].extension[firstName].valueString = "Jean"
+Zone géographique de l'adresse d'une organisation.
+
+### Codes
+
+| Code | Localisation | Description | Pays ISO 3166 |
+|------|-------------|-------------|---------------|
+| **FRANCE** | France | Métropole et DROM | FR |
+| **EUROPE** | Europe | Union Européenne hors France | AT, BE, DE, ES, IT, etc. |
+| **AUTRE** | Autre | Hors Union Européenne | Suisse, USA, Japon, etc. |
+
+### Utilisation pratique
+
+**Fiscalité** : Impacte la TVA et les obligations déclaratives  
+**France** : TVA française standard  
+**Europe** : TVA intracommunautaire, autoliquidation  
+**Autre** : Réglementations internationales, retenue à la source possible
+
+---
+
+## Usages des Succursales - 3 codes
+
+### Description
+
+Qualification de l'**usage métier** d'un site secondaire (succursale).
+
+### Codes
+
+| Code | Usage | Description |
+|------|-------|-------------|
+| **POINT_LIVRAISON** | Point de livraison | Adresse de réception des marchandises |
+| **FACTURATION** | Facturation | Adresse d'envoi des factures |
+| **CORRESPONDANCE** | Correspondance | Adresse postale administrative |
+
+### Utilisation pratique
+
+**Multisite** : Un hôpital avec plusieurs campus définit l'usage de chaque site  
+**Exemple** : Campus principal = Facturation + Correspondance, Campus annexe = Point de livraison
+
+---
+
+## Moyens de Paiement - 4 codes
+
+### Description
+
+Moyens de paiement acceptés par un fournisseur.
+
+### Codes
+
+| Code | Moyen | Description |
+|------|-------|-------------|
+| **VIR** | Virement | Virement bancaire standard (SEPA) |
+| **EXT** | Virement externe | Virement international ou spécifique |
+| **CHQ** | Chèque | Paiement par chèque bancaire |
+| **NUM** | Numéraire | Espèces (rare, montants limités) |
+
+### Utilisation pratique
+
+**Conditions de paiement** : Vérifier si le fournisseur accepte le moyen choisi  
+**Virement SEPA** : Standard France et UE (code **VIR**)  
+**International** : Virement externe (code **EXT**)
+
+---
+
+## Régimes d'Assurance - 6 codes
+
+### Description
+
+Classification des **régimes de protection sociale** pour les organismes payeurs.
+
+### Codes
+
+| Code | Régime | Description | Exemples |
+|------|--------|-------------|----------|
+| **SS** | Sécurité Sociale | Régime général obligatoire | CPAM, CNAM |
+| **MSA** | Mutualité Sociale Agricole | Régime agricole | MSA départementale |
+| **RSI** | Régime Social des Indépendants | Travailleurs indépendants | RSI (devenu SSI) |
+| **MUTUELLE** | Mutuelle | Régime complémentaire mutualiste | MGEN, MGEN |
+| **PREVOYANCE** | Prévoyance | Complémentaire prévoyance | Malakoff Humanis |
+| **AUTRE** | Autre | Autres régimes spéciaux | RATP, SNCF, Mines |
+
+### Utilisation pratique
+
+**Ordre de remboursement** : 
+1. Régime obligatoire (**SS**, **MSA**, **RSI**) en premier
+2. Régime complémentaire (**MUTUELLE**, **PREVOYANCE**) ensuite
+
+**Tiers-payant intégral** : Cumul régime obligatoire + complémentaire = 0 € reste à charge patient
+
+---
+
+## Types d'Organismes Payeurs - 2 codes
+
+### Description
+
+Classification des organismes payeurs selon qu'ils sont **obligatoires** ou **complémentaires**.
+
+### Codes
+
+| Code | Type | Description | Exemples |
+|------|------|-------------|----------|
+| **RO** | Régime Obligatoire | Assurance maladie de base (obligatoire pour tous) | CPAM, MSA, RSI |
+| **RC** | Régime Complémentaire | Assurance complémentaire (volontaire) | Mutuelles, prévoyances |
+
+### Utilisation pratique
+
+**Facturation** : Envoyer d'abord au RO, puis au RC  
+**Tiers-payant** : RO rembourse en premier, RC complète  
+**Recherche** : Lister tous les régimes obligatoires : `?payeur-type=RO`
+
+---
+
+## Types de Résidents Fiscaux - 2 codes
+
+### Description
+
+Statut de **résidence fiscale** d'une organisation pour les obligations déclaratives.
+
+### Codes
+
+| Code | Type | Description | Obligations |
+|------|------|-------------|-------------|
+| **R** | Résident | Résidence fiscale en France | Déclaration fiscale française standard |
+| **NR** | Non-Résident | Résidence fiscale hors France | Retenue à la source possible |
+
+### Utilisation pratique
+
+**Fiscalité** :  
+- **Résident** : TVA et impôts selon régime français  
+- **Non-résident** : Obligation de retenue à la source sur certains paiements
+
+**Recherche** : Identifier tous les non-résidents : `?debiteur-type-resident=NR`
+
+---
+
+## Règles de Cohérence
+
+### Combinaisons Catégorie + Nature Juridique
+
+Certaines combinaisons de **Catégorie d'organisation** et **Nature juridique** sont obligatoires pour maintenir la cohérence des données.
+
+| Catégorie | Nature juridique autorisée |
+|-----------|---------------------------|
+| **01** (Personne physique) | **00** (Inconnue), **01** (Particulier), **02** (Artisan-Commerçant-Agriculteur) |
+| **20** (État) | **07** (État) |
+| **21-23** (Région, Département, Commune) | **09** (Collectivité territoriale) |
+| **27** (EPS - Hôpital public) | **09** (Collectivité - EPS) |
+| **50** (Personne morale privé) | **03** (Société), **06** (Association) |
+| **60-62** (Caisses Sécurité Sociale) | **04** (CAM), **05** (Caisse complémentaire) |
+| **63** (Mutuelle) | **05** (Caisse complémentaire), **06** (Association) |
+| **65** ou **11** (CAF) | **11** (CAF) |
+| **70-71** (CNRACL, IRCANTEC) | **08** (EPA ou EPIC) |
+
+### Règle Civilité
+
+**Si Catégorie = 01** (Personne physique) :
+- ✅ **Civilité OBLIGATOIRE** (M, MME, MLLE, etc.)
+- ✅ **Prénom OBLIGATOIRE**
+
+**Sinon** (Organisation) :
+- ❌ **Civilité et Prénom OMIS**
+
+---
+
+## Exemples d'Utilisation
+
+### Exemple 1 : Hôpital Public
+
+```
+Catégorie : 27 (EPS)
+Nature juridique : 09 (Collectivité - EPS)
+Rôle : supplier + debtor (fournit et achète)
+Identifiant : FINESS (03)
+```
+
+### Exemple 2 : Mutuelle Complémentaire
+
+```
+Catégorie : 63 (Mutuelle)
+Nature juridique : 05 (Caisse complémentaire)
+Rôle : payer (uniquement)
+Régime : MUTUELLE
+Type payeur : RC (Régime Complémentaire)
+```
+
+### Exemple 3 : Entreprise Pharmaceutique
+
+```
+Catégorie : 50 (Personne morale privé)
+Nature juridique : 03 (Société)
+Rôle : supplier (fournisseur)
+Identifiant : SIRET (01)
+```
+
+### Exemple 4 : Médecin Libéral
+
+```
+Catégorie : 01 (Personne physique)
+Nature juridique : 02 (Artisan-Commerçant-Agriculteur)
+Rôle : supplier (prestations médicales)
+Identifiant : NIR (04)
+Civilité : M (Monsieur)
+Prénom : Jean
 ```
 
 ---
 
-### GEFChorusIdentifierTypeCS - Types identifiant CHORUS (8 codes)
+## Liens vers Ressources Techniques
 
-**ID** : `gef-chorus-identifier-type-cs`  
-**URL** : `https://www.cpage.fr/ig/masterdata/tiers/CodeSystem/gef-chorus-identifier-type-cs`  
-**Status** : Active  
-**Content** : Complete
+### CodeSystems (définitions)
 
-#### Description
+- [Types d'identifiants](CodeSystem-gef-identifier-type-cs.html)
+- [Catégories d'organisations](CodeSystem-gef-tg-category-cs.html)
+- [Natures juridiques](CodeSystem-gef-legal-nature-cs.html)
+- [Rôles](CodeSystem-tiers-role-cs.html)
+- [Types de clients](CodeSystem-gef-debtor-type-cs.html)
+- [Civilités](CodeSystem-gef-civility-cs.html)
+- [Localisations géographiques](CodeSystem-gef-address-localization-cs.html)
+- [Usages des succursales](CodeSystem-succursale-usage-cs.html)
+- [Moyens de paiement](CodeSystem-moyen-paiement-cs.html)
+- [Régimes d'assurance](CodeSystem-grand-regime-cs.html)
+- [Types d'organismes payeurs](CodeSystem-type-resident-cs.html)
 
-Types d'identifiants pour le système CHORUS (Comptabilité Publique de l'État). **Sous-ensemble de GEFIdentifierTypeCS excluant le code 09** ("En cours d'immatriculation").
+### ValueSets (ensembles de valeurs)
 
-#### Codes
-
-| Code | Libellé (identique à GEFIdentifierTypeCS) |
-|------|-------------------------------------------|
-| **01** | SIRET |
-| **02** | SIREN |
-| **03** | FINESS |
-| **04** | NIR |
-| **05** | TVA Intracommunautaire |
-| **06** | Hors UE |
-| **07** | Tahiti |
-| **08** | RIDET |
-
-**Code exclu** : ~~09 "En cours d'immatriculation"~~ (non valide pour CHORUS)
-
-#### Références
-
-- **KERD** : Champ "Type identifiant CHORUS" (2 caractères numériques 01-08)
-- **Contexte** : Débiteurs publics interfacés avec le système CHORUS de l'État
-
-#### Usage
-
-- **Extension** : GEFChorusIdentifierTypeExtension sur `identifier.extension`
-- **Cardinality** : 0..1 MS sur DebiteurProfile (optionnel, uniquement si CHORUS)
-
-#### Exemple d'utilisation
-
-```fsh
-// Hôpital public avec FINESS pour CHORUS
-Instance: CHMarseille
-InstanceOf: DebiteurProfile
-* identifier[finess].value = "750712184"
-* identifier[finess].extension contains GEFChorusIdentifierType named chorusIdentifierType 0..1
-* identifier[finess].extension[chorusIdentifierType].valueCodeableConcept = GEFChorusIdentifierTypeCS#03
-```
+- [Types d'identifiants VS](ValueSet-gef-identifier-type-vs.html)
+- [Catégories d'organisations VS](ValueSet-gef-tg-category-vs.html)
+- [Natures juridiques VS](ValueSet-gef-legal-nature-vs.html)
+- [Rôles VS](ValueSet-tiers-role-vs.html)
+- [Types de clients VS](ValueSet-gef-debtor-type-vs.html)
+- [Civilités VS](ValueSet-gef-civility-vs.html)
+- [Localisations géographiques VS](ValueSet-gef-address-localization-vs.html)
+- [Usages des succursales VS](ValueSet-succursale-usage-vs.html)
+- [Moyens de paiement VS](ValueSet-moyen-paiement-vs.html)
+- [Régimes d'assurance VS](ValueSet-grand-regime-vs.html)
+- [Types d'organismes payeurs VS](ValueSet-type-resident-vs.html)
 
 ---
 
-### GEFAddressLocalizationCS - Localisation adresse (3 codes)
+## Voir Aussi
 
-**ID** : `gef-address-localization-cs`  
-**URL** : `https://www.cpage.fr/ig/masterdata/tiers/CodeSystem/gef-address-localization-cs`  
-**Status** : Active  
-**Content** : Complete
-
-#### Description
-
-Classification géographique de l'adresse d'un débiteur selon les zones GEF.
-
-#### Codes
-
-| Code | Libellé | Description | ISO 3166 |
-|------|---------|-------------|----------|
-| **FRANCE** | France | Territoire métropolitain et DROM | FR |
-| **EUROPE** | Europe | Union Européenne hors France | UE (AT, BE, DE, IT, ES, etc.) |
-| **AUTRE** | Autre | Hors Union Européenne | Monde hors UE |
-
-#### Références
-
-- **KERD** : Champ "Localisation adresse" (6 caractères max : "FRANCE", "EUROPE", "AUTRE")
-
-#### Usage
-
-- **Extension** : GEFAddressLocalizationExtension sur `address.extension`
-- **Cardinality** : 0..1 MS sur DebiteurProfile (recommandé pour tous les débiteurs)
-
-#### Exemple d'utilisation
-
-```fsh
-// Débiteur en France
-* address.extension contains GEFAddressLocalization named localization 0..1 MS
-* address.extension[localization].valueCode = GEFAddressLocalizationCS#FRANCE
-* address.city = "Lyon"
-* address.country = "FR"
-
-// Débiteur en Europe (Allemagne)
-* address.extension[localization].valueCode = GEFAddressLocalizationCS#EUROPE
-* address.city = "Berlin"
-* address.country = "DE"
-```
-
----
-
-## Règles métier globales
-
-### Combinaisons Catégorie TG + Nature Juridique
-
-Le module métier GEF valide les combinaisons suivantes (rejets métier si non conformes) :
-
-| Catégorie TG | Codes | Natures juridiques autorisées | Codes |
-|--------------|-------|-------------------------------|-------|
-| Inconnue | 00 | Toutes | 00-11 |
-| Personne physique | 01 | Inconnue, Particulier, Artisan-Commerçant-Agriculteur | 00, 01, 02 |
-| État | 20 | État | 07 |
-| Région, Département, Commune | 21-23 | Collectivité territoriale-EPL-EPS | 09 |
-| CCAS, EPL | 24-25 | Collectivité territoriale-EPL-EPS | 09 |
-| EPS, ENSP | 27-28 | Collectivité territoriale-EPL-EPS, EPA ou EPIC | 08, 09 |
-| Autre établissement public | 29 | EPA ou EPIC | 08 |
-| Personne morale privé | 50 | Société, Association | 03, 06 |
-| CPAM, MSA, TNS | 60-62 | CAM, Caisse complémentaire | 04, 05 |
-| Mutuelle, Tiers payant | 63-64 | Caisse complémentaire, Association | 05, 06 |
-| CNRACL, IRCANTEC | 70-71 | EPA ou EPIC | 08 |
-| CAF | 65, 11 | CAF | 11 |
-
-### Règle d'obligation GEFPersonDetails
-
-**Si Catégorie TG = 01 (Personne physique)** :
-- **OBLIGATOIRE** : extension GEFPersonDetails avec :
-  - `civility` (valueCode from GEFCivilityCS)
-  - `firstName` (valueString)
-
-**Sinon** (Catégorie TG ≠ 01) :
-- **Omis** : GEFPersonDetails non utilisé
-
----
-
-## Liens vers ressources FHIR
-
-### CodeSystems
-- [GEFIdentifierTypeCS](CodeSystem-gef-identifier-type-cs.html)
-- [GEFTGCategoryCS](CodeSystem-gef-tg-category-cs.html)
-- [GEFLegalNatureCS](CodeSystem-gef-legal-nature-cs.html)
-- [TiersRoleCS](CodeSystem-tiers-role-cs.html)
-- [GEFDebtorTypeCS](CodeSystem-gef-debtor-type-cs.html)
-- [GEFCivilityCS](CodeSystem-gef-civility-cs.html)
-- [GEFChorusIdentifierTypeCS](CodeSystem-gef-chorus-identifier-type-cs.html)
-- [GEFAddressLocalizationCS](CodeSystem-gef-address-localization-cs.html)
-
-### ValueSets
-- [GEFIdentifierTypeVS](ValueSet-gef-identifier-type-vs.html)
-- [GEFTGCategoryVS](ValueSet-gef-tg-category-vs.html)
-- [GEFLegalNatureVS](ValueSet-gef-legal-nature-vs.html)
-- [TiersRoleVS](ValueSet-tiers-role-vs.html)
-- [GEFDebtorTypeVS](ValueSet-gef-debtor-type-vs.html)
-- [GEFCivilityVS](ValueSet-gef-civility-vs.html)
-- [GEFChorusIdentifierTypeVS](ValueSet-gef-chorus-identifier-type-vs.html)
-- [GEFAddressLocalizationVS](ValueSet-gef-address-localization-vs.html)
-
-### Extensions utilisant ces terminologies
-- [GEFIdentifierTypeExtension](StructureDefinition-gef-identifier-type.html) (9 codes)
-- [GEFTGCategoryExtension](StructureDefinition-gef-tg-category.html) (24 codes)
-- [GEFLegalNatureExtension](StructureDefinition-gef-legal-nature.html) (12 codes)
-- [TiersRoleExtension](StructureDefinition-tiers-role-extension.html) (2 codes)
-- [GEFDebtorTypeExtension](StructureDefinition-gef-debtor-type.html) (2 codes)
-- [GEFPersonDetailsExtension](StructureDefinition-gef-person-details.html) → sub-extension civility (5 codes)
-- [GEFChorusIdentifierTypeExtension](StructureDefinition-gef-chorus-identifier-type.html) (8 codes)
-- [GEFAddressLocalizationExtension](StructureDefinition-gef-address-localization.html) (3 codes)
-
----
-
-**Total terminologies GEF** : **8 CodeSystems**, **8 ValueSets**, **54 codes**
+- [Guide d'implémentation](index.html) - Vue d'ensemble du référentiel
+- [Exemples d'utilisation](examples.html) - Cas concrets avec les classifications
+- [Rechercher dans le référentiel](search-parameters.html) - Recherches par catégorie, rôle, etc.

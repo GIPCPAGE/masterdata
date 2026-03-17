@@ -1,616 +1,490 @@
-# Mapping GEF vers FHIR
+# Guide d'Intégration
 
-Cette page documente les mappings complets entre les **interfaces GEF** (EFOU, KERD, EMAF) et les profils FHIR TiersProfile, FournisseurProfile, DebiteurProfile.
+## Vue d'ensemble
 
-## Vue d'ensemble des interfaces GEF
+Cette page fournit des recommandations pratiques pour **intégrer le référentiel des organisations tierces** dans vos systèmes d'information hospitaliers ou vos logiciels de gestion.
 
-L'interfaçage GEF (Gestion Économique et Financière) utilise 3 messages principaux :
-
-| Message | Format | Direction | Contenu | Profil FHIR |
-|---------|--------|-----------|---------|-------------|
-| **EFOU** (Extraction Fournisseurs) | Fixe 262 caractères | Oracle ECO → GEF | Données fournisseurs (suppliers) | FournisseurProfile |
-| **KERD** (Intégration Débiteurs) | CSV | GEF → Oracle ECO | Données débiteurs (debtors/buyers) | DebiteurProfile |
-| **EMAF** (Extraction Marchés) | Fixe positions | Oracle ECO → GEF | Contrats fournisseurs | ⏳ Phase 4 (à venir) |
+Le référentiel expose une **API REST FHIR** standard permettant de créer, consulter, modifier et rechercher les organisations (fournisseurs, clients, organismes payeurs).
 
 ---
 
-## Architecture de mapping
+## Principes d'Intégration
 
-```
-┌────────────────────────────────────────────────────────────────┐
-│                     Oracle ECO Database                        │
-│  ┌──────────────────┐  ┌──────────────────┐                   │
-│  │  ECO.ETIER       │  │  ECO.FOU         │                   │
-│  │  (Tiers pivot)   │  │  (Fournisseurs)  │                   │
-│  └────────┬─────────┘  └──────────────────┘                   │
-│           │                       │                             │
-└───────────┼───────────────────────┼─────────────────────────────┘
-            │                       │
-            ↓ EFOU 262 chars        ↓ EMAF (Phase 4)
-    ┌───────────────────────────────────────────┐
-    │          GEF System                       │
-    │  (Gestion Économique et Financière)       │
-    └───────────────────────────────────────────┘
-            ↓ KERD CSV
-┌───────────────────────────────────────────────────────────────┐
-│                  FHIR R4 Profiles                             │
-│  ┌──────────────────┐  ┌──────────────────┐                  │
-│  │ TiersProfile     │  │ FournisseurProfile│                  │
-│  │ (Base GEF)       │  │ (EFOU-compliant) │                  │
-│  └────────┬─────────┘  └──────────────────┘                  │
-│           │                       │                            │
-│           └───────────┬───────────┘                            │
-│                       │                                        │
-│           ┌───────────▼───────────┐                            │
-│           │  DebiteurProfile     │                            │
-│           │  (KERD-compliant)    │                            │
-│           └──────────────────────┘                            │
-└───────────────────────────────────────────────────────────────┘
-```
+### 1. Approche API REST
+
+Le référentiel suit les standards **FHIR REST** :
+
+| Opération | Méthode HTTP | URL | Description |
+|-----------|-------------|-----|-------------|
+| **Créer** | POST | `[base]/Organization` | Créer une nouvelle organisation |
+| **Lire** | GET | `[base]/Organization/{id}` | Récupérer une organisation par son ID |
+| **Modifier** | PUT | `[base]/Organization/{id}` | Mettre à jour une organisation existante |
+| **Rechercher** | GET | `[base]/Organization?[critères]` | Rechercher des organisations |
+| **Supprimer** | DELETE | `[base]/Organization/{id}` | Supprimer une organisation (logique) |
+
+### 2. Format des Données
+
+**Format** : JSON (FHIR R4)  
+**Encodage** : UTF-8  
+**Content-Type** : `application/fhir+json`
 
 ---
 
-## Mapping EFOU (Extraction Fournisseurs) → FournisseurProfile
+## Scénarios d'Intégration
 
-### Spécifications EFOU
+### Scénario 1 : Import Depuis un Système Existant
 
-- **Format** : Texte fixe 262 caractères par enregistrement
-- **Encodage** : ASCII 7 bits
-- **Document** : Spécification INT.201.010
-- **Direction** : Oracle ECO → GEF (export fournisseurs)
+**Contexte** : Vous avez un système de gestion existant avec des fournisseurs et clients. Vous souhaitez les importer dans le référentiel FHIR.
 
-### Table de mapping EFOU positions → FHIR
+#### Étapes
 
-| Position | Longueur | Champ EFOU | FHIR Path | Extension/Slice | Notes |
-|----------|----------|------------|-----------|-----------------|-------|
-| **1-4** | 4 | Type enregistrement | (metadata) | - | Toujours "EFOU" |
-| **4-14** | 11 | Numéro fournisseur | `identifier[etierId].value` | etierId slice | Code interne ETIER.IDTITI |
-| **15-17** | 3 | Code identifiant TG | `identifier.extension[gefType]` | GEFIdentifierTypeExtension | 01=SIRET, 02=SIREN, 03=FINESS, etc. (voir GEFIdentifierTypeCS) |
-| **18-32** | 15 | Nom du fournisseur | `name` | - | Raison sociale principale |
-| **33-49** | 17 | Complément nom | `alias[0]` | - | Nom complémentaire |
-| **50-32** | 32 | Raison sociale | `alias[1]` | - | Autre alias (si différent de nom) |
-| **82-38** | 38 | Adresse ligne 1 | `address.line[0]` | - | Voie, numéro |
-| **120-26** | 26 | Adresse ligne 2 | `address.line[1]` | - | Complément adresse |
-| **146-38** | 38 | Ville | `address.city` | - | Commune |
-| **184-5** | 5 | Code postal | `address.postalCode` | - | CP français ou étranger |
-| **189-3** | 3 | Code pays | `address.country` | - | ISO 3166-1 alpha-2 (FR, DE, etc.) |
-| **192-14** | 14 | Téléphone | `telecom[].value` (system=phone) | - | Numéro téléphone principal |
-| **206-14** | 14 | Fax | `telecom[].value` (system=fax) | - | Numéro fax (obsolète) |
-| **220-40** | 40 | Email | `telecom[].value` (system=email) | - | Adresse email principale |
-| **260-3** | 3 | (Réservé) | - | - | Champ GEF réservé |
-| **223-14** | 14 | Code SIRET | `identifier[siret].value` | siret slice (si Type TG = 01) | SIRET 14 chiffres |
-| **237-1** | 1 | Catégorie TG | `extension[tgCategory]` | GEFTGCategoryExtension | Codes 00-74 (voir GEFTGCategoryCS) |
-| **238-2** | 2 | Nature juridique | `extension[legalNature]` | GEFLegalNatureExtension | Codes 00-11 (voir GEFLegalNatureCS) |
-| **240-10** | 10 | Code comptable classe 6 | ⚠️ CPage IG | CPageFournisseurProfile | Spécifique CPage, non dans TiersProfile |
-| **250-12** | 12 | Identifiant externe | ⚠️ CPage IG | CPageFournisseurProfile | Spécifique CPage |
+**1. Analyser vos données sources**
+- Liste des fournisseurs avec SIRET, raison sociale, adresse
+- Liste des clients avec coordonnées bancaires
+- Identifiants existants (codes fournisseur/client)
 
-### Exemple de mapping EFOU
+**2. Mapper vers les profils FHIR**
+- Raison sociale → `Organization.name`
+- SIRET → `Organization.identifier[siret].value`
+- Adresse → `Organization.address`
+- Code fournisseur → `Organization.extension[codeFournisseur].value`
 
-#### Enregistrement EFOU (extrait)
+**3. Créer les ressources FHIR**
 
-```
-EFOU0001234567801Centre Hospit...75001Paris      FR        0140123456    contact@chu.fr  12345678901234270910 ...
-    └─┬─┘└────┬────┘└┬┘└──────┬──────┘...└──┬──┘└───┬───┘...└─────────┬────────┘└┬┘└┬┘...
-    Type   N°fournisseur│  Nom        ...   CP    Pays     ...      SIRET       TG LN
-                        01 (SIRET)
-```
+```http
+POST [base]/Organization
+Content-Type: application/fhir+json
 
-#### FournisseurProfile FHIR résultant
-
-```json
 {
   "resourceType": "Organization",
-  "meta": {
-    "profile": ["https://www.cpage.fr/ig/masterdata/tiers/StructureDefinition/fournisseur-profile"]
-  },
   "identifier": [
-    {
-      "system": "urn:oid:1.2.250.1.999.1.1.1",
-      "value": "0001234567",
-      "type": {
-        "coding": [{"system": "http://terminology.hl7.org/CodeSystem/v2-0203", "code": "RI"}]
-      }
-    },
     {
       "system": "urn:oid:1.2.250.1.24.3.2",
-      "value": "12345678901234",
-      "type": {
-        "coding": [{"system": "http://terminology.hl7.org/CodeSystem/v2-0203", "code": "PRN"}]
-      },
-      "extension": [{
-        "url": "https://www.cpage.fr/ig/masterdata/tiers/StructureDefinition/gef-identifier-type",
-        "valueCodeableConcept": {
-          "coding": [{
-            "system": "https://www.cpage.fr/ig/masterdata/tiers/CodeSystem/gef-identifier-type-cs",
-            "code": "01",
-            "display": "SIRET"
-          }]
-        }
-      }]
+      "value": "12345678901234"
     }
   ],
-  "name": "Centre Hospitalier Universitaire",
+  "name": "Laboratoires Pharmaceutiques Durand",
   "address": [{
-    "line": ["1 Avenue de l'Hôpital"],
+    "line": ["10 Rue de la Santé"],
     "city": "Paris",
-    "postalCode": "75001",
+    "postalCode": "75014",
     "country": "FR"
   }],
-  "telecom": [
-    {"system": "phone", "value": "0140123456"},
-    {"system": "email", "value": "contact@chu.fr"}
-  ],
-  "extension": [
-    {
-      "url": "https://www.cpage.fr/ig/masterdata/tiers/StructureDefinition/tiers-role-extension",
-      "valueCoding": {
-        "system": "https://www.cpage.fr/ig/masterdata/tiers/CodeSystem/tiers-role-cs",
-        "code": "supplier"
-      }
-    },
-    {
-      "url": "https://www.cpage.fr/ig/masterdata/tiers/StructureDefinition/gef-tg-category",
-      "valueCodeableConcept": {
-        "coding": [{
-          "system": "https://www.cpage.fr/ig/masterdata/tiers/CodeSystem/gef-tg-category-cs",
-          "code": "27",
-          "display": "EPS"
-        }]
-      }
-    },
-    {
-      "url": "https://www.cpage.fr/ig/masterdata/tiers/StructureDefinition/gef-legal-nature",
-      "valueCodeableConcept": {
-        "coding": [{
-          "system": "https://www.cpage.fr/ig/masterdata/tiers/CodeSystem/gef-legal-nature-cs",
-          "code": "09",
-          "display": "Collectivité territoriale-EPL-EPS"
-        }]
-      }
+  "extension": [{
+    "url": "https://www.cpage.fr/ig/masterdata/tiers/StructureDefinition/tiers-role-extension",
+    "valueCoding": {
+      "system": "http://cpage.org/fhir/CodeSystem/tiers-role-cs",
+      "code": "supplier"
     }
-  ]
+  }]
 }
 ```
 
----
+**4. Gérer les doublons**
 
-## Mapping KERD (Intégration Débiteurs) → DebiteurProfile
+Avant chaque import, vérifier si l'organisation existe déjà :
 
-### Spécifications KERD
-
-- **Format** : CSV (Comma-Separated Values) avec séparateur ";"
-- **Encodage** : ISO-8859-1 (Latin-1)
-- **Document** : Spécification INT.300.960
-- **Direction** : GEF → Oracle ECO (import débiteurs)
-
-### Table de mapping KERD colonnes → FHIR
-
-| Position CSV | Champ KERD | FHIR Path | Extension/Slice | Cardinality | Notes |
-|--------------|------------|-----------|-----------------|-------------|-------|
-| **1** | Code débiteur | `identifier[etierId].value` | etierId slice | 1..1 | Code interne ETIER.IDTITI |
-| **2** | Type débiteur | `extension[debtorType]` | GEFDebtorTypeExtension | **1..1 MS** | **O** (Occasionnel) ou **N** (Normal), OBLIGATOIRE |
-| **3-4** | Compte contrepartie (lettre + numéro) | `extension[publicAccountingCounterpart]` | GEFPublicAccountingCounterpartExtension | 0..1 | Complex: letterCode (A/B/C) + accountNumber (10 digits) |
-| **5** | Nom débiteur | `name` | - | 1..1 | Raison sociale ou nom complet personne |
-| **6** | Complément nom | `alias[0]` | - | 0..1 | Nom complémentaire |
-| **7** | Code régie | `extension[regieCode]` | GEFRegieCodeExtension | 0..1 | Code régie secteur public (10 car max) |
-| **8** | Catégorie TG | `extension[tgCategory]` | GEFTGCategoryExtension | 0..1 | Codes 00-74 (voir GEFTGCategoryCS) |
-| **9** | Nature juridique | `extension[legalNature]` | GEFLegalNatureExtension | 0..1 | Codes 00-11 (voir GEFLegalNatureCS) |
-| **10** | Civilité | `extension[personDetails].extension[civility]` | GEFPersonDetailsExtension | **0..1 (obligatoire si TG=01)** | M, MME, MLLE, METMME, MOUMME |
-| **11** | Prénom | `extension[personDetails].extension[firstName]` | GEFPersonDetailsExtension | **0..1 (obligatoire si TG=01)** | Prénom personne physique (38 car max) |
-| **12** | Adresse ligne 1 | `address.line[0]` | - | 0..1 | Voie, numéro |
-| **13** | Adresse ligne 2 | `address.line[1]` | - | 0..1 | Complément adresse |
-| **14** | Ville | `address.city` | - | 0..1 | Commune |
-| **15** | Code postal | `address.postalCode` | - | 0..1 | CP français ou étranger |
-| **16** | Localisation adresse | `address.extension[localization]` | GEFAddressLocalizationExtension | 0..1 | **FRANCE**, **EUROPE**, **AUTRE** |
-| **17** | Type identifiant TG | `identifier.extension[gefType]` | GEFIdentifierTypeExtension | 0..1 | 01=SIRET, 02=SIREN, 03=FINESS, 04=NIR, etc. (voir GEFIdentifierTypeCS) |
-| **18** | Identifiant TG | `identifier[*].value` | Slice déduit du type (siret/siren/finess/nir/tva/etc.) | 0..1 | Valeur identifiant (SIRET 14 car, NIR 15 car, etc.) |
-| **19** | Code banque | `extension[bankAccount].extension[bankCode]` | GEFBankAccountExtension | **1..1 (au moins 1 bankAccount)** | Code banque RIB (5 car) |
-| **20** | Code guichet | `extension[bankAccount].extension[branchCode]` | GEFBankAccountExtension | 0..1 | Code guichet RIB (5 car) |
-| **21** | Numéro de compte | `extension[bankAccount].extension[accountNumber]` | GEFBankAccountExtension | 0..1 | Numéro compte RIB (11 car) |
-| **22** | Clé RIB | `extension[bankAccount].extension[ribKey]` | GEFBankAccountExtension | 0..1 | Clé RIB (2 car) |
-| **23** | IBAN | `extension[bankAccount].extension[iban]` | GEFBankAccountExtension | **1..1 (au moins 1 bankAccount)** | IBAN international (34 car max) |
-| **24** | BIC | `extension[bankAccount].extension[bic]` | GEFBankAccountExtension | 0..1 | BIC/SWIFT (11 car) |
-| **25** | Est débiteur laboratoire | `extension[debtorFlags].extension[isLaboratory]` | GEFDebtorFlagsExtension | 0..1 | Boolean O/N → true/false |
-| **26** | Est débiteur locataire | `extension[debtorFlags].extension[isTenant]` | GEFDebtorFlagsExtension | 0..1 | Boolean O/N → true/false |
-| **27** | Est débiteur agent | `extension[debtorFlags].extension[isAgent]` | GEFDebtorFlagsExtension | 0..1 | Boolean O/N → true/false |
-| **28** | Numéro matricule agent | `extension[debtorFlags].extension[agentRegistrationNumber]` | GEFDebtorFlagsExtension | 0..1 | String (20 car max) |
-| **29** | Type identifiant CHORUS | `identifier.extension[chorusIdentifierType]` | GEFChorusIdentifierTypeExtension | 0..1 | Codes 01-08 (subset de GEFIdentifierTypeCS, sans 09) |
-
-### Exemple de mapping KERD
-
-#### Enregistrement KERD CSV (extrait)
-
-```csv
-0001234567;N;A;4110000000;CH Marseille;;REG001;27;09;;;1 Rue Paradis;Bâtiment A;Marseille;13001;FRANCE;03;750712184;30002;00550;00000123456;11;FR7630006000011234567890789;BDFEFRPPCCT;N;N;N;;03
+```http
+GET [base]/Organization?identifier=urn:oid:1.2.250.1.24.3.2|12345678901234
 ```
 
-**Décomposition** :
-- `0001234567` : Code débiteur → identifier[etierId].value
-- `N` : Type débiteur Normal → extension[debtorType] = N
-- `A` : Compte contrepartie lettre → extension[publicAccountingCounterpart].extension[letterCode] = "A"
-- `4110000000` : Compte contrepartie numéro → extension[publicAccountingCounterpart].extension[accountNumber] = "4110000000"
-- `CH Marseille` : Nom → name
-- `REG001` : Code régie → extension[regieCode] = "REG001"
-- `27` : Catégorie TG EPS → extension[tgCategory] = #27
-- `09` : Nature juridique Collectivité → extension[legalNature] = #09
-- `03` : Type identifiant FINESS → identifier[finess].extension[gefType] = #03
-- `750712184` : FINESS → identifier[finess].value
-- `FR76300...` : IBAN → extension[bankAccount].extension[iban]
-- `BDFEFRPPCCT` : BIC → extension[bankAccount].extension[bic]
-- `03` (fin) : Type identifiant CHORUS → identifier[finess].extension[chorusIdentifierType] = #03
+Si résultat vide → Créer  
+Si résultat trouvé → Mettre à jour ou ignorer
 
-#### DebiteurProfile FHIR résultant
+---
+
+### Scénario 2 : Synchronisation Bidirectionnelle
+
+**Contexte** : Votre système doit rester synchronisé avec le référentiel (modifications dans les deux sens).
+
+#### Architecture Recommandée
+
+```
+┌─────────────────────────────┐
+│   Votre Système Métier      │
+│  (Comptabilité, Achats)     │
+└──────────┬──────────────────┘
+           │
+           │ Synchronisation
+           │ bidirectionnelle
+           ↓
+┌─────────────────────────────┐
+│  Référentiel FHIR Tiers     │
+│  (Source de vérité)         │
+└─────────────────────────────┘
+```
+
+#### Mécanismes
+
+**1. Push (de votre système vers le référentiel)**
+
+Quand une organisation est créée/modifiée dans votre système :
+- Appeler `POST` ou `PUT` sur le référentiel
+- Stocker l'ID FHIR retourné dans votre base
+
+**2. Pull (du référentiel vers votre système)**
+
+Option A : **Polling périodique**
+```http
+GET [base]/Organization?_lastUpdated=gt2024-03-15T10:00:00Z
+```
+
+Option B : **Webhooks/Subscriptions** (si supporté)
+- S'abonner aux événements de modification
+- Recevoir notification push lors de changements
+
+**3. Gestion des conflits**
+
+Stratégie : **Référentiel = source de vérité**
+- En cas de divergence, privilégier les données du référentiel
+- Journaliser les écrasements pour audit
+
+---
+
+### Scénario 3 : Recherche et Affichage
+
+**Contexte** : Votre application doit permettre de rechercher et afficher les organisations.
+
+#### Interface Utilisateur
+
+**Champ de recherche libre** :
+```http
+GET [base]/Organization?name:contains=hopital
+```
+
+**Filtres avancés** :
+
+- Par rôle (fournisseur, client, payeur)
+```http
+GET [base]/Organization?tiers-role=supplier
+```
+
+- Par catégorie (hôpital public, mutuelle, entreprise)
+```http
+GET [base]/Organization?tiers-category=27
+```
+
+- Par identifiant (SIRET, FINESS)
+```http
+GET [base]/Organization?identifier=urn:oid:1.2.250.1.24.3.2|12345678901234
+```
+
+#### Affichage des Résultats
+
+Informations minimales à afficher :
+- Nom (+ alias si disponible)
+- Identifiant principal (SIRET, FINESS)
+- Adresse
+- Rôle(s) métier
+- Statut actif/inactif
+
+---
+
+### Scénario 4 : Validation des Paiements
+
+**Contexte** : Avant de régler un fournisseur, vérifier ses coordonnées bancaires et conditions.
+
+#### Workflow
+
+**1. Récupérer le fournisseur**
+```http
+GET [base]/Organization?fournisseur-code:exact=FRSUP123456
+```
+
+**2. Extraire les informations de paiement**
 
 ```json
 {
-  "resourceType": "Organization",
-  "meta": {
-    "profile": ["https://www.cpage.fr/ig/masterdata/tiers/StructureDefinition/debiteur-profile"]
-  },
-  "identifier": [
-    {
-      "system": "urn:oid:1.2.250.1.999.1.1.1",
-      "value": "0001234567",
-      "type": {
-        "coding": [{"system": "http://terminology.hl7.org/CodeSystem/v2-0203", "code": "RI"}]
-      }
-    },
-    {
-      "system": "https://finess.esante.gouv.fr",
-      "value": "750712184",
-      "type": {
-        "coding": [{"system": "http://terminology.hl7.org/CodeSystem/v2-0203", "code": "FI"}]
-      },
-      "extension": [
-        {
-          "url": "https://www.cpage.fr/ig/masterdata/tiers/StructureDefinition/gef-identifier-type",
-          "valueCodeableConcept": {
-            "coding": [{
-              "system": "https://www.cpage.fr/ig/masterdata/tiers/CodeSystem/gef-identifier-type-cs",
-              "code": "03",
-              "display": "FINESS"
-            }]
-          }
-        },
-        {
-          "url": "https://www.cpage.fr/ig/masterdata/tiers/StructureDefinition/gef-chorus-identifier-type",
-          "valueCodeableConcept": {
-            "coding": [{
-              "system": "https://www.cpage.fr/ig/masterdata/tiers/CodeSystem/gef-chorus-identifier-type-cs",
-              "code": "03",
-              "display": "FINESS"
-            }]
-          }
-        }
-      ]
-    }
-  ],
-  "name": "CH Marseille",
-  "address": [{
-    "line": ["1 Rue Paradis", "Bâtiment A"],
-    "city": "Marseille",
-    "postalCode": "13001",
-    "country": "FR",
-    "extension": [{
-      "url": "https://www.cpage.fr/ig/masterdata/tiers/StructureDefinition/gef-address-localization",
-      "valueCode": "FRANCE"
-    }]
-  }],
-  "extension": [
-    {
-      "url": "https://www.cpage.fr/ig/masterdata/tiers/StructureDefinition/tiers-role-extension",
-      "valueCoding": {
-        "system": "https://www.cpage.fr/ig/masterdata/tiers/CodeSystem/tiers-role-cs",
-        "code": "debtor"
-      }
-    },
-    {
-      "url": "https://www.cpage.fr/ig/masterdata/tiers/StructureDefinition/gef-debtor-type",
-      "valueCode": "N"
-    },
-    {
-      "url": "https://www.cpage.fr/ig/masterdata/tiers/StructureDefinition/gef-public-accounting-counterpart",
-      "extension": [
-        {"url": "letterCode", "valueString": "A"},
-        {"url": "accountNumber", "valueString": "4110000000"}
-      ]
-    },
-    {
-      "url": "https://www.cpage.fr/ig/masterdata/tiers/StructureDefinition/gef-regie-code",
-      "valueString": "REG001"
-    },
-    {
-      "url": "https://www.cpage.fr/ig/masterdata/tiers/StructureDefinition/gef-tg-category",
-      "valueCodeableConcept": {
-        "coding": [{
-          "system": "https://www.cpage.fr/ig/masterdata/tiers/CodeSystem/gef-tg-category-cs",
-          "code": "27",
-          "display": "EPS"
-        }]
-      }
-    },
-    {
-      "url": "https://www.cpage.fr/ig/masterdata/tiers/StructureDefinition/gef-legal-nature",
-      "valueCodeableConcept": {
-        "coding": [{
-          "system": "https://www.cpage.fr/ig/masterdata/tiers/CodeSystem/gef-legal-nature-cs",
-          "code": "09",
-          "display": "Collectivité territoriale-EPL-EPS"
-        }]
-      }
-    },
-    {
-      "url": "https://www.cpage.fr/ig/masterdata/tiers/StructureDefinition/gef-bank-account",
-      "extension": [
-        {"url": "bankCode", "valueString": "30002"},
-        {"url": "branchCode", "valueString": "00550"},
-        {"url": "accountNumber", "valueString": "00000123456"},
-        {"url": "ribKey", "valueString": "11"},
-        {"url": "iban", "valueString": "FR7630006000011234567890789"},
-        {"url": "bic", "valueString": "BDFEFRPPCCT"}
-      ]
-    },
-    {
-      "url": "https://www.cpage.fr/ig/masterdata/tiers/StructureDefinition/gef-debtor-flags",
-      "extension": [
-        {"url": "isLaboratory", "valueBoolean": false},
-        {"url": "isTenant", "valueBoolean": false},
-        {"url": "isAgent", "valueBoolean": false}
-      ]
-    }
-  ]
+  "extension": [{
+    "url": ".../gef-bank-account",
+    "extension": [
+      {"url": "iban", "valueString": "FR7630002..."},
+      {"url": "bic", "valueString": "SOGEFRPPXXX"}
+    ]
+  }, {
+    "url": ".../fournisseur-paiement",
+    "extension": [
+      {"url": "delaiPaiement", "valueInteger": 60},
+      {"url": "jourPaiement", "valueInteger": 10},
+      {"url": "montantMin", "valueDecimal": 1000.0}
+    ]
+  }]
 }
 ```
 
----
+**3. Valider avant paiement**
 
-## Mapping EMAF (Extraction Marchés Fournisseurs) → Phase 4
-
-### Spécifications EMAF
-
-- **Format** : Texte fixe positions (longueur totale à documenter)
-- **Document** : Spécification INT.201.010 (section marchés)
-- **Direction** : Oracle ECO → GEF (export contrats fournisseurs)
-- **Statut** : ⏳ **Phase 4 en attente** (analyse ressource Contract FHIR)
-
-### Champs identifiés EMAF (documentation préliminaire)
-
-| Champ EMAF | FHIR Candidat | Notes |
-|------------|---------------|-------|
-| Code fournisseur | `Contract.subject` référence Organization (FournisseurProfile) | Lien fournisseur-contrat |
-| Numéro marché | `Contract.identifier[marketNumber]` | Identifiant unique marché |
-| Dates contrat (début, fin) | `Contract.period.start`, `Contract.period.end` | Période validité |
-| Montant marché | `Contract.totalValue` (Money) | Montant total TTC |
-| RIB marché | Extension custom ou `Contract.term.offer.party.extension` | RIB spécifique marché (si différent du RIB fournisseur principal) |
-| Identifiant externe marché | `Contract.identifier[externalId]` | Identifiant dans système GEF |
-
-**Action Phase 4** : 
-1. Analyser spécification EMAF complète (positions, longueurs)
-2. Décider : 
-   - **Option A** : Créer ContratFournisseurProfile (extends Contract)
-   - **Option B** : Extension complexe sur FournisseurProfile (MarketAssociationExtension)
-3. Mapper tous les champs EMAF → FHIR Contract ou Extension
-4. Créer instances de test (contract examples)
+- Délai respecté ? (60 jours depuis facture)
+- Montant ≥ minimum ? (1000 €)
+- IBAN valide ?
+- Affacturage activé ? (si oui, payer le factor, pas le fournisseur)
 
 ---
 
-## Mapping Oracle ECO → FHIR (legacy)
+### Scénario 5 : Transmission FSE aux Organismes Payeurs
 
-Cette section documente le mapping Oracle ECO (système interne CPage) vers TiersProfile pour référence historique.
+**Contexte** : Envoyer les feuilles de soins électroniques aux bons organismes (CPAM, mutuelles).
 
-### Table ETIER → TiersProfile
+#### Workflow
 
-| Champ Oracle | Type | FHIR Path | Notes |
-|--------------|------|-----------|-------|
-| **IDTITI** | VARCHAR2(10) | `identifier[etierId].value` | **Obligatoire**, identifiant unique interne |
-| **CSINTI** | VARCHAR2(9) | `identifier[siren].value` | Slice FR Core, 9 chiffres |
-| **CSIRTI** | VARCHAR2(14) | `identifier[siret].value` | Slice FR Core, 14 chiffres |
-| **CFINTI** | VARCHAR2(9) | `identifier[finess].value` | Slice FR Core |
-| **CNIRTI** | VARCHAR2(15) | `identifier[nir].value` | ⚠️ NIR très sensible, RGPD, utiliser avec précautions |
-| **TVAITI** | VARCHAR2(20) | `identifier[tva].value` | TVA intracommunautaire |
-| **NORSTI** | VARCHAR2(100) | `name` | **Obligatoire**, raison sociale |
-| **COMPTI** | VARCHAR2(100) | `alias[0]` | Nom complémentaire |
-| **VALITI** | CHAR(1) | `active` | V → true, I → false |
-| **AL1STI** | VARCHAR2(50) | `address.line[0]` | Ligne d'adresse 1 |
-| **AL2STI** | VARCHAR2(50) | `address.line[1]` | Ligne d'adresse 2 |
-| **AL3STI** | VARCHAR2(50) | `address.line[2]` | Ligne d'adresse 3 |
-| **CPOSTI** | VARCHAR2(10) | `address.postalCode` | Code postal |
-| **BDISTI** | VARCHAR2(50) | `address.city` | Ville/Commune |
-| **PAYSTI** | VARCHAR2(50) | `address.country` | Code pays (ISO 3166) |
-| **TELETI** | VARCHAR2(20) | `telecom[].value` (system=phone) | Téléphone |
-| **MAILTI** | VARCHAR2(100) | `telecom[].value` (system=email) | Email |
-| **SITETI** | VARCHAR2(200) | `telecom[].value` (system=url) | Site web |
+**1. Identifier l'organisme payeur**
 
-### Détermination des rôles (Tables FOU / DBT)
+Trouver la CPAM du patient selon son département :
 
-| Table | Condition | FHIR Extension | Code |
-|-------|-----------|----------------|------|
-| **ECO.FOU** | EXISTS (SELECT 1 FROM ECO.FOU WHERE IDTITI = :id) | `extension[tiersRole].valueCoding` | `supplier` |
-| **ECO.DBT** | EXISTS (SELECT 1 FROM ECO.DBT WHERE IDTITI = :id) | `extension[tiersRole].valueCoding` | `debtor` |
+```http
+GET [base]/Organization?tiers-role=payer
+  &payeur-type=RO
+  &payeur-grand-regime=SS
+  &_filter=extension('numeroCaisse').value eq '75001'
+```
 
-#### Requête SQL complète
+**2. Récupérer les paramètres de transmission**
 
-```sql
--- Transformer ECO.ETIER + FOU/DBT → TiersProfile
-SELECT
-    e.IDTITI,
-    e.NORSTI AS name,
-    e.COMPTI AS alias,
-    e.CSINTI AS siren,
-    e.CSIRTI AS siret,
-    e.TVAITI AS tva,
-    e.VALITI AS active_flag,
-    e.AL1STI, e.AL2STI, e.AL3STI,
-    e.CPOSTI, e.BDISTI, e.PAYSTI,
-    e.TELETI, e.MAILTI, e.SITETI,
-    CASE WHEN EXISTS (SELECT 1 FROM ECO.FOU WHERE IDTITI = e.IDTITI) THEN 'supplier' ELSE NULL END AS role_supplier,
-    CASE WHEN EXISTS (SELECT 1 FROM ECO.DBT WHERE IDTITI = e.IDTITI) THEN 'debtor' ELSE NULL END AS role_debtor
-FROM ECO.ETIER e
-WHERE e.IDTITI = :tiers_id;
+```json
+{
+  "extension": [{
+    "url": ".../payeur-sante",
+    "extension": [
+      {"url": "typePayeur", "valueCode": "RO"},
+      {"url": "codeCentre", "valueString": "750"},
+      {"url": "numeroCaisse", "valueString": "75001"},
+      {"url": "numeroOrganisme", "valueString": "007501"},
+      {"url": "delaiPec", "valueInteger": 90}
+    ]
+  }]
+}
+```
+
+**3. Transmettre la FSE**
+
+- Utiliser le `numeroOrganisme` pour identifier le destinataire
+- Surveiller le délai de prise en charge (90 jours)
+- Relancer si dépassement
+
+---
+
+## Bonnes Pratiques
+
+### 1. Gestion des Identifiants
+
+**Privilégier les identifiants officiels** :
+1. SIRET (entreprises françaises)
+2. FINESS (établissements de santé)
+3. TVA UE (fournisseurs européens)
+4. Identifiant interne (en dernier recours)
+
+**Rechercher par identifiant avant création** pour éviter doublons :
+
+```http
+GET [base]/Organization?identifier=[system]|[value]
 ```
 
 ---
 
-## Règles de transformation importantes
+### 2. Multi-Rôle
 
-### 1. Identifiants GEF : Mapping Type → Slice
+**Une organisation = une seule ressource**, même si elle a plusieurs rôles.
 
-Le champ **Type identifiant TG** (EFOU position 15-17, KERD position 17) détermine le slice identifier :
+❌ **Mauvaise pratique** :
+- Créer 3 ressources distinctes pour la même clinique (fournisseur, client, payeur)
 
-| Code GEF | GEFIdentifierTypeCS | Slice identifier | System |
-|----------|---------------------|------------------|--------|
-| **01** | SIRET | identifier[siret] | urn:oid:1.2.250.1.24.3.2 |
-| **02** | SIREN | identifier[siren] | urn:oid:1.2.250.1.24.3.1 |
-| **03** | FINESS | identifier[finess] | https://finess.esante.gouv.fr |
-| **04** | NIR | identifier[nir] | urn:oid:1.2.250.1.213.1.4.8 |
-| **05** | TVA intracommunautaire | identifier[tva] | (Selon pays UE) |
-| **06** | Hors UE | identifier[horsUE] | (Selon pays) |
-| **07** | Tahiti | identifier[tahiti] | http://cpage.org/fhir/NamingSystem/tahiti-identifier |
-| **08** | RIDET | identifier[ridet] | http://cpage.org/fhir/NamingSystem/ridet-identifier |
-| **09** | En cours d'immatriculation | (À créer selon besoin) | - |
+✅ **Bonne pratique** :
+- Créer 1 ressource avec 3 rôles différents
 
-**Règle** : Lire le code TG, créer le slice correspondant, puis ajouter l'extension GEFIdentifierTypeExtension sur `identifier.extension[gefType]`.
+**Avantages** :
+- Pas de duplication
+- Historique unifié
+- Recherche simplifiée
 
-### 2. Compte contrepartie comptabilité publique (KERD position 3-4)
+---
 
-Le champ KERD "Compte contrepartie" est **composé de 2 sous-champs** :
-- **Lettre** (position 3, 1 caractère : A, B, C)
-- **Numéro** (position 4, 10 caractères numériques)
+### 3. Gestion des Erreurs
 
-**Transformation** :
-```
-KERD: "A;4110000000"
-      ↓
-FHIR: extension[publicAccountingCounterpart]
-        .extension[letterCode].valueString = "A"
-        .extension[accountNumber].valueString = "4110000000"
-```
+**Codes HTTP standards** :
 
-### 3. GEFPersonDetails obligatoire si Catégorie TG = 01
-
-**Règle métier KERD** : Si Catégorie TG #01 (Personne physique), les champs position 10 (Civilité) et position 11 (Prénom) sont **OBLIGATOIRES**.
+| Code | Signification | Action |
+|------|--------------|--------|
+| **200 OK** | Succès | Continuer |
+| **201 Created** | Ressource créée | Stocker l'ID retourné |
+| **400 Bad Request** | Données invalides | Corriger la requête |
+| **404 Not Found** | Ressource inexistante | Vérifier l'ID |
+| **409 Conflict** | Conflit (doublon) | Utiliser ressource existante |
+| **500 Server Error** | Erreur serveur | Réessayer plus tard |
 
 **Validation FHIR** :
-```fsh
-Profile: DebiteurProfile
-* extension[personDetails] 0..1 MS
-* extension[personDetails] ^short = "OBLIGATOIRE si Catégorie TG = 01"
-// TODO: Ajouter FHIRPath invariant
-// * obeys debtor-person-details-mandatory-if-tg-01
+
+Le serveur peut retourner un `OperationOutcome` en cas d'erreur :
+
+```json
+{
+  "resourceType": "OperationOutcome",
+  "issue": [{
+    "severity": "error",
+    "code": "invalid",
+    "diagnostics": "SIRET invalide : doit faire 14 chiffres"
+  }]
+}
 ```
 
-**FHIRPath invariant candidat** :
-```
-extension.where(url='gef-tg-category').valueCodeableConcept.coding.code = '01' 
-  implies 
-extension.exists(url='gef-person-details')
-```
-
-### 4. Compte bancaire (bankAccount) obligatoire pour débiteurs
-
-**Règle KERD** : Tout débiteur **DOIT** avoir au moins un compte bancaire (IBAN minimum).
-
-**Validation FHIR** :
-```fsh
-Profile: DebiteurProfile
-* extension[bankAccount] 1..* MS // MANDATORY
-* extension[bankAccount].extension[iban] 1..1 MS // IBAN obligatoire
-```
-
-**KERD positions 19-24** :
-- Si **RIB complet** : 4 champs (bankCode, branchCode, accountNumber, ribKey) + IBAN + BIC
-- Si **IBAN seul** (étranger UE) : Uniquement IBAN + BIC
-
-### 5. Combinaison Catégorie TG + Nature juridique
-
-Le module métier GEF valide les combinaisons autorisées (voir [Terminologies - Règles métier](terminologies.html#règles-métier-globales)).
-
-**Validation recommandée** : Créer un FHIRPath invariant vérifiant les combinaisons légales :
-
-```
-// Exemple : Si Catégorie TG = 01 (Personne physique), Nature juridique doit être 00, 01 ou 02
-extension.where(url='gef-tg-category').valueCodeableConcept.coding.code = '01'
-  implies
-extension.where(url='gef-legal-nature').valueCodeableConcept.coding.code.memberOf('00' | '01' | '02')
-```
-
-### 6. GEFChorusIdentifierType : Subset de GEFIdentifierType
-
-**Attention** : GEFChorusIdentifierTypeCS utilise **uniquement les codes 01-08** (exclut le code 09 "En cours d'immatriculation").
-
-**Règle** : Sur les débiteurs publics (EPS, collectivités) interfacés avec CHORUS, utiliser GEFChorusIdentifierTypeExtension au lieu de GEFIdentifierTypeExtension pour qualification CHORUS-spécifique.
+Analyser le champ `diagnostics` pour afficher un message utilisateur clair.
 
 ---
 
-## Couverture de mapping
+### 4. Performance et Pagination
 
-### EFOU (Extraction Fournisseurs)
+**Limiter les résultats** :
+```http
+GET [base]/Organization?_count=50
+```
 
-| Statut | Champs | Mapping FHIR |
-|--------|--------|--------------|
-| ✅ **Complet** | Positions 1-262 | FournisseurProfile + extensions Phase 1 |
-| ⚠️ **Partiel CPage** | Positions 240-262 | Nécessite CPageFournisseurProfile (IG dérivé) |
+**Pagination** :
+```http
+GET [base]/Organization?_count=50&_offset=100
+```
 
-**Positions non mappées dans TiersProfile** (spécifiques CPage) :
-- Position 240-10 : Code comptable classe 6 → CPageFournisseurProfile.extension[accountingClass6]
-- Position 250-12 : Identifiant externe → CPageFournisseurProfile.extension[externalId]
-
-### KERD (Intégration Débiteurs)
-
-| Statut | Champs | Mapping FHIR |
-|--------|--------|--------------|
-| ✅ **Complet** | Positions 1-29 CSV | DebiteurProfile + extensions Phase 1 + Phase 2 |
-| ✅ **Complet** | Banking (RIB/IBAN) | GEFBankAccountExtension (6 sub-extensions) |
-| ✅ **Complet** | Comptabilité publique | GEFPublicAccountingCounterpartExtension, GEFRegieCodeExtension, GEFChorusIdentifierTypeExtension |
-| ✅ **Complet** | Personne physique | GEFPersonDetailsExtension (civility + firstName) |
-| ✅ **Complet** | Flags métier | GEFDebtorFlagsExtension (isLaboratory, isTenant, isAgent, agentRegistrationNumber) |
-
-**Tous les champs KERD sont mappés** (0 champs non mappés dans ig-md-fhir-common).
-
-### EMAF (Extraction Marchés Fournisseurs)
-
-| Statut | Analyse |
-|--------|---------|
-| ⏳ **Phase 4** | Spécifications en cours d'analyse |
-| ⏳ **Décision** | Contract resource vs Extension custom |
-| ⏳ **Mapping** | À définir (positions, longueurs, champs) |
+**Optimiser les recherches** :
+- Utiliser des critères précis (`identifier`, `fournisseur-code:exact`)
+- Éviter les recherches `name:contains` trop larges
+- Indexer sur les identifiants dans votre base locale
 
 ---
 
-## Liens vers ressources FHIR
+### 5. Sécurité
 
-### Profils
-- **TiersProfile** : [StructureDefinition](StructureDefinition-tiers-profile.html)
-- **FournisseurProfile** (EFOU) : [StructureDefinition](StructureDefinition-fournisseur-profile.html)
-- **DebiteurProfile** (KERD) : [StructureDefinition](StructureDefinition-debiteur-profile.html)
+**Authentification** : Utiliser OAuth 2.0 ou API Key selon configuration serveur
 
-### Extensions Phase 1 (Fondations)
-- **GEFIdentifierTypeExtension** : [StructureDefinition](StructureDefinition-gef-identifier-type.html)
-- **GEFBankAccountExtension** : [StructureDefinition](StructureDefinition-gef-bank-account.html)
-- **GEFTGCategoryExtension** : [StructureDefinition](StructureDefinition-gef-tg-category.html)
-- **GEFLegalNatureExtension** : [StructureDefinition](StructureDefinition-gef-legal-nature.html)
-- **TiersRoleExtension** : [StructureDefinition](StructureDefinition-tiers-role-extension.html)
+**Autorisation** : Respecter les rôles métier
+- Lecture : Tous utilisateurs
+- Création/Modification : Administrateurs référentiel
+- Suppression : Super-administrateurs uniquement
 
-### Extensions Phase 2 (Débitorat)
-- **GEFDebtorTypeExtension** : [StructureDefinition](StructureDefinition-gef-debtor-type.html)
-- **GEFPublicAccountingCounterpartExtension** : [StructureDefinition](StructureDefinition-gef-public-accounting-counterpart.html)
-- **GEFRegieCodeExtension** : [StructureDefinition](StructureDefinition-gef-regie-code.html)
-- **GEFChorusIdentifierTypeExtension** : [StructureDefinition](StructureDefinition-gef-chorus-identifier-type.html)
-- **GEFDebtorFlagsExtension** : [StructureDefinition](StructureDefinition-gef-debtor-flags.html)
-- **GEFPersonDetailsExtension** : [StructureDefinition](StructureDefinition-gef-person-details.html)
-- **GEFAddressLocalizationExtension** : [StructureDefinition](StructureDefinition-gef-address-localization.html)
-
-### Terminologies
-- [Terminologies GEF (8 CodeSystems)](terminologies.html)
-
-### Instances de test
-- [ExempleFournisseurEPS](Organization-ExempleFournisseurEPS.html) (EFOU: SIRET + RIB)
-- [ExempleFournisseurTVA](Organization-ExempleFournisseurTVA.html) (EFOU: TVA UE + IBAN)
-- [ExempleDebiteurPersonnePhysique](Organization-ExempleDebiteurPersonnePhysique.html) (KERD: NIR + Civilité)
-- [ExempleDebiteurEPSPublic](Organization-ExempleDebiteurEPSPublic.html) (KERD: FINESS + comptabilité publique)
-- [ExempleFournisseurRIDET](Organization-ExempleFournisseurRIDET.html) (EFOU: RIDET NC)
+**Confidentialité** :
+- Ne pas logger les coordonnées bancaires (IBAN, BIC)
+- Chiffrer les communications (HTTPS obligatoire)
+- Respecter RGPD pour données personnelles (NIR, civilité, prénom)
 
 ---
 
-**Documentation mise à jour** : 23 février 2026  
-**Couverture** : EFOU 100% (hors CPage), KERD 100%, EMAF Phase 4
+### 6. Maintenance et Evolution
+
+**Versionnement** :
+- Le référentiel suit FHIR R4
+- Les extensions peuvent évoluer (nouvelles versions)
+- Tester régulièrement la compatibilité
+
+**Monitoring** :
+- Surveiller les temps de réponse API
+- Journaliser les erreurs 4xx/5xx
+- Alerter si taux d'échec > seuil
+
+**Documentation** :
+- Maintenir la correspondance entre vos codes internes et IDs FHIR
+- Documenter les mappings de données
+- Former les utilisateurs aux nouveaux processus
+
+---
+
+## Exemples de Code
+
+### Création d'un Fournisseur (Python)
+
+```python
+import requests
+import json
+
+url = "https://api.example.com/fhir/Organization"
+headers = {
+    "Content-Type": "application/fhir+json",
+    "Authorization": "Bearer YOUR_TOKEN"
+}
+
+data = {
+    "resourceType": "Organization",
+    "identifier": [{
+        "system": "urn:oid:1.2.250.1.24.3.2",
+        "value": "12345678901234"
+    }],
+    "name": "Laboratoires Durand",
+    "extension": [{
+        "url": "https://www.cpage.fr/ig/masterdata/tiers/StructureDefinition/tiers-role-extension",
+        "valueCoding": {
+            "system": "http://cpage.org/fhir/CodeSystem/tiers-role-cs",
+            "code": "supplier"
+        }
+    }]
+}
+
+response = requests.post(url, headers=headers, data=json.dumps(data))
+
+if response.status_code == 201:
+    org_id = response.json()["id"]
+    print(f"Organisation créée avec ID : {org_id}")
+else:
+    print(f"Erreur {response.status_code} : {response.text}")
+```
+
+---
+
+### Recherche par SIRET (JavaScript)
+
+```javascript
+const axios = require('axios');
+
+const baseUrl = 'https://api.example.com/fhir';
+const siret = '12345678901234';
+
+async function findBySiret(siret) {
+    const url = `${baseUrl}/Organization?identifier=urn:oid:1.2.250.1.24.3.2|${siret}`;
+    
+    try {
+        const response = await axios.get(url, {
+            headers: { 'Authorization': 'Bearer YOUR_TOKEN' }
+        });
+        
+        const bundle = response.data;
+        if (bundle.total > 0) {
+            return bundle.entry[0].resource;
+        } else {
+            console.log('Organisation non trouvée');
+            return null;
+        }
+    } catch (error) {
+        console.error('Erreur:', error.message);
+    }
+}
+
+findBySiret(siret).then(org => {
+    if (org) {
+        console.log('Nom:', org.name);
+        console.log('Adresse:', org.address[0].city);
+    }
+});
+```
+
+---
+
+## Ressources Complémentaires
+
+### Documentation Technique
+
+- [Spécification FHIR R4](https://www.hl7.org/fhir/R4/) - Standard international
+- [FR Core](https://hl7.fr/ig/fhir/core/) - Profils français de base
+- [API REST FHIR](https://www.hl7.org/fhir/R4/http.html) - Actions HTTP
+
+### Pages du Guide
+
+- [Guide d'implémentation](index.html) - Vue d'ensemble du référentiel
+- [Structure des organisations](tiers-organization.html) - Profils et extensions
+- [Rechercher dans le référentiel](search-parameters.html) - Critères de recherche
+- [Exemples d'utilisation](examples.html) - Cas concrets
+- [Classifications et nomenclatures](terminologies.html) - Codes et catégories
+
+---
+
+## Support
+
+Pour toute question sur l'intégration :
+- Consultez la [documentation des profils](StructureDefinition-tiers-profile.html)
+- Utilisez les [exemples fournis](examples.html) comme modèles
+- Testez avec des données fictives avant production
+- Contactez l'équipe du référentiel pour support technique
