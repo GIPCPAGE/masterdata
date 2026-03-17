@@ -117,6 +117,24 @@ Description: "Profil générique pour la notion de Tiers (commun débiteur/fourn
 * extension[bankAccount] ^short = "Coordonnées bancaires RIB/IBAN"
 * extension[bankAccount] ^definition = "Domiciliation bancaire du tiers (RIB français ou IBAN/BIC international). Conforme aux formats GEF."
 
+// Usage de la succursale (pour organisations rattachées via partOf)
+* extension contains SuccursaleUsageExtension named succursaleUsage 0..* MS
+* extension[succursaleUsage] ^short = "Usage de la succursale"
+* extension[succursaleUsage] ^definition = "Qualifie l'usage d'une succursale rattachée au siège: point de livraison, facturation, ou siège social secondaire."
+
+// Extensions spécifiques Fournisseur (optionnelles, utilisées si le tiers a le rôle supplier)
+* extension contains FournisseurCodeExtension named codeFournisseur 0..1 MS
+* extension contains FournisseurComptabiliteExtension named comptabilite 0..1 MS
+* extension contains FournisseurPaiementExtension named paiement 0..1 MS
+
+// Extensions spécifiques Débiteur (optionnelles, utilisées si le tiers a le rôle debtor)
+* extension contains DebiteurCodeExtension named codeDebiteur 0..1 MS
+* extension contains DebiteurParametresExtension named parametres 0..1 MS
+* extension contains GEFDebtorType named debtorType 0..1 MS
+
+// Extensions spécifiques Payeur Santé (optionnelles, utilisées si le tiers a le rôle payer)
+* extension contains PayeurSanteExtension named payeurSante 0..1 MS
+
 // Note: FR Core Organization hérite déjà des contraintes suivantes :
 // - identifier[siren] : SIREN (9 chiffres) - system = https://sirene.fr
 // - identifier[siret] : SIRET (14 chiffres) - system = https://sirene.fr

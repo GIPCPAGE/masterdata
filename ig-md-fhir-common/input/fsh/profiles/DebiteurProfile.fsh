@@ -48,8 +48,8 @@ Description: "Profil débiteur conforme au message KERD (Intégration Débiteurs
 
 // ========== Extensions métier spécifiques KERD (Phase 2) ==========
 
-// Extension 1: Type débiteur (O=Occasionnel, N=Normal)
-* extension contains GEFDebtorType named debtorType 1..1 MS
+// Extension 1: Type débiteur (O=Occasionnel, N=Normal) - Hérité de TiersProfile, rendu obligatoire
+* extension[debtorType] 1..1 MS
 * extension[debtorType] ^short = "Type débiteur : O (Occasionnel) ou N (Normal) - KERD position 2"
 * extension[debtorType] ^definition = "Indique si le débiteur est occasionnel (enregistrement ponctuel) ou normal/régulier (enregistrement permanent). Champ obligatoire dans KERD."
 

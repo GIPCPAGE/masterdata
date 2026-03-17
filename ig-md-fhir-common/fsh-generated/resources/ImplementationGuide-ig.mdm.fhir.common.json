@@ -104,6 +104,22 @@
       },
       {
         "reference": {
+          "reference": "StructureDefinition/debiteur-code"
+        },
+        "name": "Code Débiteur",
+        "description": "Code unique identifiant le débiteur/client dans le système de gestion",
+        "exampleBoolean": false
+      },
+      {
+        "reference": {
+          "reference": "StructureDefinition/fournisseur-code"
+        },
+        "name": "Code Fournisseur",
+        "description": "Code unique identifiant le fournisseur dans le système de gestion",
+        "exampleBoolean": false
+      },
+      {
+        "reference": {
           "reference": "StructureDefinition/gef-regie-code"
         },
         "name": "Code Régie (GEF)",
@@ -120,6 +136,14 @@
       },
       {
         "reference": {
+          "reference": "Organization/ExemplePayeurSanteCPAM"
+        },
+        "name": "CPAM - Caisse Primaire d'Assurance Maladie de Paris",
+        "description": "Exemple de payeur santé du régime obligatoire (CPAM). Illustre les paramètres spécifiques: grand régime SS, type payeur RO, code centre, numéro caisse, organisme, délai PEC.",
+        "exampleCanonical": "https://www.cpage.fr/ig/masterdata/tiers/StructureDefinition/payeur-sante-profile"
+      },
+      {
+        "reference": {
           "reference": "StructureDefinition/gef-bank-account"
         },
         "name": "Domiciliation bancaire GEF",
@@ -133,6 +157,14 @@
         "name": "Débiteur (GEF)",
         "description": "Profil débiteur conforme au message KERD (Intégration Débiteurs) des interfaces GEF - format CSV. Hérite du profil TiersProfile et ajoute les contraintes et extensions spécifiques aux débiteurs (établissements acheteurs, débiteurs de recettes).",
         "exampleBoolean": false
+      },
+      {
+        "reference": {
+          "reference": "Organization/ExempleDebiteurComplet"
+        },
+        "name": "Débiteur avec paramètres comptables et fiscaux complets",
+        "description": "Exemple d'un débiteur (établissement acheteur) avec tous les paramètres de gestion: code débiteur, compte lettre, type résident fiscal, type débiteur, autorisation assurances, COH.",
+        "exampleCanonical": "https://www.cpage.fr/ig/masterdata/tiers/StructureDefinition/debiteur-profile"
       },
       {
         "reference": {
@@ -192,6 +224,22 @@
       },
       {
         "reference": {
+          "reference": "Organization/ExempleFournisseurComplet"
+        },
+        "name": "Fournisseur avec paramètres comptables et paiement complets",
+        "description": "Exemple d'un fournisseur avec tous les paramètres de gestion: code fournisseur, comptes lettres classe 2 et 6, délais et modalités de paiement, montant minimum, taux transitaire, escompte.",
+        "exampleCanonical": "https://www.cpage.fr/ig/masterdata/tiers/StructureDefinition/fournisseur-profile"
+      },
+      {
+        "reference": {
+          "reference": "CodeSystem/grand-regime-cs"
+        },
+        "name": "Grands régimes de Sécurité sociale",
+        "description": "Principaux régimes de Sécurité sociale et organismes payeurs en France",
+        "exampleBoolean": false
+      },
+      {
+        "reference": {
           "reference": "StructureDefinition/gef-address-localization"
         },
         "name": "Localisation Adresse (GEF)",
@@ -213,6 +261,14 @@
         "name": "Localisation Adresse (GEF)",
         "description": "Codes de localisation géographique pour les adresses selon la nomenclature GEF. Utilisé dans les messages KERD pour qualifier la localisation de l'adresse du débiteur (France métropolitaine/DOM-TOM, Europe, ou Autre monde).",
         "exampleBoolean": false
+      },
+      {
+        "reference": {
+          "reference": "Organization/ExemplePayeurSanteMutuelle"
+        },
+        "name": "Mutuelle MGEN - Mutuelle Générale de l'Éducation Nationale",
+        "description": "Exemple de payeur santé du régime complémentaire (mutuelle). Illustre les paramètres spécifiques: grand régime Mutuelle, type payeur RC, code centre, numéro caisse, organisme, éclatement factures, délai PEC.",
+        "exampleCanonical": "https://www.cpage.fr/ig/masterdata/tiers/StructureDefinition/payeur-sante-profile"
       },
       {
         "reference": {
@@ -248,6 +304,46 @@
       },
       {
         "reference": {
+          "reference": "StructureDefinition/fournisseur-comptabilite"
+        },
+        "name": "Paramètres comptables Fournisseur",
+        "description": "Paramètres de comptabilisation pour un fournisseur (comptes classe 2 et 6)",
+        "exampleBoolean": false
+      },
+      {
+        "reference": {
+          "reference": "StructureDefinition/fournisseur-paiement"
+        },
+        "name": "Paramètres de paiement Fournisseur",
+        "description": "Paramètres de paiement pour un fournisseur (délais, montants, conditions)",
+        "exampleBoolean": false
+      },
+      {
+        "reference": {
+          "reference": "StructureDefinition/debiteur-parametres"
+        },
+        "name": "Paramètres Débiteur",
+        "description": "Paramètres de gestion pour un débiteur/client",
+        "exampleBoolean": false
+      },
+      {
+        "reference": {
+          "reference": "StructureDefinition/payeur-sante"
+        },
+        "name": "Paramètres Payeur Santé",
+        "description": "Paramètres de gestion pour un organisme payeur dans le secteur de la santé (Sécurité sociale, mutuelles, etc.)",
+        "exampleBoolean": false
+      },
+      {
+        "reference": {
+          "reference": "StructureDefinition/payeur-sante-profile"
+        },
+        "name": "Payeur Santé",
+        "description": "Profil pour les payeurs d'assurance maladie (régime obligatoire et complémentaire). Hérite du profil TiersProfile et ajoute les contraintes spécifiques aux organismes payeurs: CPAM, MSA, RSI, mutuelles, etc.",
+        "exampleBoolean": false
+      },
+      {
+        "reference": {
           "reference": "NamingSystem/ridet-identifier-ns"
         },
         "name": "RIDET (Nouvelle-Calédonie)",
@@ -267,8 +363,96 @@
           "reference": "CodeSystem/tiers-role-codesystem"
         },
         "name": "Rôles Tiers (Générique)",
-        "description": "Rôles génériques d'un tiers (débiteur, fournisseur).",
+        "description": "Rôles génériques d'un tiers (débiteur, fournisseur, payeur).",
         "exampleBoolean": false
+      },
+      {
+        "reference": {
+          "reference": "SearchParameter/DebiteurCodeSearchParameter"
+        },
+        "name": "Search Débiteur by Code",
+        "description": "Permet de rechercher un débiteur par son code débiteur unique (numéro interne de gestion).",
+        "exampleBoolean": false
+      },
+      {
+        "reference": {
+          "reference": "SearchParameter/DebiteurTypeResidentSearchParameter"
+        },
+        "name": "Search Débiteur by Type Résident",
+        "description": "Permet de rechercher un débiteur par son type de résidence fiscale: Résident (R) ou Non-résident (NR).",
+        "exampleBoolean": false
+      },
+      {
+        "reference": {
+          "reference": "SearchParameter/FournisseurCodeSearchParameter"
+        },
+        "name": "Search Fournisseur by Code",
+        "description": "Permet de rechercher un fournisseur par son code fournisseur unique (numéro interne de gestion).",
+        "exampleBoolean": false
+      },
+      {
+        "reference": {
+          "reference": "SearchParameter/PayeurGrandRegimeSearchParameter"
+        },
+        "name": "Search Payeur Santé by Grand Régime",
+        "description": "Permet de rechercher un payeur santé par son grand régime: Sécurité Sociale (SS), MSA, RSI, CNAV, Mutuelle.",
+        "exampleBoolean": false
+      },
+      {
+        "reference": {
+          "reference": "SearchParameter/PayeurTypeSearchParameter"
+        },
+        "name": "Search Payeur Santé by Type",
+        "description": "Permet de rechercher un payeur santé par son type: Régime Obligatoire (RO) ou Régime Complémentaire (RC).",
+        "exampleBoolean": false
+      },
+      {
+        "reference": {
+          "reference": "SearchParameter/SuccursaleUsageSearchParameter"
+        },
+        "name": "Search Succursale by Usage",
+        "description": "Permet de rechercher une succursale par son usage: point de livraison, siège de facturation, ou siège social secondaire.",
+        "exampleBoolean": false
+      },
+      {
+        "reference": {
+          "reference": "SearchParameter/BankAccountIbanSearchParameter"
+        },
+        "name": "Search Tiers by IBAN",
+        "description": "Permet de rechercher un tiers par son IBAN (International Bank Account Number). Utile pour identifier le bénéficiaire d'un virement ou l'émetteur d'un paiement.",
+        "exampleBoolean": false
+      },
+      {
+        "reference": {
+          "reference": "SearchParameter/TiersLegalNatureSearchParameter"
+        },
+        "name": "Search Tiers by Legal Nature",
+        "description": "Permet de rechercher un tiers par sa nature juridique selon la nomenclature GEF: particulier, société, association, établissement public, collectivité territoriale...",
+        "exampleBoolean": false
+      },
+      {
+        "reference": {
+          "reference": "SearchParameter/TiersRoleSearchParameter"
+        },
+        "name": "Search Tiers by Role",
+        "description": "Permet de rechercher un tiers par son rôle: fournisseur (supplier), débiteur (debtor), ou payeur santé (payer). Supporte les recherches multi-rôles.",
+        "exampleBoolean": false
+      },
+      {
+        "reference": {
+          "reference": "SearchParameter/TiersCategorySearchParameter"
+        },
+        "name": "Search Tiers by TG Category",
+        "description": "Permet de rechercher un tiers par sa catégorie TG selon la nomenclature GEF: État, collectivités territoriales, établissements publics, organismes sociaux, personnes morales de droit privé, personnes physiques...",
+        "exampleBoolean": false
+      },
+      {
+        "reference": {
+          "reference": "Organization/ExempleSuccursale"
+        },
+        "name": "Succursale rattachée à un établissement principal",
+        "description": "Exemple d'une succursale (point de livraison, facturation, ou site secondaire) rattachée à son établissement principal via partOf. Illustre la relation hiérarchique organisation parente → succursale, distincte de l'héritage de profil.",
+        "exampleCanonical": "https://www.cpage.fr/ig/masterdata/tiers/StructureDefinition/tiers-profile"
       },
       {
         "reference": {
@@ -277,6 +461,22 @@
         "name": "Tiers (GEF)",
         "description": "Profil générique pour la notion de Tiers (commun débiteur/fournisseur), basé sur FR Core Organization. Conforme aux spécifications GEF. Ce profil hérite des slices identifier déjà définis par FR Core (SIREN, SIRET, FINESS) et ajoute les identifiants GEF (NIR, hors UE, Tahiti, RIDET) ainsi qu'un identifiant de TVA intracommunautaire.",
         "exampleBoolean": false
+      },
+      {
+        "reference": {
+          "reference": "Organization/ExempleTiersComplet"
+        },
+        "name": "Tiers avec Multi-Rôles (Fournisseur + Débiteur + Payeur)",
+        "description": "Exemple d'un tiers qui cumule trois rôles: fournisseur, débiteur ET payeur santé. Illustre la capacité d'un même organisme à avoir plusieurs profils actifs simultanément.",
+        "exampleCanonical": "https://www.cpage.fr/ig/masterdata/tiers/StructureDefinition/tiers-profile"
+      },
+      {
+        "reference": {
+          "reference": "Organization/ExempleTiersDoubleRole"
+        },
+        "name": "Tiers Double Rôle (Fournisseur ET Débiteur)",
+        "description": "Exemple d'un tiers qui est à la fois fournisseur (vend des marchandises) ET débiteur (achète des prestations). Illustre la capacité à échanger dans les deux sens avec le même partenaire commercial.",
+        "exampleCanonical": "https://www.cpage.fr/ig/masterdata/tiers/StructureDefinition/tiers-profile"
       },
       {
         "reference": {
@@ -300,6 +500,14 @@
         },
         "name": "Type d'identifiant GEF ValueSet",
         "description": "Types d'identifiants supportés dans les interfaces GEF pour la qualification des identifiants fournisseurs et débiteurs",
+        "exampleBoolean": false
+      },
+      {
+        "reference": {
+          "reference": "CodeSystem/type-resident-cs"
+        },
+        "name": "Type de résident fiscal",
+        "description": "Type de résident fiscal pour un débiteur",
         "exampleBoolean": false
       },
       {
@@ -352,10 +560,66 @@
       },
       {
         "reference": {
+          "reference": "CodeSystem/succursale-usage-cs"
+        },
+        "name": "Types d'usage de succursale",
+        "description": "Types d'usage pour les succursales/filiales d'un tiers",
+        "exampleBoolean": false
+      },
+      {
+        "reference": {
+          "reference": "CodeSystem/moyen-paiement-cs"
+        },
+        "name": "Types de moyen de paiement",
+        "description": "Types de moyens de paiement acceptés ou utilisés pour les transactions avec les tiers",
+        "exampleBoolean": false
+      },
+      {
+        "reference": {
+          "reference": "StructureDefinition/succursale-usage-extension"
+        },
+        "name": "Usage de la succursale",
+        "description": "Qualifie l'usage d'une succursale: point de livraison, siège de facturation, ou siège social secondaire.",
+        "exampleBoolean": false
+      },
+      {
+        "reference": {
+          "reference": "ValueSet/grand-regime-vs"
+        },
+        "name": "ValueSet Grands régimes de Sécurité sociale",
+        "description": "ValueSet pour les grands régimes de Sécurité sociale",
+        "exampleBoolean": false
+      },
+      {
+        "reference": {
           "reference": "ValueSet/tiers-role-valueset"
         },
         "name": "ValueSet Rôles Tiers",
         "description": "Rôles génériques d'un tiers.",
+        "exampleBoolean": false
+      },
+      {
+        "reference": {
+          "reference": "ValueSet/type-resident-vs"
+        },
+        "name": "ValueSet Type de résident fiscal",
+        "description": "ValueSet pour le type de résident fiscal",
+        "exampleBoolean": false
+      },
+      {
+        "reference": {
+          "reference": "ValueSet/succursale-usage-vs"
+        },
+        "name": "ValueSet Types d'usage de succursale",
+        "description": "ValueSet pour les types d'usage des succursales",
+        "exampleBoolean": false
+      },
+      {
+        "reference": {
+          "reference": "ValueSet/moyen-paiement-vs"
+        },
+        "name": "ValueSet Types de moyen de paiement",
+        "description": "ValueSet pour les types de moyens de paiement",
         "exampleBoolean": false
       }
     ],

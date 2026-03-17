@@ -87,6 +87,136 @@
         "mustSupport": true
       },
       {
+        "id": "Organization.extension:succursaleUsage",
+        "path": "Organization.extension",
+        "sliceName": "succursaleUsage",
+        "short": "Usage de la succursale",
+        "definition": "Qualifie l'usage d'une succursale rattachée au siège: point de livraison, facturation, ou siège social secondaire.",
+        "min": 0,
+        "max": "*",
+        "type": [
+          {
+            "code": "Extension",
+            "profile": [
+              "http://cpage.org/fhir/StructureDefinition/succursale-usage-extension"
+            ]
+          }
+        ],
+        "mustSupport": true
+      },
+      {
+        "id": "Organization.extension:codeFournisseur",
+        "path": "Organization.extension",
+        "sliceName": "codeFournisseur",
+        "min": 0,
+        "max": "1",
+        "type": [
+          {
+            "code": "Extension",
+            "profile": [
+              "http://cpage.org/fhir/StructureDefinition/fournisseur-code"
+            ]
+          }
+        ],
+        "mustSupport": true
+      },
+      {
+        "id": "Organization.extension:comptabilite",
+        "path": "Organization.extension",
+        "sliceName": "comptabilite",
+        "min": 0,
+        "max": "1",
+        "type": [
+          {
+            "code": "Extension",
+            "profile": [
+              "http://cpage.org/fhir/StructureDefinition/fournisseur-comptabilite"
+            ]
+          }
+        ],
+        "mustSupport": true
+      },
+      {
+        "id": "Organization.extension:paiement",
+        "path": "Organization.extension",
+        "sliceName": "paiement",
+        "min": 0,
+        "max": "1",
+        "type": [
+          {
+            "code": "Extension",
+            "profile": [
+              "http://cpage.org/fhir/StructureDefinition/fournisseur-paiement"
+            ]
+          }
+        ],
+        "mustSupport": true
+      },
+      {
+        "id": "Organization.extension:codeDebiteur",
+        "path": "Organization.extension",
+        "sliceName": "codeDebiteur",
+        "min": 0,
+        "max": "1",
+        "type": [
+          {
+            "code": "Extension",
+            "profile": [
+              "http://cpage.org/fhir/StructureDefinition/debiteur-code"
+            ]
+          }
+        ],
+        "mustSupport": true
+      },
+      {
+        "id": "Organization.extension:parametres",
+        "path": "Organization.extension",
+        "sliceName": "parametres",
+        "min": 0,
+        "max": "1",
+        "type": [
+          {
+            "code": "Extension",
+            "profile": [
+              "http://cpage.org/fhir/StructureDefinition/debiteur-parametres"
+            ]
+          }
+        ],
+        "mustSupport": true
+      },
+      {
+        "id": "Organization.extension:debtorType",
+        "path": "Organization.extension",
+        "sliceName": "debtorType",
+        "min": 0,
+        "max": "1",
+        "type": [
+          {
+            "code": "Extension",
+            "profile": [
+              "http://cpage.org/fhir/StructureDefinition/gef-debtor-type"
+            ]
+          }
+        ],
+        "mustSupport": true
+      },
+      {
+        "id": "Organization.extension:payeurSante",
+        "path": "Organization.extension",
+        "sliceName": "payeurSante",
+        "min": 0,
+        "max": "1",
+        "type": [
+          {
+            "code": "Extension",
+            "profile": [
+              "http://cpage.org/fhir/StructureDefinition/payeur-sante"
+            ]
+          }
+        ],
+        "mustSupport": true
+      },
+      {
         "id": "Organization.identifier",
         "path": "Organization.identifier",
         "min": 1,

@@ -18,7 +18,10 @@ Description: "Coordonnées bancaires RIB/IBAN du tiers pour paiements (fournisse
     accountNumber 0..1 MS and
     ribKey 0..1 MS and
     iban 0..1 MS and
-    bic 0..1 MS
+    bic 0..1 MS and
+    ediEnabled 0..1 MS and
+    factoringEnabled 0..1 MS and
+    paymentMethod 0..* MS
 
 * extension[bankCode] ^short = "Code banque"
 * extension[bankCode] ^definition = "Code établissement bancaire (5 caractères) - Partie du RIB français"
@@ -55,3 +58,19 @@ Description: "Coordonnées bancaires RIB/IBAN du tiers pour paiements (fournisse
 * extension[bic].value[x] only string
 * extension[bic].valueString 1..1
 * extension[bic].valueString ^maxLength = 11
+
+* extension[ediEnabled] ^short = "EDI activé"
+* extension[ediEnabled] ^definition = "Indique si les échanges EDI sont activés pour ce compte bancaire (paiements électroniques automatisés)"
+* extension[ediEnabled].value[x] only boolean
+* extension[ediEnabled].valueBoolean 1..1
+
+* extension[factoringEnabled] ^short = "Affacturage activé"
+* extension[factoringEnabled] ^definition = "Indique si le compte est sujet à l'affacturage (cession de créances à un factor pour financement)"
+* extension[factoringEnabled].value[x] only boolean
+* extension[factoringEnabled].valueBoolean 1..1
+
+* extension[paymentMethod] ^short = "Moyens de paiement acceptés"
+* extension[paymentMethod] ^definition = "Liste des moyens de paiement acceptés sur ce compte: numéraire, chèque, virement standard, virement application externe, virement gros montant, virement interne"
+* extension[paymentMethod].value[x] only CodeableConcept
+* extension[paymentMethod].valueCodeableConcept 1..1
+* extension[paymentMethod].valueCodeableConcept from MoyenPaiementVS (required)

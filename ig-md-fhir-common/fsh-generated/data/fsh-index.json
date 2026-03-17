@@ -56,12 +56,44 @@
     "endLine": 40
   },
   {
+    "outputFile": "CodeSystem-grand-regime-cs.json",
+    "fshName": "GrandRegimeCS",
+    "fshType": "CodeSystem",
+    "fshFile": "codesystems\\GrandRegimeCodeSystem.fsh",
+    "startLine": 5,
+    "endLine": 21
+  },
+  {
+    "outputFile": "CodeSystem-moyen-paiement-cs.json",
+    "fshName": "MoyenPaiementCS",
+    "fshType": "CodeSystem",
+    "fshFile": "codesystems\\MoyenPaiementCodeSystem.fsh",
+    "startLine": 5,
+    "endLine": 22
+  },
+  {
+    "outputFile": "CodeSystem-succursale-usage-cs.json",
+    "fshName": "SuccursaleUsageCS",
+    "fshType": "CodeSystem",
+    "fshFile": "codesystems\\SuccursaleUsageCodeSystem.fsh",
+    "startLine": 5,
+    "endLine": 19
+  },
+  {
     "outputFile": "CodeSystem-tiers-role-codesystem.json",
     "fshName": "TiersRoleCodeSystem",
     "fshType": "CodeSystem",
     "fshFile": "codesystems\\TiersRoleCodeSystem.fsh",
     "startLine": 5,
-    "endLine": 13
+    "endLine": 14
+  },
+  {
+    "outputFile": "CodeSystem-type-resident-cs.json",
+    "fshName": "TypeResidentCS",
+    "fshType": "CodeSystem",
+    "fshFile": "codesystems\\TypeResidentCodeSystem.fsh",
+    "startLine": 5,
+    "endLine": 18
   },
   {
     "outputFile": "NamingSystem-ridet-identifier-ns.json",
@@ -80,6 +112,14 @@
     "endLine": 24
   },
   {
+    "outputFile": "Organization-ExempleDebiteurComplet.json",
+    "fshName": "ExempleDebiteurComplet",
+    "fshType": "Instance",
+    "fshFile": "examples\\ExempleDebiteurComplet.fsh",
+    "startLine": 5,
+    "endLine": 81
+  },
+  {
     "outputFile": "Organization-ExempleDebiteurEPSPublic.json",
     "fshName": "ExempleDebiteurEPSPublic",
     "fshType": "Instance",
@@ -94,6 +134,14 @@
     "fshFile": "examples\\ExempleDebiteurPersonnePhysique.fsh",
     "startLine": 5,
     "endLine": 51
+  },
+  {
+    "outputFile": "Organization-ExempleFournisseurComplet.json",
+    "fshName": "ExempleFournisseurComplet",
+    "fshType": "Instance",
+    "fshFile": "examples\\ExempleFournisseurComplet.fsh",
+    "startLine": 5,
+    "endLine": 88
   },
   {
     "outputFile": "Organization-ExempleFournisseurEPS.json",
@@ -120,12 +168,172 @@
     "endLine": 42
   },
   {
+    "outputFile": "Organization-ExemplePayeurSanteCPAM.json",
+    "fshName": "ExemplePayeurSanteCPAM",
+    "fshType": "Instance",
+    "fshFile": "examples\\ExemplePayeurSanteCPAM.fsh",
+    "startLine": 5,
+    "endLine": 47
+  },
+  {
+    "outputFile": "Organization-ExemplePayeurSanteMutuelle.json",
+    "fshName": "ExemplePayeurSanteMutuelle",
+    "fshType": "Instance",
+    "fshFile": "examples\\ExemplePayeurSanteMutuelle.fsh",
+    "startLine": 5,
+    "endLine": 51
+  },
+  {
+    "outputFile": "Organization-ExempleSuccursale.json",
+    "fshName": "ExempleSuccursale",
+    "fshType": "Instance",
+    "fshFile": "examples\\ExempleSuccursale.fsh",
+    "startLine": 5,
+    "endLine": 74
+  },
+  {
+    "outputFile": "Organization-ExempleTiersComplet.json",
+    "fshName": "ExempleTiersComplet",
+    "fshType": "Instance",
+    "fshFile": "examples\\ExempleTiersComplet.fsh",
+    "startLine": 5,
+    "endLine": 89
+  },
+  {
+    "outputFile": "Organization-ExempleTiersDoubleRole.json",
+    "fshName": "ExempleTiersDoubleRole",
+    "fshType": "Instance",
+    "fshFile": "examples\\ExempleTiersDoubleRole.fsh",
+    "startLine": 5,
+    "endLine": 98
+  },
+  {
+    "outputFile": "SearchParameter-BankAccountIbanSearchParameter.json",
+    "fshName": "BankAccountIbanSearchParameter",
+    "fshType": "Instance",
+    "fshFile": "searchparameters\\BankAccountIbanSearchParameter.fsh",
+    "startLine": 6,
+    "endLine": 32
+  },
+  {
+    "outputFile": "SearchParameter-DebiteurCodeSearchParameter.json",
+    "fshName": "DebiteurCodeSearchParameter",
+    "fshType": "Instance",
+    "fshFile": "searchparameters\\DebiteurCodeSearchParameter.fsh",
+    "startLine": 6,
+    "endLine": 32
+  },
+  {
+    "outputFile": "SearchParameter-DebiteurTypeResidentSearchParameter.json",
+    "fshName": "DebiteurTypeResidentSearchParameter",
+    "fshType": "Instance",
+    "fshFile": "searchparameters\\DebiteurTypeResidentSearchParameter.fsh",
+    "startLine": 6,
+    "endLine": 32
+  },
+  {
+    "outputFile": "SearchParameter-FournisseurCodeSearchParameter.json",
+    "fshName": "FournisseurCodeSearchParameter",
+    "fshType": "Instance",
+    "fshFile": "searchparameters\\FournisseurCodeSearchParameter.fsh",
+    "startLine": 6,
+    "endLine": 32
+  },
+  {
+    "outputFile": "SearchParameter-PayeurGrandRegimeSearchParameter.json",
+    "fshName": "PayeurGrandRegimeSearchParameter",
+    "fshType": "Instance",
+    "fshFile": "searchparameters\\PayeurGrandRegimeSearchParameter.fsh",
+    "startLine": 6,
+    "endLine": 32
+  },
+  {
+    "outputFile": "SearchParameter-PayeurTypeSearchParameter.json",
+    "fshName": "PayeurTypeSearchParameter",
+    "fshType": "Instance",
+    "fshFile": "searchparameters\\PayeurTypeSearchParameter.fsh",
+    "startLine": 6,
+    "endLine": 32
+  },
+  {
+    "outputFile": "SearchParameter-SuccursaleUsageSearchParameter.json",
+    "fshName": "SuccursaleUsageSearchParameter",
+    "fshType": "Instance",
+    "fshFile": "searchparameters\\SuccursaleUsageSearchParameter.fsh",
+    "startLine": 6,
+    "endLine": 32
+  },
+  {
+    "outputFile": "SearchParameter-TiersCategorySearchParameter.json",
+    "fshName": "TiersCategorySearchParameter",
+    "fshType": "Instance",
+    "fshFile": "searchparameters\\TiersCategorySearchParameter.fsh",
+    "startLine": 6,
+    "endLine": 32
+  },
+  {
+    "outputFile": "SearchParameter-TiersLegalNatureSearchParameter.json",
+    "fshName": "TiersLegalNatureSearchParameter",
+    "fshType": "Instance",
+    "fshFile": "searchparameters\\TiersLegalNatureSearchParameter.fsh",
+    "startLine": 6,
+    "endLine": 32
+  },
+  {
+    "outputFile": "SearchParameter-TiersRoleSearchParameter.json",
+    "fshName": "TiersRoleSearchParameter",
+    "fshType": "Instance",
+    "fshFile": "searchparameters\\TiersRoleSearchParameter.fsh",
+    "startLine": 6,
+    "endLine": 32
+  },
+  {
+    "outputFile": "StructureDefinition-debiteur-code.json",
+    "fshName": "DebiteurCodeExtension",
+    "fshType": "Extension",
+    "fshFile": "extensions\\DebiteurCodeExtension.fsh",
+    "startLine": 5,
+    "endLine": 18
+  },
+  {
+    "outputFile": "StructureDefinition-debiteur-parametres.json",
+    "fshName": "DebiteurParametresExtension",
+    "fshType": "Extension",
+    "fshFile": "extensions\\DebiteurParametresExtension.fsh",
+    "startLine": 5,
+    "endLine": 46
+  },
+  {
     "outputFile": "StructureDefinition-debiteur-profile.json",
     "fshName": "DebiteurProfile",
     "fshType": "Profile",
     "fshFile": "profiles\\DebiteurProfile.fsh",
     "startLine": 6,
     "endLine": 84
+  },
+  {
+    "outputFile": "StructureDefinition-fournisseur-code.json",
+    "fshName": "FournisseurCodeExtension",
+    "fshType": "Extension",
+    "fshFile": "extensions\\FournisseurCodeExtension.fsh",
+    "startLine": 5,
+    "endLine": 18
+  },
+  {
+    "outputFile": "StructureDefinition-fournisseur-comptabilite.json",
+    "fshName": "FournisseurComptabiliteExtension",
+    "fshType": "Extension",
+    "fshFile": "extensions\\FournisseurComptabiliteExtension.fsh",
+    "startLine": 5,
+    "endLine": 27
+  },
+  {
+    "outputFile": "StructureDefinition-fournisseur-paiement.json",
+    "fshName": "FournisseurPaiementExtension",
+    "fshType": "Extension",
+    "fshFile": "extensions\\FournisseurPaiementExtension.fsh",
+    "startLine": 5,
+    "endLine": 45
   },
   {
     "outputFile": "StructureDefinition-fournisseur-profile.json",
@@ -149,7 +357,7 @@
     "fshType": "Extension",
     "fshFile": "extensions\\GEFBankAccountExtension.fsh",
     "startLine": 5,
-    "endLine": 57
+    "endLine": 76
   },
   {
     "outputFile": "StructureDefinition-gef-chorus-identifier-type.json",
@@ -224,12 +432,36 @@
     "endLine": 19
   },
   {
+    "outputFile": "StructureDefinition-payeur-sante-profile.json",
+    "fshName": "PayeurSanteProfile",
+    "fshType": "Profile",
+    "fshFile": "profiles\\PayeurSanteProfile.fsh",
+    "startLine": 6,
+    "endLine": 55
+  },
+  {
+    "outputFile": "StructureDefinition-payeur-sante.json",
+    "fshName": "PayeurSanteExtension",
+    "fshType": "Extension",
+    "fshFile": "extensions\\PayeurSanteExtension.fsh",
+    "startLine": 5,
+    "endLine": 58
+  },
+  {
+    "outputFile": "StructureDefinition-succursale-usage-extension.json",
+    "fshName": "SuccursaleUsageExtension",
+    "fshType": "Extension",
+    "fshFile": "extensions\\SuccursaleUsageExtension.fsh",
+    "startLine": 5,
+    "endLine": 17
+  },
+  {
     "outputFile": "StructureDefinition-tiers-profile.json",
     "fshName": "TiersProfile",
     "fshType": "Profile",
     "fshFile": "profiles\\CPageTiersProfile.fsh",
     "startLine": 6,
-    "endLine": 128
+    "endLine": 146
   },
   {
     "outputFile": "StructureDefinition-tiers-role-extension.json",
@@ -296,11 +528,43 @@
     "endLine": 13
   },
   {
+    "outputFile": "ValueSet-grand-regime-vs.json",
+    "fshName": "GrandRegimeVS",
+    "fshType": "ValueSet",
+    "fshFile": "valuesets\\GrandRegimeValueSet.fsh",
+    "startLine": 5,
+    "endLine": 13
+  },
+  {
+    "outputFile": "ValueSet-moyen-paiement-vs.json",
+    "fshName": "MoyenPaiementVS",
+    "fshType": "ValueSet",
+    "fshFile": "valuesets\\MoyenPaiementValueSet.fsh",
+    "startLine": 5,
+    "endLine": 13
+  },
+  {
+    "outputFile": "ValueSet-succursale-usage-vs.json",
+    "fshName": "SuccursaleUsageVS",
+    "fshType": "ValueSet",
+    "fshFile": "valuesets\\SuccursaleUsageValueSet.fsh",
+    "startLine": 5,
+    "endLine": 13
+  },
+  {
     "outputFile": "ValueSet-tiers-role-valueset.json",
     "fshName": "TiersRoleValueSet",
     "fshType": "ValueSet",
     "fshFile": "valuesets\\TiersRoleValueSet.fsh",
     "startLine": 5,
     "endLine": 10
+  },
+  {
+    "outputFile": "ValueSet-type-resident-vs.json",
+    "fshName": "TypeResidentVS",
+    "fshType": "ValueSet",
+    "fshFile": "valuesets\\TypeResidentValueSet.fsh",
+    "startLine": 5,
+    "endLine": 13
   }
 ]
