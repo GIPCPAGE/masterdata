@@ -1,391 +1,441 @@
-# Critères de Recherche - SearchParameters
+# Rechercher dans le référentiel
 
-## Vue d'ensemble
+## Introduction
 
-Cette page documente les **critères de recherche (SearchParameters)** définis pour faciliter l'exploitation des ressources **Organization** conformes aux profils Tiers. Ces paramètres permettent de filtrer, rechercher et identifier rapidement les organisations selon leurs rôles, attributs métier, identifiants, et paramètres de gestion.
+Cette page explique comment **rechercher des organisations** dans le référentiel des tiers en utilisant l'API REST standard FHIR.
 
-## Principes généraux
+Chaque critère de recherche permet de filtrer les organisations selon leurs caractéristiques : type, rôle, identifiants, coordonnées bancaires, etc.
 
-Les SearchParameters FHIR permettent de construire des requêtes REST pour interroger le serveur FHIR :
+## Comment rechercher ?
+
+### Syntaxe de base
 
 ```
-GET [base]/Organization?[parameter]=[value]
+GET [serveur]/Organization?[critère]=[valeur]
 ```
 
-### Syntaxe des recherches
+### Types de recherches
 
-- **Token** : Pour codes et valeurs codées  
-  `?tiers-role=supplier`
-  
-- **String** : Pour chaînes de caractères (supporte `:exact`, `:contains`)  
-  `?fournisseur-code:contains=LPD`
-  
-- **MultipleOr** : Recherche avec OU logique  
-  `?tiers-role=supplier,debtor` (supplier OU debtor)
-  
-- **MultipleAnd** : Recherche avec ET logique  
-  `?tiers-role=supplier&tiers-role=debtor` (supplier ET debtor)
+**Recherche exacte**
+```
+GET [serveur]/Organization?fournisseur-code=FRSUP00456
+```
+
+**Recherche partielle** (contient)
+```
+GET [serveur]/Organization?fournisseur-code:contains=LPD
+```
+
+**Recherche avec OU logique**
+```
+GET [serveur]/Organization?tiers-role=supplier,debtor
+→ Renvoie les fournisseurs OU les clients
+```
+
+**Recherche avec ET logique**
+```
+GET [serveur]/Organization?tiers-role=supplier&tiers-role=debtor  
+→ Renvoie uniquement les organisations qui sont À LA FOIS fournisseurs ET clients
+```
 
 ---
 
-## Recherches par Rôle et Classification
+## Recherches par rôle et type
 
-### 1. Recherche par Rôle du Tiers
+### 1. Recherche par rôle de l'organisation
 
-**Code** : `tiers-role`  
-**Type** : token  
-**Base** : Organization  
-**Cardinalité** : Multiple OR/AND supportés  
+**Critère** : `tiers-role`  
+**Type** : Valeurs codées  
+**Utilité** : Trouver toutes les organisations ayant un rôle spécifique
 
-Permet de rechercher un tiers par son ou ses rôles : fournisseur (supplier), débiteur (debtor), ou payeur santé (payer).
+**Valeurs possibles** :
+- `supplier` = Fournisseur
+- `debtor` = Client  
+- `payer` = Organisme payeur
 
+**Exemples** :
 ```http
-GET [base]/Organization?tiers-role=supplier
-GET [base]/Organization?tiers-role=debtor
-GET [base]/Organization?tiers-role=payer
-GET [base]/Organization?tiers-role=supplier,debtor (OU)
-GET [base]/Organization?tiers-role=supplier&tiers-role=debtor (ET - multi-rôles)
+# Tous les fournisseurs
+GET [serveur]/Organization?tiers-role=supplier
+
+# Tous les organismes payeurs (CPAM, mutuelles)
+GET [serveur]/Organization?tiers-role=payer
+
+# Fournisseurs OU clients (OU logique)
+GET [serveur]/Organization?tiers-role=supplier,debtor
+
+# Organisations multi-rôles (fournisseur ET client simultanément)
+GET [serveur]/Organization?tiers-role=supplier&tiers-role=debtor
 ```
 
 **Cas d'usage** :
-- Lister tous les fournisseurs actifs
-- Identifier les tiers ayant un double rôle (supplier + debtor)
-- Filtrer uniquement les payeurs santé (CPAM, mutuelles)
+- Générer la liste de tous mes fournisseurs actifs
+- Envoyer une campagne d'information à tous mes clients
+- Synchroniser les organismes payeurs avec l'outil de facturation
 
 ---
 
-### 2. Recherche par Catégorie TG
+### 2. Recherche par type d'organisation
 
-**Code** : `tiers-category`  
-**Type** : token  
-**Base** : Organization  
-**Cardinalité** : Multiple OR supporté  
+**Critère** : `tiers-category`  
+**Type** : Valeurs codées  
+**Utilité** : Filtrer par secteur d'activité ou statut juridique
 
-Permet de rechercher un tiers par sa catégorie TG selon la nomenclature GEF (codes 00-74).
+**Exemples de valeurs** :
+- `01` = État
+- `02` = Collectivité territoriale
+- `16` = Établissement public de santé  
+- `03` = Clinique
+- `60` = Assurance maladie (générique)
+- `61` = CPAM
+- `63` = Mutuelle
 
+**Exemples** :
 ```http
-GET [base]/Organization?tiers-category=01 (État)
-GET [base]/Organization?tiers-category=02 (Collectivité territoriale)
-GET [base]/Organization?tiers-category=16 (Établissement public de santé)
-GET [base]/Organization?tiers-category=60 (Assurance maladie)
-GET [base]/Organization?tiers-category=16,60 (EPS OU Assurance maladie)
+# Tous les établissements publics de santé
+GET [serveur]/Organization?tiers-category=16
+
+# Toutes les CPAM
+GET [serveur]/Organization?tiers-category=61
+
+# Assurance maladie OU mutuelles
+GET [serveur]/Organization?tiers-category=60,63
 ```
 
 **Cas d'usage** :
-- Identifier tous les établissements publics de santé (TG 16)
-- Lister les organismes sociaux (TG 60-65)
-- Filtrer les collectivités territoriales pour mandats électroniques
+- Identifier tous les établissements de santé partenaires
+- Créer une liste de diffusion des organismes d'assurance maladie
+- Filtrer les collectivités territoriales pour les mandats administratifs
 
 ---
 
-### 3. Recherche par Nature Juridique
+### 3. Recherche par forme juridique
 
-**Code** : `tiers-legal-nature`  
-**Type** : token  
-**Base** : Organization  
-**Cardinalité** : Multiple OR supporté  
+**Critère** : `tiers-legal-nature`  
+**Type** : Valeurs codées  
+**Utilité** : Filtrer par statut légal de l'organisation
 
-Permet de rechercher un tiers par sa nature juridique selon GEF (codes 00-11).
+**Exemples de valeurs** :
+- `00` = Particulier (personne physique)
+- `03` = Société commerciale
+- `04` = Association  
+- `06` = Établissement public
 
+**Exemples** :
 ```http
-GET [base]/Organization?tiers-legal-nature=00 (Particulier)
-GET [base]/Organization?tiers-legal-nature=03 (Société)
-GET [base]/Organization?tiers-legal-nature=04 (Association)
-GET [base]/Organization?tiers-legal-nature=06 (Établissement public)
-GET [base]/Organization?tiers-legal-nature=03,04 (Société OU Association)
+# Toutes les sociétés commerciales
+GET [serveur]/Organization?tiers-legal-nature=03
+
+# Associations uniquement
+GET [serveur]/Organization?tiers-legal-nature=04
+
+# Sociétés OU associations (secteur privé)
+GET [serveur]/Organization?tiers-legal-nature=03,04
 ```
 
 **Cas d'usage** :
-- Filtrer les personnes physiques (particuliers) pour gestion spécifique
-- Identifier les sociétés commerciales vs associations
-- Séparer les établissements publics des entités privées
+- Distinguer les entités publiques des privées
+- Filtrer les associations pour des appels d'offres spécifiques
+- Reporting juridique et fiscal
 
 ---
 
-## Recherches par Codes Métier
+## Recherches par identifiants métier
 
-### 4. Recherche par Code Fournisseur
+### 4. Recherche par code fournisseur
 
-**Code** : `fournisseur-code`  
-**Type** : string  
-**Base** : Organization  
-**Cardinalité** : Multiple OR supporté  
+**Critère** : `fournisseur-code`  
+**Type** : Texte libre  
+**Utilité** : Retrouver un fournisseur par son code interne
 
-Permet de rechercher un fournisseur par son code fournisseur unique (numéro interne de gestion).
-
+**Exemples** :
 ```http
-GET [base]/Organization?fournisseur-code=FRSUP00456
-GET [base]/Organization?fournisseur-code:exact=FRNSLPD001
-GET [base]/Organization?fournisseur-code:contains=LPD
+# Recherche exacte par code
+GET [serveur]/Organization?fournisseur-code:exact=FRSUP00456
+
+# Recherche partielle (contient "LPD")
+GET [serveur]/Organization?fournisseur-code:contains=LPD
 ```
 
 **Cas d'usage** :
-- Validation d'existence d'un code fournisseur avant création
-- Récupération fiche fournisseur par code EFOU
-- Recherche approximative sur nom fournisseur intégré au code
+- Vérifier si un code fournisseur existe déjà avant création
+- Retrouver une fiche fournisseur depuis un bon de commande
+- Import/synchronisation depuis un système externe
 
 ---
 
-### 5. Recherche par Code Débiteur
+### 5. Recherche par code client
 
-**Code** : `debiteur-code`  
-**Type** : string  
-**Base** : Organization  
-**Cardinalité** : Multiple OR supporté  
+**Critère** : `debiteur-code`  
+**Type** : Texte libre  
+**Utilité** : Retrouver un client par son code interne
 
-Permet de rechercher un débiteur par son code débiteur unique (numéro interne de gestion).
-
+**Exemples** :
 ```http
-GET [base]/Organization?debiteur-code=DEB000789
-GET [base]/Organization?debiteur-code:exact=DEBNECKER01
-GET [base]/Organization?debiteur-code:contains=NECKER
+# Recherche exacte par code
+GET [serveur]/Organization?debiteur-code:exact=DEBNECKER01
+
+# Recherche partielle (contient "NECKER")
+GET [serveur]/Organization?debiteur-code:contains=NECKER
 ```
 
 **Cas d'usage** :
-- Validation d'existence d'un code débiteur avant création
-- Récupération fiche débiteur par code KERD
-- Recherche approximative sur nom établissement intégré au code
+- Validation d'existence avant création client
+- Récupération fiche client depuis une facture
+- Rapprochement comptable
 
 ---
 
-## Recherches Financières
+## Recherches financières
 
-### 6. Recherche par IBAN
+### 6. Recherche par compte bancaire (IBAN)
 
-**Code** : `bank-account-iban`  
-**Type** : string  
-**Base** : Organization  
-**Cardinalité** : Multiple OR supporté  
+**Critère** : `bank-account-iban`  
+**Type** : Texte libre  
+**Utilité** : Identifier le titulaire d'un compte bancaire
 
-Permet de rechercher un tiers par son IBAN (International Bank Account Number).
-
+**Exemples** :
 ```http
-GET [base]/Organization?bank-account-iban=FR7630004000020000012345678
-GET [base]/Organization?bank-account-iban:exact=DE89370400440532013000
-GET [base]/Organization?bank-account-iban:contains=30004 (recherche par code banque)
+# Recherche exacte par IBAN complet
+GET [serveur]/Organization?bank-account-iban=FR7630004000020000012345678
+
+# Recherche par code banque (commence par FR76...)
+GET [serveur]/Organization?bank-account-iban:contains=30004
 ```
 
 **Cas d'usage** :
-- Identification du bénéficiaire d'un virement pour rapprochement comptable
-- Validation de compte bancaire avant ordre de paiement
-- Contrôle anti-doublons sur RIB/IBAN
-- Détection de comptes bancaires partagés entre plusieurs tiers
+- **Rapprochement bancaire** : Qui a émis ce virement reçu ?
+- **Contrôle avant paiement** : Vérifier le bénéficiaire avant ordre de virement
+- **Détection de doublons** : Plusieurs organisations partageant le même RIB
+- **Audit comptable** : Lister toutes les organisations ayant un compte chez une banque donnée
 
 ---
 
-## Recherches Payeurs Santé
+## Recherches spécifiques organismes payeurs
 
-### 7. Recherche par Grand Régime
+### 7. Recherche par régime de protection sociale
 
-**Code** : `payeur-grand-regime`  
-**Type** : token  
-**Base** : Organization  
-**Cardinalité** : Multiple OR supporté  
+**Critère** : `payeur-grand-regime`  
+**Type** : Valeurs codées  
+**Utilité** : Filtrer les organismes payeurs par régime
 
-Permet de rechercher un payeur santé par son grand régime de protection sociale.
+**Valeurs possibles** :
+- `SS` = Sécurité Sociale (CPAM)
+- `MSA` = Mutualité Sociale Agricole
+- `RSI` = Régime Social des Indépendants
+- `CNAV` = Caisse Nationale d'Assurance Vieillesse
+- `MUTUELLE` = Organismes complémentaires
 
+**Exemples** :
 ```http
-GET [base]/Organization?payeur-grand-regime=SS (Sécurité Sociale)
-GET [base]/Organization?payeur-grand-regime=MSA (Mutualité Sociale Agricole)
-GET [base]/Organization?payeur-grand-regime=MUTUELLE (Mutuelles complémentaires)
-GET [base]/Organization?payeur-grand-regime=SS,MSA (SS OU MSA)
+# Toutes les CPAM (Sécurité Sociale)
+GET [serveur]/Organization?payeur-grand-regime=SS
+
+# Toutes les mutuelles
+GET [serveur]/Organization?payeur-grand-regime=MUTUELLE
+
+# Sécurité Sociale OU MSA (régimes obligatoires agricoles et généraux)
+GET [serveur]/Organization?payeur-grand-regime=SS,MSA
 ```
 
-**Valeurs** : `SS`, `MSA`, `RSI`, `CNAV`, `MUTUELLE`
-
 **Cas d'usage** :
-- Filtrer les caisses primaires Sécurité Sociale pour télétransmission FSE
-- Identifier les mutuelles pour facturation complémentaire
-- Lister tous les organismes régime obligatoire (SS+MSA+RSI)
+- Préparer une télétransmission FSE vers les CPAM uniquement
+- Lister les mutuelles pour facturation complémentaire
+- Reporting par régime social
 
 ---
 
-### 8. Recherche par Type Payeur
+### 8. Recherche par type de régime
 
-**Code** : `payeur-type`  
-**Type** : string  
-**Base** : Organization  
-**Cardinalité** : Multiple OR supporté  
+**Critère** : `payeur-type`  
+**Type** : Texte libre  
+**Utilité** : Distinguer régimes obligatoires et complémentaires
 
-Permet de rechercher un payeur santé par son type : Régime Obligatoire (RO) ou Régime Complémentaire (RC).
+**Valeurs possibles** :
+- `RO` = Régime Obligatoire (CPAM, MSA, RSI)
+- `RC` = Régime Complémentaire (mutuelles, assurances)
 
+**Exemples** :
 ```http
-GET [base]/Organization?payeur-type=RO (Régime Obligatoire)
-GET [base]/Organization?payeur-type=RC (Régime Complémentaire)
+# Tous les régimes obligatoires
+GET [serveur]/Organization?payeur-type=RO
+
+# Tous les régimes complémentaires
+GET [serveur]/Organization?payeur-type=RC
 ```
 
 **Cas d'usage** :
-- Séparer payeurs RO (CPAM/MSA/RSI) des RC (mutuelles)
-- Appliquer règles de gestion différenciées (délais, taux remboursement)
-- Générer états financiers par type de payeur
+- Facturation différenciée obligatoire vs complémentaire
+- Télétransmission en deux temps (RO puis RC)
+- Reporting financier par type de payeur
 
 ---
 
-## Recherches Organisationnelles
+## Recherches organisationnelles
 
-### 9. Recherche par Usage Succursale
+### 9. Recherche par usage de succursale
 
-**Code** : `succursale-usage`  
-**Type** : token  
-**Base** : Organization  
-**Cardinalité** : Multiple OR/AND supportés  
+**Critère** : `succursale-usage`  
+**Type** : Valeurs codées  
+**Utilité** : Identifier les sites selon leur fonction
 
-Permet de rechercher une succursale par son usage : point de livraison, siège de facturation, ou siège social secondaire.
+**Valeurs possibles** :
+- `POINT_LIVRAISON` = Adresse de réception des marchandises
+- `FACTURATION` = Adresse d'envoi des factures
+- `SIEGE_SOCIAL` = Siège social secondaire
 
+**Exemples** :
 ```http
-GET [base]/Organization?succursale-usage=POINT_LIVRAISON
-GET [base]/Organization?succursale-usage=FACTURATION
-GET [base]/Organization?succursale-usage=SIEGE_SOCIAL
-GET [base]/Organization?succursale-usage=POINT_LIVRAISON,FACTURATION (OU)
-GET [base]/Organization?succursale-usage=POINT_LIVRAISON&succursale-usage=FACTURATION (ET)
+# Tous les points de livraison
+GET [serveur]/Organization?succursale-usage=POINT_LIVRAISON
+
+# Adresses de facturation uniquement
+GET [serveur]/Organization?succursale-usage=FACTURATION
+
+# Sites qui sont À LA FOIS point de livraison ET facturation
+GET [serveur]/Organization?succursale-usage=POINT_LIVRAISON&succursale-usage=FACTURATION
 ```
 
-**Valeurs** : `POINT_LIVRAISON`, `FACTURATION`, `SIEGE_SOCIAL`
-
 **Cas d'usage** :
-- Identifier toutes les adresses de livraison d'un groupe hospitalier
-- Lister les sièges de facturation pour envoi factures
-- Distinction sites secondaires vs établissements principaux
+- Préparer les bons de livraison (adresses POINT_LIVRAISON)
+- Routage des factures (adresses FACTURATION)
+- Gestion multi-sites d'un groupe hospitalier
 
 ---
 
-### 10. Recherche par Type Résident Fiscal
+### 10. Recherche par résidence fiscale
 
-**Code** : `debiteur-type-resident`  
-**Type** : token  
-**Base** : Organization  
-**Cardinalité** : Multiple OR supporté  
+**Critère** : `debiteur-type-resident`  
+**Type** : Valeurs codées  
+**Utilité** : Identifier les clients selon leur statut fiscal
 
-Permet de rechercher un débiteur par son type de résidence fiscale : Résident (R) ou Non-résident (NR).
+**Valeurs possibles** :
+- `R` = Résident français
+- `NR` = Non-résident (étranger)
 
+**Exemples** :
 ```http
-GET [base]/Organization?debiteur-type-resident=R (Résident)
-GET [base]/Organization?debiteur-type-resident=NR (Non-résident)
+# Tous les clients résidents
+GET [serveur]/Organization?debiteur-type-resident=R
+
+# Tous les clients non-résidents
+GET [serveur]/Organization?debiteur-type-resident=NR
 ```
 
-**Valeurs** : `R` (Résident français), `NR` (Non-résident)
-
 **Cas d'usage** :
-- Identifier débiteurs non-résidents pour application retenue à la source
-- Filtrer résidents fiscaux pour obligations déclaratives nationales
+- Application de la retenue à la source (obligatoire pour non-résidents)
 - Reporting fiscal différencié résidents/non-résidents
+- Contrôles douaniers et TVA intracommunautaire
 
 ---
 
-## Recherches Combinées (Exemples Avancés)
+## Recherches combinées
 
-### Multi-critères
+### Exemples avancés
 
+**Tous les fournisseurs établissements publics de santé actifs**
 ```http
-# Fournisseurs EPS actifs avec IBAN français
-GET [base]/Organization?tiers-role=supplier
-  &tiers-category=16
-  &bank-account-iban:contains=FR76
-  &active=true
-
-# Débiteurs non-résidents de type société
-GET [base]/Organization?tiers-role=debtor
-  &debiteur-type-resident=NR
-  &tiers-legal-nature=03
-
-# Payeurs santé régime obligatoire Sécurité Sociale
-GET [base]/Organization?tiers-role=payer
-  &payeur-type=RO
-  &payeur-grand-regime=SS
-
-# Tiers multi-rôles (fournisseur ET débiteur)
-GET [base]/Organization?tiers-role=supplier
-  &tiers-role=debtor
+GET [serveur]/Organization?tiers-role=supplier&tiers-category=16&active=true
 ```
 
-### Recherches par identifiants standards FHIR
-
-Les identifiants standards Organization sont également disponibles :
-
+**Clients non-résidents de forme société commerciale**
 ```http
-# Recherche par SIRET
-GET [base]/Organization?identifier=urn:oid:1.2.250.1.24.3.2|85211234500018
+GET [serveur]/Organization?tiers-role=debtor&debiteur-type-resident=NR&tiers-legal-nature=03
+```
 
-# Recherche par FINESS
-GET [base]/Organization?identifier=https://finess.esante.gouv.fr|750012345
+**Organismes payeurs Sécurité Sociale régime obligatoire uniquement**
+```http
+GET [serveur]/Organization?tiers-role=payer&payeur-type=RO&payeur-grand-regime=SS
+```
 
-# Recherche par nom (substring)
-GET [base]/Organization?name:contains=Clinique
-
-# Recherche par ville
-GET [base]/Organization?address-city=Paris
+**Organisations multi-rôles (fournisseur ET client)**
+```http
+GET [serveur]/Organization?tiers-role=supplier&tiers-role=debtor
 ```
 
 ---
 
-## Tableau Récapitulatif
+## Critères de recherche standard FHIR
 
-| SearchParameter | Type | Multi OR | Multi AND | Extension Source |
-|-----------------|------|----------|-----------|------------------|
-| **tiers-role** | token | ✅ | ✅ | TiersRoleExtension |
-| **tiers-category** | token | ✅ | ❌ | GEFTGCategory |
-| **tiers-legal-nature** | token | ✅ | ❌ | GEFLegalNature |
-| **fournisseur-code** | string | ✅ | ❌ | FournisseurCodeExtension |
-| **debiteur-code** | string | ✅ | ❌ | DebiteurCodeExtension |
-| **bank-account-iban** | string | ✅ | ❌ | GEFBankAccount.iban |
-| **payeur-grand-regime** | token | ✅ | ❌ | PayeurSanteExtension.grandRegime |
-| **payeur-type** | string | ✅ | ❌ | PayeurSanteExtension.typePayeur |
-| **succursale-usage** | token | ✅ | ✅ | SuccursaleUsageExtension |
-| **debiteur-type-resident** | token | ✅ | ❌ | DebiteurParametresExtension.typeResident |
+En plus des critères spécifiques ci-dessus, vous pouvez utiliser les **critères standards** de la ressource Organization :
 
----
+**Recherche par nom**
+```http
+GET [serveur]/Organization?name:contains=Clinique
+```
 
-## Implémentation Serveur
+**Recherche par ville**
+```http
+GET [serveur]/Organization?address-city=Paris
+```
 
-Les serveurs FHIR implémentant ce guide **DOIVENT** :
+**Recherche par SIRET**
+```http
+GET [serveur]/Organization?identifier=https://sirene.fr|85211234500018
+```
 
-1. ✅ Supporter tous les SearchParameters token/string définis
-2. ✅ Implémenter les modificateurs `:exact` et `:contains` pour string
-3. ✅ Gérer les recherches MultipleOr (valeurs séparées par virgules)
-4. ✅ Gérer les recherches MultipleAnd (paramètres répétés) quand supporté
-5. ✅ Retourner des résultats conformes aux profils Tiers
-
-Les serveurs **PEUVENT** :
-- Ajouter des SearchParameters supplémentaires non définis ici
-- Supporter d'autres modificateurs FHIR (`:above`, `:below`, etc.)
-- Implémenter des recherches composites (Composite SearchParameters)
+**Recherche par FINESS**
+```http
+GET [serveur]/Organization?identifier=https://finess.esante.gouv.fr|750012345
+```
 
 ---
 
-## Sécurité et Performance
+## Pagination et performance
 
-### Contrôle d'accès
+### Limiter le nombre de résultats
 
-Les SearchParameters peuvent exposer des données sensibles :
-- **IBAN** : Données bancaires confidentielles
-- **NIR** : Données personnelles protégées
-- **Codes métier** : Identifiants internes sensibles
+```http
+# 50 résultats maximum par page
+GET [serveur]/Organization?tiers-role=supplier&_count=50
 
-Les serveurs **DOIVENT** :
-- Implémenter OAuth2 ou autre mécanisme d'authentification
-- Appliquer des filtres selon les droits de l'utilisateur
-- Logger les recherches sur données sensibles
+# Page suivante (résultats 51-100)
+GET [serveur]/Organization?tiers-role=supplier&_count=50&_offset=50
+```
 
 ### Optimisation
 
 Pour de meilleures performances :
-- Indexer les extensions fréquemment recherchées (tiers-role, codes métier)
-- Limiter les recherches par défaut (`:count`)
-- Utiliser la pagination pour grands résultats
-- Implémenter le cache pour recherches fréquentes
+- ✅ Combinez plusieurs critères pour affiner la recherche
+- ✅ Utilisez la pagination explicite (`_count`)
+- ✅ Évitez les recherches trop larges sans filtre
 
-```http
-# Pagination explicite
-GET [base]/Organization?tiers-role=supplier&_count=50&_offset=100
-```
+---
+
+## Sécurité et confidentialité
+
+### Contrôle d'accès
+
+Certains critères donnent accès à des données sensibles :
+- **IBAN** : Informations bancaires confidentielles
+- **Codes métier** : Identifiants internes sensibles
+
+Le serveur **doit** :
+- Implémenter l'authentification (OAuth2 ou équivalent)
+- Filtrer les résultats selon les droits de l'utilisateur
+- Tracer les recherches sur données sensibles (audit)
+
+---
+
+## Tableau récapitulatif
+
+| Critère | Type | OU logique | ET logique | Usage principal |
+|---------|------|------------|------------|-----------------|
+| **tiers-role** | Code | ✅ | ✅ | Filtrer par fonction (fournisseur/client/payeur) |
+| **tiers-category** | Code | ✅ | ❌ | Filtrer par type d'organisation |
+| **tiers-legal-nature** | Code | ✅ | ❌ | Filtrer par forme juridique |
+| **fournisseur-code** | Texte | ✅ | ❌ | Retrouver un fournisseur par code |
+| **debiteur-code** | Texte | ✅ | ❌ | Retrouver un client par code |
+| **bank-account-iban** | Texte | ✅ | ❌ | Identifier titulaire d'un compte |
+| **payeur-grand-regime** | Code | ✅ | ❌ | Filtrer organismes payeurs par régime |
+| **payeur-type** | Texte | ✅ | ❌ | Distinguer RO (obligatoire) vs RC (complémentaire) |
+| **succursale-usage** | Code | ✅ | ✅ | Trouver sites par fonction |
+| **debiteur-type-resident** | Code | ✅ | ❌ | Filtrer par résidence fiscale |
 
 ---
 
 ## Voir aussi
 
-- [Index](index.html) - Vue d'ensemble de l'Implementation Guide
-- [TiersProfile](StructureDefinition-tiers-profile.html) - Profil de base Tiers
-- [FournisseurProfile](StructureDefinition-fournisseur-profile.html) - Profil Fournisseur
-- [DebiteurProfile](StructureDefinition-debiteur-profile.html) - Profil Débiteur
-- [PayeurSanteProfile](StructureDefinition-payeur-sante-profile.html) - Profil Payeur Santé
-- [Exemples](examples.html) - Exemples d'utilisation des recherches
+- [Page d'accueil](index.html) - Vue d'ensemble du guide
+- [Exemples pratiques](examples.html) - Cas d'usage réels avec données
+- [Profils](StructureDefinition-tiers-profile.html) - Documentation technique des profils

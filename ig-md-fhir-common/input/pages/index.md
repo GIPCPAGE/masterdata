@@ -1,137 +1,144 @@
-# IG FHIR Tiers MDM - Conformité GEF
+# Guide d'Implémentation FHIR - Référentiel Tiers
 
-**Version**: 0.1.0 | **Date**: 23 février 2026 | **Statut**: Draft
+**Version**: 0.1.0 | **Date**: 17 mars 2026 | **Statut**: Draft
 
 ## Bienvenue
 
-Cet **Implementation Guide FHIR** définit les profils et ressources FHIR pour la gestion des **données de référence (Master Data)** dans le secteur hospitalier français, en conformité avec les **interfaces GEF (Gestion Économique et Financière)**.
+Ce **Guide d'Implémentation FHIR** définit comment gérer et échanger les informations sur les **tiers** (fournisseurs, clients, organismes payeurs) dans le secteur hospitalier français.
 
-Ce guide est **vendor-neutral** et **interopérable**, basé sur **FR Core 2.1.0**, et sert de socle pour les IG spécialisés.
+Un **tiers** est toute organisation avec laquelle un établissement de santé est en relation commerciale ou administrative : laboratoires pharmaceutiques, cliniques partenaires, caisses d'assurance maladie, mutuelles, collectivités territoriales, etc.
 
-### Périmètre de l'IG
+Ce guide est **interopérable** et basé sur le **standard national FR Core 2.1.0**.
 
-Cet Implementation Guide couvre les **données de référence hospitalières** suivantes :
+### Périmètre de ce guide
 
-| Domaine | Ressources FHIR | État | Phase |
-|---------|-----------------|------|-------|
-| **Tiers** (organisations) | Organization | ✅ Complet | Phase 1-3 |
-| **Personnes** (praticiens, patients) | Practitioner, Patient | ⏳ À venir | Phase 5 |
-| **Structures** (services, unités) | OrganizationAffiliation, Location | ⏳ À venir | Phase 6 |
-| **Produits** (médicaments, DM) | Medication, Device | ⏳ À venir | Phase 7 |
-| **Activités** (actes, prestations) | ActivityDefinition, PlanDefinition | ⏳ À venir | Phase 8 |
+Ce guide couvre actuellement les **organisations tierces** :
 
-**Version actuelle (Phase 3)** : Focus sur les **Tiers** uniquement (fournisseurs, débiteurs, payeurs santé).
+| Type d'organisation | Description | Exemples |
+|---------------------|-------------|----------|
+| **Fournisseurs** | Vendent des biens ou services à l'établissement | Laboratoires, équipementiers médicaux, prestataires de services |
+| **Clients/Débiteurs** | Achètent des prestations à l'établissement | Autres hôpitaux, EHPAD, cabinets médicaux |
+| **Organismes payeurs** | Remboursent les soins aux patients | CPAM, MSA, mutuelles, assurances complémentaires |
+| **Succursales** | Sites secondaires rattachés à une organisation principale | Annexes, sites de livraison, adresses de facturation |
 
-Les autres domaines seront progressivement ajoutés dans les phases suivantes. Ce guide restera le socle commun pour toutes les données de référence GEF.
+> **Note** : Les autres référentiels (personnels soignants, patients, structures internes, produits, actes) seront ajoutés dans les prochaines versions.
 
-## Objectif : Interopérabilité GEF
+## Objectifs
 
-Les **interfaces GEF** sont des formats d'échange standardisés utilisés entre systèmes hospitaliers pour synchroniser les données de tiers :
-- **EFOU** : Extraction Fournisseurs (format texte fixe, 262 caractères)
-- **KERD** : Intégration Débiteurs (format CSV)
-- **EMAF** : Extraction Marchés Fournisseurs (contrats)
+Ce guide permet de :
 
-Ce guide fournit une **représentation FHIR complète** de ces formats pour permettre :
-✅ Mapping bidirectionnel GEF ↔ FHIR  
-✅ Validation des données selon nomenclatures GEF officielles  
-✅ Interopérabilité entre systèmes hospitaliers  
-✅ Modernisation progressive des échanges (GEF legacy → FHIR moderne)  
-✅ Recherche et exploitation optimisées via SearchParameters REST
+✅ **Partager** les données sur les tiers entre établissements et systèmes  
+✅ **Identifier** un même tiers dans différents systèmes (SIRET, FINESS, TVA, etc.)  
+✅ **Rechercher** rapidement un fournisseur, client ou organisme payeur  
+✅ **Gérer les multi-rôles** : une même organisation peut être à la fois fournisseur ET client  
+✅ **Garantir la conformité** avec les échanges standards du secteur hospitalier français
 
-## Architecture Multi-IG
+## Architecture du guide
 
 ```
 ┌──────────────────────────────────────────────┐
-│  FR Core 2.1.0 (HL7 France)                 │
-│  • FRCoreOrganizationProfile                │
-│  • Slices SIREN, SIRET, FINESS               │
+│  Standard National FR Core 2.1.0             │
+│  (HL7 France)                                │
+│  • Identifiants français: SIRET, FINESS     │
+│  • Adresses françaises                       │
 └────────┬─────────────────────────────────────┘
          │
          ├─▶ ┌───────────────────────────────────────────────┐
-         │   │ ig-md-fhir-common (ce guide)                 │
-         │   │ CONFORMITÉ GEF - Interopérabilité externe    │
-         │   │ • TiersProfile (base GEF)                    │
-         │   │ • FournisseurProfile (EFOU-compliant)        │
-         │   │ • DebiteurProfile (KERD-compliant)           │
-         │   │ • 12 Extensions GEF (banking, identifiers,   │
-         │   │   debtor-specific)                           │
-         │   │ • 8 CodeSystems GEF (46 codes totaux)        │
-         │   │ • 2 NamingSystems (Tahiti, RIDET)            │
+         │   │ Ce Guide - Référentiel Tiers                 │
+         │   │ (Interopérable et réutilisable)              │
+         │   │                                              │
+         │   │ • Profil de base: Organisation Tiers         │
+         │   │ • Profils spécialisés: Fournisseur, Client,  │
+         │   │   Organisme Payeur, Succursale               │
+         │   │ • 10 critères de recherche REST              │
+         │   │ • Support multi-rôles                        │
          │   └────────┬──────────────────────────────────────┘
          │            │
          └────────────┴─▶ ┌──────────────────────────────────┐
-                          │ ig-md-fhir-cpage (spécialisé)    │
-                          │ ENRICHISSEMENTS CPAGE - Interne   │
-                          │ • CPageFournisseurProfile        │
-                          │ • CPageDebiteurProfile           │
-                          │ • Extensions métier CPage        │
-                          │ • Chorus, comptabilité, ASAP     │
+                          │ Guides spécialisés établissements│
+                          │ (Extensions métier spécifiques)   │
+                          │                                  │
+                          │ • Gestion interne                │
+                          │ • Processus métier               │
+                          │ • Échanges sectoriels            │
                           └──────────────────────────────────┘
 ```
 
-**Principe de séparation** :
-- **ig-md-fhir-common** = Conformité GEF stricte (interop externe, vendor-neutral)
-- **ig-md-fhir-cpage** = Enrichissements propriétaires CPage (métier interne)
+**Principe** : Ce guide définit le **socle commun** réutilisable par tous les établissements. Les spécificités locales sont ajoutées dans des guides dérivés.
 
-## Contenu de ce Guide
+## Contenu du guide
 
-### Profils FHIR
+### Profils d'organisations
 
-#### [TiersProfile](StructureDefinition-tiers-profile.html)
-Profil de base conforme GEF pour tout type de tiers. Hérite de FR Core Organization. **Support multi-rôles** : un même tiers peut être simultanement fournisseur, débiteur ET payeur santé.
-- **9 types d'identifiants** : SIRET, SIREN, FINESS, NIR, TVA, Hors UE, Tahiti, RIDET, En cours
-- **Classification GEF** : Catégorie TG (24 codes), Nature juridique (12 codes)
-- **Banking** : RIB/IBAN (9 sous-extensions incluant EDI, affacturage, moyens paiement)
-- **Extensions rôles** : 10 extensions métier (3 fournisseur, 3 débiteur, 1 payeur, 1 succursale, 2 base)
+#### [Profil de base Organisation](StructureDefinition-tiers-profile.html)
+Profil commun à tous les types de tiers. Inclut les identifiants nationaux (SIRET, FINESS, TVA), les coordonnées bancaires, et la classification de l'organisation.
 
-#### [FournisseurProfile](StructureDefinition-fournisseur-profile.html)
-Profil fournisseur conforme au message **EFOU** (Extraction Fournisseurs, positions 1-262).
-- Hérite de TiersProfile
-- Extensions qualifiant type identifiant GEF
-- Mapping complet vers format texte fixe EFOU
-- **Extensions spécifiques** : codeFournisseur, comptabilite (classe 2/6), paiement (délais, montant min, taux transitaire, escompte)
+**Caractéristiques** :
+- **Multi-rôles** : Une même organisation peut être à la fois fournisseur, client ET organisme payeur
+- **9 types d'identifiants** : SIRET, SIREN, FINESS, Numéro de sécurité sociale, TVA intracommunautaire, identifiants DOM-TOM, etc.
+- **Coordonnées bancaires** : RIB/IBAN avec paramètres de paiement (virements, chèques, EDI, affacturage)
 
-#### [DebiteurProfile](StructureDefinition-debiteur-profile.html)
-Profil débiteur conforme au message **KERD** (Intégration Débiteurs CSV).
-- Hérite de TiersProfile
-- **Extensions spécifiques** :
-  - codeDebiteur : Code unique débiteur
-  - parametres : Compte lettre, type résident fiscal (R/NR), type débiteur, autorisation assurances, COH
-  - debtorType : Occasionnel (O) / Normal (N)
-- RIB obligatoire (1..* MS)
+#### [Profil Fournisseur](StructureDefinition-fournisseur-profile.html)
+Pour les organisations qui **vendent des biens ou services** à l'établissement.
 
-#### [PayeurSanteProfile](StructureDefinition-payeur-sante-profile.html) 🆕
-Profil payeur d'assurance maladie (régime obligatoire et complémentaire).
-- Hérite de TiersProfile
-- **Extension payeurSante requise** (1..1 MS) :
-  - typePayeur : RO (Régime Obligatoire) ou RC (Régime Complémentaire)
-  - codeCentre : Code centre géographique
-  - numeroCaisse : Numéro caisse primaire
-  - grandRegime : SS, MSA, RSI, CNAV, MUTUELLE
-  - numeroOrganisme : Identifiant national
-  - flagEclatement : Éclatement factures par acte
-  - delaiPec : Délai prise en charge (jours)
-- **Contraintes** : Rôle = payer uniquement, pas de RIB (0..0)
+**Informations spécifiques** :
+- Code fournisseur unique
+- Paramètres comptables (comptes de charges et dettes)
+- Conditions de paiement : délais, montants minimums, taux, possibilité d'escompte
 
-### Terminologies GEF
+**Exemples** : Laboratoires pharmaceutiques, fournisseurs d'équipements médicaux, prestataires de services d'entretien
 
-#### Phase 1 - Fondations
-- **GEFIdentifierTypeCS** (9 codes) : Types d'identifiants GEF 01-09
-- **GEFTGCategoryCS** (24 codes) : Catégories tiers (État, régions, EPS, organismes sociaux, etc.)
-- **GEFLegalNatureCS** (12 codes) : Natures juridiques (particulier, société, association, etc.)
+#### [Profil Client/Débiteur](StructureDefinition-debiteur-profile.html)
+Pour les organisations qui **achètent des prestations** à l'établissement.
 
-#### Phase 2 - Débitorat
-- **GEFDebtorTypeCS** (2 codes) : Occasionnel (O) / Normal (N)
-- **GEFCivilityCS** (5 codes) : M, MME, MLLE, METMME, MOUMME
-- **GEFChorusIdentifierTypeCS** (8 codes) : Types identifiants CHORUS 01-08 (sans 09)
-- **GEFAddressLocalizationCS** (3 codes) : FRANCE, EUROPE, AUTRE
+**Informations spécifiques** :
+- Code client unique
+- Paramètres de facturation et encaissement
+- Statut fiscal (résident/non-résident)
+- Autorisations (paiement par assurances, etc.)
+- Coordonnées bancaires **obligatoires** pour encaissement
 
-#### Phase 3 - Multi-rôles et Payeurs 🆕
-- **TiersRoleCS** (3 codes) : supplier, debtor, **payer** (nouveau)
-- **SuccursaleUsageCS** (3 codes) : POINT_LIVRAISON, FACTURATION, SIEGE_SOCIAL
-- **MoyenPaiementCS** (6 codes) : NUMERAIRE, CHEQUE, VIREMENT, VIREMENT_APPLI_EXT, VIREMENT_GROS_MONTANT, VIREMENT_INTERNE
-- **GrandRegimeCS** (5 codes) : SS, MSA, RSI, CNAV, MUTUELLE
-- **TypeResidentCS** (2 codes) : R (Résident), NR (Non résident)
+**Exemples** : Autres hôpitaux, EHPAD, cliniques, maisons de retraite, cabinets médicaux
+
+#### [Profil Organisme Payeur](StructureDefinition-payeur-sante-profile.html)
+Pour les **organismes d'assurance maladie** qui remboursent les soins.
+
+**Informations spécifiques** :
+- Type de régime : Obligatoire (CPAM, MSA, RSI) ou Complémentaire (mutuelles)
+- Grand régime de rattachement : Sécurité Sociale, MSA, RSI, CNAV, Mutuelle
+- Paramètres de gestion : code centre, numéro de caisse, délais de prise en charge
+- Éclatement des factures par acte (oui/non)
+
+**Exemples** : CPAM, MSA, mutuelles, assurances complémentaires
+
+### Classifications et nomenclatures
+
+#### Types d'organisations
+- **Catégories** : État, collectivités territoriales, établissements publics de santé, organismes sociaux, entreprises privées, personnes physiques
+- **Natures juridiques** : Particulier, société commerciale, association, établissement public, collectivité territoriale, etc.
+
+#### Rôles des organisations (multi-rôles supportés)
+- **Fournisseur** (supplier) : Vend des biens ou services
+- **Client** (debtor) : Achète des prestations
+- **Organisme payeur** (payer) : Rembourse les soins aux patients
+
+> Une même organisation peut avoir **plusieurs rôles simultanément**. Exemple : une clinique peut être à la fois fournisseur de consultations spécialisées ET cliente d'équipements médicaux.
+
+#### Moyens de paiement
+- Numéraire, Chèque, Virement bancaire standard
+- Virement application externe, Virement gros montant, Virement interne
+
+#### Régimes de protection sociale
+- **Sécurité Sociale** (SS) : CPAM, régime général
+- **Mutualité Sociale Agricole** (MSA) : Secteur agricole
+- **RSI** : Régime Social des Indépendants
+- **CNAV** : Caisse Nationale d'Assurance Vieillesse
+- **MUTUELLE** : Organismes complémentaires
+
+#### Usages des succursales
+- **Point de livraison** : Adresse de réception des marchandises
+- **Facturation** : Adresse d'envoi des factures
+- **Siège social secondaire** : Établissement autonome rattaché
 
 📊 **Total** : 12 CodeSystems, 74 codes, 15 extensions, 12 ValueSets, 10 SearchParameters
 
@@ -147,49 +154,43 @@ RIDET - Répertoire d'IDEntification des Entreprises et des Établissements (Nou
 - URI temporaire : `http://cpage.org/fhir/NamingSystem/ridet-identifier`
 - ⚠️ OID officiel à acquérir auprès de https://www.ridet.nc/
 
-### [Critères de Recherche](search-parameters.html) 🆕
+### [Critères de recherche](search-parameters.html)
 
-10 SearchParameters pour exploiter les ressources Tiers :
+10 critères pour interroger le référentiel via l'API REST :
 
-| SearchParameter | Type | Description | Exemple |
-|-----------------|------|-------------|---------|
-| **tiers-role** | token | Rôle du tiers (supplier/debtor/payer) | `?tiers-role=supplier` |
-| **tiers-category** | token | Catégorie TG (00-74) | `?tiers-category=16` |
-| **tiers-legal-nature** | token | Nature juridique (00-11) | `?tiers-legal-nature=03` |
-| **fournisseur-code** | string | Code fournisseur unique | `?fournisseur-code=FRSUP00456` |
-| **debiteur-code** | string | Code débiteur unique | `?debiteur-code=DEB000789` |
-| **bank-account-iban** | string | IBAN du compte bancaire | `?bank-account-iban=FR763...` |
-| **payeur-grand-regime** | token | Grand régime payeur (SS/MSA/MUTUELLE) | `?payeur-grand-regime=SS` |
-| **payeur-type** | string | Type payeur (RO/RC) | `?payeur-type=RO` |
-| **succursale-usage** | token | Usage succursale | `?succursale-usage=POINT_LIVRAISON` |
-| **debiteur-type-resident** | token | Résidence fiscale (R/NR) | `?debiteur-type-resident=R` |
+| Critère | Description | Exemple d'usage |
+|---------|-------------|-----------------|
+| **tiers-role** | Recherche par rôle | Tous les fournisseurs |
+| **tiers-category** | Recherche par type d'organisation | Toutes les cliniques, tous les CHU |
+| **tiers-legal-nature** | Recherche par forme juridique | Sociétés commerciales, associations |
+| **fournisseur-code** | Recherche un fournisseur par son code | Recherche par code fournisseur |
+| **debiteur-code** | Recherche un client par son code | Recherche par code client |
+| **bank-account-iban** | Recherche par compte bancaire | Identification bénéficiaire d'un virement |
+| **payeur-grand-regime** | Recherche organisme par régime | Toutes les CPAM, toutes les mutuelles |
+| **payeur-type** | Recherche par type de régime | Régimes obligatoires vs complémentaires |
+| **succursale-usage** | Recherche succursale par usage | Points de livraison, adresses de facturation |
+| **debiteur-type-resident** | Recherche par résidence fiscale | Résidents vs non-résidents |
 
-**Voir** : [Documentation complète SearchParameters](search-parameters.html)
+**Voir** : [Documentation complète des critères de recherche](search-parameters.html)
 
-### [Exemples d'Usage](examples.html) 🆕
+### [Exemples pratiques](examples.html)
 
-7 exemples fonctionnels illustrant tous les cas d'usage GEF :
+7 exemples d'organisations avec leurs données complètes :
 
-#### Multi-rôles
-- **[ExempleTiersComplet](Organization-ExempleTiersComplet.html)** : Tiers avec 3 rôles simultanés (supplier + debtor + payer)
-- **[ExempleTiersDoubleRole](Organization-ExempleTiersDoubleRole.html)** : Clinique fournisseur ET débiteur avec 2 comptes bancaires
+#### Cas multi-rôles
+- **Organisation multi-rôles** : Une entreprise qui est à la fois fournisseur, client ET organisme payeur pour ses employés
+- **Clinique bi-rôle** : Un établissement qui vend des consultations ET achète des médicaments
 
 #### Organisation hiérarchique
-- **[ExempleSuccursale](Organization-ExempleSuccursale.html)** : Succursale avec partOf + usage (point livraison + facturation)
+- **Succursale** : Un site secondaire rattaché à son établissement principal (point de livraison + facturation)
 
 #### Profils spécialisés
-- **[ExempleFournisseurComplet](Organization-ExempleFournisseurComplet.html)** : Fournisseur avec paramètres comptables et paiement (EFOU)
-- **[ExempleDebiteurComplet](Organization-ExempleDebiteurComplet.html)** : CHU débiteur avec RIB obligatoire et paramètres (KERD)
-- **[ExemplePayeurSanteCPAM](Organization-ExemplePayeurSanteCPAM.html)** : CPAM régime obligatoire (RO), grand régime SS
-- **[ExemplePayeurSanteMutuelle](Organization-ExemplePayeurSanteMutuelle.html)** : MGEN régime complémentaire (RC), éclatement activé
+- **Fournisseur** : Laboratoire pharmaceutique avec conditions de paiement complètes
+- **Client** : CHU acheteur avec coordonnées bancaires pour encaissement
+- **CPAM** : Organisme payeur régime obligatoire Sécurité Sociale
+- **Mutuelle** : Organisme payeur régime complémentaire
 
-**Voir** : [Documentation complète Exemples](examples.html)
-
-### Instances de Test Legacy (Phase 1-2)
-
-5 exemples fonctionnels initiaux illustrant les bases GEF :
-- **ExempleFournisseurEPS** : CHU avec SIRET + RIB complet (Catégorie TG 27)
-- **ExempleFournisseurTVA** : Société allemande avec TVA intracommunautaire
+**Voir** : [Tous les exemples détaillés](examples.html)
 - **ExempleDebiteurPersonnePhysique** : Particulier avec NIR + Civilité M + Prénom (obligatoire TG 01)
 - **ExempleDebiteurEPSPublic** : Hôpital avec FINESS + compte contrepartie + code régie (CHORUS)
 - **ExempleFournisseurRIDET** : Société calédonienne avec RIDET (overseas NC)
@@ -203,99 +204,97 @@ Tables complètes de correspondance :
 
 ## Implémentation
 
-### Pour les Éditeurs de Logiciels Hospitaliers
+## Pour qui est ce guide ?
 
-1. **Lecture GEF → FHIR** : Parser EFOU/KERD → créer ressources Organization conformes aux profils
-2. **Écriture FHIR → GEF** : Lire ressources FHIR → générer fichiers EFOU/KERD
-3. **Validation** : Contrôler avec ValueSets GEF (bindings required)
-4. **Extensions** : Implémenter toutes les extensions GEF pour couverture complète
-5. **Multi-rôles** : Gérer un même tiers avec plusieurs rôles simultanés (supplier + debtor + payer)
-6. **Recherches** : Implémenter les 10 SearchParameters pour exploitation optimale
+### Établissements de santé
 
-### Pour les Intégrateurs
+Ce guide vous permet de :
+- **Échanger** vos données fournisseurs et clients avec d'autres établissements au format standard
+- **Synchroniser** vos référentiels tiers entre vos différents systèmes (comptabilité, achats, facturation)
+- **Rechercher** rapidement un fournisseur, client ou organisme payeur dans votre base
+- **Maîtriser** la qualité de vos données grâce aux contrôles de conformité
 
-1. Consommer les profils comme contrat d'interface FHIR
-2. Valider les données échangées contre les StructureDefinitions
-3. Respecter les cardinalités (ex: RIB 1..* obligatoire pour débiteurs)
-4. Implémenter règles métier (ex: civilité+prénom obligatoire si Catégorie TG=01)
-5. **Utiliser les SearchParameters** pour requêtes REST efficaces
-6. **Gérer les succursales** avec partOf (relation hiérarchique organisation)
+### Éditeurs de logiciels
 
-### Cas d'Usage Multi-rôles
+Ce guide vous fournit :
+1. **Des profils FHIR prêts à l'emploi** pour gérer les organisations tierces
+2. **Une API REST standardisée** avec 10 critères de recherche
+3. **Des exemples concrets** pour valider vos implémentations
+4. **La compatibilité** avec le standard national FR Core
+5. **Le support du multi-rôle** : une organisation = plusieurs fonctions
 
-Un même Organization peut avoir **plusieurs rôles simultanés** :
+### Cas d'usage pratiques
+
+#### Gestion des multi-rôles
+
+Une même organisation peut avoir **plusieurs rôles simultanés** :
 
 ```json
 {
   "resourceType": "Organization",
-  "id": "multiservices-sante",
+  "id": "clinique-dupont",
+  "name": "Clinique Dupont",
   "extension": [
-    {"url": "tiersRole", "valueCode": "supplier"},
-    {"url": "tiersRole", "valueCode": "debtor"},
-    {"url": "tiersRole", "valueCode": "payer"},
-    {"url": "codeFournisseur", "valueString": "FRSUP00456"},
-    {"url": "codeDebiteur", "valueString": "DEB000789"},
-    {"url": "payeurSante", "extension": [...]}
+    {"url": "tiersRole", "valueCoding": {"code": "supplier"}},
+    {"url": "tiersRole", "valueCoding": {"code": "debtor"}}
   ]
 }
 ```
 
 **Avantages** :
-- ✅ Pas de duplication données (1 fiche unique)
-- ✅ Historique unifié
-- ✅ Relations simplifiées (1 Organization vs 3)
+- ✅ Une seule fiche pour tous les échanges commerciaux
+- ✅ Pas de duplication de données (adresse, contacts, RIB uniques)
+- ✅ Historique centralisé des relations
 - ✅ Recherche flexible par rôle
 
-**Voir** : [Multi-rôles expliqués](tiers-multi-roles.html) | [Héritage vs partOf](heritage-vs-partof.html)
+**Exemple réel** : Une clinique partenaire vous vend des consultations spécialisées (rôle fournisseur) ET vous achète des médicaments (rôle client).
 
-## Conformité et Validation
+**Voir** : [Exemples multi-rôles détaillés](examples.html)
 
-✅ **SUSHI v3.16.3** : 0 erreurs, 0 warnings  
-✅ **FHIR R4 4.0.1** : Full compliance  
-✅ **FR Core 2.1.0** : Héritage correct  
-✅ **GEF Coverage** : EFOU (100%), KERD (100%), EMAF (Phase 4)  
-✅ **Multi-rôles** : Support complet (supplier + debtor + payer simultanés)  
-✅ **SearchParameters** : 10 critères de recherche définis et testés
+## Statut et conformité
 
-## Liens et Ressources
+✅ **Compilation** : 0 erreurs, 0 warnings  
+✅ **Standard FHIR** : R4 4.0.1 conforme  
+✅ **Standard national** : FR Core 2.1.0 conforme  
+✅ **Multi-rôles** : Support complet (plusieurs rôles par organisation)  
+✅ **Recherches** : 10 critères REST définis et testés
 
-- 📦 **Repository GitHub** : [github.com/NicolasMoreauCPage/mdm-igs](https://github.com/NicolasMoreauCPage/mdm-igs)
-- 🔗 **IG Spécialisé CPage** : ig-md-fhir-cpage
-- 🇫🇷 **FR Core 2.1.0** : [hl7.fr/ig/fhir/core](https://hl7.fr/ig/fhir/core/)
-- 📚 **FHIR R4** : [hl7.org/fhir/R4](https://www.hl7.org/fhir/R4/)
-- 📄 **Documentation GEF** : interfacesGEF.txt (172 pages)
+### Ressources produites
 
-## Statut et Roadmap
+- **4 profils** : Organisation de base, Fournisseur, Client, Organisme payeur
+- **19 extensions** : Informations métier spécifiques (codes, comptabilité, paiement, coordonnées bancaires)
+- **12 nomenclatures** : Types d'organisations, rôles, moyens de paiement, régimes sociaux
+- **24 exemples** : Cas réels d'organisations avec données complètes
+- **10 critères de recherche** : API REST pour interroger le référentiel
 
-### Phase 1 ✅ Complétée (11 fév 2026)
-- GEFIdentifierType, GEFBankAccount, GEFTGCategory, GEFLegalNature
-- TiersProfile avec 6 identifier slices
-- FournisseurProfile, DebiteurProfile
-- NamingSystems Tahiti/RIDET
+## Liens et ressources
 
-### Phase 2 ✅ Complétée (23 fév 2026)
-- 7 extensions débitorat
-- 4 terminologies (DebtorType, Civility, ChorusIdentifierType, AddressLocalization)
-- Intégration complète dans DebiteurProfile
+- 📦 **Code source** : [github.com/GIPCPAGE/masterdata](https://github.com/GIPCPAGE/masterdata)
+- 🇫🇷 **Standard national** : [FR Core 2.1.0](https://hl7.fr/ig/fhir/core)
+- 📚 **Spécification FHIR** : [FHIR R4](https://www.hl7.org/fhir/R4/)
 
-### Phase 3 ✅ Complétée (17 mars 2026) 🆕
-- **Support multi-rôles** : Extension tiersRole 0..* (supplier + debtor + payer)
-- **PayeurSanteProfile** : Profil payeurs santé (CPAM, mutuelles)
-- **4 nouveaux CodeSystems** : TiersRole (avec payer), SuccursaleUsage, MoyenPaiement, GrandRegime, TypeResident
-- **10 SearchParameters** : Critères de recherche pour exploitation (role, category, codes métier, IBAN, payeurs, succursales)
-- **7 exemples complets** : Multi-rôles, succursale avec partOf, fournisseur/débiteur/payeurs avec tous paramètres
-- **Extensions banking enrichies** : GEFBankAccount avec EDI, affacturage, moyens paiement (0..*)
-- **Extensions métier** : 6 nouvelles extensions (FournisseurCode, Comptabilite, Paiement, DebiteurCode, Parametres, PayeurSante)
-- **Documentation complète** : Pages search-parameters.md, examples.md, mise à jour index.md
+## Feuille de route
 
-### Phase 4 ⏳ À venir
-- Support EMAF (contrats fournisseurs - Contract resource)
-- Acquisition OIDs officiels Tahiti/RIDET
-- Génération snapshots IG Publisher
-- Extensions CPage spécialisées (Chorus, ASAP)
+### Version actuelle (Mars 2026)
+✅ **Référentiel des organisations tierces**
+- Profils de base et spécialisés (Fournisseur, Client, Organisme payeur)
+- Support du multi-rôle
+- 10 critères de recherche REST
+- 19 extensions métier
+- 24 exemples d'utilisation
+
+### Prochaines versions
+
+**Version 0.2** (À venir)
+- Référentiel des **personnes** : Professionnels de santé, patients, contacts
+- Référentiel des **structures internes** : Services, unités de soins, pôles
+
+**Version 0.3** (À venir)  
+- Référentiel des **produits** : Médicaments, dispositifs médicaux, consommables
+- Référentiel des **actes et prestations** : Nomenclature des actes
 
 ## Contact
 
-**Équipe CPage MasterData**  
+**Équipe Référentiels**  
 📧 contact@cpage.fr  
 🌐 https://www.cpage.fr
