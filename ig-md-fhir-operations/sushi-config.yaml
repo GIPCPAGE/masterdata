@@ -1,0 +1,51 @@
+id: ig.mdm.fhir.operations
+canonical: https://www.cpage.fr/ig/masterdata/operations
+name: IGMdmFhirOperations
+status: draft
+version: 0.1.0
+date: 2026-03-30
+title: CPage MasterData - IG FHIR pour les opérations de publication
+publisher:
+  name: CPage
+  url: https://www.cpage.fr
+contact:
+  - name: CPage
+    telecom:
+      - system: email
+        value: contact@cpage.fr
+description: >-
+  IG FHIR dédié aux opérations de publication Master Data.
+  Ce guide décrit les opérations $publication-metadata et $publication-bundle,
+  et s'appuie sur le socle commun ig-md-fhir-common.
+fhirVersion: 4.0.1
+copyrightYear: 2026
+releaseLabel: ci-build
+jurisdiction: urn:iso:std:iso:3166#FR "FRANCE"
+
+parameters:
+  shownav: true
+  generate-snapshot: true
+
+dependencies:
+  hl7.fhir.fr.core: 2.1.0
+
+pages:
+  index.md:
+    title: Accueil
+  operations.md:
+    title: Opérations de publication
+  api-publication-batch.md:
+    title: API FHIR de récupération des lots publiés
+  nats-cases.md:
+    title: Cas d'exemple NATS
+  downloads.md:
+    title: Téléchargements
+
+menu:
+  "Accueil": index.html
+  Documentation:
+    Opérations de publication: operations.html
+    API FHIR de récupération des lots publiés: api-publication-batch.html
+    Cas d'exemple NATS: nats-cases.html
+  Ressources de conformité: artifacts.html
+  Téléchargements: downloads.html

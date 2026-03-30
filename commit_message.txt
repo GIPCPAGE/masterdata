@@ -1,0 +1,32 @@
+feat(geo): Ajout gestion historique et temporalité pour communes et codes postaux
+
+PROPRIÉTÉS TEMPORELLES:
+
+Communes INSEE (6 propriétés):
+- status: active, inactive (fusionnée), deprecated
+- effectiveDate: Date création
+- deprecationDate: Date suppression/fusion
+- replacedBy: Code commune de remplacement
+- parent: Code département
+- region: Code région INSEE 2016+
+
+Codes Postaux (5 propriétés):
+- status, effectiveDate, deprecationDate, replacedBy, communeInsee
+
+EXEMPLES HISTORIQUES:
+- Villepreux (78674) fusionnée 2019 dans Les Clayes-sous-Bois (78165)
+- Mouen (14472) créée 2024
+- Paris, Lyon, Marseille avec dept + région
+
+SCRIPTS:
+- generate_communes_fsh.py parse colonnes temporelles INSEE
+- Génère propriétés status, effectiveDate, parent, region automatiquement
+
+DOCUMENTATION (geographie.md):
+- Section Gestion Historique complète
+- API FHIR $lookup, $validate-code avec filtres temporels
+- Cas usage métier (factures historiques, migrations, statistiques)
+- Procédure maintenance annuelle COG
+- Table codes région INSEE 2016+
+
+COMPILATION: 0 erreurs, 0 warnings

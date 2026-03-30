@@ -1,0 +1,20 @@
+/output
+.index.json
+input-cache/publisher.jar
+
+# Ignorer à la racine tout dossier qui existe dans template/
+assets/
+config/
+content/
+includes/
+layouts/
+liquid/
+scripts/
+template/
+temp/
+
+# Dossiers générés automatiquement par la compilation IG FHIR
+input-cache/
+output/
+temp/
+# (template/ déjà listé ci-dessus)

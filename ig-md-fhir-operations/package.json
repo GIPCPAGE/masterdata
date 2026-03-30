@@ -1,0 +1,11 @@
+{
+  "name": "ig-md-fhir-operations",
+  "version": "0.1.0",
+  "description": "FHIR Implementation Guide - Operations de publication MDM",
+  "scripts": {
+    "build": "npx --yes fsh-sushi ."
+  },
+  "dependencies": {
+    "fhir": "^4.0.1"
+  }
+}

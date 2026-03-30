@@ -1,0 +1,17 @@
+{
+  "package-id": "ig.mdm.fhir.operations",
+  "title": "CPage MasterData - IG FHIR pour les operations de publication",
+  "canonical": "https://www.cpage.fr/ig/masterdata/operations",
+  "introduction": "IG FHIR dedie aux operations $publication-metadata et $publication-bundle.",
+  "list": [
+    {
+      "version": "0.1.0",
+      "date": "2026-03-30",
+      "desc": "Premiere version de l'IG operations de publication",
+      "path": "https://www.cpage.fr/ig/masterdata/operations/0.1.0",
+      "status": "draft",
+      "sequence": "STU1",
+      "changes": "Creation initiale de l'IG operations."
+    }
+  ]
+}
