@@ -230,11 +230,42 @@ Le bundle retourne est tenant-aware.
 
 ## 7. Regle de decoupage lors d'une transaction mixte
 
-Si la transaction interne melange nomenclature + ressource metier, il faut publier plusieurs batches homogenes :
+Une meme transaction metier interne peut inclure des operations de nature differente, par exemple :
+
+- mise a jour d'une nomenclature (`CodeSystem` / `ValueSet`) ;
+- recalcul et mise a jour des ressources metier qui dependent de cette nomenclature.
+
+Exemple concret :
+
+1. L'equipe metier modifie des codes de specialite dans un `CodeSystem`.
+2. Dans la meme transaction applicative, Master Data recalcule des `Organization` qui portent ces codes.
+3. Les changements sont valides atomiquement cote metier (une seule transaction interne).
+
+Dans ce cas, la diffusion externe ne doit pas exposer un seul bundle mixte, car les perimetres de diffusion ne sont pas les memes :
+
+- la nomenclature est en general `GLOBAL` ;
+- les ressources metier peuvent etre `CLIENT` (tenant-aware).
+
+Donc, a partir d'une transaction interne unique, il faut publier plusieurs batches homogenes :
 
 - `PB-GLOBAL-001` pour `CodeSystem` ;
 - `PB-CLIENTA-0456` pour `Organization` client A ;
 - `PB-CLIENTB-0457` pour `Organization` client B.
+
+Schema simplifie :
+
+```mermaid
+flowchart LR
+  T[Transaction metier interne unique]
+  T --> G[PB-GLOBAL-001\nCodeSystem / ValueSet\nScope GLOBAL]
+  T --> A[PB-CLIENTA-0456\nOrganization\nScope CLIENT A]
+  T --> B[PB-CLIENTB-0457\nOrganization\nScope CLIENT B]
+```
+
+Ce decoupage permet de conserver :
+
+- la coherence metier interne (transaction unique) ;
+- un contrat de diffusion propre et securise (GLOBAL separe de CLIENT).
 
 ## 8. Rattachement des artefacts IG
 

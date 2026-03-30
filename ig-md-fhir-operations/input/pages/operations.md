@@ -87,10 +87,6 @@ Deux operations sont exposees :
 
 Cette operation permet de recuperer les metadonnees d'un lot publie.
 
-Elle remplace les endpoints generiques de type :
-
-- `GET /version/{id}`
-
 Elle permet au consommateur de comprendre :
 
 - la nature du lot ;
@@ -212,11 +208,6 @@ Exemple :
 ### 6.1 Objectif
 
 Cette operation permet de recuperer le contenu publie sous forme de `Bundle` FHIR.
-
-Elle remplace les endpoints generiques de type :
-
-- `GET /data/{type}`
-- `GET /file/{type}`
 
 ### 6.2 Endpoint
 
