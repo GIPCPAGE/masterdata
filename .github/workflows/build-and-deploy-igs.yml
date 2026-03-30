@@ -49,6 +49,7 @@ jobs:
         path: |
           ig-md-fhir-common/input-cache/publisher.jar
           ig-md-fhir-cpage/input-cache/publisher.jar
+          ig-md-fhir-operations/input-cache/publisher.jar
         key: ${{ runner.os }}-publisher-latest
         restore-keys: |
           ${{ runner.os }}-publisher-
@@ -64,6 +65,12 @@ jobs:
       run: |
         mkdir -p ig-md-fhir-cpage/input-cache
         curl -L https://github.com/HL7/fhir-ig-publisher/releases/latest/download/publisher.jar -o ig-md-fhir-cpage/input-cache/publisher.jar
+
+    - name: Download FHIR Publisher (Operations)
+      if: steps.cache-publisher.outputs.cache-hit != 'true'
+      run: |
+        mkdir -p ig-md-fhir-operations/input-cache
+        curl -L https://github.com/HL7/fhir-ig-publisher/releases/latest/download/publisher.jar -o ig-md-fhir-operations/input-cache/publisher.jar
 
     # ========== BUILD IG PARENT (ig-md-fhir-common) ==========
     - name: Run SUSHI on ig-md-fhir-common
@@ -98,12 +105,24 @@ jobs:
         chmod +x _genonce.sh
         java -jar input-cache/publisher.jar -ig ig.ini
 
+    # ========== BUILD IG OPERATIONS (ig-md-fhir-operations) ==========
+    - name: Run SUSHI on ig-md-fhir-operations
+      working-directory: ig-md-fhir-operations
+      run: sushi .
+
+    - name: Build IG ig-md-fhir-operations
+      working-directory: ig-md-fhir-operations
+      run: |
+        chmod +x _genonce.sh
+        java -jar input-cache/publisher.jar -ig ig.ini
+
     # ========== PREPARE GITHUB PAGES DEPLOYMENT ==========
     - name: Prepare combined output for GitHub Pages
       run: |
         mkdir -p pages-output
         mkdir -p pages-output/common
         mkdir -p pages-output/cpage
+        mkdir -p pages-output/operations
 
         # Copier l'output de l'IG parent dans /common
         if [ -d ig-md-fhir-common/output ]; then
@@ -113,6 +132,11 @@ jobs:
         # Copier l'output de l'IG enfant dans /cpage
         if [ -d ig-md-fhir-cpage/output ]; then
           cp -r ig-md-fhir-cpage/output/* pages-output/cpage/
+        fi
+
+        # Copier l'output de l'IG operations dans /operations
+        if [ -d ig-md-fhir-operations/output ]; then
+          cp -r ig-md-fhir-operations/output/* pages-output/operations/
         fi
 
         # Créer une page index.html à la racine pour rediriger
@@ -141,6 +165,10 @@ jobs:
             <strong>IG FHIR CPage (ig-md-fhir-cpage)</strong><br>
             Profils spécifiques CPage pour Master Data Management
           </a>
+          <a class="ig-link" href="./operations/index.html">
+            <strong>IG FHIR Operations (ig-md-fhir-operations)</strong><br>
+            Opérations de publication: $publication-metadata et $publication-bundle
+          </a>
         </body>
         </html>
         EOF
@@ -168,3 +196,23 @@ jobs:
       if: github.ref == 'refs/heads/main' || github.ref == 'refs/heads/master'
       id: deployment
       uses: actions/deploy-pages@v4
+
+    - name: Publish GitHub Pages links in summary
+      if: always()
+      run: |
+        if [ -n "${{ steps.deployment.outputs.page_url }}" ]; then
+          BASE_URL="${{ steps.deployment.outputs.page_url }}"
+          ROOT_URL="${BASE_URL%/}"
+          {
+            echo "## GitHub Pages links"
+            echo "- Portail: ${ROOT_URL}/"
+            echo "- IG Common: ${ROOT_URL}/common/index.html"
+            echo "- IG CPage: ${ROOT_URL}/cpage/index.html"
+            echo "- IG Operations: ${ROOT_URL}/operations/index.html"
+          } >> "$GITHUB_STEP_SUMMARY"
+        else
+          {
+            echo "## GitHub Pages links"
+            echo "Le déploiement Pages n'a pas été exécuté (branche non principale) ou n'a pas retourné d'URL."
+          } >> "$GITHUB_STEP_SUMMARY"
+        fi
