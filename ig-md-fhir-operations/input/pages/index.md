@@ -14,15 +14,21 @@ Il s'appuie sur le socle commun **ig-md-fhir-common** et definit un contrat d'ec
 
 ## Descriptif du traitement
 
-Le cycle de publication est alimente par des evenements NATS.
-Les evenements recus sont transformes en lots de publication homogenes, puis exposes via les operations FHIR de cette IG.
-La notification broker annonce la disponibilite d'un batch, et non la transaction metier brute.
+Le cycle de publication du Master Data produit des **lots de publication** à destination des consommateurs.
 
-Le detail des scenarios est documente ici :
+Lorsqu’un lot est prêt, le serveur publie sur NATS une **notification de disponibilité**.
+Cette notification n’embarque pas la transaction meétier brute ni l’ensemble dtailleé du contenu. Elle annonce uniquement qu’un lot publié est disponible et peut être récupéré via l’API FHIR.
+
+Le consommateur suit alors le cycle suivant :
+- il reçoit une notification NATS ;
+- il récupère les métadonnées du lot ;
+- il récupère le contenu du lot sous forme de Bundle FHIR ;
+
+Le détail des scénarios est documenté ici :
 
 - [Cas d'exemple NATS](nats-cases.html)
 
-## Perimetre de ce guide
+## Périmètre de ce guide
 
 Ce guide couvre exclusivement les operations :
 
@@ -34,31 +40,35 @@ Ce guide ne couvre pas :
 - les traitements internes de fabrication des lots ;
 - les regles metier internes de versionnement ;
 - l'orchestration technique hors interface FHIR.
+- la logique interne de consommation des messages par les applications clientes.
 
 ## Objectifs
 
 Ce guide permet de :
 
-- recuperer les metadonnees d'un lot de publication ;
-- recuperer le contenu publie d'un lot au format FHIR ;
+- récupérer les métadonnées d'un lot de publication ;
+- récupérer le contenu publié d'un lot au format FHIR ;
 - distinguer les lots globaux et les lots client-specifiques.
+- découpler la notification broker de la récupération détaillée des données.
 
-## Principe de decoupage des publications
+## Principe de découpage des publications
 
-Une transaction metier interne peut impacter plusieurs objets simultanement (ex. nomenclature + ressource metier).
+Une transaction métier interne peut impacter plusieurs objets simultanément (ex. nomenclature + ressource métier).
 La diffusion ne reprend pas necessairement la transaction interne telle quelle.
 
-Regles :
+Règles :
 
 - une transaction interne peut produire plusieurs lots de publication ;
-- chaque lot publie doit rester homogene en termes de perimetre de diffusion ;
-- les lots globaux et les lots client-specifiques doivent etre separes.
+- chaque lot publié doit rester homogène en termes de périmètre de diffusion ;
+- les lots globaux et les lots client-spécifiques doivent être séparés.
+- un lot GLOBAL ne doit pas contenir de contenu contextualisé par client ;
+- un lot CLIENT ne doit exposer que le contenu autorisé pour le client concerné.
 
-## Operations exposees
+## Opérations exposées
 
 ### `$publication-metadata`
 
-Recupere les metadonnees d'un lot publie.
+Récupère les métadonnées d'un lot publié.
 
 Endpoint :
 
@@ -67,24 +77,24 @@ Endpoint :
 
 ### `$publication-bundle`
 
-Recupere le contenu publie d'un lot sous forme de `Bundle`.
+Récupère le contenu publié d'un lot sous forme de `Bundle`.
 
 Endpoint :
 
 - `POST /fhir/$publication-bundle`
 - `Content-Type: application/fhir+json`
 
-Mode de reponse :
+Mode de réponse :
 
-- synchrone pour les lots de faible volumetrie ;
+- synchrone pour les lots de faible volumétrie ;
 - asynchrone via `Prefer: respond-async`, `202 Accepted` et `Content-Location` pour les lots volumineux.
 
 ## Type de bundle retourne
 
-- `Bundle.type = transaction` : le lot doit etre applique comme une unite coherente.
-- `Bundle.type = batch` : les entrees peuvent etre traitees independamment.
+- `Bundle.type = transaction` : le lot doit être interprèté comme une unité cohérente.
+- `Bundle.type = batch` : les entrées peuvent être traitées indépendamment.
 
-Le type est determine par la vue de publication et le besoin de coherence du lot.
+Le type est déterminé par la vue de publication et le besoin de cohérence du lot.
 
 ## Navigation
 

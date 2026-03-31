@@ -34,6 +34,8 @@ Description: "Retourne les metadonnees d'un lot de publication identifie par pub
 * parameter[=].max = "1"
 * parameter[=].type = #code
 * parameter[=].documentation = "Scope du lot : GLOBAL ou CLIENT."
+* parameter[=].binding.strength = #required
+* parameter[=].binding.valueSet = "https://www.cpage.fr/ig/masterdata/operations/ValueSet/publication-scope"
 
 * parameter[+].name = #targetTenant
 * parameter[=].use = #out
@@ -48,6 +50,8 @@ Description: "Retourne les metadonnees d'un lot de publication identifie par pub
 * parameter[=].max = "1"
 * parameter[=].type = #code
 * parameter[=].documentation = "Type du bundle expose : transaction ou batch."
+* parameter[=].binding.strength = #required
+* parameter[=].binding.valueSet = "https://www.cpage.fr/ig/masterdata/operations/ValueSet/bundle-type-publication"
 
 * parameter[+].name = #publicationViewCode
 * parameter[=].use = #out
@@ -83,6 +87,8 @@ Description: "Retourne les metadonnees d'un lot de publication identifie par pub
 * parameter[=].max = "1"
 * parameter[=].type = #code
 * parameter[=].documentation = "Statut du lot : READY, PROCESSING, FAILED, etc."
+* parameter[=].binding.strength = #required
+* parameter[=].binding.valueSet = "https://www.cpage.fr/ig/masterdata/operations/ValueSet/publication-batch-status"
 
 * parameter[+].name = #createdAt
 * parameter[=].use = #out
