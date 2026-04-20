@@ -1,6 +1,6 @@
 // =============================================
 // Profil Payeur Santé (Assurance Maladie, Mutuelles)
-// Conforme aux spécifications GEF payeurs santé
+// Conforme aux spécifications payeurs santé
 // =============================================
 
 Profile: PayeurSanteProfile

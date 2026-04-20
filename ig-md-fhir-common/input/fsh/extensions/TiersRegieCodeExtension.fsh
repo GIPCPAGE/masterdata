@@ -1,13 +1,13 @@
 // =============================================
-// Extension: Code Régie (GEF)
+// Extension: Code Régie
 // =============================================
 
-Extension: GEFRegieCode
-Id: gef-regie-code
-Title: "Code Régie (GEF)"
+Extension: TiersRegieCode
+Id: tiers-regie-code
+Title: "Code Régie"
 Description: "Extension pour le code régie du secteur public. Correspond au champ KERD position 7. Le code régie identifie de façon unique une régie d'avance ou de recettes au sein d'un établissement public. Les régies sont des services habilités à manier des fonds publics pour le compte d'une collectivité ou d'un établissement public."
 Context: Organization
-* ^url = "http://cpage.org/fhir/StructureDefinition/gef-regie-code"
+* ^url = "https://www.cpage.fr/ig/masterdata/common/StructureDefinition/tiers-regie-code"
 * ^version = "1.0.0"
 * ^status = #active
 * ^context[0].type = #element

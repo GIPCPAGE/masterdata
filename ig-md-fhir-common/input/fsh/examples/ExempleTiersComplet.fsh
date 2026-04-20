@@ -34,12 +34,12 @@ Description: "Exemple d'un tiers qui cumule trois rôles: fournisseur, débiteur
 * address.country = "FR"
 
 // Multi-rôle: Fournisseur + Débiteur + Payeur
-* extension[tiersRole][0].valueCoding = http://cpage.org/fhir/CodeSystem/tiers-role-cs#supplier
-* extension[tiersRole][1].valueCoding = http://cpage.org/fhir/CodeSystem/tiers-role-cs#debtor
-* extension[tiersRole][2].valueCoding = http://cpage.org/fhir/CodeSystem/tiers-role-cs#payer
+* extension[tiersRole][0].valueCoding = https://www.cpage.fr/ig/masterdata/common/CodeSystem/tiers-role-cs#supplier
+* extension[tiersRole][1].valueCoding = https://www.cpage.fr/ig/masterdata/common/CodeSystem/tiers-role-cs#debtor
+* extension[tiersRole][2].valueCoding = https://www.cpage.fr/ig/masterdata/common/CodeSystem/tiers-role-cs#payer
 
 // Nature juridique
-* extension[legalNature].valueCodeableConcept = http://cpage.org/fhir/CodeSystem/gef-legal-nature-cs#03 "Société"
+* extension[legalNature].valueCodeableConcept = https://www.cpage.fr/ig/masterdata/common/CodeSystem/tiers-legal-nature-cs#03 "Société"
 
 // TG Category
 * extension[tgCategory].valueCodeableConcept = https://mos.esante.gouv.fr/NOS/TRE_R66-CategorieEtablissement/FHIR/TRE-R66-CategorieEtablissement#61 "CPAM"
@@ -71,7 +71,7 @@ Description: "Exemple d'un tiers qui cumule trois rôles: fournisseur, débiteur
 * extension[payeurSante].extension[typePayeur].valueString = "RO"
 * extension[payeurSante].extension[codeCentre].valueString = "750"
 * extension[payeurSante].extension[numeroCaisse].valueString = "75001"
-* extension[payeurSante].extension[grandRegime].valueCodeableConcept = http://cpage.org/fhir/CodeSystem/grand-regime-cs#SS
+* extension[payeurSante].extension[grandRegime].valueCodeableConcept = https://www.cpage.fr/ig/masterdata/common/CodeSystem/grand-regime-cs#SS
 * extension[payeurSante].extension[numeroOrganisme].valueString = "007501"
 * extension[payeurSante].extension[flagEclatement].valueString = "false"
 * extension[payeurSante].extension[delaiPec].valueInteger = 90
@@ -85,5 +85,5 @@ Description: "Exemple d'un tiers qui cumule trois rôles: fournisseur, débiteur
 * extension[bankAccount][0].extension[bic].valueString = "BNPAFRPP"
 * extension[bankAccount][0].extension[ediEnabled].valueBoolean = true
 * extension[bankAccount][0].extension[factoringEnabled].valueBoolean = false
-* extension[bankAccount][0].extension[paymentMethod][0].valueCodeableConcept = http://cpage.org/fhir/CodeSystem/moyen-paiement#VIREMENT "Virement"
-* extension[bankAccount][0].extension[paymentMethod][1].valueCodeableConcept = http://cpage.org/fhir/CodeSystem/moyen-paiement#CHEQUE "Chèque"
+* extension[bankAccount][0].extension[paymentMethod][0].valueCodeableConcept = https://www.cpage.fr/ig/masterdata/common/CodeSystem/moyen-paiement-cs#VIREMENT "Virement bancaire"
+* extension[bankAccount][0].extension[paymentMethod][1].valueCodeableConcept = https://www.cpage.fr/ig/masterdata/common/CodeSystem/moyen-paiement-cs#CHEQUE "Chèque"

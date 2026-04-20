@@ -37,10 +37,10 @@ Description: "Exemple d'un débiteur (établissement acheteur) avec tous les par
 * address.country = "FR"
 
 // Rôle: Débiteur uniquement
-* extension[tiersRole][0].valueCoding = http://cpage.org/fhir/CodeSystem/tiers-role-cs#debtor
+* extension[tiersRole][0].valueCoding = https://www.cpage.fr/ig/masterdata/common/CodeSystem/tiers-role-cs#debtor
 
 // Nature juridique
-* extension[legalNature].valueCodeableConcept = http://cpage.org/fhir/CodeSystem/gef-legal-nature-cs#06 "Établissement public"
+* extension[legalNature].valueCodeableConcept = https://www.cpage.fr/ig/masterdata/common/CodeSystem/tiers-legal-nature-cs#09 "Collectivité territoriale - EPL - EPS"
 
 // TG Category
 * extension[tgCategory].valueCodeableConcept = https://mos.esante.gouv.fr/NOS/TRE_R66-CategorieEtablissement/FHIR/TRE-R66-CategorieEtablissement#02 "CHU"
@@ -66,8 +66,8 @@ Description: "Exemple d'un débiteur (établissement acheteur) avec tous les par
 * extension[bankAccount][0].extension[bic].valueString = "BDFEFRPP"
 * extension[bankAccount][0].extension[ediEnabled].valueBoolean = true
 * extension[bankAccount][0].extension[factoringEnabled].valueBoolean = false
-* extension[bankAccount][0].extension[paymentMethod][0].valueCodeableConcept = http://cpage.org/fhir/CodeSystem/moyen-paiement#VIREMENT "Virement"
-* extension[bankAccount][0].extension[paymentMethod][1].valueCodeableConcept = http://cpage.org/fhir/CodeSystem/moyen-paiement#VIREMENT_INTERNE "Virement interne"
+* extension[bankAccount][0].extension[paymentMethod][0].valueCodeableConcept = https://www.cpage.fr/ig/masterdata/common/CodeSystem/moyen-paiement-cs#VIREMENT "Virement bancaire"
+* extension[bankAccount][0].extension[paymentMethod][1].valueCodeableConcept = https://www.cpage.fr/ig/masterdata/common/CodeSystem/moyen-paiement-cs#VIREMENT_INTERNE "Virement interne"
 
 // === Second compte bancaire pour recettes importantes ===
 * extension[bankAccount][1].extension[bankCode].valueString = "30004"
@@ -78,4 +78,4 @@ Description: "Exemple d'un débiteur (établissement acheteur) avec tous les par
 * extension[bankAccount][1].extension[bic].valueString = "BNPAFRPP"
 * extension[bankAccount][1].extension[ediEnabled].valueBoolean = true
 * extension[bankAccount][1].extension[factoringEnabled].valueBoolean = false
-* extension[bankAccount][1].extension[paymentMethod][0].valueCodeableConcept = http://cpage.org/fhir/CodeSystem/moyen-paiement#VIREMENT_GROS_MONTANT "Virement gros montant"
+* extension[bankAccount][1].extension[paymentMethod][0].valueCodeableConcept = https://www.cpage.fr/ig/masterdata/common/CodeSystem/moyen-paiement-cs#VIREMENT_GROS_MONTANT "Virement gros montant"

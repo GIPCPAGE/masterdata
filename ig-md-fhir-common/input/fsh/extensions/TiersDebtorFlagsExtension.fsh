@@ -1,13 +1,13 @@
 // =============================================
-// Extension: Attributs Spécifiques Débiteur (GEF)
+// Extension: Attributs Spécifiques Débiteur
 // =============================================
 
-Extension: GEFDebtorFlags
-Id: gef-debtor-flags
-Title: "Attributs Spécifiques Débiteur (GEF)"
-Description: "Extension pour les attributs spécifiques des débiteurs GEF. Correspond aux champs KERD positions 21-23 (Est débiteur laboratoire O/N, Est débiteur locataire O/N, Est débiteur agent O/N, Numéro matricule agent). Ces attributs permettent d'identifier des catégories particulières de débiteurs nécessitant un traitement comptable ou administratif spécifique."
+Extension: TiersDebtorFlags
+Id: tiers-debtor-flags
+Title: "Attributs Spécifiques Débiteur"
+Description: "Extension pour les attributs spécifiques des débiteurs. Correspond aux champs KERD positions 21-23 (Est débiteur laboratoire O/N, Est débiteur locataire O/N, Est débiteur agent O/N, Numéro matricule agent). Ces attributs permettent d'identifier des catégories particulières de débiteurs nécessitant un traitement comptable ou administratif spécifique."
 Context: Organization
-* ^url = "http://cpage.org/fhir/StructureDefinition/gef-debtor-flags"
+* ^url = "https://www.cpage.fr/ig/masterdata/common/StructureDefinition/tiers-debtor-flags"
 * ^version = "1.0.0"
 * ^status = #active
 * ^context[0].type = #element

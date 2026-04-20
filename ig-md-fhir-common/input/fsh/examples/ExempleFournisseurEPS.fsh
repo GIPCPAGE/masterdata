@@ -17,10 +17,10 @@ Description: "Exemple d'un établissement public de santé (CHU) en tant que fou
 * name = "CHU de Paris"
 * alias = "Centre Hospitalier Universitaire de Paris"
 
-* extension[tgCategory].valueCodeableConcept = http://cpage.org/fhir/CodeSystem/gef-tg-category-cs#27 "Établissement public de santé"
-* extension[legalNature].valueCodeableConcept = http://cpage.org/fhir/CodeSystem/gef-legal-nature-cs#09 "Collectivité territoriale - EPL - EPS"
+* extension[tgCategory].valueCodeableConcept = https://www.cpage.fr/ig/masterdata/common/CodeSystem/tiers-category-cs#27 "Établissement public de santé"
+* extension[legalNature].valueCodeableConcept = https://www.cpage.fr/ig/masterdata/common/CodeSystem/tiers-legal-nature-cs#09 "Collectivité territoriale - EPL - EPS"
 
-* extension[tiersRole].valueCoding = http://cpage.org/fhir/CodeSystem/tiers-role-cs#supplier "Fournisseur"
+* extension[tiersRole].valueCoding = https://www.cpage.fr/ig/masterdata/common/CodeSystem/tiers-role-cs#supplier "Fournisseur"
 
 * extension[bankAccount][0].extension[bankCode].valueString = "12345"
 * extension[bankAccount][0].extension[branchCode].valueString = "67890"

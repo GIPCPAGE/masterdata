@@ -41,10 +41,10 @@ Description: "Exemple d'un fournisseur avec tous les paramètres de gestion: cod
 * address.country = "FR"
 
 // Rôle: Fournisseur uniquement
-* extension[tiersRole][0].valueCoding = http://cpage.org/fhir/CodeSystem/tiers-role-cs#supplier
+* extension[tiersRole][0].valueCoding = https://www.cpage.fr/ig/masterdata/common/CodeSystem/tiers-role-cs#supplier
 
 // Nature juridique
-* extension[legalNature].valueCodeableConcept = http://cpage.org/fhir/CodeSystem/gef-legal-nature-cs#03 "Société"
+* extension[legalNature].valueCodeableConcept = https://www.cpage.fr/ig/masterdata/common/CodeSystem/tiers-legal-nature-cs#03 "Société"
 
 // TG Category
 * extension[tgCategory].valueCodeableConcept = https://mos.esante.gouv.fr/NOS/TRE_R66-CategorieEtablissement/FHIR/TRE-R66-CategorieEtablissement#26 "Entreprise (autre secteur)"
@@ -72,8 +72,8 @@ Description: "Exemple d'un fournisseur avec tous les paramètres de gestion: cod
 * extension[bankAccount][0].extension[bic].valueString = "AGRIFRPP"
 * extension[bankAccount][0].extension[ediEnabled].valueBoolean = true
 * extension[bankAccount][0].extension[factoringEnabled].valueBoolean = true
-* extension[bankAccount][0].extension[paymentMethod][0].valueCodeableConcept = http://cpage.org/fhir/CodeSystem/moyen-paiement#VIREMENT "Virement"
-* extension[bankAccount][0].extension[paymentMethod][1].valueCodeableConcept = http://cpage.org/fhir/CodeSystem/moyen-paiement#VIREMENT_APPLI_EXT "Virement application externe"
+* extension[bankAccount][0].extension[paymentMethod][0].valueCodeableConcept = https://www.cpage.fr/ig/masterdata/common/CodeSystem/moyen-paiement-cs#VIREMENT "Virement bancaire"
+* extension[bankAccount][0].extension[paymentMethod][1].valueCodeableConcept = https://www.cpage.fr/ig/masterdata/common/CodeSystem/moyen-paiement-cs#VIREMENT_APPLI_EXT "Virement via application externe"
 
 // === Second compte pour paiements en numéraire ou chèque ===
 * extension[bankAccount][1].extension[bankCode].valueString = "30003"
@@ -84,5 +84,5 @@ Description: "Exemple d'un fournisseur avec tous les paramètres de gestion: cod
 * extension[bankAccount][1].extension[bic].valueString = "SOGEFRPP"
 * extension[bankAccount][1].extension[ediEnabled].valueBoolean = false
 * extension[bankAccount][1].extension[factoringEnabled].valueBoolean = false
-* extension[bankAccount][1].extension[paymentMethod][0].valueCodeableConcept = http://cpage.org/fhir/CodeSystem/moyen-paiement#CHEQUE "Chèque"
-* extension[bankAccount][1].extension[paymentMethod][1].valueCodeableConcept = http://cpage.org/fhir/CodeSystem/moyen-paiement#NUMERAIRE "Numéraire"
+* extension[bankAccount][1].extension[paymentMethod][0].valueCodeableConcept = https://www.cpage.fr/ig/masterdata/common/CodeSystem/moyen-paiement-cs#CHEQUE "Chèque"
+* extension[bankAccount][1].extension[paymentMethod][1].valueCodeableConcept = https://www.cpage.fr/ig/masterdata/common/CodeSystem/moyen-paiement-cs#NUMERAIRE "Numéraire"

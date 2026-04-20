@@ -6,7 +6,7 @@ Extension: PayeurSanteExtension
 Id: payeur-sante
 Title: "Paramètres Payeur Santé"
 Description: "Paramètres de gestion pour un organisme payeur dans le secteur de la santé (Sécurité sociale, mutuelles, etc.)"
-* ^url = "http://cpage.org/fhir/StructureDefinition/payeur-sante"
+* ^url = "https://www.cpage.fr/ig/masterdata/common/StructureDefinition/payeur-sante"
 * ^version = "1.0.0"
 * ^status = #active
 * ^context[0].type = #element

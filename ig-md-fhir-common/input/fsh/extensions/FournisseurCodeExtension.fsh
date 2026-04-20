@@ -6,7 +6,7 @@ Extension: FournisseurCodeExtension
 Id: fournisseur-code
 Title: "Code Fournisseur"
 Description: "Code unique identifiant le fournisseur dans le système de gestion"
-* ^url = "http://cpage.org/fhir/StructureDefinition/fournisseur-code"
+* ^url = "https://www.cpage.fr/ig/masterdata/common/StructureDefinition/fournisseur-code"
 * ^version = "1.0.0"
 * ^status = #active
 * ^context[0].type = #element

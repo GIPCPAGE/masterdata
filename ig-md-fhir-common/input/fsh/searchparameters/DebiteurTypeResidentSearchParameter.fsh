@@ -3,13 +3,13 @@
 // Permet de rechercher un débiteur par son type de résidence fiscale
 // =============================================
 
-Instance: DebiteurTypeResidentSearchParameter
+Instance: debiteur-type-resident
 InstanceOf: SearchParameter
 Usage: #definition
 Title: "Search Débiteur by Type Résident"
 Description: "Permet de rechercher un débiteur par son type de résidence fiscale: Résident (R) ou Non-résident (NR)."
 
-* url = "http://cpage.org/fhir/SearchParameter/debiteur-type-resident"
+* url = "https://www.cpage.fr/ig/masterdata/common/SearchParameter/debiteur-type-resident"
 * version = "1.0.0"
 * name = "DebiteurTypeResidentSearchParameter"
 * status = #active
@@ -25,8 +25,8 @@ Description: "Permet de rechercher un débiteur par son type de résidence fisca
 * code = #debiteur-type-resident
 * base = #Organization
 * type = #token
-* expression = "Organization.extension('http://cpage.org/fhir/StructureDefinition/debiteur-parametres-extension').extension('typeResident').value.ofType(code)"
-* xpath = "f:Organization/f:extension[@url='http://cpage.org/fhir/StructureDefinition/debiteur-parametres-extension']/f:extension[@url='typeResident']/f:valueCode"
+* expression = "Organization.extension('https://www.cpage.fr/ig/masterdata/common/StructureDefinition/debiteur-parametres-extension').extension('typeResident').value.ofType(code)"
+* xpath = "f:Organization/f:extension[@url='https://www.cpage.fr/ig/masterdata/common/StructureDefinition/debiteur-parametres-extension']/f:extension[@url='typeResident']/f:valueCode"
 * xpathUsage = #normal
 * multipleOr = true
 * multipleAnd = false

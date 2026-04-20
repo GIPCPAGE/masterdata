@@ -1,5 +1,5 @@
 id: ig.mdm.fhir.common
-canonical: https://www.cpage.fr/ig/masterdata/tiers
+canonical: https://www.cpage.fr/ig/masterdata/common
 name: IGMdmFhirCommon
 status: draft
 version: 0.1.0
@@ -14,7 +14,7 @@ contact:
       - system: email
         value: contact@cpage.fr
 description: >-
-  IG FHIR générique pour la gestion des Tiers (Organisation/Fournisseur/Débiteur).
+  IG FHIR générique pour l'échange des concepts métiers et des nomenclatures avec le CPage Master Data.
   Ce guide définit les profils et ressources communs, réutilisables et vendor-neutral,
   basés sur FR Core. Il sert de socle pour les IG spécifiques (ex: CPage).
 fhirVersion: 4.0.1
@@ -24,7 +24,10 @@ jurisdiction: urn:iso:std:iso:3166#FR "FRANCE"
 
 parameters:
   shownav: true
-  generate-snapshot: true
+  special-url:
+    - https://smt.esante.gouv.fr/fhir/CodeSystem/TRE-R13-CommuneOM
+    - https://smt.esante.gouv.fr/fhir/ValueSet/fr-communes-actives
+    - https://smt.esante.gouv.fr/fhir/ValueSet/fr-communes-cog-complet
   
 dependencies:
   hl7.fhir.fr.core: 2.1.0
@@ -33,19 +36,29 @@ pages:
   index.md:
     title: Accueil
   tiers-organization.md:
-    title: Profil TiersOrganization
+    title: Profils Tiers
   terminologies.md:
-    title: Terminologies
+    title: Terminologies GEF
+  geographie.md:
+    title: Données Géographiques COG
   mapping.md:
     title: Mapping Oracle ECO
+  search-parameters.md:
+    title: Paramètres de Recherche
+  examples.md:
+    title: Exemples
   downloads.md:
     title: Téléchargements
 
 menu:
   "Accueil": index.html
-  Documentation:
-    Profil TiersOrganization: tiers-organization.html
-    Terminologies: terminologies.html
-    Mapping Oracle ECO: mapping.html
+  "Axe Tiers":
+    Profils Tiers: tiers-organization.html
+    Paramètres de Recherche: search-parameters.html
+    Exemples: examples.html
+  "Axe Nomenclatures":
+    Terminologies GEF: terminologies.html
+    Données géographiques COG: geographie.html
+  Mapping Oracle ECO: mapping.html
   Ressources de conformité: artifacts.html
   Téléchargements: downloads.html

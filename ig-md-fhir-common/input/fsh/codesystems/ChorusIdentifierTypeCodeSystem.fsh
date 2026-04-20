@@ -1,12 +1,12 @@
 // =============================================
-// CodeSystem: Type Identifiant CHORUS (GEF)
+// CodeSystem: Type Identifiant CHORUS
 // =============================================
 
-CodeSystem: GEFChorusIdentifierTypeCS
-Id: gef-chorus-identifier-type-cs
-Title: "Type Identifiant CHORUS (GEF)"
-Description: "Types d'identifiants reconnus par CHORUS (système de comptabilité publique). Nomenclature GEF extraite de interfacesGEF.txt page 141. Identique à la table 'Identifiant TG' mais sans le code 09 (En cours d'immatriculation) car CHORUS n'accepte que les identifiants définitifs."
-* ^url = "http://cpage.org/fhir/CodeSystem/gef-chorus-identifier-type-cs"
+CodeSystem: ChorusIdentifierTypeCS
+Id: chorus-identifier-type-cs
+Title: "Type Identifiant CHORUS"
+Description: "Types d'identifiants reconnus par CHORUS (système de comptabilité publique). Nomenclature extraite de interfacesGEF.txt page 141. Identique à la table 'Identifiant TG' mais sans le code 09 (En cours d'immatriculation) car CHORUS n'accepte que les identifiants définitifs."
+* ^url = "https://www.cpage.fr/ig/masterdata/common/CodeSystem/chorus-identifier-type-cs"
 * ^version = "1.0.0"
 * ^status = #active
 * ^experimental = false

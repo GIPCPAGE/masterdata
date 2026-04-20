@@ -33,10 +33,10 @@ Description: "Exemple d'une succursale (point de livraison, facturation, ou site
 * address.country = "FR"
 
 // Rôle: Débiteur (la succursale achète des fournitures)
-* extension[tiersRole][0].valueCoding = http://cpage.org/fhir/CodeSystem/tiers-role-cs#debtor
+* extension[tiersRole][0].valueCoding = https://www.cpage.fr/ig/masterdata/common/CodeSystem/tiers-role-cs#debtor
 
 // Nature juridique hérite du siège
-* extension[legalNature].valueCodeableConcept = http://cpage.org/fhir/CodeSystem/gef-legal-nature-cs#03 "Société"
+* extension[legalNature].valueCodeableConcept = https://www.cpage.fr/ig/masterdata/common/CodeSystem/tiers-legal-nature-cs#03 "Société"
 
 // TG Category
 * extension[tgCategory].valueCodeableConcept = https://mos.esante.gouv.fr/NOS/TRE_R66-CategorieEtablissement/FHIR/TRE-R66-CategorieEtablissement#07 "Centre de santé"
@@ -70,5 +70,5 @@ Description: "Exemple d'une succursale (point de livraison, facturation, ou site
 * extension[bankAccount][0].extension[bic].valueString = "CMCIFR2A"
 * extension[bankAccount][0].extension[ediEnabled].valueBoolean = false
 * extension[bankAccount][0].extension[factoringEnabled].valueBoolean = false
-* extension[bankAccount][0].extension[paymentMethod][0].valueCodeableConcept = http://cpage.org/fhir/CodeSystem/moyen-paiement#VIREMENT "Virement"
-* extension[bankAccount][0].extension[paymentMethod][1].valueCodeableConcept = http://cpage.org/fhir/CodeSystem/moyen-paiement#CHEQUE "Chèque"
+* extension[bankAccount][0].extension[paymentMethod][0].valueCodeableConcept = https://www.cpage.fr/ig/masterdata/common/CodeSystem/moyen-paiement-cs#VIREMENT "Virement bancaire"
+* extension[bankAccount][0].extension[paymentMethod][1].valueCodeableConcept = https://www.cpage.fr/ig/masterdata/common/CodeSystem/moyen-paiement-cs#CHEQUE "Chèque"

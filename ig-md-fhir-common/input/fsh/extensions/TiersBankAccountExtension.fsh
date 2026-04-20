@@ -1,12 +1,12 @@
 // =============================================
-// Extension GEF Bank Account
+// Extension Bank Account
 // =============================================
 
-Extension: GEFBankAccount
-Id: gef-bank-account
-Title: "Domiciliation bancaire GEF"
-Description: "Coordonnées bancaires RIB/IBAN du tiers pour paiements (fournisseurs) ou recettes (débiteurs). Conforme aux formats GEF (KERD et EMAF)"
-* ^url = "http://cpage.org/fhir/StructureDefinition/gef-bank-account"
+Extension: TiersBankAccount
+Id: tiers-bank-account
+Title: "Domiciliation bancaire"
+Description: "Coordonnées bancaires RIB/IBAN du tiers pour paiements (fournisseurs) ou recettes (débiteurs). Conforme aux formats (KERD et EMAF)"
+* ^url = "https://www.cpage.fr/ig/masterdata/common/StructureDefinition/tiers-bank-account"
 * ^version = "1.0.0"
 * ^status = #active
 * ^context[0].type = #element

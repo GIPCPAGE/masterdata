@@ -1,10 +1,27 @@
-# Rechercher dans le référentiel
+﻿# Axe 1 — Paramètres de Recherche Tiers
 
 ## Introduction
 
-Cette page explique comment **rechercher des organisations** dans le référentiel des tiers en utilisant l'API REST standard FHIR.
+Cette page documente les **10 paramètres de recherche** FHIR pour requêter les organisations tierces (ressource `Organization`) via l'API REST.
 
-Chaque critère de recherche permet de filtrer les organisations selon leurs caractéristiques : type, rôle, identifiants, coordonnées bancaires, etc.
+Ces SearchParameters sont spécifiques à l'**Axe 1 — Tiers** de ce guide. Pour les requêtes sur les CodeSystems et ValueSets géographiques (communes COG), voir la [documentation géographique](geographie.html).
+
+| Paramètre | Extension source | Cible |
+|-----------|-----------------|-------|
+| `tiers-role` | `TiersRoleExtension` | Rôle : supplier / debtor / payer |
+| `tiers-category` | `TiersCategoryExtension` | Catégorie d'organisation |
+| `tiers-legal-nature` | `TiersLegalNatureExtension` | Nature juridique |
+| `fournisseur-code` | `FournisseurCodeExtension` | Code fournisseur CPage |
+| `debiteur-code` | `DebiteurCodeExtension` | Code débiteur CPage |
+| `bank-account-iban` | `TiersBankAccountExtension` | IBAN du compte bancaire |
+| `payeur-grand-regime` | `PayeurSanteExtension` | Grand régime (SS, MSA…) |
+| `payeur-type` | `TiersCategoryExtension` | Type payeur (RO / RC) |
+| `succursale-usage` | `SuccursaleUsageExtension` | Usage succursale |
+| `debiteur-type-resident` | `TiersIdentifierTypeExtension` | Résidence fiscale |
+
+**[Voir les définitions FHIR des SearchParameters →](artifacts.html#behavior-search-parameters)**
+
+---
 
 ## Comment rechercher ?
 
@@ -436,6 +453,7 @@ Le serveur **doit** :
 
 ## Voir aussi
 
-- [Page d'accueil](index.html) - Vue d'ensemble du guide
-- [Exemples pratiques](examples.html) - Cas d'usage réels avec données
+- [Profils Tiers](tiers-organization.html) - Extensions qui exposent les données recherchables
+- [Données Géographiques COG](geographie.html) - Requêtes sur les terminologies COG ($lookup, $expand)
+- [Exemples](examples.html) - Instances concrètes avec exemples de recherche
 - [Profils](StructureDefinition-tiers-profile.html) - Documentation technique des profils

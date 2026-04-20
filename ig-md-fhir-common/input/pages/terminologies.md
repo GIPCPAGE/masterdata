@@ -1,10 +1,17 @@
-# Classifications et Nomenclatures
+﻿# Axe 2 — Terminologies
 
 ## Vue d'ensemble
 
-Cette page documente les **classifications** et **nomenclatures** utilisées pour qualifier et catégoriser les organisations tierces dans le référentiel. Ces codes permettent de structurer les informations selon des critères métier standardisés.
+Cette page documente les **classifications et nomenclatures** utilisées pour qualifier les organisations tierces (fournisseurs, clients, organismes payeurs). Ces codes permettent de structurer les informations selon des critères métier standardisés.
 
-Le référentiel utilise **12 classifications principales** regroupant **100+ codes** pour caractériser les fournisseurs, clients et organismes payeurs.
+Ce guide expose deux catégories de terminologies :
+
+| Catégorie | Description | Lien |
+|-----------|-------------|------|
+| **Classifications** | 10 CodeSystems internes CPage — natures juridiques, catégories, civilités, rôles… | Cette page |
+| **Nomenclatures géographiques** | Communes françaises COG via TRE-R13 (ANS SMT), NamingSystems INSEE | [Données Géographiques COG](geographie.html) |
+
+Le référentiel utilise **10 classifications** regroupant **74+ codes** pour caractériser les fournisseurs, clients et organismes payeurs.
 
 ---
 
@@ -18,8 +25,8 @@ Le référentiel utilise **12 classifications principales** regroupant **100+ co
 - [Civilités](#civilités---5-codes)
 - [Localisations Géographiques](#localisations-géographiques---3-codes)
 - [Usages des Succursales](#usages-des-succursales---3-codes)
-- [Moyens de Paiement](#moyens-de-paiement---4-codes)
-- [Régimes d'Assurance](#régimes-dassurance---6-codes)
+- [Moyens de Paiement](#moyens-de-paiement---6-codes)
+- [Régimes d'Assurance](#régimes-dassurance---5-codes)
 - [Types d'Organismes Payeurs](#types-dorganismes-payeurs---2-codes)
 - [Types de Résidents Fiscaux](#types-de-résidents-fiscaux---2-codes)
 
@@ -249,39 +256,41 @@ Qualification de l'**usage métier** d'un site secondaire (succursale).
 |------|-------|-------------|
 | **POINT_LIVRAISON** | Point de livraison | Adresse de réception des marchandises |
 | **FACTURATION** | Facturation | Adresse d'envoi des factures |
-| **CORRESPONDANCE** | Correspondance | Adresse postale administrative |
+| **SIEGE_SOCIAL** | Siège social | Succursale correspondant au siège social |
 
 ### Utilisation pratique
 
 **Multisite** : Un hôpital avec plusieurs campus définit l'usage de chaque site  
-**Exemple** : Campus principal = Facturation + Correspondance, Campus annexe = Point de livraison
+**Exemple** : Campus principal = Facturation + Siège social, Campus annexe = Point de livraison
 
 ---
 
-## Moyens de Paiement - 4 codes
+## Moyens de Paiement - 6 codes
 
 ### Description
 
-Moyens de paiement acceptés par un fournisseur.
+Moyens de paiement acceptés par un fournisseur ou utilisés pour les paiements sortants.
 
 ### Codes
 
 | Code | Moyen | Description |
 |------|-------|-------------|
-| **VIR** | Virement | Virement bancaire standard (SEPA) |
-| **EXT** | Virement externe | Virement international ou spécifique |
-| **CHQ** | Chèque | Paiement par chèque bancaire |
-| **NUM** | Numéraire | Espèces (rare, montants limités) |
+| **NUMERAIRE** | Numéraire | Paiement en espèces (rare, montants limités) |
+| **CHEQUE** | Chèque | Paiement par chèque bancaire |
+| **VIREMENT** | Virement bancaire | Virement bancaire standard (SEPA) |
+| **VIREMENT_APPLI_EXT** | Virement application externe | Virement via une application de paiement externe |
+| **VIREMENT_GROS_MONTANT** | Virement gros montant | Virement pour montants importants nécessitant validation spéciale |
+| **VIREMENT_INTERNE** | Virement interne | Virement entre comptes internes de l'organisation |
 
 ### Utilisation pratique
 
-**Conditions de paiement** : Vérifier si le fournisseur accepte le moyen choisi  
-**Virement SEPA** : Standard France et UE (code **VIR**)  
-**International** : Virement externe (code **EXT**)
+**Standard France/UE** : Virement bancaire SEPA (code **VIREMENT**)  
+**Gros montants** : Validation spécifique requise (code **VIREMENT_GROS_MONTANT**)  
+**Applications tierces** : Paiement via outil externe (code **VIREMENT_APPLI_EXT**)
 
 ---
 
-## Régimes d'Assurance - 6 codes
+## Régimes d'Assurance - 5 codes
 
 ### Description
 
@@ -291,18 +300,17 @@ Classification des **régimes de protection sociale** pour les organismes payeur
 
 | Code | Régime | Description | Exemples |
 |------|--------|-------------|----------|
-| **SS** | Sécurité Sociale | Régime général obligatoire | CPAM, CNAM |
+| **SS** | Sécurité Sociale générale | Régime général obligatoire | CPAM, CNAM |
 | **MSA** | Mutualité Sociale Agricole | Régime agricole | MSA départementale |
 | **RSI** | Régime Social des Indépendants | Travailleurs indépendants | RSI (devenu SSI) |
-| **MUTUELLE** | Mutuelle | Régime complémentaire mutualiste | MGEN, MGEN |
-| **PREVOYANCE** | Prévoyance | Complémentaire prévoyance | Malakoff Humanis |
-| **AUTRE** | Autre | Autres régimes spéciaux | RATP, SNCF, Mines |
+| **CNAV** | Caisse Nationale d'Assurance Vieillesse | Régime retraite | CNAV |
+| **MUTUELLE** | Mutuelle complémentaire | Organisme complémentaire mutualiste | MGEN, Mutuelle d'Alsace |
 
 ### Utilisation pratique
 
-**Ordre de remboursement** : 
+**Ordre de remboursement** :
 1. Régime obligatoire (**SS**, **MSA**, **RSI**) en premier
-2. Régime complémentaire (**MUTUELLE**, **PREVOYANCE**) ensuite
+2. Régime complémentaire (**MUTUELLE**) ensuite
 
 **Tiers-payant intégral** : Cumul régime obligatoire + complémentaire = 0 € reste à charge patient
 
@@ -428,13 +436,13 @@ Prénom : Jean
 
 ### CodeSystems (définitions)
 
-- [Types d'identifiants](CodeSystem-gef-identifier-type-cs.html)
-- [Catégories d'organisations](CodeSystem-gef-tg-category-cs.html)
-- [Natures juridiques](CodeSystem-gef-legal-nature-cs.html)
+- [Types d'identifiants](CodeSystem-tiers-identifier-type-cs.html)
+- [Catégories d'organisations](CodeSystem-tiers-category-cs.html)
+- [Natures juridiques](CodeSystem-tiers-legal-nature-cs.html)
 - [Rôles](CodeSystem-tiers-role-cs.html)
-- [Types de clients](CodeSystem-gef-debtor-type-cs.html)
-- [Civilités](CodeSystem-gef-civility-cs.html)
-- [Localisations géographiques](CodeSystem-gef-address-localization-cs.html)
+- [Types de clients](CodeSystem-tiers-debtor-type-cs.html)
+- [Civilités](CodeSystem-tiers-civility-cs.html)
+- [Localisations géographiques](CodeSystem-tiers-address-localization-cs.html)
 - [Usages des succursales](CodeSystem-succursale-usage-cs.html)
 - [Moyens de paiement](CodeSystem-moyen-paiement-cs.html)
 - [Régimes d'assurance](CodeSystem-grand-regime-cs.html)
@@ -442,13 +450,13 @@ Prénom : Jean
 
 ### ValueSets (ensembles de valeurs)
 
-- [Types d'identifiants VS](ValueSet-gef-identifier-type-vs.html)
-- [Catégories d'organisations VS](ValueSet-gef-tg-category-vs.html)
-- [Natures juridiques VS](ValueSet-gef-legal-nature-vs.html)
-- [Rôles VS](ValueSet-tiers-role-vs.html)
-- [Types de clients VS](ValueSet-gef-debtor-type-vs.html)
-- [Civilités VS](ValueSet-gef-civility-vs.html)
-- [Localisations géographiques VS](ValueSet-gef-address-localization-vs.html)
+- [Types d'identifiants VS](ValueSet-tiers-identifier-type-vs.html)
+- [Catégories d'organisations VS](ValueSet-tiers-category-vs.html)
+- [Natures juridiques VS](ValueSet-tiers-legal-nature-vs.html)
+- [Rôles VS](ValueSet-tiers-role-valueset.html)
+- [Types de clients VS](ValueSet-tiers-debtor-type-vs.html)
+- [Civilités VS](ValueSet-tiers-civility-vs.html)
+- [Localisations géographiques VS](ValueSet-tiers-address-localization-vs.html)
 - [Usages des succursales VS](ValueSet-succursale-usage-vs.html)
 - [Moyens de paiement VS](ValueSet-moyen-paiement-vs.html)
 - [Régimes d'assurance VS](ValueSet-grand-regime-vs.html)
@@ -458,6 +466,7 @@ Prénom : Jean
 
 ## Voir Aussi
 
-- [Guide d'implémentation](index.html) - Vue d'ensemble du référentiel
-- [Exemples d'utilisation](examples.html) - Cas concrets avec les classifications
-- [Rechercher dans le référentiel](search-parameters.html) - Recherches par catégorie, rôle, etc.
+- [Données Géographiques COG](geographie.html) - Communes françaises TRE-R13 (Axe 2 nomenclatures géographiques)
+- [Profils Tiers](tiers-organization.html) - Profils Organization utilisant ces classifications
+- [Paramètres de Recherche](search-parameters.html) - Recherches par catégorie, rôle, régime…
+- [Exemples](examples.html) - Instances concrètes avec les classifications

@@ -1,12 +1,14 @@
-# Structure des Organisations
+﻿# Axe 1 — Profils Tiers
 
 ## Vue d'ensemble
 
-Cette page explique comment structurer les informations des **organisations tierces** (fournisseurs, clients, organismes payeurs) dans le référentiel. Chaque organisation est représentée par une ressource **Organization** enrichie d'extensions métier.
+Cette page décrit l'**Axe 1** du guide d'implémentation : la modélisation des organisations tierces (fournisseurs, clients, organismes payeurs). Chaque tiers est représenté par une ressource FHIR **Organization** enrichie d'extensions métier.
+
+Les nomenclatures géographiques (communes COG, TRE-R13) sont documentées dans l'[Axe 2 — Données Géographiques COG](geographie.html).
 
 ---
 
-## Architeckture des Profils
+## Architecture des Profils
 
 ### Hiérarchie
 
@@ -31,6 +33,36 @@ Organisation Tierce (profil de base)
 - **Client** (achète des médicaments)
 
 Au lieu de créer 2 fiches distinctes, on crée **1 fiche avec 2 rôles**.
+
+---
+
+## Extensions (19)
+
+Les extensions métier enrichissent le profil de base `Organization` :
+
+| Extension | Profil(s) | Description |
+|-----------|-----------|-------------|
+| `TiersRoleExtension` | Tiers | Rôle(s) de l'organisation (supplier / debtor / payer) |
+| `TiersIdentifierTypeExtension` | Tiers | Type de l'identifiant principal (SIRET, FINESS, NIR…) |
+| `TiersLegalNatureExtension` | Tiers | Nature juridique (SA, SARL, GCS, association…) |
+| `TiersBankAccountExtension` | Tiers | Compte bancaire IBAN/BIC avec paramètres de paiement |
+| `TiersPersonDetailsExtension` | Tiers | Civilité et prénom (personnes physiques) |
+| `TiersAddressLocalizationExtension` | Tiers / Débiteur | Zone géographique (France, Europe, Autre) |
+| `ChorusIdentifierTypeExtension` | Tiers | Type d'identifiant CHORUS (commande publique) |
+| `TiersDebtorFlagsExtension` | Débiteur | Drapeaux débiteur (autorisations, centralisations…) |
+| `TiersDebtorTypeExtension` | Débiteur | Type débiteur (Normal / Occasionnel) |
+| `TiersCategoryExtension` | Tiers | Catégorie de l'organisation (codes 00-74 : personne physique, EPS, collectivité, organisme social…) |
+| `TiersPublicAccountingCounterpartExtension` | Débiteur | Compte de contrepartie comptabilité publique |
+| `TiersRegieCodeExtension` | Débiteur | Code régie (CHORUS, comptabilité publique) |
+| `FournisseurCodeExtension` | Fournisseur | Code fournisseur CPage unique |
+| `FournisseurComptabiliteExtension` | Fournisseur | Paramètres comptables (comptes classe 2/6) |
+| `FournisseurPaiementExtension` | Fournisseur | Conditions de paiement (délai, escompte, EDI…) |
+| `DebiteurCodeExtension` | Débiteur | Code débiteur CPage unique |
+| `DebiteurParametresExtension` | Débiteur | Paramètres encaissement débiteur |
+| `PayeurSanteExtension` | Payeur santé | Paramètres organisme payeur (code centre, régime…) |
+| `SuccursaleUsageExtension` | Tiers | Usage de la succursale (livraison, facturation, siège) |
+
+**[Voir tous les artifacts de conformité →](artifacts.html)**
 
 ---
 
@@ -219,8 +251,9 @@ Une organisation peut avoir **plusieurs comptes bancaires** :
 **Régime d'assurance** :
 - Sécurité Sociale (SS)
 - Mutualité Sociale Agricole (MSA)
-- Mutuelle (MUTUELLE)
-- Prévoyance (PREVOYANCE)
+- Régime Social des Indépendants (RSI)
+- Caisse Nationale d'Assurance Vieillesse (CNAV)
+- Mutuelle complémentaire (MUTUELLE)
 
 **Paramètres** :
 - **Délai de prise en charge** : 90 jours (CPAM), 60 jours (mutuelles)
@@ -264,28 +297,81 @@ Clinique du Parc
 
 ### Succursales et Sites Secondaires
 
-**Problème** : Un hôpital a plusieurs campus. Comment les gérer ?
+**Principe** : Chaque site est une ressource `Organization` distincte. La succursale référence son siège via `partOf`. Le siège n'a pas à lister ses succursales.
 
-**Réponse** : Créer une fiche pour chaque site avec une **relation hiérarchique** (`partOf`).
+#### Pourquoi deux ressources séparées ?
 
-**Exemple** :
+- Chaque établissement au sens INSEE a son propre **SIRET** (même SIREN, NIC différent)
+- La succursale peut avoir sa propre adresse, ses propres contacts, son propre RIB
+- La relation `partOf` est une **référence entre ressources** (résolvable via l'API), pas un héritage de profil
+
+#### Structure pour un fournisseur avec dépôt de livraison
 
 ```
-Clinique du Parc (siège)
-├── Campus Raspail (succursale)
-│   ├── Usage : Point de livraison
-│   └── SIRET propre : 12345678900002
-└── Campus Montparnasse (succursale)
-    ├── Usage : Facturation + Correspondance
-    └── SIRET propre : 12345678900003
+Laboratoires Durand SA (siège — Toulouse)
+│   SIREN : 425123456
+│   codeFournisseur : FRNSLPD000
+│
+└── Dépôt Paris Nord (succursale)
+    SIRET : 42512345600026  (même SIREN, NIC différent)
+    codeFournisseur : FRNSLPDPN1
+    succursaleUsage : POINT_LIVRAISON + FACTURATION
+    partOf → Laboratoires Durand SA
 ```
 
-**Usages possibles** :
-- **Point de livraison** : Réception marchandises
-- **Facturation** : Adresse facturation
-- **Correspondance** : Courrier administratif
+#### Ressource siège (simplifié)
 
-**Important** : `partOf` est une **relation organisationnelle** (dans les données), pas un héritage technique.
+```json
+{
+  "resourceType": "Organization",
+  "id": "fournisseur-siege",
+  "identifier": [
+    { "system": "https://sirene.fr", "value": "425123456" }
+  ],
+  "name": "Laboratoires Durand SA",
+  "extension": [
+    { "url": ".../tiers-role-extension", "valueCoding": { "code": "supplier" } }
+  ]
+}
+```
+
+#### Ressource succursale (simplifié)
+
+```json
+{
+  "resourceType": "Organization",
+  "id": "fournisseur-succursale-paris",
+  "identifier": [
+    { "system": "https://sirene.fr", "value": "42512345600026" }
+  ],
+  "name": "Laboratoires Durand SA — Dépôt Paris Nord",
+  "address": [{
+    "line": ["55 Avenue du Président Wilson", "Entrepôt B2"],
+    "city": "La Plaine Saint-Denis",
+    "postalCode": "93210",
+    "country": "FR"
+  }],
+  "partOf": {
+    "reference": "Organization/fournisseur-siege",
+    "display": "Laboratoires Durand SA (Siège — Toulouse)"
+  },
+  "extension": [
+    { "url": ".../tiers-role-extension", "valueCoding": { "code": "supplier" } },
+    { "url": ".../succursale-usage-extension", "valueCode": "POINT_LIVRAISON" },
+    { "url": ".../succursale-usage-extension", "valueCode": "FACTURATION" },
+    { "url": ".../fournisseur-code", "valueString": "FRNSLPDPN1" }
+  ]
+}
+```
+
+**Usages possibles** (`succursaleUsage`) :
+- **POINT_LIVRAISON** : Adresse de réception des marchandises
+- **FACTURATION** : Adresse d'envoi des factures / facturation locale
+- **SIEGE_SOCIAL** : Siège social secondaire
+
+**[Voir l'exemple complet FSH →](Organization-ExempleFournisseurSuccursale.html)**
+
+> **Important** : `partOf` est résolvable par l'API (`GET Organization/[id-siege]`). Il suffit d'une référence depuis la succursale vers le siège ; il n'est pas nécessaire de lister les succursales dans la ressource siège.
 
 ---
 

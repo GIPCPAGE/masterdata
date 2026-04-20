@@ -1,12 +1,12 @@
 // =============================================
-// CodeSystem: Type Débiteur (GEF)
+// CodeSystem: Type Débiteur
 // =============================================
 
-CodeSystem: GEFDebtorTypeCS
-Id: gef-debtor-type-cs
-Title: "Type Débiteur (GEF)"
-Description: "Type de débiteur selon la nomenclature GEF. Utilisé dans les messages KERD (position 2) pour distinguer les débiteurs occasionnels des débiteurs normaux/réguliers."
-* ^url = "http://cpage.org/fhir/CodeSystem/gef-debtor-type-cs"
+CodeSystem: TiersDebtorTypeCS
+Id: tiers-debtor-type-cs
+Title: "Type Débiteur"
+Description: "Type de débiteur selon la nomenclature. Utilisé dans les messages KERD (position 2) pour distinguer les débiteurs occasionnels des débiteurs normaux/réguliers."
+* ^url = "https://www.cpage.fr/ig/masterdata/common/CodeSystem/tiers-debtor-type-cs"
 * ^version = "1.0.0"
 * ^status = #active
 * ^experimental = false

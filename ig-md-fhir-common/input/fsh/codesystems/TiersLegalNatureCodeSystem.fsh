@@ -1,12 +1,12 @@
 // =============================================
-// CodeSystem: Nature Juridique (GEF)
+// CodeSystem: Nature Juridique
 // =============================================
 
-CodeSystem: GEFLegalNatureCS
-Id: gef-legal-nature-cs
-Title: "Nature juridique (GEF)"
-Description: "Nature juridique des tiers selon la nomenclature GEF (codes 00-11). Utilisé dans les messages KERD et EFOU pour qualifier la structure juridique des organisations"
-* ^url = "http://cpage.org/fhir/CodeSystem/gef-legal-nature-cs"
+CodeSystem: TiersLegalNatureCS
+Id: tiers-legal-nature-cs
+Title: "Nature juridique"
+Description: "Nature juridique des tiers selon la nomenclature (codes 00-11). Utilisé dans les messages KERD et EFOU pour qualifier la structure juridique des organisations"
+* ^url = "https://www.cpage.fr/ig/masterdata/common/CodeSystem/tiers-legal-nature-cs"
 * ^version = "1.0.0"
 * ^status = #active
 * ^experimental = false

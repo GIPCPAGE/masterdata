@@ -3,13 +3,13 @@
 // Permet de rechercher un payeur santé par son type (RO ou RC)
 // =============================================
 
-Instance: PayeurTypeSearchParameter
+Instance: payeur-type
 InstanceOf: SearchParameter
 Usage: #definition
 Title: "Search Payeur Santé by Type"
 Description: "Permet de rechercher un payeur santé par son type: Régime Obligatoire (RO) ou Régime Complémentaire (RC)."
 
-* url = "http://cpage.org/fhir/SearchParameter/payeur-type"
+* url = "https://www.cpage.fr/ig/masterdata/common/SearchParameter/payeur-type"
 * version = "1.0.0"
 * name = "PayeurTypeSearchParameter"
 * status = #active
@@ -25,8 +25,8 @@ Description: "Permet de rechercher un payeur santé par son type: Régime Obliga
 * code = #payeur-type
 * base = #Organization
 * type = #string
-* expression = "Organization.extension('http://cpage.org/fhir/StructureDefinition/payeur-sante-extension').extension('typePayeur').value.ofType(string)"
-* xpath = "f:Organization/f:extension[@url='http://cpage.org/fhir/StructureDefinition/payeur-sante-extension']/f:extension[@url='typePayeur']/f:valueString"
+* expression = "Organization.extension('https://www.cpage.fr/ig/masterdata/common/StructureDefinition/payeur-sante-extension').extension('typePayeur').value.ofType(string)"
+* xpath = "f:Organization/f:extension[@url='https://www.cpage.fr/ig/masterdata/common/StructureDefinition/payeur-sante-extension']/f:extension[@url='typePayeur']/f:valueString"
 * xpathUsage = #normal
 * multipleOr = true
 * multipleAnd = false

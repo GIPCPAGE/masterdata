@@ -1,13 +1,13 @@
 // =============================================
 // Profil Tiers Organization (basé sur FR Core)
-// Profil de base pour interopérabilité GEF
+// Profil de base pour interopérabilité
 // =============================================
 
 Profile: TiersProfile
 Parent: FRCoreOrganizationProfile
 Id: tiers-profile
-Title: "Tiers (GEF)"
-Description: "Profil générique pour la notion de Tiers (commun débiteur/fournisseur), basé sur FR Core Organization. Conforme aux spécifications GEF. Ce profil hérite des slices identifier déjà définis par FR Core (SIREN, SIRET, FINESS) et ajoute les identifiants GEF (NIR, hors UE, Tahiti, RIDET) ainsi qu'un identifiant de TVA intracommunautaire."
+Title: "Tiers"
+Description: "Profil générique pour la notion de Tiers (commun débiteur/fournisseur), basé sur FR Core Organization. Conforme aux spécifications. Ce profil hérite des slices identifier déjà définis par FR Core (SIREN, SIRET, FINESS) et ajoute les identifiants (NIR, hors UE, Tahiti, RIDET) ainsi qu'un identifiant de TVA intracommunautaire."
 
 // FR Core définit déjà le slicing sur Organization.identifier + slices SIREN/SIRET/FINESS
 // On ajoute uniquement nos slices supplémentaires
@@ -24,65 +24,65 @@ Description: "Profil générique pour la notion de Tiers (commun débiteur/fourn
     tahiti 0..1 MS and
     ridet 0..1 MS
 
-// Identifiant interne ETIER (ECO.ETIER.IDTITI)
+// Identifiant interne ETIER (identifiant interne)
 * identifier[etierId].type = $v2-0203#RI "Resource identifier"
 * identifier[etierId].system = $id-etier (exactly)
 * identifier[etierId].value 1..1
 * identifier[etierId] ^short = "Identifiant interne du tiers (IDTITI)"
-* identifier[etierId] ^definition = "Identifiant unique interne du tiers issu de la table ECO.ETIER (champ IDTITI)."
+* identifier[etierId] ^definition = "Identifiant unique interne du tiers issu de la table ETIER (champ IDTITI)."
 
-// TVA intracommunautaire (ECO.ETIER.TVAITI)
+// TVA intracommunautaire (TVA intracommunautaire)
 * identifier[tva].type = $v2-0203#TAX "Tax ID number"
 * identifier[tva].system = $id-tva (exactly)
 * identifier[tva].value 1..1
 * identifier[tva] ^short = "Numéro de TVA intracommunautaire"
 * identifier[tva] ^definition = "Numéro de TVA intracommunautaire du tiers (champ TVAITI)."
 
-// NIR - Numéro Inscription Répertoire (Sécurité Sociale) - GEF type 04
+// NIR - Numéro Inscription Répertoire (Sécurité Sociale) - type 04
 * identifier[nir] ^short = "NIR - Numéro Sécurité Sociale"
-* identifier[nir] ^definition = "Numéro d'Inscription au Répertoire de la Sécurité Sociale (15 caractères). Type identifiant GEF: 04"
-* identifier[nir].type = GEFIdentifierTypeCS#04
+* identifier[nir] ^definition = "Numéro d'Inscription au Répertoire de la Sécurité Sociale (15 caractères). Type identifiant: 04"
+* identifier[nir].type = TiersIdentifierTypeCS#04
 * identifier[nir].system = "urn:oid:1.2.250.1.213.1.4.8" // OID officiel INS
 * identifier[nir].value 1..1
-* identifier[nir].extension contains GEFIdentifierType named gefType 0..1
-* identifier[nir].extension[gefType].valueCodeableConcept = GEFIdentifierTypeCS#04
+* identifier[nir].extension contains TiersIdentifierType named gefType 0..1
+* identifier[nir].extension[gefType].valueCodeableConcept = TiersIdentifierTypeCS#04
 
-// Identifiant hors Union Européenne - GEF type 06
+// Identifiant hors Union Européenne - type 06
 * identifier[horsUE] ^short = "Identifiant hors UE"
-* identifier[horsUE] ^definition = "Identifiant pour tiers hors Union Européenne. Type identifiant GEF: 06"
-* identifier[horsUE].type = GEFIdentifierTypeCS#06
-* identifier[horsUE].system = "http://cpage.org/fhir/NamingSystem/non-eu-identifier"
+* identifier[horsUE] ^definition = "Identifiant pour tiers hors Union Européenne. Type identifiant: 06"
+* identifier[horsUE].type = TiersIdentifierTypeCS#06
+* identifier[horsUE].system = "https://www.cpage.fr/ig/masterdata/common/NamingSystem/non-eu-identifier"
 * identifier[horsUE].value 1..1
-* identifier[horsUE].extension contains GEFIdentifierType named gefType 0..1
-* identifier[horsUE].extension[gefType].valueCodeableConcept = GEFIdentifierTypeCS#06
+* identifier[horsUE].extension contains TiersIdentifierType named gefType 0..1
+* identifier[horsUE].extension[gefType].valueCodeableConcept = TiersIdentifierTypeCS#06
 
-// Numéro Tahiti (Polynésie française) - GEF type 07
+// Numéro Tahiti (Polynésie française) - type 07
 * identifier[tahiti] ^short = "Numéro Tahiti"
-* identifier[tahiti] ^definition = "Numéro d'identification Tahiti - Polynésie française. Type identifiant GEF: 07"
-* identifier[tahiti].type = GEFIdentifierTypeCS#07
-* identifier[tahiti].system = "http://cpage.org/fhir/NamingSystem/tahiti-identifier" // À remplacer par OID officiel si disponible
+* identifier[tahiti] ^definition = "Numéro d'identification Tahiti - Polynésie française. Type identifiant: 07"
+* identifier[tahiti].type = TiersIdentifierTypeCS#07
+* identifier[tahiti].system = "https://www.cpage.fr/ig/masterdata/common/NamingSystem/tahiti-identifier" // À remplacer par OID officiel si disponible
 * identifier[tahiti].value 1..1
-* identifier[tahiti].extension contains GEFIdentifierType named gefType 0..1
-* identifier[tahiti].extension[gefType].valueCodeableConcept = GEFIdentifierTypeCS#07
+* identifier[tahiti].extension contains TiersIdentifierType named gefType 0..1
+* identifier[tahiti].extension[gefType].valueCodeableConcept = TiersIdentifierTypeCS#07
 
-// RIDET (Nouvelle-Calédonie) - GEF type 08
+// RIDET (Nouvelle-Calédonie) - type 08
 * identifier[ridet] ^short = "RIDET Nouméa"
-* identifier[ridet] ^definition = "RIDET - Répertoire d'Identification des Entreprises et des Établissements de Nouvelle-Calédonie. Type identifiant GEF: 08"
-* identifier[ridet].type = GEFIdentifierTypeCS#08
-* identifier[ridet].system = "http://cpage.org/fhir/NamingSystem/ridet-identifier" // À remplacer par OID officiel si disponible
+* identifier[ridet] ^definition = "RIDET - Répertoire d'Identification des Entreprises et des Établissements de Nouvelle-Calédonie. Type identifiant: 08"
+* identifier[ridet].type = TiersIdentifierTypeCS#08
+* identifier[ridet].system = "https://www.cpage.fr/ig/masterdata/common/NamingSystem/ridet-identifier" // À remplacer par OID officiel si disponible
 * identifier[ridet].value 1..1
-* identifier[ridet].extension contains GEFIdentifierType named gefType 0..1
-* identifier[ridet].extension[gefType].valueCodeableConcept = GEFIdentifierTypeCS#08
+* identifier[ridet].extension contains TiersIdentifierType named gefType 0..1
+* identifier[ridet].extension[gefType].valueCodeableConcept = TiersIdentifierTypeCS#08
 
 // Nom / raison sociale (NORSTI)
 * name 1..1 MS
 * name ^short = "Raison sociale / nom du tiers"
-* name ^definition = "Nom officiel du tiers (ECO.ETIER.NORSTI)."
+* name ^definition = "Nom officiel du tiers (nom du tiers)."
 
 // Complément de nom (COMPTI)
 * alias 0..* MS
 * alias ^short = "Nom complémentaire"
-* alias ^definition = "Nom complémentaire ou alternatif du tiers (ECO.ETIER.COMPTI)."
+* alias ^definition = "Nom complémentaire ou alternatif du tiers (nom complementaire)."
 
 // Adresse siège (AL1STI, AL2STI, AL3STI, CPOSTI, BDISTI, PAYSTI)
 * address 0..* MS
@@ -95,27 +95,27 @@ Description: "Profil générique pour la notion de Tiers (commun débiteur/fourn
 // Actif / validité (VALITI)
 * active 0..1 MS
 * active ^short = "Tiers actif"
-* active ^definition = "Indique si le tiers est actif. Peut être mappé depuis ECO.ETIER.VALITI (V=true, I=false)."
+* active ^definition = "Indique si le tiers est actif. Peut être mappé depuis indicateur actif (V=true, I=false)."
 
 // Rôles génériques du tiers (debtor/supplier)
 * extension contains TiersRoleExtension named tiersRole 0..* MS
 * extension[tiersRole] ^short = "Rôle(s) du tiers"
-* extension[tiersRole] ^definition = "Rôle(s) générique(s) du tiers : fournisseur (supplier) si présent dans ECO.FOU, débiteur (debtor) si présent dans ECO.DBT."
+* extension[tiersRole] ^definition = "Rôle(s) générique(s) du tiers : fournisseur (supplier) si présent dans table fournisseurs, débiteur (debtor) si présent dans table debiteurs."
 
-// Catégorie TG (GEF - codes 00-74)
-* extension contains GEFTGCategory named tgCategory 0..1 MS
-* extension[tgCategory] ^short = "Catégorie TG (GEF)"
-* extension[tgCategory] ^definition = "Catégorie du tiers selon nomenclature GEF: État, collectivités, établissements publics, organismes sociaux, personne physique, etc. Codes 00-74."
+// Catégorie TG (codes 00-74)
+* extension contains TiersCategory named tgCategory 0..1 MS
+* extension[tgCategory] ^short = "Catégorie TG"
+* extension[tgCategory] ^definition = "Catégorie du tiers selon nomenclature: État, collectivités, établissements publics, organismes sociaux, personne physique, etc. Codes 00-74."
 
-// Nature juridique (GEF - codes 00-11)
-* extension contains GEFLegalNature named legalNature 0..1 MS
-* extension[legalNature] ^short = "Nature juridique (GEF)"
-* extension[legalNature] ^definition = "Nature juridique du tiers selon nomenclature GEF: particulier, société, association, établissement public, collectivité territoriale, etc. Codes 00-11."
+// Nature juridique (codes 00-11)
+* extension contains TiersLegalNature named legalNature 0..1 MS
+* extension[legalNature] ^short = "Nature juridique"
+* extension[legalNature] ^definition = "Nature juridique du tiers selon nomenclature: particulier, société, association, établissement public, collectivité territoriale, etc. Codes 00-11."
 
-// Domiciliation bancaire (GEF - KERD et EMAF)
-* extension contains GEFBankAccount named bankAccount 0..* MS
+// Domiciliation bancaire (RIB/IBAN)
+* extension contains TiersBankAccount named bankAccount 0..* MS
 * extension[bankAccount] ^short = "Coordonnées bancaires RIB/IBAN"
-* extension[bankAccount] ^definition = "Domiciliation bancaire du tiers (RIB français ou IBAN/BIC international). Conforme aux formats GEF."
+* extension[bankAccount] ^definition = "Domiciliation bancaire du tiers (RIB français ou IBAN/BIC international). Conforme aux formats."
 
 // Usage de la succursale (pour organisations rattachées via partOf)
 * extension contains SuccursaleUsageExtension named succursaleUsage 0..* MS
@@ -130,7 +130,7 @@ Description: "Profil générique pour la notion de Tiers (commun débiteur/fourn
 // Extensions spécifiques Débiteur (optionnelles, utilisées si le tiers a le rôle debtor)
 * extension contains DebiteurCodeExtension named codeDebiteur 0..1 MS
 * extension contains DebiteurParametresExtension named parametres 0..1 MS
-* extension contains GEFDebtorType named debtorType 0..1 MS
+* extension contains TiersDebtorType named debtorType 0..1 MS
 
 // Extensions spécifiques Payeur Santé (optionnelles, utilisées si le tiers a le rôle payer)
 * extension contains PayeurSanteExtension named payeurSante 0..1 MS

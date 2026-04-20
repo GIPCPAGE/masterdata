@@ -3,13 +3,13 @@
 // Permet de rechercher un débiteur par son code unique
 // =============================================
 
-Instance: DebiteurCodeSearchParameter
+Instance: debiteur-code
 InstanceOf: SearchParameter
 Usage: #definition
 Title: "Search Débiteur by Code"
 Description: "Permet de rechercher un débiteur par son code débiteur unique (numéro interne de gestion)."
 
-* url = "http://cpage.org/fhir/SearchParameter/debiteur-code"
+* url = "https://www.cpage.fr/ig/masterdata/common/SearchParameter/debiteur-code"
 * version = "1.0.0"
 * name = "DebiteurCodeSearchParameter"
 * status = #active
@@ -20,13 +20,13 @@ Description: "Permet de rechercher un débiteur par son code débiteur unique (n
 * contact.telecom.system = #email
 * contact.telecom.value = "support@cpage.org"
 
-* description = "Recherche un débiteur par son code débiteur unique attribué dans le système de gestion. Correspond au 'Code débiteur' du message KERD GEF."
+* description = "Recherche un débiteur par son code débiteur unique attribué dans le système de gestion. Correspond au 'Code débiteur' du interface debiteurs."
 
 * code = #debiteur-code
 * base = #Organization
 * type = #string
-* expression = "Organization.extension('http://cpage.org/fhir/StructureDefinition/debiteur-code-extension').value.ofType(string)"
-* xpath = "f:Organization/f:extension[@url='http://cpage.org/fhir/StructureDefinition/debiteur-code-extension']/f:valueString"
+* expression = "Organization.extension('https://www.cpage.fr/ig/masterdata/common/StructureDefinition/debiteur-code-extension').value.ofType(string)"
+* xpath = "f:Organization/f:extension[@url='https://www.cpage.fr/ig/masterdata/common/StructureDefinition/debiteur-code-extension']/f:valueString"
 * xpathUsage = #normal
 * multipleOr = true
 * multipleAnd = false

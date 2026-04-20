@@ -1,11 +1,11 @@
 {
   "resourceType": "StructureDefinition",
   "id": "tiers-role-extension",
-  "url": "https://www.cpage.fr/ig/masterdata/tiers/StructureDefinition/tiers-role-extension",
+  "url": "https://www.cpage.fr/ig/masterdata/common/StructureDefinition/tiers-role-extension",
   "name": "TiersRoleExtension",
   "title": "Rôle générique du tiers",
   "status": "active",
-  "description": "Rôle(s) générique(s) du tiers : débiteur / fournisseur. Cette extension permet de qualifier la fonction d'une organisation dans le contexte métier (ECO.FOU, ECO.DBT).",
+  "description": "Rôle(s) générique(s) du tiers : débiteur / fournisseur. Cette extension permet de qualifier la fonction d'une organisation dans le contexte métier (table fournisseurs, table debiteurs).",
   "fhirVersion": "4.0.1",
   "kind": "complex-type",
   "abstract": false,
@@ -24,7 +24,7 @@
         "id": "Extension",
         "path": "Extension",
         "short": "Rôle générique du tiers",
-        "definition": "Rôle(s) générique(s) du tiers : débiteur / fournisseur. Cette extension permet de qualifier la fonction d'une organisation dans le contexte métier (ECO.FOU, ECO.DBT)."
+        "definition": "Rôle(s) générique(s) du tiers : débiteur / fournisseur. Cette extension permet de qualifier la fonction d'une organisation dans le contexte métier (table fournisseurs, table debiteurs)."
       },
       {
         "id": "Extension.extension",
@@ -34,7 +34,7 @@
       {
         "id": "Extension.url",
         "path": "Extension.url",
-        "fixedUri": "https://www.cpage.fr/ig/masterdata/tiers/StructureDefinition/tiers-role-extension"
+        "fixedUri": "https://www.cpage.fr/ig/masterdata/common/StructureDefinition/tiers-role-extension"
       },
       {
         "id": "Extension.value[x]",
@@ -47,7 +47,7 @@
         ],
         "binding": {
           "strength": "required",
-          "valueSet": "https://www.cpage.fr/ig/masterdata/tiers/ValueSet/tiers-role-valueset"
+          "valueSet": "https://www.cpage.fr/ig/masterdata/common/ValueSet/tiers-role-valueset"
         }
       }
     ]

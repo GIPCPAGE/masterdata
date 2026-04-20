@@ -2,7 +2,12 @@
 
 ## Vue d'ensemble
 
-Cette page présente des **exemples concrets** d'organisations tierces dans des contextes de santé réels. Chaque exemple illustre comment structurer les informations selon que l'organisation est un **fournisseur**, un **client**, un **organisme payeur**, ou une **combinaison de plusieurs rôles**.
+Cette page présente des **exemples concrets** couvrant les deux axes du guide :
+
+| Axe | Exemples | Section |
+|-----|----------|---------|
+| **Axe 1 — Tiers** | Organizations (fournisseur, client, payeur, multi-rôle, succursale, étranger) | [Exemples Tiers](#exemple-1--organisation-multi-rôles) |
+| **Axe 2 — Nomenclatures géographiques** | Patient avec adresse commune déléguée, commune nouvelle, recherche historique | [Exemples Communes COG](#exemples-communes-cog) |
 
 ---
 
@@ -445,9 +450,83 @@ Privilégier dans l'ordre :
 
 ---
 
+## Exemples Communes COG
+
+Les exemples suivants illustrent l'utilisation des **terminologies géographiques** (Axe 2) : communes françaises codées via le Code Officiel Géographique INSEE (TRE-R13).
+
+### Exemple COG-1 : Patient avec adresse en commune déléguée
+
+**Situation** : Un patient réside dans la commune déléguée **Saint-Rambert-l'Ile-Barbe** (69019), rattachée à la commune nouvelle **Lyon** (69264).
+
+**Ressource FHIR** : [ExemplePatientCommuneDeleguee](Patient-ExemplePatientCommuneDeleguee.html)
+
+**Points clés** :
+- Extension `fr-core-address-insee-code` avec code `69019` (commune déléguée)
+- Vérification via `$lookup` : `active = false` (commune déléguée, non indépendante)
+- Le code `69264` (Lyon) est la commune nouvelle parente
+
+```http
+# Vérifier le statut d'une commune déléguée
+GET [base]/CodeSystem/$lookup
+  ?system=https://smt.esante.gouv.fr/fhir/CodeSystem/TRE-R13-CommuneOM
+  &code=69019
+  &property=communeNouvelle
+```
+
+---
+
+### Exemple COG-2 : Organisation dans une commune nouvelle
+
+**Situation** : Un laboratoire est installé dans la commune nouvelle **Caen-la-Mer** (14666), créée en 2016 par fusion de plusieurs communes.
+
+**Ressource FHIR** : [ExempleOrganisationCommuneNouvelle](Organization-ExempleOrganisationCommuneNouvelle.html)
+
+**Points clés** :
+- Code INSEE actif `14666`
+- Propriété `typeTerritoire = Commune-Nouvelle`
+- Propriété `dateCreation = 2016-01-01`
+
+---
+
+### Exemple COG-3 : Recherche du successeur d'une commune supprimée
+
+**Situation** : Résolution d'un code commune historique `69282` (Oullins, supprimé en 2022) vers son successeur.
+
+**Ressource FHIR** : [ExempleParametersLookupSuccesseur](Parameters-ExempleParametersLookupSuccesseur.html)
+
+```http
+# Réponse $lookup pour un code inactif
+GET [base]/CodeSystem/$lookup
+  ?system=https://smt.esante.gouv.fr/fhir/CodeSystem/TRE-R13-CommuneOM
+  &code=69282
+  &property=successeur
+```
+
+La réponse `Parameters` contiendra :
+- `inactive = true`
+- `dateSuppression = 2022-01-01`
+- `successeur = 69264` (Pierre-Bénite)
+
+---
+
+### Exemple COG-4 : Lister les communes actives ($expand)
+
+```http
+# 100 premières communes actives
+GET [base]/ValueSet/fr-communes-actives/$expand?count=100&offset=0
+
+# Toutes les communes (actives + historique)
+GET [base]/ValueSet/fr-communes-cog-complet/$expand
+```
+
+**[Voir la documentation géographique complète →](geographie.html)**
+
+---
+
 ## Voir aussi
 
-- [Rechercher dans le référentiel](search-parameters.html) - Tous les critères de recherche disponibles
+- [Paramètres de recherche Tiers](search-parameters.html) - Tous les critères de recherche disponibles
+- [Données Géographiques COG](geographie.html) - Requêtes complètes $lookup, $expand, $validate-code
 - [Guide d'implémentation](index.html) - Vue d'ensemble du référentiel
 - [Classifications et nomenclatures](terminologies.html) - Codes et catégories utilisés
 - [Documentation technique des profils](StructureDefinition-tiers-profile.html) - Spécifications détaillées

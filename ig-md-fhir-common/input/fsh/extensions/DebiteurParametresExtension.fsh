@@ -6,7 +6,7 @@ Extension: DebiteurParametresExtension
 Id: debiteur-parametres
 Title: "Paramètres Débiteur"
 Description: "Paramètres de gestion pour un débiteur/client"
-* ^url = "http://cpage.org/fhir/StructureDefinition/debiteur-parametres"
+* ^url = "https://www.cpage.fr/ig/masterdata/common/StructureDefinition/debiteur-parametres"
 * ^version = "1.0.0"
 * ^status = #active
 * ^context[0].type = #element

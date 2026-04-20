@@ -3,7 +3,7 @@
 // =============================================
 
 CodeSystem: TiersRoleCodeSystem
-Id: tiers-role-codesystem
+Id: tiers-role-cs
 Title: "Rôles Tiers (Générique)"
 Description: "Rôles génériques d'un tiers (débiteur, fournisseur, payeur)."
 * ^status = #active

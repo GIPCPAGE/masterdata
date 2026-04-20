@@ -1,10 +1,16 @@
-# Guide d'Intégration
+# Guide d'Intégration REST
 
 ## Vue d'ensemble
 
-Cette page fournit des recommandations pratiques pour **intégrer le référentiel des organisations tierces** dans vos systèmes d'information hospitaliers ou vos logiciels de gestion.
+Cette page documente les **profils FHIR cibles** de l'Axe 1 (Tiers) et les recommandations d'intégration REST pour les systèmes hospitaliers.
 
-Le référentiel expose une **API REST FHIR** standard permettant de créer, consulter, modifier et rechercher les organisations (fournisseurs, clients, organismes payeurs).
+| Source | Profil FHIR cible |
+|------------|-------------------|
+| Données fournisseurs | `FournisseurProfile` |
+| Données débiteurs/clients | `DebiteurProfile` |
+| Organismes payeurs | `PayeurSanteProfile` |
+
+Les **communes INSEE** (codes COG) utilisés dans les adresses sont documentés dans [Données Géographiques COG](geographie.html).
 
 ---
 
@@ -71,9 +77,9 @@ Content-Type: application/fhir+json
     "country": "FR"
   }],
   "extension": [{
-    "url": "https://www.cpage.fr/ig/masterdata/tiers/StructureDefinition/tiers-role-extension",
+    "url": "https://www.cpage.fr/ig/masterdata/common/StructureDefinition/tiers-role-extension",
     "valueCoding": {
-      "system": "http://cpage.org/fhir/CodeSystem/tiers-role-cs",
+      "system": "https://www.cpage.fr/ig/masterdata/common/CodeSystem/tiers-role-cs",
       "code": "supplier"
     }
   }]
@@ -196,7 +202,7 @@ GET [base]/Organization?fournisseur-code:exact=FRSUP123456
 ```json
 {
   "extension": [{
-    "url": ".../gef-bank-account",
+    "url": ".../tiers-bank-account",
     "extension": [
       {"url": "iban", "valueString": "FR7630002..."},
       {"url": "bic", "valueString": "SOGEFRPPXXX"}
@@ -406,9 +412,9 @@ data = {
     }],
     "name": "Laboratoires Durand",
     "extension": [{
-        "url": "https://www.cpage.fr/ig/masterdata/tiers/StructureDefinition/tiers-role-extension",
+        "url": "https://www.cpage.fr/ig/masterdata/common/StructureDefinition/tiers-role-extension",
         "valueCoding": {
-            "system": "http://cpage.org/fhir/CodeSystem/tiers-role-cs",
+            "system": "https://www.cpage.fr/ig/masterdata/common/CodeSystem/tiers-role-cs",
             "code": "supplier"
         }
     }]

@@ -3,13 +3,13 @@
 // Permet de rechercher une succursale par son usage
 // =============================================
 
-Instance: SuccursaleUsageSearchParameter
+Instance: succursale-usage
 InstanceOf: SearchParameter
 Usage: #definition
 Title: "Search Succursale by Usage"
 Description: "Permet de rechercher une succursale par son usage: point de livraison, siège de facturation, ou siège social secondaire."
 
-* url = "http://cpage.org/fhir/SearchParameter/succursale-usage"
+* url = "https://www.cpage.fr/ig/masterdata/common/SearchParameter/succursale-usage"
 * version = "1.0.0"
 * name = "SuccursaleUsageSearchParameter"
 * status = #active
@@ -25,8 +25,8 @@ Description: "Permet de rechercher une succursale par son usage: point de livrai
 * code = #succursale-usage
 * base = #Organization
 * type = #token
-* expression = "Organization.extension('http://cpage.org/fhir/StructureDefinition/succursale-usage-extension').value.ofType(code)"
-* xpath = "f:Organization/f:extension[@url='http://cpage.org/fhir/StructureDefinition/succursale-usage-extension']/f:valueCode"
+* expression = "Organization.extension('https://www.cpage.fr/ig/masterdata/common/StructureDefinition/succursale-usage-extension').value.ofType(code)"
+* xpath = "f:Organization/f:extension[@url='https://www.cpage.fr/ig/masterdata/common/StructureDefinition/succursale-usage-extension']/f:valueCode"
 * xpathUsage = #normal
 * multipleOr = true
 * multipleAnd = true

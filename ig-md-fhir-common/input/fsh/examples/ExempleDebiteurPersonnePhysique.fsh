@@ -6,7 +6,7 @@ Instance: ExempleDebiteurPersonnePhysique
 InstanceOf: DebiteurProfile
 Usage: #example
 Title: "Exemple Débiteur - Personne Physique avec NIR"
-Description: "Exemple d'une personne physique en tant que débiteur, avec NIR (Sécurité Sociale), civilité Monsieur et prénom. Illustre la Catégorie TG 01 (Personne physique), Nature juridique 01 (Particulier), et type débiteur Normal. Démontre l'utilisation obligatoire de GEFPersonDetails (civilité + prénom) pour les personnes physiques."
+Description: "Exemple d'une personne physique en tant que débiteur, avec NIR (Sécurité Sociale), civilité Monsieur et prénom. Illustre la Catégorie TG 01 (Personne physique), Nature juridique 01 (Particulier), et type débiteur Normal. Démontre l'utilisation obligatoire de TiersPersonDetails (civilité + prénom) pour les personnes physiques."
 
 * identifier[etierId].value = "ETIER345678"
 * identifier[etierId].use = #official
@@ -16,10 +16,10 @@ Description: "Exemple d'une personne physique en tant que débiteur, avec NIR (S
 
 * name = "Dupont Jean"
 
-* extension[tgCategory].valueCodeableConcept = http://cpage.org/fhir/CodeSystem/gef-tg-category-cs#01 "Personne physique"
-* extension[legalNature].valueCodeableConcept = http://cpage.org/fhir/CodeSystem/gef-legal-nature-cs#01 "Particulier"
+* extension[tgCategory].valueCodeableConcept = https://www.cpage.fr/ig/masterdata/common/CodeSystem/tiers-category-cs#01 "Personne physique"
+* extension[legalNature].valueCodeableConcept = https://www.cpage.fr/ig/masterdata/common/CodeSystem/tiers-legal-nature-cs#01 "Particulier"
 
-* extension[tiersRole].valueCoding = http://cpage.org/fhir/CodeSystem/tiers-role-cs#debtor "Débiteur"
+* extension[tiersRole].valueCoding = https://www.cpage.fr/ig/masterdata/common/CodeSystem/tiers-role-cs#debtor "Débiteur"
 
 // Type débiteur Normal (Phase 2)
 * extension[debtorType].valueCode = #N
@@ -44,8 +44,8 @@ Description: "Exemple d'une personne physique en tant que débiteur, avec NIR (S
 
 * telecom[0].system = #phone
 * telecom[0].value = "+33 4 78 00 00 00"
-* telecom[0].use = #home
+* telecom[0].use = #work
 
 * telecom[1].system = #email
 * telecom[1].value = "jean.dupont@example.fr"
-* telecom[1].use = #home
+* telecom[1].use = #work

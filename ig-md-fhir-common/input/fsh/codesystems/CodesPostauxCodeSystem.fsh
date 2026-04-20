@@ -21,7 +21,7 @@ Ce CodeSystem fait rÃ©fÃ©rence aux codes postaux franÃ§ais officiels de La
 **Note** : Ce systÃ¨me de codes fait rÃ©fÃ©rence Ã  une terminologie externe maintenue par La Poste. Les codes ne sont pas Ã©numÃ©rÃ©s dans cet IG mais doivent Ãªtre validÃ©s contre la source officielle.
 """
 
-* ^url = "https://www.cpage.fr/ig/masterdata/geo/CodeSystem/codes-postaux-cs"
+* ^url = "https://www.cpage.fr/ig/masterdata/common/CodeSystem/codes-postaux-cs"
 * ^version = "2026.1.0"
 * ^status = #active
 * ^experimental = false

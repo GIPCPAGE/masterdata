@@ -6,7 +6,7 @@ Extension: FournisseurPaiementExtension
 Id: fournisseur-paiement
 Title: "Paramètres de paiement Fournisseur"
 Description: "Paramètres de paiement pour un fournisseur (délais, montants, conditions)"
-* ^url = "http://cpage.org/fhir/StructureDefinition/fournisseur-paiement"
+* ^url = "https://www.cpage.fr/ig/masterdata/common/StructureDefinition/fournisseur-paiement"
 * ^version = "1.0.0"
 * ^status = #active
 * ^context[0].type = #element

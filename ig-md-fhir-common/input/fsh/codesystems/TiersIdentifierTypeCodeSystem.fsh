@@ -1,12 +1,12 @@
 // =============================================
-// CodeSystem: GEF Identifier Type
+// CodeSystem: Identifier Type
 // =============================================
 
-CodeSystem: GEFIdentifierTypeCS
-Id: gef-identifier-type-cs
-Title: "Type d'identifiant GEF"
-Description: "Codes pour types d'identifiants dans les interfaces GEF (EFOU, KERD). Correspond au champ 'Type identifiant' des messages GEF."
-* ^url = "http://cpage.org/fhir/CodeSystem/gef-identifier-type-cs"
+CodeSystem: TiersIdentifierTypeCS
+Id: tiers-identifier-type-cs
+Title: "Type d'identifiant"
+Description: "Codes pour types d'identifiants dans les interfaces (EFOU, KERD). Correspond au champ 'Type identifiant' des messages."
+* ^url = "https://www.cpage.fr/ig/masterdata/common/CodeSystem/tiers-identifier-type-cs"
 * ^version = "1.0.0"
 * ^status = #active
 * ^experimental = false

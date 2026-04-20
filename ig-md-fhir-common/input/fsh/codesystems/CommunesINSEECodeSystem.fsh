@@ -26,7 +26,7 @@ Ce CodeSystem fait référence aux communes françaises officielles selon le Cod
 **Note** : Ce système de codes fait référence à une terminologie externe maintenue par l'INSEE. Les codes ne sont pas énumérés dans cet IG mais doivent être validés contre le COG officiel (~35 000 communes actives).
 """
 
-* ^url = "https://www.cpage.fr/ig/masterdata/geo/CodeSystem/communes-insee-cs"
+* ^url = "https://www.cpage.fr/ig/masterdata/common/CodeSystem/communes-insee-cs"
 * ^version = "2026.1.0"
 * ^status = #active
 * ^experimental = false

@@ -1,12 +1,12 @@
 // =============================================
-// CodeSystem: Catégorie TG (GEF)
+// CodeSystem: Catégorie TG
 // =============================================
 
-CodeSystem: GEFTGCategoryCS
-Id: gef-tg-category-cs
-Title: "Catégorie TG (GEF)"
-Description: "Catégories de tiers selon la nomenclature GEF (codes 00-74). Utilisé dans les messages KERD et EFOU pour classifier les types d'organisations (État, collectivités, établissements publics, organismes sociaux, personnes physiques, etc.)"
-* ^url = "http://cpage.org/fhir/CodeSystem/gef-tg-category-cs"
+CodeSystem: TiersCategoryCS
+Id: tiers-category-cs
+Title: "Catégorie TG"
+Description: "Catégories de tiers selon la nomenclature (codes 00-74). Utilisé dans les messages KERD et EFOU pour classifier les types d'organisations (État, collectivités, établissements publics, organismes sociaux, personnes physiques, etc.)"
+* ^url = "https://www.cpage.fr/ig/masterdata/common/CodeSystem/tiers-category-cs"
 * ^version = "1.0.0"
 * ^status = #active
 * ^experimental = false
