@@ -1,10 +1,10 @@
-﻿# Axe 1 — Paramètres de Recherche Tiers
+﻿# Axe Concepts Métiers — Paramètres de Recherche Tiers
 
 ## Introduction
 
 Cette page documente les **10 paramètres de recherche** FHIR pour requêter les organisations tierces (ressource `Organization`) via l'API REST.
 
-Ces SearchParameters sont spécifiques à l'**Axe 1 — Tiers** de ce guide. Pour les requêtes sur les CodeSystems et ValueSets géographiques (communes COG), voir la [documentation géographique](geographie.html).
+Ces SearchParameters sont spécifiques à l'**Axe Concepts Métiers** de ce guide. Pour les requêtes sur les CodeSystems et ValueSets géographiques (communes COG), voir la [documentation géographique](geographie.html).
 
 | Paramètre | Extension source | Cible |
 |-----------|-----------------|-------|

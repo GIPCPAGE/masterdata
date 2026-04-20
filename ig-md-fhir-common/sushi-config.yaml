@@ -42,7 +42,7 @@ pages:
   geographie.md:
     title: Données Géographiques COG
   mapping.md:
-    title: Mapping Oracle ECO
+    title: Guide d'Intégration
   search-parameters.md:
     title: Paramètres de Recherche
   examples.md:
@@ -52,13 +52,13 @@ pages:
 
 menu:
   "Accueil": index.html
-  "Axe Tiers":
-    Profils Tiers: tiers-organization.html
-    Paramètres de Recherche: search-parameters.html
-    Exemples: examples.html
+  "Axe Concepts Métiers":
+    "Tiers — Profils": tiers-organization.html
+    "Tiers — Recherche": search-parameters.html
+    "Tiers — Exemples": examples.html
   "Axe Nomenclatures":
     Terminologies GEF: terminologies.html
     Données géographiques COG: geographie.html
-  Mapping Oracle ECO: mapping.html
+  "Guide d'Intégration": mapping.html
   Ressources de conformité: artifacts.html
   Téléchargements: downloads.html

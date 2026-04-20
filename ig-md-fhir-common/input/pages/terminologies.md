@@ -1,4 +1,4 @@
-﻿# Axe 2 — Terminologies
+﻿# Axe Nomenclatures — Terminologies
 
 ## Vue d'ensemble
 
@@ -446,7 +446,7 @@ Prénom : Jean
 - [Usages des succursales](CodeSystem-succursale-usage-cs.html)
 - [Moyens de paiement](CodeSystem-moyen-paiement-cs.html)
 - [Régimes d'assurance](CodeSystem-grand-regime-cs.html)
-- [Types d'organismes payeurs](CodeSystem-type-resident-cs.html)
+- [Types de résidents fiscaux](CodeSystem-type-resident-cs.html)
 
 ### ValueSets (ensembles de valeurs)
 
@@ -460,13 +460,13 @@ Prénom : Jean
 - [Usages des succursales VS](ValueSet-succursale-usage-vs.html)
 - [Moyens de paiement VS](ValueSet-moyen-paiement-vs.html)
 - [Régimes d'assurance VS](ValueSet-grand-regime-vs.html)
-- [Types d'organismes payeurs VS](ValueSet-type-resident-vs.html)
+- [Types de résidents fiscaux VS](ValueSet-type-resident-vs.html)
 
 ---
 
 ## Voir Aussi
 
-- [Données Géographiques COG](geographie.html) - Communes françaises TRE-R13 (Axe 2 nomenclatures géographiques)
+- [Données Géographiques COG](geographie.html) - Communes françaises TRE-R13 (Axe Nomenclatures géographiques)
 - [Profils Tiers](tiers-organization.html) - Profils Organization utilisant ces classifications
 - [Paramètres de Recherche](search-parameters.html) - Recherches par catégorie, rôle, régime…
 - [Exemples](examples.html) - Instances concrètes avec les classifications

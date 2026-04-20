@@ -6,8 +6,8 @@ Cette page présente des **exemples concrets** couvrant les deux axes du guide :
 
 | Axe | Exemples | Section |
 |-----|----------|---------|
-| **Axe 1 — Tiers** | Organizations (fournisseur, client, payeur, multi-rôle, succursale, étranger) | [Exemples Tiers](#exemple-1--organisation-multi-rôles) |
-| **Axe 2 — Nomenclatures géographiques** | Patient avec adresse commune déléguée, commune nouvelle, recherche historique | [Exemples Communes COG](#exemples-communes-cog) |
+| **Axe Concepts Métiers** | Organizations (fournisseur, client, payeur, multi-rôle, succursale, étranger) | [Exemples Tiers](#exemple-1--organisation-multi-rôles) |
+| **Axe Nomenclatures** | Patient avec adresse commune déléguée, commune nouvelle, recherche historique | [Exemples Communes COG](#exemples-communes-cog) |
 
 ---
 
@@ -452,7 +452,7 @@ Privilégier dans l'ordre :
 
 ## Exemples Communes COG
 
-Les exemples suivants illustrent l'utilisation des **terminologies géographiques** (Axe 2) : communes françaises codées via le Code Officiel Géographique INSEE (TRE-R13).
+Les exemples suivants illustrent l'utilisation des **terminologies géographiques** de l'Axe Nomenclatures : communes françaises codées via le Code Officiel Géographique INSEE (TRE-R13).
 
 ### Exemple COG-1 : Patient avec adresse en commune déléguée
 

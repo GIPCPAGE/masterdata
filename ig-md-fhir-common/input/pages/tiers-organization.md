@@ -1,10 +1,10 @@
-﻿# Axe 1 — Profils Tiers
+﻿# Axe Concepts Métiers — Profils Tiers
 
 ## Vue d'ensemble
 
-Cette page décrit l'**Axe 1** du guide d'implémentation : la modélisation des organisations tierces (fournisseurs, clients, organismes payeurs). Chaque tiers est représenté par une ressource FHIR **Organization** enrichie d'extensions métier.
+Cette page décrit l'**Axe Concepts Métiers** du guide d'implémentation : la modélisation des organisations tierces (fournisseurs, clients, organismes payeurs). Chaque tiers est représenté par une ressource FHIR **Organization** enrichie d'extensions métier.
 
-Les nomenclatures géographiques (communes COG, TRE-R13) sont documentées dans l'[Axe 2 — Données Géographiques COG](geographie.html).
+Les nomenclatures géographiques (communes COG, TRE-R13) sont documentées dans les [Données Géographiques COG](geographie.html).
 
 ---
 
@@ -424,9 +424,7 @@ IBAN : DE89370400440532013000
 
 ---
 
-## Règles de
-
- Cohérence
+## Règles de Cohérence
 
 ### 1. Combinaisons Catégorie + Nature Juridique
 

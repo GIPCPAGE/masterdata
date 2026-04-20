@@ -2,7 +2,7 @@
 
 ## Vue d'ensemble
 
-Cette page documente les **profils FHIR cibles** de l'Axe 1 (Tiers) et les recommandations d'intégration REST pour les systèmes hospitaliers.
+Cette page documente les **profils FHIR cibles** de l'Axe Concepts Métiers (Tiers) et les recommandations d'intégration REST pour les systèmes hospitaliers.
 
 | Source | Profil FHIR cible |
 |------------|-------------------|

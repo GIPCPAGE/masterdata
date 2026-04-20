@@ -30,7 +30,7 @@ Vous pourrez ensuite utiliser l'opération [$validate](https://www.hl7.org/fhir/
 
 ## Contenu du package
 
-### Axe 1 — Tiers (Organization)
+### Axe Concepts Métiers — Tiers (Organization)
 
 | Ressource | Identifiant |
 |-----------|-------------|
@@ -42,7 +42,7 @@ Vous pourrez ensuite utiliser l'opération [$validate](https://www.hl7.org/fhir/
 | 10 SearchParameter | — |
 | 10 CodeSystems | — |
 
-### Axe 2 — Nomenclatures géographiques
+### Axe Nomenclatures
 
 | Ressource | Identifiant |
 |-----------|-------------|
