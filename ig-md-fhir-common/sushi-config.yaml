@@ -32,30 +32,10 @@ dependencies:
 pages:
   index.md:
     title: Accueil
-  tiers-organization.md:
-    title: Profils Tiers
-  terminologies.md:
-    title: Terminologies GEF
-  geographie.md:
-    title: Données Géographiques COG
-  mapping.md:
-    title: Guide d'Intégration
-  search-parameters.md:
-    title: Paramètres de Recherche
-  examples.md:
-    title: Exemples
   downloads.md:
     title: Téléchargements
 
 menu:
   "Accueil": index.html
-  "Axe Concepts Métiers":
-    "Tiers — Profils": tiers-organization.html
-    "Tiers — Recherche": search-parameters.html
-    "Tiers — Exemples": examples.html
-  "Axe Nomenclatures":
-    Terminologies GEF: terminologies.html
-    Données géographiques COG: geographie.html
-  "Guide d'Intégration": mapping.html
   Ressources de conformité: artifacts.html
   Téléchargements: downloads.html
