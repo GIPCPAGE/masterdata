@@ -1,19 +1,25 @@
-# Telechargements
+# Téléchargements
 
-L'implementation guide produit un package telechargeable permettant de reutiliser les artefacts de cette specification.
+Ce guide d'implémentation contient les artefacts FHIR relatifs aux opérations de publication du CPage MasterData :
+- Définitions des opérations `$publication-metadata` et `$publication-bundle`
+- Modèles logiques (`PublicationBatch`, `PublicationView`)
+- Terminologies (`publication-scope`, `bundle-type-publication`)
+- CapabilityStatement serveur
 
-Vous pouvez utiliser ce package pour valider les ressources d'exemple et partager les definitions dans vos environnements FHIR.
+Le package NPM de cet IG est [téléchargeable ici](package.tgz).
 
-Ensemble des ressources telechargeables :
+---
 
-* [L'ensemble de la specification (zip)](full-ig.zip)
-* [Package (tgz)](package.tgz)
+## Ressources téléchargeables
 
-### Definitions
+* [Spécification complète (zip)](full-ig.zip)
+* [Package NPM (tgz)](package.tgz)
 
-* [Definitions JSON (zip)](definitions.json.zip)
-* [Definitions XML (zip)](definitions.xml.zip)
-* [Definitions Turtle (zip)](definitions.ttl.zip)
+### Définitions
+
+* [Définitions JSON (zip)](definitions.json.zip)
+* [Définitions XML (zip)](definitions.xml.zip)
+* [Définitions Turtle (zip)](definitions.ttl.zip)
 
 ### Exemples
 

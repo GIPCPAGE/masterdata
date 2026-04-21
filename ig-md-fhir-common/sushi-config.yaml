@@ -1,5 +1,5 @@
 id: ig.mdm.fhir.common
-canonical: https://www.cpage.fr/ig/masterdata/tiers
+canonical: https://www.cpage.fr/ig/masterdata/common
 name: IGMdmFhirCommon
 status: draft
 version: 0.1.0
@@ -14,7 +14,7 @@ contact:
       - system: email
         value: contact@cpage.fr
 description: >-
-  IG FHIR générique pour la gestion des Tiers (Organisation/Fournisseur/Débiteur).
+  IG FHIR générique pour l'échange des concepts métiers et des nomenclatures avec le CPage Master Data.
   Ce guide définit les profils et ressources communs, réutilisables et vendor-neutral,
   basés sur FR Core. Il sert de socle pour les IG spécifiques (ex: CPage).
 fhirVersion: 4.0.1
@@ -24,28 +24,18 @@ jurisdiction: urn:iso:std:iso:3166#FR "FRANCE"
 
 parameters:
   shownav: true
-  generate-snapshot: true
+
   
 dependencies:
-  hl7.fhir.fr.core: 2.1.0
+  hl7.fhir.fr.core: 2.2.0
 
 pages:
   index.md:
     title: Accueil
-  tiers-organization.md:
-    title: Profil TiersOrganization
-  terminologies.md:
-    title: Terminologies
-  mapping.md:
-    title: Mapping Oracle ECO
   downloads.md:
     title: Téléchargements
 
 menu:
   "Accueil": index.html
-  Documentation:
-    Profil TiersOrganization: tiers-organization.html
-    Terminologies: terminologies.html
-    Mapping Oracle ECO: mapping.html
   Ressources de conformité: artifacts.html
   Téléchargements: downloads.html

@@ -13,4 +13,7 @@ Alias: $org-type = http://terminology.hl7.org/CodeSystem/organization-type
 // TODO: Replace with your official OIDs/URIs
 Alias: $id-etier = urn:oid:1.2.250.1.999.1.1.1
 // Pour le numero de TVA l'OID est correct : 
-Alias: $id-tva = urn:oid:1.2.250.1.69.1.1011 
+Alias: $id-tva = urn:oid:1.2.250.1.69.1.1011
+
+// Terminologies géographiques — CPage (communes COG INSEE)
+Alias: $communes-fr-cs = https://www.cpage.fr/ig/masterdata/common/CodeSystem/communes-fr-cs

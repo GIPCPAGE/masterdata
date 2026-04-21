@@ -1,11 +1,11 @@
 {
   "resourceType": "StructureDefinition",
   "id": "tiers-profile",
-  "url": "https://www.cpage.fr/ig/masterdata/tiers/StructureDefinition/tiers-profile",
+  "url": "https://www.cpage.fr/ig/masterdata/common/StructureDefinition/tiers-profile",
   "name": "TiersProfile",
-  "title": "Tiers (GEF)",
+  "title": "Tiers",
   "status": "draft",
-  "description": "Profil générique pour la notion de Tiers (commun débiteur/fournisseur), basé sur FR Core Organization. Conforme aux spécifications GEF. Ce profil hérite des slices identifier déjà définis par FR Core (SIREN, SIRET, FINESS) et ajoute les identifiants GEF (NIR, hors UE, Tahiti, RIDET) ainsi qu'un identifiant de TVA intracommunautaire.",
+  "description": "Profil générique pour la notion de Tiers (commun débiteur/fournisseur), basé sur FR Core Organization. Conforme aux spécifications. Ce profil hérite des slices identifier déjà définis par FR Core (SIREN, SIRET, FINESS) et ajoute les identifiants (NIR, hors UE, Tahiti, RIDET) ainsi qu'un identifiant de TVA intracommunautaire.",
   "fhirVersion": "4.0.1",
   "kind": "resource",
   "abstract": false,
@@ -19,14 +19,14 @@
         "path": "Organization.extension",
         "sliceName": "tiersRole",
         "short": "Rôle(s) du tiers",
-        "definition": "Rôle(s) générique(s) du tiers : fournisseur (supplier) si présent dans ECO.FOU, débiteur (debtor) si présent dans ECO.DBT.",
+        "definition": "Rôle(s) générique(s) du tiers : fournisseur (supplier) si présent dans table fournisseurs, débiteur (debtor) si présent dans table debiteurs.",
         "min": 0,
         "max": "*",
         "type": [
           {
             "code": "Extension",
             "profile": [
-              "https://www.cpage.fr/ig/masterdata/tiers/StructureDefinition/tiers-role-extension"
+              "https://www.cpage.fr/ig/masterdata/common/StructureDefinition/tiers-role-extension"
             ]
           }
         ],
@@ -36,15 +36,15 @@
         "id": "Organization.extension:tgCategory",
         "path": "Organization.extension",
         "sliceName": "tgCategory",
-        "short": "Catégorie TG (GEF)",
-        "definition": "Catégorie du tiers selon nomenclature GEF: État, collectivités, établissements publics, organismes sociaux, personne physique, etc. Codes 00-74.",
+        "short": "Catégorie TG",
+        "definition": "Catégorie du tiers selon nomenclature: État, collectivités, établissements publics, organismes sociaux, personne physique, etc. Codes 00-74.",
         "min": 0,
         "max": "1",
         "type": [
           {
             "code": "Extension",
             "profile": [
-              "http://cpage.org/fhir/StructureDefinition/gef-tg-category"
+              "https://www.cpage.fr/ig/masterdata/common/StructureDefinition/tiers-category"
             ]
           }
         ],
@@ -54,15 +54,15 @@
         "id": "Organization.extension:legalNature",
         "path": "Organization.extension",
         "sliceName": "legalNature",
-        "short": "Nature juridique (GEF)",
-        "definition": "Nature juridique du tiers selon nomenclature GEF: particulier, société, association, établissement public, collectivité territoriale, etc. Codes 00-11.",
+        "short": "Nature juridique",
+        "definition": "Nature juridique du tiers selon nomenclature: particulier, société, association, établissement public, collectivité territoriale, etc. Codes 00-11.",
         "min": 0,
         "max": "1",
         "type": [
           {
             "code": "Extension",
             "profile": [
-              "http://cpage.org/fhir/StructureDefinition/gef-legal-nature"
+              "https://www.cpage.fr/ig/masterdata/common/StructureDefinition/tiers-legal-nature"
             ]
           }
         ],
@@ -73,14 +73,14 @@
         "path": "Organization.extension",
         "sliceName": "bankAccount",
         "short": "Coordonnées bancaires RIB/IBAN",
-        "definition": "Domiciliation bancaire du tiers (RIB français ou IBAN/BIC international). Conforme aux formats GEF.",
+        "definition": "Domiciliation bancaire du tiers (RIB français ou IBAN/BIC international). Conforme aux formats.",
         "min": 0,
         "max": "*",
         "type": [
           {
             "code": "Extension",
             "profile": [
-              "http://cpage.org/fhir/StructureDefinition/gef-bank-account"
+              "https://www.cpage.fr/ig/masterdata/common/StructureDefinition/tiers-bank-account"
             ]
           }
         ],
@@ -98,7 +98,7 @@
           {
             "code": "Extension",
             "profile": [
-              "http://cpage.org/fhir/StructureDefinition/succursale-usage-extension"
+              "https://www.cpage.fr/ig/masterdata/common/StructureDefinition/succursale-usage-extension"
             ]
           }
         ],
@@ -114,7 +114,7 @@
           {
             "code": "Extension",
             "profile": [
-              "http://cpage.org/fhir/StructureDefinition/fournisseur-code"
+              "https://www.cpage.fr/ig/masterdata/common/StructureDefinition/fournisseur-code"
             ]
           }
         ],
@@ -130,7 +130,7 @@
           {
             "code": "Extension",
             "profile": [
-              "http://cpage.org/fhir/StructureDefinition/fournisseur-comptabilite"
+              "https://www.cpage.fr/ig/masterdata/common/StructureDefinition/fournisseur-comptabilite"
             ]
           }
         ],
@@ -146,7 +146,7 @@
           {
             "code": "Extension",
             "profile": [
-              "http://cpage.org/fhir/StructureDefinition/fournisseur-paiement"
+              "https://www.cpage.fr/ig/masterdata/common/StructureDefinition/fournisseur-paiement"
             ]
           }
         ],
@@ -162,7 +162,7 @@
           {
             "code": "Extension",
             "profile": [
-              "http://cpage.org/fhir/StructureDefinition/debiteur-code"
+              "https://www.cpage.fr/ig/masterdata/common/StructureDefinition/debiteur-code"
             ]
           }
         ],
@@ -178,7 +178,7 @@
           {
             "code": "Extension",
             "profile": [
-              "http://cpage.org/fhir/StructureDefinition/debiteur-parametres"
+              "https://www.cpage.fr/ig/masterdata/common/StructureDefinition/debiteur-parametres"
             ]
           }
         ],
@@ -194,7 +194,7 @@
           {
             "code": "Extension",
             "profile": [
-              "http://cpage.org/fhir/StructureDefinition/gef-debtor-type"
+              "https://www.cpage.fr/ig/masterdata/common/StructureDefinition/tiers-debtor-type"
             ]
           }
         ],
@@ -210,7 +210,7 @@
           {
             "code": "Extension",
             "profile": [
-              "http://cpage.org/fhir/StructureDefinition/payeur-sante"
+              "https://www.cpage.fr/ig/masterdata/common/StructureDefinition/payeur-sante"
             ]
           }
         ],
@@ -219,119 +219,27 @@
       {
         "id": "Organization.identifier",
         "path": "Organization.identifier",
+        "slicing": {
+          "discriminator": [
+            {
+              "type": "value",
+              "path": "system"
+            }
+          ],
+          "rules": "open",
+          "description": "Identifiants du tiers : SIRET, SIREN, FINESS, TVA, NIR, hors UE, Tahiti, RIDET, identifiant interne"
+        },
         "min": 1,
         "mustSupport": true
       },
       {
         "id": "Organization.identifier.system",
         "path": "Organization.identifier.system",
+        "min": 1,
         "mustSupport": true
       },
       {
         "id": "Organization.identifier.value",
-        "path": "Organization.identifier.value",
-        "mustSupport": true
-      },
-      {
-        "id": "Organization.identifier:idNatSt",
-        "path": "Organization.identifier",
-        "sliceName": "idNatSt"
-      },
-      {
-        "id": "Organization.identifier:idNatSt.system",
-        "path": "Organization.identifier.system",
-        "min": 1,
-        "mustSupport": true
-      },
-      {
-        "id": "Organization.identifier:idNatSt.value",
-        "path": "Organization.identifier.value",
-        "min": 1,
-        "mustSupport": true
-      },
-      {
-        "id": "Organization.identifier:siren",
-        "path": "Organization.identifier",
-        "sliceName": "siren"
-      },
-      {
-        "id": "Organization.identifier:siren.system",
-        "path": "Organization.identifier.system",
-        "min": 1,
-        "mustSupport": true
-      },
-      {
-        "id": "Organization.identifier:siren.value",
-        "path": "Organization.identifier.value",
-        "min": 1,
-        "mustSupport": true
-      },
-      {
-        "id": "Organization.identifier:siret",
-        "path": "Organization.identifier",
-        "sliceName": "siret"
-      },
-      {
-        "id": "Organization.identifier:siret.system",
-        "path": "Organization.identifier.system",
-        "min": 1,
-        "mustSupport": true
-      },
-      {
-        "id": "Organization.identifier:siret.value",
-        "path": "Organization.identifier.value",
-        "min": 1,
-        "mustSupport": true
-      },
-      {
-        "id": "Organization.identifier:finess",
-        "path": "Organization.identifier",
-        "sliceName": "finess"
-      },
-      {
-        "id": "Organization.identifier:finess.system",
-        "path": "Organization.identifier.system",
-        "min": 1,
-        "mustSupport": true
-      },
-      {
-        "id": "Organization.identifier:finess.value",
-        "path": "Organization.identifier.value",
-        "min": 1,
-        "mustSupport": true
-      },
-      {
-        "id": "Organization.identifier:adeliRang",
-        "path": "Organization.identifier",
-        "sliceName": "adeliRang",
-        "max": "0"
-      },
-      {
-        "id": "Organization.identifier:adeliRang.system",
-        "path": "Organization.identifier.system",
-        "min": 1,
-        "mustSupport": true
-      },
-      {
-        "id": "Organization.identifier:adeliRang.value",
-        "path": "Organization.identifier.value",
-        "min": 1,
-        "mustSupport": true
-      },
-      {
-        "id": "Organization.identifier:rppsRang",
-        "path": "Organization.identifier",
-        "sliceName": "rppsRang",
-        "max": "0"
-      },
-      {
-        "id": "Organization.identifier:rppsRang.system",
-        "path": "Organization.identifier.system",
-        "min": 1,
-        "mustSupport": true
-      },
-      {
-        "id": "Organization.identifier:rppsRang.value",
         "path": "Organization.identifier.value",
         "min": 1,
         "mustSupport": true
@@ -341,7 +249,7 @@
         "path": "Organization.identifier",
         "sliceName": "etierId",
         "short": "Identifiant interne du tiers (IDTITI)",
-        "definition": "Identifiant unique interne du tiers issu de la table ECO.ETIER (champ IDTITI).",
+        "definition": "Identifiant unique interne du tiers issu de la table ETIER (champ IDTITI).",
         "min": 0,
         "max": "*",
         "mustSupport": true
@@ -349,7 +257,6 @@
       {
         "id": "Organization.identifier:etierId.type",
         "path": "Organization.identifier.type",
-        "min": 1,
         "patternCodeableConcept": {
           "coding": [
             {
@@ -366,6 +273,48 @@
         "fixedUri": "urn:oid:1.2.250.1.999.1.1.1"
       },
       {
+        "id": "Organization.identifier:siret",
+        "path": "Organization.identifier",
+        "sliceName": "siret",
+        "short": "Numéro SIRET (14 chiffres)",
+        "min": 0,
+        "max": "1",
+        "mustSupport": true
+      },
+      {
+        "id": "Organization.identifier:siret.system",
+        "path": "Organization.identifier.system",
+        "fixedUri": "https://sirene.fr"
+      },
+      {
+        "id": "Organization.identifier:siren",
+        "path": "Organization.identifier",
+        "sliceName": "siren",
+        "short": "Numéro SIREN (9 chiffres)",
+        "min": 0,
+        "max": "1",
+        "mustSupport": true
+      },
+      {
+        "id": "Organization.identifier:siren.system",
+        "path": "Organization.identifier.system",
+        "fixedUri": "https://sirene.fr/siren"
+      },
+      {
+        "id": "Organization.identifier:finess",
+        "path": "Organization.identifier",
+        "sliceName": "finess",
+        "short": "Numéro FINESS",
+        "min": 0,
+        "max": "1",
+        "mustSupport": true
+      },
+      {
+        "id": "Organization.identifier:finess.system",
+        "path": "Organization.identifier.system",
+        "fixedUri": "http://finess.sante.gouv.fr"
+      },
+      {
         "id": "Organization.identifier:tva",
         "path": "Organization.identifier",
         "sliceName": "tva",
@@ -378,7 +327,6 @@
       {
         "id": "Organization.identifier:tva.type",
         "path": "Organization.identifier.type",
-        "min": 1,
         "patternCodeableConcept": {
           "coding": [
             {
@@ -399,7 +347,7 @@
         "path": "Organization.identifier",
         "sliceName": "nir",
         "short": "NIR - Numéro Sécurité Sociale",
-        "definition": "Numéro d'Inscription au Répertoire de la Sécurité Sociale (15 caractères). Type identifiant GEF: 04",
+        "definition": "Numéro d'Inscription au Répertoire de la Sécurité Sociale (15 caractères). Type identifiant: 04",
         "min": 0,
         "max": "1",
         "mustSupport": true
@@ -414,7 +362,7 @@
           {
             "code": "Extension",
             "profile": [
-              "http://cpage.org/fhir/StructureDefinition/gef-identifier-type"
+              "https://www.cpage.fr/ig/masterdata/common/StructureDefinition/tiers-identifier-type"
             ]
           }
         ]
@@ -426,7 +374,7 @@
           "coding": [
             {
               "code": "04",
-              "system": "http://cpage.org/fhir/CodeSystem/gef-identifier-type-cs"
+              "system": "https://www.cpage.fr/ig/masterdata/common/CodeSystem/tiers-identifier-type-cs"
             }
           ]
         }
@@ -434,12 +382,11 @@
       {
         "id": "Organization.identifier:nir.type",
         "path": "Organization.identifier.type",
-        "min": 1,
         "patternCodeableConcept": {
           "coding": [
             {
               "code": "04",
-              "system": "http://cpage.org/fhir/CodeSystem/gef-identifier-type-cs"
+              "system": "https://www.cpage.fr/ig/masterdata/common/CodeSystem/tiers-identifier-type-cs"
             }
           ]
         }
@@ -454,7 +401,7 @@
         "path": "Organization.identifier",
         "sliceName": "horsUE",
         "short": "Identifiant hors UE",
-        "definition": "Identifiant pour tiers hors Union Européenne. Type identifiant GEF: 06",
+        "definition": "Identifiant pour tiers hors Union Européenne. Type identifiant: 06",
         "min": 0,
         "max": "1",
         "mustSupport": true
@@ -469,7 +416,7 @@
           {
             "code": "Extension",
             "profile": [
-              "http://cpage.org/fhir/StructureDefinition/gef-identifier-type"
+              "https://www.cpage.fr/ig/masterdata/common/StructureDefinition/tiers-identifier-type"
             ]
           }
         ]
@@ -481,7 +428,7 @@
           "coding": [
             {
               "code": "06",
-              "system": "http://cpage.org/fhir/CodeSystem/gef-identifier-type-cs"
+              "system": "https://www.cpage.fr/ig/masterdata/common/CodeSystem/tiers-identifier-type-cs"
             }
           ]
         }
@@ -489,12 +436,11 @@
       {
         "id": "Organization.identifier:horsUE.type",
         "path": "Organization.identifier.type",
-        "min": 1,
         "patternCodeableConcept": {
           "coding": [
             {
               "code": "06",
-              "system": "http://cpage.org/fhir/CodeSystem/gef-identifier-type-cs"
+              "system": "https://www.cpage.fr/ig/masterdata/common/CodeSystem/tiers-identifier-type-cs"
             }
           ]
         }
@@ -502,14 +448,14 @@
       {
         "id": "Organization.identifier:horsUE.system",
         "path": "Organization.identifier.system",
-        "patternUri": "http://cpage.org/fhir/NamingSystem/non-eu-identifier"
+        "patternUri": "https://www.cpage.fr/ig/masterdata/common/NamingSystem/non-eu-identifier"
       },
       {
         "id": "Organization.identifier:tahiti",
         "path": "Organization.identifier",
         "sliceName": "tahiti",
         "short": "Numéro Tahiti",
-        "definition": "Numéro d'identification Tahiti - Polynésie française. Type identifiant GEF: 07",
+        "definition": "Numéro d'identification Tahiti - Polynésie française. Type identifiant: 07",
         "min": 0,
         "max": "1",
         "mustSupport": true
@@ -524,7 +470,7 @@
           {
             "code": "Extension",
             "profile": [
-              "http://cpage.org/fhir/StructureDefinition/gef-identifier-type"
+              "https://www.cpage.fr/ig/masterdata/common/StructureDefinition/tiers-identifier-type"
             ]
           }
         ]
@@ -536,7 +482,7 @@
           "coding": [
             {
               "code": "07",
-              "system": "http://cpage.org/fhir/CodeSystem/gef-identifier-type-cs"
+              "system": "https://www.cpage.fr/ig/masterdata/common/CodeSystem/tiers-identifier-type-cs"
             }
           ]
         }
@@ -544,12 +490,11 @@
       {
         "id": "Organization.identifier:tahiti.type",
         "path": "Organization.identifier.type",
-        "min": 1,
         "patternCodeableConcept": {
           "coding": [
             {
               "code": "07",
-              "system": "http://cpage.org/fhir/CodeSystem/gef-identifier-type-cs"
+              "system": "https://www.cpage.fr/ig/masterdata/common/CodeSystem/tiers-identifier-type-cs"
             }
           ]
         }
@@ -557,14 +502,14 @@
       {
         "id": "Organization.identifier:tahiti.system",
         "path": "Organization.identifier.system",
-        "patternUri": "http://cpage.org/fhir/NamingSystem/tahiti-identifier"
+        "patternUri": "https://www.cpage.fr/ig/masterdata/common/NamingSystem/tahiti-identifier"
       },
       {
         "id": "Organization.identifier:ridet",
         "path": "Organization.identifier",
         "sliceName": "ridet",
         "short": "RIDET Nouméa",
-        "definition": "RIDET - Répertoire d'Identification des Entreprises et des Établissements de Nouvelle-Calédonie. Type identifiant GEF: 08",
+        "definition": "RIDET - Répertoire d'Identification des Entreprises et des Établissements de Nouvelle-Calédonie. Type identifiant: 08",
         "min": 0,
         "max": "1",
         "mustSupport": true
@@ -579,7 +524,7 @@
           {
             "code": "Extension",
             "profile": [
-              "http://cpage.org/fhir/StructureDefinition/gef-identifier-type"
+              "https://www.cpage.fr/ig/masterdata/common/StructureDefinition/tiers-identifier-type"
             ]
           }
         ]
@@ -591,7 +536,7 @@
           "coding": [
             {
               "code": "08",
-              "system": "http://cpage.org/fhir/CodeSystem/gef-identifier-type-cs"
+              "system": "https://www.cpage.fr/ig/masterdata/common/CodeSystem/tiers-identifier-type-cs"
             }
           ]
         }
@@ -599,12 +544,11 @@
       {
         "id": "Organization.identifier:ridet.type",
         "path": "Organization.identifier.type",
-        "min": 1,
         "patternCodeableConcept": {
           "coding": [
             {
               "code": "08",
-              "system": "http://cpage.org/fhir/CodeSystem/gef-identifier-type-cs"
+              "system": "https://www.cpage.fr/ig/masterdata/common/CodeSystem/tiers-identifier-type-cs"
             }
           ]
         }
@@ -612,20 +556,20 @@
       {
         "id": "Organization.identifier:ridet.system",
         "path": "Organization.identifier.system",
-        "patternUri": "http://cpage.org/fhir/NamingSystem/ridet-identifier"
+        "patternUri": "https://www.cpage.fr/ig/masterdata/common/NamingSystem/ridet-identifier"
       },
       {
         "id": "Organization.active",
         "path": "Organization.active",
         "short": "Tiers actif",
-        "definition": "Indique si le tiers est actif. Peut être mappé depuis ECO.ETIER.VALITI (V=true, I=false).",
+        "definition": "Indique si le tiers est actif. Peut être mappé depuis indicateur actif (V=true, I=false).",
         "mustSupport": true
       },
       {
         "id": "Organization.name",
         "path": "Organization.name",
         "short": "Raison sociale / nom du tiers",
-        "definition": "Nom officiel du tiers (ECO.ETIER.NORSTI).",
+        "definition": "Nom officiel du tiers (nom du tiers).",
         "min": 1,
         "mustSupport": true
       },
@@ -633,7 +577,7 @@
         "id": "Organization.alias",
         "path": "Organization.alias",
         "short": "Nom complémentaire",
-        "definition": "Nom complémentaire ou alternatif du tiers (ECO.ETIER.COMPTI).",
+        "definition": "Nom complémentaire ou alternatif du tiers (nom complementaire).",
         "mustSupport": true
       },
       {

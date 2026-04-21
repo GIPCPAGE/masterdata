@@ -6,7 +6,7 @@ Extension: FournisseurComptabiliteExtension
 Id: fournisseur-comptabilite
 Title: "Paramètres comptables Fournisseur"
 Description: "Paramètres de comptabilisation pour un fournisseur (comptes classe 2 et 6)"
-* ^url = "http://cpage.org/fhir/StructureDefinition/fournisseur-comptabilite"
+* ^url = "https://www.cpage.fr/ig/masterdata/common/StructureDefinition/fournisseur-comptabilite"
 * ^version = "1.0.0"
 * ^status = #active
 * ^context[0].type = #element

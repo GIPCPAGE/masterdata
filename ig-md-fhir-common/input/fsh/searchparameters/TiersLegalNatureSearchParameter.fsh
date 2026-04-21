@@ -1,15 +1,15 @@
 // =============================================
 // SearchParameter: Tiers Legal Nature
-// Permet de rechercher un tiers par sa nature juridique (GEF codes 00-11)
+// Permet de rechercher un tiers par sa nature juridique (codes 00-11)
 // =============================================
 
-Instance: TiersLegalNatureSearchParameter
+Instance: tiers-legal-nature-search-parameter
 InstanceOf: SearchParameter
 Usage: #definition
 Title: "Search Tiers by Legal Nature"
-Description: "Permet de rechercher un tiers par sa nature juridique selon la nomenclature GEF: particulier, société, association, établissement public, collectivité territoriale..."
+Description: "Permet de rechercher un tiers par sa nature juridique selon la nomenclature: particulier, société, association, établissement public, collectivité territoriale..."
 
-* url = "http://cpage.org/fhir/SearchParameter/tiers-legal-nature"
+* url = "https://www.cpage.fr/ig/masterdata/common/SearchParameter/tiers-legal-nature-search-parameter"
 * version = "1.0.0"
 * name = "TiersLegalNatureSearchParameter"
 * status = #active
@@ -20,13 +20,13 @@ Description: "Permet de rechercher un tiers par sa nature juridique selon la nom
 * contact.telecom.system = #email
 * contact.telecom.value = "support@cpage.org"
 
-* description = "Recherche un tiers par sa nature juridique. Correspond aux codes GEF 00-11 (particulier, société, association, établissement public, collectivité, administration, régime spécial...)."
+* description = "Recherche un tiers par sa nature juridique. Correspond aux codes 00-11 (particulier, société, association, établissement public, collectivité, administration, régime spécial...)."
 
 * code = #tiers-legal-nature
 * base = #Organization
 * type = #token
-* expression = "Organization.extension('http://cpage.org/fhir/StructureDefinition/gef-legal-nature').value.ofType(CodeableConcept)"
-* xpath = "f:Organization/f:extension[@url='http://cpage.org/fhir/StructureDefinition/gef-legal-nature']/f:valueCodeableConcept"
+* expression = "Organization.extension('https://www.cpage.fr/ig/masterdata/common/StructureDefinition/tiers-legal-nature').value.ofType(CodeableConcept)"
+* xpath = "f:Organization/f:extension[@url='https://www.cpage.fr/ig/masterdata/common/StructureDefinition/tiers-legal-nature']/f:valueCodeableConcept"
 * xpathUsage = #normal
 * multipleOr = true
 * multipleAnd = false

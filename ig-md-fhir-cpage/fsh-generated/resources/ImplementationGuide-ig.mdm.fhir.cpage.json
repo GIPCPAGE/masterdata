@@ -48,7 +48,7 @@
     {
       "packageId": "ig.mdm.fhir.common",
       "version": "dev",
-      "uri": "https://www.cpage.fr/ig/masterdata/tiers/ImplementationGuide/ig.mdm.fhir.common",
+      "uri": "https://www.cpage.fr/ig/masterdata/common/ImplementationGuide/ig.mdm.fhir.common",
       "id": "ig_mdm_fhir_common"
     }
   ],

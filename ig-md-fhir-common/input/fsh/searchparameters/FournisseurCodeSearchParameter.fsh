@@ -3,13 +3,13 @@
 // Permet de rechercher un fournisseur par son code unique
 // =============================================
 
-Instance: FournisseurCodeSearchParameter
+Instance: fournisseur-code
 InstanceOf: SearchParameter
 Usage: #definition
 Title: "Search Fournisseur by Code"
 Description: "Permet de rechercher un fournisseur par son code fournisseur unique (numéro interne de gestion)."
 
-* url = "http://cpage.org/fhir/SearchParameter/fournisseur-code"
+* url = "https://www.cpage.fr/ig/masterdata/common/SearchParameter/fournisseur-code"
 * version = "1.0.0"
 * name = "FournisseurCodeSearchParameter"
 * status = #active
@@ -20,13 +20,13 @@ Description: "Permet de rechercher un fournisseur par son code fournisseur uniqu
 * contact.telecom.system = #email
 * contact.telecom.value = "support@cpage.org"
 
-* description = "Recherche un fournisseur par son code fournisseur unique attribué dans le système de gestion. Correspond au 'Numéro fournisseur' du message EFOU GEF."
+* description = "Recherche un fournisseur par son code fournisseur unique attribué dans le système de gestion. Correspond au 'Numéro fournisseur' du interface fournisseurs."
 
 * code = #fournisseur-code
 * base = #Organization
 * type = #string
-* expression = "Organization.extension('http://cpage.org/fhir/StructureDefinition/fournisseur-code-extension').value.ofType(string)"
-* xpath = "f:Organization/f:extension[@url='http://cpage.org/fhir/StructureDefinition/fournisseur-code-extension']/f:valueString"
+* expression = "Organization.extension('https://www.cpage.fr/ig/masterdata/common/StructureDefinition/fournisseur-code-extension').value.ofType(string)"
+* xpath = "f:Organization/f:extension[@url='https://www.cpage.fr/ig/masterdata/common/StructureDefinition/fournisseur-code-extension']/f:valueString"
 * xpathUsage = #normal
 * multipleOr = true
 * multipleAnd = false

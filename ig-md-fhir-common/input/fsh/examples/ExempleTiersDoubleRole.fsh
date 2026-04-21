@@ -15,7 +15,7 @@ Description: "Exemple d'un tiers qui est à la fois fournisseur (vend des marcha
 * identifier[tva].value = "FR12453123456"
 
 * active = true
-* type = https://mos.esante.gouv.fr/NOS/TRE_R66-CategorieEtablissement/FHIR/TRE-R66-CategorieEtablissement#03 "Clinique"
+* type = https://www.cpage.fr/ig/masterdata/common/CodeSystem/tiers-category-cs#50 "Personne morale de droit privé"
 
 * name = "Clinique du Parc"
 * alias = "CDP SAS"
@@ -41,14 +41,14 @@ Description: "Exemple d'un tiers qui est à la fois fournisseur (vend des marcha
 * address.country = "FR"
 
 // Double rôle: Fournisseur ET Débiteur
-* extension[tiersRole][0].valueCoding = http://cpage.org/fhir/CodeSystem/tiers-role-cs#supplier
-* extension[tiersRole][1].valueCoding = http://cpage.org/fhir/CodeSystem/tiers-role-cs#debtor
+* extension[tiersRole][0].valueCoding = https://www.cpage.fr/ig/masterdata/common/CodeSystem/tiers-role-cs#supplier
+* extension[tiersRole][1].valueCoding = https://www.cpage.fr/ig/masterdata/common/CodeSystem/tiers-role-cs#debtor
 
 // Nature juridique
-* extension[legalNature].valueCodeableConcept = http://cpage.org/fhir/CodeSystem/gef-legal-nature-cs#03 "Société"
+* extension[legalNature].valueCodeableConcept = https://www.cpage.fr/ig/masterdata/common/CodeSystem/tiers-legal-nature-cs#03 "Société"
 
 // TG Category
-* extension[tgCategory].valueCodeableConcept = https://mos.esante.gouv.fr/NOS/TRE_R66-CategorieEtablissement/FHIR/TRE-R66-CategorieEtablissement#03 "Clinique"
+* extension[tgCategory].valueCodeableConcept = https://www.cpage.fr/ig/masterdata/common/CodeSystem/tiers-category-cs#50 "Personne morale de droit privé"
 
 // === Extensions Fournisseur (la clinique vend des prestations) ===
 * extension[codeFournisseur].valueString = "FRCLIN00123"
@@ -82,8 +82,8 @@ Description: "Exemple d'un tiers qui est à la fois fournisseur (vend des marcha
 * extension[bankAccount][0].extension[bic].valueString = "CRLYFRPP"
 * extension[bankAccount][0].extension[ediEnabled].valueBoolean = true
 * extension[bankAccount][0].extension[factoringEnabled].valueBoolean = false
-* extension[bankAccount][0].extension[paymentMethod][0].valueCodeableConcept = http://cpage.org/fhir/CodeSystem/moyen-paiement#VIREMENT "Virement"
-* extension[bankAccount][0].extension[paymentMethod][1].valueCodeableConcept = http://cpage.org/fhir/CodeSystem/moyen-paiement#VIREMENT_APPLI_EXT "Virement application externe"
+* extension[bankAccount][0].extension[paymentMethod][0].valueCodeableConcept = https://www.cpage.fr/ig/masterdata/common/CodeSystem/moyen-paiement-cs#VIREMENT "Virement bancaire"
+* extension[bankAccount][0].extension[paymentMethod][1].valueCodeableConcept = https://www.cpage.fr/ig/masterdata/common/CodeSystem/moyen-paiement-cs#VIREMENT_APPLI_EXT "Virement via application externe"
 
 // === Second compte bancaire (Pour séparer flux importants) ===
 * extension[bankAccount][1].extension[bankCode].valueString = "30004"
@@ -94,5 +94,5 @@ Description: "Exemple d'un tiers qui est à la fois fournisseur (vend des marcha
 * extension[bankAccount][1].extension[bic].valueString = "BNPAFRPP"
 * extension[bankAccount][1].extension[ediEnabled].valueBoolean = false
 * extension[bankAccount][1].extension[factoringEnabled].valueBoolean = false
-* extension[bankAccount][1].extension[paymentMethod][0].valueCodeableConcept = http://cpage.org/fhir/CodeSystem/moyen-paiement#VIREMENT_GROS_MONTANT "Virement gros montant"
-* extension[bankAccount][1].extension[paymentMethod][1].valueCodeableConcept = http://cpage.org/fhir/CodeSystem/moyen-paiement#CHEQUE "Chèque"
+* extension[bankAccount][1].extension[paymentMethod][0].valueCodeableConcept = https://www.cpage.fr/ig/masterdata/common/CodeSystem/moyen-paiement-cs#VIREMENT_GROS_MONTANT "Virement gros montant"
+* extension[bankAccount][1].extension[paymentMethod][1].valueCodeableConcept = https://www.cpage.fr/ig/masterdata/common/CodeSystem/moyen-paiement-cs#CHEQUE "Chèque"

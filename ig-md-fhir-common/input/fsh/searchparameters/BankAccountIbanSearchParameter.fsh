@@ -3,13 +3,13 @@
 // Permet de rechercher un tiers par son IBAN
 // =============================================
 
-Instance: BankAccountIbanSearchParameter
+Instance: bank-account-iban
 InstanceOf: SearchParameter
 Usage: #definition
 Title: "Search Tiers by IBAN"
 Description: "Permet de rechercher un tiers par son IBAN (International Bank Account Number). Utile pour identifier le bénéficiaire d'un virement ou l'émetteur d'un paiement."
 
-* url = "http://cpage.org/fhir/SearchParameter/bank-account-iban"
+* url = "https://www.cpage.fr/ig/masterdata/common/SearchParameter/bank-account-iban"
 * version = "1.0.0"
 * name = "BankAccountIbanSearchParameter"
 * status = #active
@@ -25,8 +25,8 @@ Description: "Permet de rechercher un tiers par son IBAN (International Bank Acc
 * code = #bank-account-iban
 * base = #Organization
 * type = #string
-* expression = "Organization.extension('http://cpage.org/fhir/StructureDefinition/gef-bank-account').extension('iban').value.ofType(string)"
-* xpath = "f:Organization/f:extension[@url='http://cpage.org/fhir/StructureDefinition/gef-bank-account']/f:extension[@url='iban']/f:valueString"
+* expression = "Organization.extension('https://www.cpage.fr/ig/masterdata/common/StructureDefinition/tiers-bank-account').extension('iban').value.ofType(string)"
+* xpath = "f:Organization/f:extension[@url='https://www.cpage.fr/ig/masterdata/common/StructureDefinition/tiers-bank-account']/f:extension[@url='iban']/f:valueString"
 * xpathUsage = #normal
 * multipleOr = true
 * multipleAnd = false

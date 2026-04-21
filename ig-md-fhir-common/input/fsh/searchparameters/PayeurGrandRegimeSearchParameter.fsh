@@ -3,13 +3,13 @@
 // Permet de rechercher un payeur santé par son grand régime
 // =============================================
 
-Instance: PayeurGrandRegimeSearchParameter
+Instance: payeur-grand-regime
 InstanceOf: SearchParameter
 Usage: #definition
 Title: "Search Payeur Santé by Grand Régime"
 Description: "Permet de rechercher un payeur santé par son grand régime: Sécurité Sociale (SS), MSA, RSI, CNAV, Mutuelle."
 
-* url = "http://cpage.org/fhir/SearchParameter/payeur-grand-regime"
+* url = "https://www.cpage.fr/ig/masterdata/common/SearchParameter/payeur-grand-regime"
 * version = "1.0.0"
 * name = "PayeurGrandRegimeSearchParameter"
 * status = #active
@@ -25,8 +25,8 @@ Description: "Permet de rechercher un payeur santé par son grand régime: Sécu
 * code = #payeur-grand-regime
 * base = #Organization
 * type = #token
-* expression = "Organization.extension('http://cpage.org/fhir/StructureDefinition/payeur-sante-extension').extension('grandRegime').value.ofType(code)"
-* xpath = "f:Organization/f:extension[@url='http://cpage.org/fhir/StructureDefinition/payeur-sante-extension']/f:extension[@url='grandRegime']/f:valueCode"
+* expression = "Organization.extension('https://www.cpage.fr/ig/masterdata/common/StructureDefinition/payeur-sante-extension').extension('grandRegime').value.ofType(code)"
+* xpath = "f:Organization/f:extension[@url='https://www.cpage.fr/ig/masterdata/common/StructureDefinition/payeur-sante-extension']/f:extension[@url='grandRegime']/f:valueCode"
 * xpathUsage = #normal
 * multipleOr = true
 * multipleAnd = false

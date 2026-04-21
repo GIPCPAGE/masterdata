@@ -6,7 +6,7 @@ CodeSystem: GrandRegimeCS
 Id: grand-regime-cs
 Title: "Grands régimes de Sécurité sociale"
 Description: "Principaux régimes de Sécurité sociale et organismes payeurs en France"
-* ^url = "http://cpage.org/fhir/CodeSystem/grand-regime-cs"
+* ^url = "https://www.cpage.fr/ig/masterdata/common/CodeSystem/grand-regime-cs"
 * ^version = "1.0.0"
 * ^status = #active
 * ^experimental = false

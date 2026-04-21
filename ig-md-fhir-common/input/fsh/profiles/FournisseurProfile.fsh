@@ -1,18 +1,18 @@
 // =============================================
-// Profil Fournisseur (GEF)
-// Conforme au message EFOU des interfaces GEF
+// Profil Fournisseur
+// Conforme au interface fournisseurs des interfaces
 // =============================================
 
 Profile: FournisseurProfile
 Parent: TiersProfile
 Id: fournisseur-profile
-Title: "Fournisseur (GEF)"
-Description: "Profil fournisseur conforme au message EFOU (Extraction Fournisseurs) des interfaces GEF. Hérite du profil TiersProfile et ajoute les contraintes spécifiques aux fournisseurs."
+Title: "Fournisseur"
+Description: "Profil fournisseur conforme au interface fournisseurs (Extraction Fournisseurs) des interfaces. Hérite du profil TiersProfile et ajoute les contraintes spécifiques aux fournisseurs."
 
-// Extension pour qualifier le type d'identifiant selon GEF
-* identifier.extension contains GEFIdentifierType named gefType 0..1 MS
-* identifier.extension[gefType] ^short = "Type d'identifiant selon GEF (codes 01-09)"
-* identifier.extension[gefType] ^definition = "Qualifie le type d'identifiant (SIRET, SIREN, FINESS, NIR, TVA, hors UE, Tahiti, RIDET, en cours). Correspond au champ 'Type identifiant fournisseur' position 239-5 du message EFOU."
+// Extension pour qualifier le type d'identifiant selon
+* identifier.extension contains TiersIdentifierType named gefType 0..1 MS
+* identifier.extension[gefType] ^short = "Type d'identifiant selon (codes 01-09)"
+* identifier.extension[gefType] ^definition = "Qualifie le type d'identifiant (SIRET, SIREN, FINESS, NIR, TVA, hors UE, Tahiti, RIDET, en cours). Correspond au champ 'Type identifiant fournisseur' position 239-5 du interface fournisseurs."
 
 // Numéro fournisseur (position 4-14 EFOU) - mappé sur etierId du parent
 * identifier[etierId] ^short = "Numéro fournisseur (EFOU position 4-14)"
@@ -42,4 +42,4 @@ Description: "Profil fournisseur conforme au message EFOU (Extraction Fournisseu
 
 // Domiciliation bancaire (RIB) - via extension héritée, utilisée dans EMAF
 * extension[bankAccount] ^short = "RIB fournisseur (EMAF)"
-* extension[bankAccount] ^definition = "Coordonnées bancaires pour paiements fournisseurs. Utilisé dans message EMAF (Marchés Fournisseurs)."
+* extension[bankAccount] ^definition = "Coordonnées bancaires pour paiements fournisseurs. Utilisé dans interface bancaire (Marchés Fournisseurs)."

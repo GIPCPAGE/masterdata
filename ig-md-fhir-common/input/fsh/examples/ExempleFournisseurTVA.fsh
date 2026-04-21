@@ -17,10 +17,10 @@ Description: "Exemple d'une société étrangère européenne en tant que fourni
 * name = "MedTech Solutions GmbH"
 * alias = "MedTech Solutions"
 
-* extension[tgCategory].valueCodeableConcept = http://cpage.org/fhir/CodeSystem/gef-tg-category-cs#50 "Personne morale de droit privé"
-* extension[legalNature].valueCodeableConcept = http://cpage.org/fhir/CodeSystem/gef-legal-nature-cs#03 "Société"
+* extension[tgCategory].valueCodeableConcept = https://www.cpage.fr/ig/masterdata/common/CodeSystem/tiers-category-cs#50 "Personne morale de droit privé"
+* extension[legalNature].valueCodeableConcept = https://www.cpage.fr/ig/masterdata/common/CodeSystem/tiers-legal-nature-cs#03 "Société"
 
-* extension[tiersRole].valueCoding = http://cpage.org/fhir/CodeSystem/tiers-role-cs#supplier "Fournisseur"
+* extension[tiersRole].valueCoding = https://www.cpage.fr/ig/masterdata/common/CodeSystem/tiers-role-cs#supplier "Fournisseur"
 
 * extension[bankAccount][0].extension[iban].valueString = "DE89370400440532013000"
 * extension[bankAccount][0].extension[bic].valueString = "COBADEFFXXX"

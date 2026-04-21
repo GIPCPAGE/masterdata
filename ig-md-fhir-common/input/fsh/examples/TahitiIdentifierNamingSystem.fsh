@@ -15,11 +15,11 @@ Description: "NamingSystem pour les identifiants Tahiti utilisés en Polynésie 
 * contact.name = "CPage"
 * contact.telecom.system = #email
 * contact.telecom.value = "contact@cpage.fr"
-* description = "Système d'identification des entreprises et établissements en Polynésie française (Tahiti). Type identifiant GEF: 07"
+* description = "Système d'identification des entreprises et établissements en Polynésie française (Tahiti). Type identifiant: 07"
 * jurisdiction = urn:iso:std:iso:3166#PF "Polynésie française"
 
 * uniqueId[0].type = #uri
-* uniqueId[0].value = "http://cpage.org/fhir/NamingSystem/tahiti-identifier"
+* uniqueId[0].value = "https://www.cpage.fr/ig/masterdata/common/NamingSystem/tahiti-identifier"
 * uniqueId[0].preferred = true
 * uniqueId[0].comment = "URI temporaire en attente d'OID officiel"
 

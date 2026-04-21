@@ -11,7 +11,7 @@ Description: "Exemple de payeur santé du régime complémentaire (mutuelle). Il
 * identifier[etierId].value = "MGEN000001"
 
 * active = true
-* type = https://mos.esante.gouv.fr/NOS/TRE_R66-CategorieEtablissement/FHIR/TRE-R66-CategorieEtablissement#63 "Mutuelle"
+* type = https://www.cpage.fr/ig/masterdata/common/CodeSystem/tiers-category-cs#64 "Mutuelle et organisme d'assurance"
 
 * name = "MGEN - Mutuelle Générale de l'Éducation Nationale"
 * alias = "MGEN"
@@ -33,19 +33,19 @@ Description: "Exemple de payeur santé du régime complémentaire (mutuelle). Il
 * address.country = "FR"
 
 // Rôle: Payeur uniquement
-* extension[tiersRole][0].valueCoding = http://cpage.org/fhir/CodeSystem/tiers-role-cs#payer
+* extension[tiersRole][0].valueCoding = https://www.cpage.fr/ig/masterdata/common/CodeSystem/tiers-role-cs#payer
 
 // Nature juridique
-* extension[legalNature].valueCodeableConcept = http://cpage.org/fhir/CodeSystem/gef-legal-nature-cs#04 "Association"
+* extension[legalNature].valueCodeableConcept = https://www.cpage.fr/ig/masterdata/common/CodeSystem/tiers-legal-nature-cs#05 "Caisse complémentaire"
 
 // TG Category
-* extension[tgCategory].valueCodeableConcept = https://mos.esante.gouv.fr/NOS/TRE_R66-CategorieEtablissement/FHIR/TRE-R66-CategorieEtablissement#63 "Mutuelle"
+* extension[tgCategory].valueCodeableConcept = https://www.cpage.fr/ig/masterdata/common/CodeSystem/tiers-category-cs#64 "Mutuelle et organisme d'assurance"
 
 // === Extension Payeur Santé ===
 * extension[payeurSante].extension[typePayeur].valueString = "RC"
 * extension[payeurSante].extension[codeCentre].valueString = "999"
 * extension[payeurSante].extension[numeroCaisse].valueString = "99901"
-* extension[payeurSante].extension[grandRegime].valueCodeableConcept = http://cpage.org/fhir/CodeSystem/grand-regime-cs#MUTUELLE
+* extension[payeurSante].extension[grandRegime].valueCodeableConcept = https://www.cpage.fr/ig/masterdata/common/CodeSystem/grand-regime-cs#MUTUELLE
 * extension[payeurSante].extension[numeroOrganisme].valueString = "509941"
 * extension[payeurSante].extension[flagEclatement].valueString = "true"
 * extension[payeurSante].extension[delaiPec].valueInteger = 60

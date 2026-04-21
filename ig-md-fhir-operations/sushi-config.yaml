@@ -30,7 +30,8 @@ parameters:
   generate-snapshot: true
 
 dependencies:
-  hl7.fhir.fr.core: 2.1.0
+  hl7.fhir.fr.core: 2.2.0
+  ig.mdm.fhir.common: dev
 
 pages:
   index.md:

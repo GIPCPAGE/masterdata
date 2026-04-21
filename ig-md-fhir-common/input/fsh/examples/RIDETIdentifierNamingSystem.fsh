@@ -15,11 +15,11 @@ Description: "NamingSystem pour le RIDET (Répertoire d'IDEntification des Entre
 * contact.name = "CPage"
 * contact.telecom.system = #email
 * contact.telecom.value = "contact@cpage.fr"
-* description = "RIDET - Répertoire d'IDEntification des Entreprises et des Établissements de Nouvelle-Calédonie. Équivalent du SIRET français pour la Nouvelle-Calédonie. Type identifiant GEF: 08"
+* description = "RIDET - Répertoire d'IDEntification des Entreprises et des Établissements de Nouvelle-Calédonie. Équivalent du SIRET français pour la Nouvelle-Calédonie. Type identifiant: 08"
 * jurisdiction = urn:iso:std:iso:3166#NC "Nouvelle-Calédonie"
 
 * uniqueId[0].type = #uri
-* uniqueId[0].value = "http://cpage.org/fhir/NamingSystem/ridet-identifier"
+* uniqueId[0].value = "https://www.cpage.fr/ig/masterdata/common/NamingSystem/ridet-identifier"
 * uniqueId[0].preferred = true
 * uniqueId[0].comment = "URI temporaire en attente d'OID officiel"
 

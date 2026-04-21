@@ -1,0 +1,139 @@
+{
+  "resourceType": "CodeSystem",
+  "id": "communes-fr-cs-extrait",
+  "meta": {
+    "profile": [
+      "http://hl7.org/fhir/StructureDefinition/shareablecodesystem"
+    ]
+  },
+  "text": {
+    "status": "additional",
+    "div": "<div xmlns=\"http://www.w3.org/1999/xhtml\"><p>Extrait illustratif du CodeSystem des communes françaises (COG INSEE). Présente les 3 patrons structurels : commune historique inactive (fusion), commune nouvelle active, commune déléguée imbriquée.</p></div>"
+  },
+  "url": "https://www.cpage.fr/ig/masterdata/common/CodeSystem/communes-fr-cs",
+  "version": "2026.1.0",
+  "name": "CommunesFrancaisesCodeSystem",
+  "title": "Communes françaises (COG INSEE) — Extrait 3 communes",
+  "status": "active",
+  "experimental": true,
+  "date": "2026-01-01",
+  "publisher": "CPage",
+  "contact": [
+    {
+      "telecom": [
+        {
+          "system": "url",
+          "value": "https://www.cpage.fr"
+        }
+      ]
+    }
+  ],
+  "description": "Extrait illustratif avec 3 communes représentant les 3 patrons du COG INSEE :\n- Patron A : commune historique inactive (fusionnée)\n- Patron B : commune nouvelle active (avec 2 codes postaux)\n- Patron B' : commune déléguée imbriquée (sous-concept de la commune nouvelle)",
+  "copyright": "Source : INSEE — Code Officiel Géographique (COG). Données publiques sous Licence Ouverte 2.0.",
+  "caseSensitive": false,
+  "hierarchyMeaning": "part-of",
+  "content": "fragment",
+  "property": [
+    {
+      "code": "inactive",
+      "uri": "http://hl7.org/fhir/concept-properties#inactive",
+      "description": "Indique si la commune est inactive (fusionnée, supprimée ou transformée en commune déléguée).",
+      "type": "boolean"
+    },
+    {
+      "code": "dateCreation",
+      "description": "Date de création ou d'entrée en vigueur du code commune.",
+      "type": "dateTime"
+    },
+    {
+      "code": "dateSuppression",
+      "description": "Date de fusion ou de suppression administrative (concepts inactifs uniquement).",
+      "type": "dateTime"
+    },
+    {
+      "code": "successeur",
+      "description": "Code INSEE de la commune absorbante lors d'une fusion.",
+      "type": "code"
+    },
+    {
+      "code": "predecesseur",
+      "description": "Code(s) INSEE des communes absorbées lors de la création d'une commune nouvelle. Propriété répétable.",
+      "type": "code"
+    },
+    {
+      "code": "codePostal",
+      "description": "Code(s) postal(aux) rattaché(s) à la commune. Propriété répétable.",
+      "type": "string"
+    },
+    {
+      "code": "typeTerritoire",
+      "description": "Nature administrative : commune | commune-nouvelle | commune-deleguee.",
+      "type": "code"
+    },
+    {
+      "code": "codeDepartement",
+      "description": "Code département INSEE (2 ou 3 caractères).",
+      "type": "code"
+    },
+    {
+      "code": "codeRegion",
+      "description": "Code région INSEE (réforme 2016). Ex : 84 = Auvergne-Rhône-Alpes.",
+      "type": "code"
+    },
+    {
+      "code": "communeNouvelle",
+      "description": "Sur une commune déléguée : code INSEE de la commune nouvelle parente. Permet la résolution via $lookup.",
+      "type": "code"
+    }
+  ],
+  "concept": [
+    {
+      "_comment_patron": "PATRON A — Commune historique inactive (fusionnée dans 69264 au 01/01/2019)",
+      "code": "69282",
+      "display": "Saint-Jean-d'Ardières",
+      "definition": "Ancienne commune du Rhône, fusionnée dans Belleville-en-Beaujolais (69264) au 01/01/2019.",
+      "property": [
+        { "code": "inactive",        "valueBoolean":  true            },
+        { "code": "typeTerritoire",  "valueCode":     "commune"       },
+        { "code": "codePostal",      "valueString":   "69220"         },
+        { "code": "codeDepartement", "valueCode":     "69"            },
+        { "code": "codeRegion",      "valueCode":     "84"            },
+        { "code": "dateCreation",    "valueDateTime": "1943-01-01"    },
+        { "code": "dateSuppression", "valueDateTime": "2019-01-01"    },
+        { "code": "successeur",      "valueCode":     "69264"         }
+      ]
+    },
+    {
+      "_comment_patron": "PATRON B — Commune nouvelle active (créée le 01/01/2019)",
+      "code": "69264",
+      "display": "Belleville-en-Beaujolais",
+      "definition": "Commune nouvelle du Rhône créée au 01/01/2019, regroupant Belleville-sur-Saône (69019) et Saint-Jean-d'Ardières (69282).",
+      "property": [
+        { "code": "typeTerritoire",  "valueCode":     "commune-nouvelle" },
+        { "code": "codePostal",      "valueString":   "69220"            },
+        { "code": "codePostal",      "valueString":   "69430"            },
+        { "code": "codeDepartement", "valueCode":     "69"               },
+        { "code": "codeRegion",      "valueCode":     "84"               },
+        { "code": "dateCreation",    "valueDateTime": "2019-01-01"       },
+        { "code": "predecesseur",    "valueCode":     "69019"            },
+        { "code": "predecesseur",    "valueCode":     "69282"            }
+      ],
+      "concept": [
+        {
+          "_comment_patron": "PATRON B' — Commune déléguée imbriquée (sous-concept de 69264)",
+          "code": "69019",
+          "display": "Belleville-sur-Saône (déléguée)",
+          "definition": "Commune déléguée de Belleville-en-Beaujolais. Ancienne ville-centre, conserve son code INSEE d'origine. La propriété communeNouvelle permet de remonter vers 69264 via $lookup.",
+          "property": [
+            { "code": "typeTerritoire",  "valueCode":     "commune-deleguee" },
+            { "code": "codePostal",      "valueString":   "69220"            },
+            { "code": "codeDepartement", "valueCode":     "69"               },
+            { "code": "codeRegion",      "valueCode":     "84"               },
+            { "code": "dateCreation",    "valueDateTime": "2019-01-01"       },
+            { "code": "communeNouvelle", "valueCode":     "69264"            }
+          ]
+        }
+      ]
+    }
+  ]
+}
