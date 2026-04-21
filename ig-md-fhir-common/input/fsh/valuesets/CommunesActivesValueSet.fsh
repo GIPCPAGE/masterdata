@@ -1,46 +1,44 @@
 // =============================================
-// ValueSet: Communes françaises actives (COG INSEE / TRE-R13)
+// ValueSet: Communes françaises actives
 // =============================================
-// Filtre les communes actives (non fusionnées, non supprimées) du CodeSystem
-// TRE-R13-CommuneOM référencé par le SMT e-santé.
+// Filtre les communes actives du CodeSystem communes-fr-cs :
+//   inactive = false → communes actuellement en vigueur
+//
+// Inclut :
+//   - communes ordinaires actives (typeTerritoire = commune)
+//   - communes nouvelles actives (typeTerritoire = commune-nouvelle)
+//   - communes déléguées actives (typeTerritoire = commune-deleguee)
 //
 // Usage recommandé :
 //   - Saisie d'adresse (champ commune) dans un formulaire
-//   - Validation du code commune INSEE d'un patient ou d'un établissement
-//
-// Pour un formulaire de saisie simplifié (sans les communes déléguées),
-// combiner ce filtre avec typeTerritoire != commune-deleguee.
+//   - Validation du code commune INSEE dans une ressource FHIR
 
-ValueSet: CommunesActivesValueSet
-Id: fr-communes-actives
+ValueSet: CommunesFrancaisesActivesValueSet
+Id: communes-fr-actives-vs
 Title: "Communes françaises actives (COG INSEE)"
 Description: """
 Ensemble des communes françaises actuellement actives selon le Code Officiel
-Géographique (COG) de l'INSEE, tel qu'exposé par le SMT e-santé.
+Géographique (COG) de l'INSEE.
 
 Ce ValueSet filtre les concepts dont la propriété `inactive` est `false`,
-excluant ainsi les anciennes communes historiques devenues inactives lors de
-fusions ou suppressions administratives.
+excluant ainsi les anciennes communes fusionnées ou supprimées.
 
-Il inclut les communes nouvelles et les communes déléguées actives.
-Pour n'inclure que les communes et communes nouvelles (interface de saisie),
-filtrer également sur `typeTerritoire` ≠ `commune-deleguee`.
+Il inclut les communes ordinaires, les communes nouvelles et les communes déléguées actives.
 
-**CodeSystem source** : https://smt.esante.gouv.fr/fhir/CodeSystem/TRE-R13-CommuneOM
+**CodeSystem source** : `https://www.cpage.fr/ig/masterdata/common/CodeSystem/communes-fr-cs`
 """
 
-* ^url = "https://smt.esante.gouv.fr/fhir/ValueSet/fr-communes-actives"
+* ^url = "https://www.cpage.fr/ig/masterdata/common/ValueSet/communes-fr-actives-vs"
 * ^status = #active
 * ^experimental = false
-* ^date = "2025-01-01"
-* ^publisher = "INSEE"
-* ^contact.name = "INSEE"
+* ^date = "2026-01-01"
+* ^publisher = "CPage"
 * ^contact.telecom.system = #url
-* ^contact.telecom.value = "https://www.insee.fr"
-* ^copyright = "INSEE — données publiques"
+* ^contact.telecom.value = "https://www.cpage.fr"
+* ^copyright = "Source : INSEE — Code Officiel Géographique (COG). Données publiques sous Licence Ouverte 2.0."
 * ^immutable = false
 
-* ^compose.include[+].system = "https://smt.esante.gouv.fr/fhir/CodeSystem/TRE-R13-CommuneOM"
+* ^compose.include[+].system = "https://www.cpage.fr/ig/masterdata/common/CodeSystem/communes-fr-cs"
 * ^compose.include[=].filter[+].property = #inactive
 * ^compose.include[=].filter[=].op = #=
 * ^compose.include[=].filter[=].value = "false"

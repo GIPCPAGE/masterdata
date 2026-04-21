@@ -9,8 +9,13 @@ Id: tiers-profile
 Title: "Tiers"
 Description: "Profil générique pour la notion de Tiers (commun débiteur/fournisseur), basé sur FR Core Organization. Conforme aux spécifications. Ce profil hérite des slices identifier déjà définis par FR Core (SIREN, SIRET, FINESS) et ajoute les identifiants (NIR, hors UE, Tahiti, RIDET) ainsi qu'un identifiant de TVA intracommunautaire."
 
-// FR Core définit déjà le slicing sur Organization.identifier + slices SIREN/SIRET/FINESS
-// On ajoute uniquement nos slices supplémentaires
+// FR Core 2.2.0 ne définit plus le slicing sur Organization.identifier
+// On le redéfinit ici avec un discriminateur standard (system)
+
+* identifier ^slicing.discriminator.type = #value
+* identifier ^slicing.discriminator.path = "system"
+* identifier ^slicing.rules = #open
+* identifier ^slicing.description = "Identifiants du tiers : SIRET, SIREN, FINESS, TVA, NIR, hors UE, Tahiti, RIDET, identifiant interne"
 
 * identifier 1..* MS
   * system 1..1 MS
@@ -18,6 +23,9 @@ Description: "Profil générique pour la notion de Tiers (commun débiteur/fourn
 
 * identifier contains
     etierId 0..* MS and
+    siret 0..1 MS and
+    siren 0..1 MS and
+    finess 0..1 MS and
     tva 0..1 MS and
     nir 0..1 MS and
     horsUE 0..1 MS and
@@ -135,12 +143,15 @@ Description: "Profil générique pour la notion de Tiers (commun débiteur/fourn
 // Extensions spécifiques Payeur Santé (optionnelles, utilisées si le tiers a le rôle payer)
 * extension contains PayeurSanteExtension named payeurSante 0..1 MS
 
-// Note: FR Core Organization hérite déjà des contraintes suivantes :
-// - identifier[siren] : SIREN (9 chiffres) - system = https://sirene.fr
-// - identifier[siret] : SIRET (14 chiffres) - system = https://sirene.fr
-// - identifier[finess] : FINESS - system = http://finess.sante.gouv.fr
-// Ces slices sont automatiquement disponibles et ne doivent pas être redéfinis ici.
+// Slices SIREN / SIRET / FINESS (redéfinis ici car FR Core 2.2.0 ne les expose plus)
+* identifier[siret].system = "https://sirene.fr" (exactly)
+* identifier[siret].value 1..1
+* identifier[siret] ^short = "Numéro SIRET (14 chiffres)"
 
-// On retire les slices hérités non souhaités
-* identifier[adeliRang] 0..0
-* identifier[rppsRang] 0..0
+* identifier[siren].system = "https://sirene.fr" (exactly)
+* identifier[siren].value 1..1
+* identifier[siren] ^short = "Numéro SIREN (9 chiffres)"
+
+* identifier[finess].system = "http://finess.sante.gouv.fr" (exactly)
+* identifier[finess].value 1..1
+* identifier[finess] ^short = "Numéro FINESS"

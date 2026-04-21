@@ -22,26 +22,26 @@ Il permet aux systèmes FHIR d'identifier sans ambiguïté l'autorité émettric
 communes INSEE, et de faire le lien avec les anciens identifiants OID des flux legacy.
 """
 
-* name = "INSEECodeOfficielGeographiqueCommune"
+* name = "CPageCodeOfficielGeographiqueCommune"
 * status = #active
 * kind = #codesystem
-* date = "2025-01-01"
-* publisher = "INSEE"
-* contact.name = "Institut national de la statistique et des études économiques"
+* date = "2026-01-01"
+* publisher = "CPage"
+* contact.name = "CPage"
 * contact.telecom.system = #url
-* contact.telecom.value = "https://www.insee.fr"
+* contact.telecom.value = "https://www.cpage.fr"
 * responsible = "Institut national de la statistique et des études économiques"
-* description = "Code Officiel Géographique (COG) des communes françaises maintenu par l'INSEE. Diffusé en FHIR via le Serveur Multi-Terminologies (SMT) de l'ANS. Environ 35 000 communes actives, mis à jour chaque 1er janvier."
+* description = "Code Officiel Géographique (COG) des communes françaises maintenu par l'INSEE, exposé dans cet IG via le CodeSystem CPage. Environ 35 000 communes actives, mis à jour chaque 1er janvier."
 * jurisdiction = urn:iso:std:iso:3166#FR "France"
 
-// URI canonique — exposition SMT e-santé, à utiliser dans les ressources FHIR R4
+// URI canonique CPage — à utiliser dans les ressources FHIR de cet IG
 * uniqueId[+].type = #uri
-* uniqueId[=].value = "https://smt.esante.gouv.fr/fhir/CodeSystem/TRE-R13-CommuneOM"
+* uniqueId[=].value = "https://www.cpage.fr/ig/masterdata/common/CodeSystem/communes-fr-cs"
 * uniqueId[=].preferred = true
-* uniqueId[=].comment = "URI officielle exposée par le SMT (ANS). À utiliser dans les valueCoding FHIR."
+* uniqueId[=].comment = "URI canonique du CodeSystem CPage pour les communes COG INSEE."
 
-// OID officiel — interopérabilité CDA / HL7 v2 / flux legacy
+// OID officiel INSEE — interopérabilité CDA / HL7 v2 / flux legacy
 * uniqueId[+].type = #oid
 * uniqueId[=].value = "1.2.250.1.213.2.12"
 * uniqueId[=].preferred = false
-* uniqueId[=].comment = "OID officiel ANS pour le COG communes. À utiliser dans les échanges CDA et HL7 v2."
+* uniqueId[=].comment = "OID officiel INSEE pour le COG communes. À utiliser dans les échanges CDA et HL7 v2."

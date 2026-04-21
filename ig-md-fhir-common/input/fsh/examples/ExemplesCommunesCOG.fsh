@@ -1,8 +1,8 @@
 // =============================================
-// Exemples — Communes françaises (COG INSEE / TRE-R13)
+// Exemples — Communes françaises (COG INSEE)
 // =============================================
 // Ces instances illustrent les trois patrons d'utilisation du CodeSystem
-// TRE-R13-CommuneOM dans les ressources FHIR de cet IG.
+// communes-fr-cs dans les ressources FHIR de cet IG.
 //
 // Alias utile (le CodeSystem est externe, pas de profil à importer)
 // Alias déjà déclaré dans aliases.fsh si besoin; on utilise l'URL directement.
@@ -50,7 +50,7 @@ retourne immédiatement `69264`, sans ambiguïté et sans table de jointure exte
 * address.city = "Belleville-en-Beaujolais"
 // Extension fr-core sur l'adresse → code INSEE de la COMMUNE DÉLÉGUÉE
 * address.extension[+].url = "https://hl7.fr/ig/fhir/core/StructureDefinition/fr-core-address-insee-code"
-* address.extension[=].valueCoding.system = "https://smt.esante.gouv.fr/fhir/CodeSystem/TRE-R13-CommuneOM"
+* address.extension[=].valueCoding.system = "https://www.cpage.fr/ig/masterdata/common/CodeSystem/communes-fr-cs"
 * address.extension[=].valueCoding.code = #69282
 * address.extension[=].valueCoding.display = "Saint-Jean-d'Ardières"
 * address.line = "14 Route des Vignes"
@@ -86,7 +86,7 @@ nécessite aucune résolution de commune déléguée.
 * address.city = "Belleville-en-Beaujolais"
 // Extension fr-core sur l'adresse → code INSEE de la commune NOUVELLE
 * address.extension[+].url = "https://hl7.fr/ig/fhir/core/StructureDefinition/fr-core-address-insee-code"
-* address.extension[=].valueCoding.system = "https://smt.esante.gouv.fr/fhir/CodeSystem/TRE-R13-CommuneOM"
+* address.extension[=].valueCoding.system = "https://www.cpage.fr/ig/masterdata/common/CodeSystem/communes-fr-cs"
 * address.extension[=].valueCoding.code = #69264
 * address.extension[=].valueCoding.display = "Belleville-en-Beaujolais"
 * address.line = "3 Place de l'Église"
@@ -112,7 +112,7 @@ Usage: #example
 Title: "Parameters — Réponse $lookup : commune déléguée → commune nouvelle"
 Description: """
 Représentation du corps de réponse FHIR de l'opération `$lookup` appliquée sur le
-CodeSystem TRE-R13-CommuneOM pour le code **69282** (Saint-Jean-d'Ardières, déléguée).
+CodeSystem communes-fr-cs pour le code **69282** (Saint-Jean-d'Ardières, déléguée).
 
 La propriété `communeNouvelle` retournée contient **69264** (Belleville-en-Beaujolais),
 permettant à tout système récepteur de résoudre automatiquement la commune parente
@@ -121,7 +121,7 @@ sans table de correspondance externe.
 **Requête HTTP correspondante** :
 ```
 GET [base]/CodeSystem/$lookup
-  ?system=https://smt.esante.gouv.fr/fhir/CodeSystem/TRE-R13-CommuneOM
+  ?system=https://www.cpage.fr/ig/masterdata/common/CodeSystem/communes-fr-cs
   &code=69282
   &property=communeNouvelle
   &property=typeTerritoire
@@ -172,7 +172,7 @@ GET [base]/CodeSystem/$lookup
 //
 // Requête HTTP :
 //   GET [base]/CodeSystem/$lookup
-//     ?system=https://smt.esante.gouv.fr/fhir/CodeSystem/TRE-R13-CommuneOM
+//     ?system=https://www.cpage.fr/ig/masterdata/common/CodeSystem/communes-fr-cs
 //     &code=69282
 //     &property=successeur
 //     &property=dateSuppression
@@ -183,7 +183,7 @@ Usage: #example
 Title: "Parameters — Réponse $lookup : commune inactive → successeur"
 Description: """
 Représentation du corps de réponse FHIR de l'opération `$lookup` appliquée sur le
-CodeSystem TRE-R13-CommuneOM pour le code racine inactif **69282**
+CodeSystem communes-fr-cs pour le code racine inactif **69282**
 (Saint-Jean-d'Ardières, commune historique fusionnée le 01/01/2019).
 
 La propriété `successeur` retournée contient **69264** (Belleville-en-Beaujolais),
@@ -195,7 +195,7 @@ commune active actuelle lors d'une migration de base de données d'adresses.
 **Requête HTTP correspondante** :
 ```
 GET [base]/CodeSystem/$lookup
-  ?system=https://smt.esante.gouv.fr/fhir/CodeSystem/TRE-R13-CommuneOM
+  ?system=https://www.cpage.fr/ig/masterdata/common/CodeSystem/communes-fr-cs
   &code=69282
   &property=successeur
   &property=dateSuppression

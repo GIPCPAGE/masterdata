@@ -2,7 +2,7 @@
 // Exemples — Requêtes par date sur le COG (TRE-R13)
 // =============================================
 // Ces instances illustrent les patrons de requête temporelle sur le CodeSystem
-// TRE-R13-CommuneOM, pour retrouver les communes ayant changé depuis une date donnée.
+// communes-fr-cs, pour retrouver les communes ayant changé depuis une date donnée.
 //
 // Contexte FHIR R4 : les opérateurs de filtre ValueSet (ValueSet.compose.include.filter)
 // sont limités à : =  is-a  descendent-of  is-not-a  regex  in  not-in  generalizes  exists
@@ -51,7 +51,7 @@ Content-Type: application/fhir+json
 * parameter[+].name = "valueSet"
 * parameter[=].resource.resourceType = "ValueSet"
 * parameter[=].resource.status = #active
-* parameter[=].resource.compose.include[+].system = "https://smt.esante.gouv.fr/fhir/CodeSystem/TRE-R13-CommuneOM"
+* parameter[=].resource.compose.include[+].system = "https://www.cpage.fr/ig/masterdata/common/CodeSystem/communes-fr-cs"
 // Filtre 1 : la propriété dateSuppression doit exister (commune inactive/fusionnée)
 * parameter[=].resource.compose.include[=].filter[+].property = #dateSuppression
 * parameter[=].resource.compose.include[=].filter[=].op = #exists
@@ -109,7 +109,7 @@ Content-Type: application/fhir+json
 * parameter[+].name = "valueSet"
 * parameter[=].resource.resourceType = "ValueSet"
 * parameter[=].resource.status = #active
-* parameter[=].resource.compose.include[+].system = "https://smt.esante.gouv.fr/fhir/CodeSystem/TRE-R13-CommuneOM"
+* parameter[=].resource.compose.include[+].system = "https://www.cpage.fr/ig/masterdata/common/CodeSystem/communes-fr-cs"
 * parameter[=].resource.compose.include[=].filter[+].property = #dateCreation
 * parameter[=].resource.compose.include[=].filter[=].op = #regex
 // Expression : tout code dont dateCreation commence par "2025" (ISO 8601 : 2025-MM-DD)

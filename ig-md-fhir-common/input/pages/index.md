@@ -6,7 +6,7 @@
 
 Ce **Guide d'Implémentation FHIR** définit les ressources communes pour deux axes complémentaires :
 
-1. **Tiers** — profiler et échanger les données sur les organisations tierces (fournisseurs, clients, organismes payeurs) dans le secteur hospitalier français, modélisés comme des ressources `Organization` enrichies d'extensions métier.
+1. **Tiers** — profiler et échanger les données sur les organisations tierces (fournisseurs, débiteurs, organismes payeurs) dans le secteur hospitalier français, modélisés comme des ressources `Organization` enrichies d'extensions métier.
 2. **Nomenclatures géographiques** — exposer les communes françaises du Code Officiel Géographique (COG/INSEE) via la terminologie nationale **TRE-R13** de l'ANS, sous forme de `CodeSystem`, `ValueSet` et `NamingSystem` FHIR standard.
 
 Ce guide est **interopérable**, basé sur le **standard national FR Core 2.1.0** (HL7 France) et s'appuie sur les référentiels nationaux de l'ANS.

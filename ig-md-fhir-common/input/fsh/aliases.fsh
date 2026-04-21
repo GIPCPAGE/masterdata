@@ -15,5 +15,5 @@ Alias: $id-etier = urn:oid:1.2.250.1.999.1.1.1
 // Pour le numero de TVA l'OID est correct : 
 Alias: $id-tva = urn:oid:1.2.250.1.69.1.1011
 
-// Terminologies géographiques — SMT e-santé (ANS)
-Alias: $TRE-R13-CommuneOM = https://smt.esante.gouv.fr/fhir/CodeSystem/TRE-R13-CommuneOM
+// Terminologies géographiques — CPage (communes COG INSEE)
+Alias: $communes-fr-cs = https://www.cpage.fr/ig/masterdata/common/CodeSystem/communes-fr-cs

@@ -219,119 +219,27 @@
       {
         "id": "Organization.identifier",
         "path": "Organization.identifier",
+        "slicing": {
+          "discriminator": [
+            {
+              "type": "value",
+              "path": "system"
+            }
+          ],
+          "rules": "open",
+          "description": "Identifiants du tiers : SIRET, SIREN, FINESS, TVA, NIR, hors UE, Tahiti, RIDET, identifiant interne"
+        },
         "min": 1,
         "mustSupport": true
       },
       {
         "id": "Organization.identifier.system",
         "path": "Organization.identifier.system",
+        "min": 1,
         "mustSupport": true
       },
       {
         "id": "Organization.identifier.value",
-        "path": "Organization.identifier.value",
-        "mustSupport": true
-      },
-      {
-        "id": "Organization.identifier:idNatSt",
-        "path": "Organization.identifier",
-        "sliceName": "idNatSt"
-      },
-      {
-        "id": "Organization.identifier:idNatSt.system",
-        "path": "Organization.identifier.system",
-        "min": 1,
-        "mustSupport": true
-      },
-      {
-        "id": "Organization.identifier:idNatSt.value",
-        "path": "Organization.identifier.value",
-        "min": 1,
-        "mustSupport": true
-      },
-      {
-        "id": "Organization.identifier:siren",
-        "path": "Organization.identifier",
-        "sliceName": "siren"
-      },
-      {
-        "id": "Organization.identifier:siren.system",
-        "path": "Organization.identifier.system",
-        "min": 1,
-        "mustSupport": true
-      },
-      {
-        "id": "Organization.identifier:siren.value",
-        "path": "Organization.identifier.value",
-        "min": 1,
-        "mustSupport": true
-      },
-      {
-        "id": "Organization.identifier:siret",
-        "path": "Organization.identifier",
-        "sliceName": "siret"
-      },
-      {
-        "id": "Organization.identifier:siret.system",
-        "path": "Organization.identifier.system",
-        "min": 1,
-        "mustSupport": true
-      },
-      {
-        "id": "Organization.identifier:siret.value",
-        "path": "Organization.identifier.value",
-        "min": 1,
-        "mustSupport": true
-      },
-      {
-        "id": "Organization.identifier:finess",
-        "path": "Organization.identifier",
-        "sliceName": "finess"
-      },
-      {
-        "id": "Organization.identifier:finess.system",
-        "path": "Organization.identifier.system",
-        "min": 1,
-        "mustSupport": true
-      },
-      {
-        "id": "Organization.identifier:finess.value",
-        "path": "Organization.identifier.value",
-        "min": 1,
-        "mustSupport": true
-      },
-      {
-        "id": "Organization.identifier:adeliRang",
-        "path": "Organization.identifier",
-        "sliceName": "adeliRang",
-        "max": "0"
-      },
-      {
-        "id": "Organization.identifier:adeliRang.system",
-        "path": "Organization.identifier.system",
-        "min": 1,
-        "mustSupport": true
-      },
-      {
-        "id": "Organization.identifier:adeliRang.value",
-        "path": "Organization.identifier.value",
-        "min": 1,
-        "mustSupport": true
-      },
-      {
-        "id": "Organization.identifier:rppsRang",
-        "path": "Organization.identifier",
-        "sliceName": "rppsRang",
-        "max": "0"
-      },
-      {
-        "id": "Organization.identifier:rppsRang.system",
-        "path": "Organization.identifier.system",
-        "min": 1,
-        "mustSupport": true
-      },
-      {
-        "id": "Organization.identifier:rppsRang.value",
         "path": "Organization.identifier.value",
         "min": 1,
         "mustSupport": true
@@ -349,7 +257,6 @@
       {
         "id": "Organization.identifier:etierId.type",
         "path": "Organization.identifier.type",
-        "min": 1,
         "patternCodeableConcept": {
           "coding": [
             {
@@ -366,6 +273,48 @@
         "fixedUri": "urn:oid:1.2.250.1.999.1.1.1"
       },
       {
+        "id": "Organization.identifier:siret",
+        "path": "Organization.identifier",
+        "sliceName": "siret",
+        "short": "Numéro SIRET (14 chiffres)",
+        "min": 0,
+        "max": "1",
+        "mustSupport": true
+      },
+      {
+        "id": "Organization.identifier:siret.system",
+        "path": "Organization.identifier.system",
+        "fixedUri": "https://sirene.fr"
+      },
+      {
+        "id": "Organization.identifier:siren",
+        "path": "Organization.identifier",
+        "sliceName": "siren",
+        "short": "Numéro SIREN (9 chiffres)",
+        "min": 0,
+        "max": "1",
+        "mustSupport": true
+      },
+      {
+        "id": "Organization.identifier:siren.system",
+        "path": "Organization.identifier.system",
+        "fixedUri": "https://sirene.fr"
+      },
+      {
+        "id": "Organization.identifier:finess",
+        "path": "Organization.identifier",
+        "sliceName": "finess",
+        "short": "Numéro FINESS",
+        "min": 0,
+        "max": "1",
+        "mustSupport": true
+      },
+      {
+        "id": "Organization.identifier:finess.system",
+        "path": "Organization.identifier.system",
+        "fixedUri": "http://finess.sante.gouv.fr"
+      },
+      {
         "id": "Organization.identifier:tva",
         "path": "Organization.identifier",
         "sliceName": "tva",
@@ -378,7 +327,6 @@
       {
         "id": "Organization.identifier:tva.type",
         "path": "Organization.identifier.type",
-        "min": 1,
         "patternCodeableConcept": {
           "coding": [
             {
@@ -434,7 +382,6 @@
       {
         "id": "Organization.identifier:nir.type",
         "path": "Organization.identifier.type",
-        "min": 1,
         "patternCodeableConcept": {
           "coding": [
             {
@@ -489,7 +436,6 @@
       {
         "id": "Organization.identifier:horsUE.type",
         "path": "Organization.identifier.type",
-        "min": 1,
         "patternCodeableConcept": {
           "coding": [
             {
@@ -544,7 +490,6 @@
       {
         "id": "Organization.identifier:tahiti.type",
         "path": "Organization.identifier.type",
-        "min": 1,
         "patternCodeableConcept": {
           "coding": [
             {
@@ -599,7 +544,6 @@
       {
         "id": "Organization.identifier:ridet.type",
         "path": "Organization.identifier.type",
-        "min": 1,
         "patternCodeableConcept": {
           "coding": [
             {

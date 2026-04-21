@@ -24,13 +24,10 @@ jurisdiction: urn:iso:std:iso:3166#FR "FRANCE"
 
 parameters:
   shownav: true
-  special-url:
-    - https://smt.esante.gouv.fr/fhir/CodeSystem/TRE-R13-CommuneOM
-    - https://smt.esante.gouv.fr/fhir/ValueSet/fr-communes-actives
-    - https://smt.esante.gouv.fr/fhir/ValueSet/fr-communes-cog-complet
+
   
 dependencies:
-  hl7.fhir.fr.core: 2.1.0
+  hl7.fhir.fr.core: 2.2.0
 
 pages:
   index.md:
