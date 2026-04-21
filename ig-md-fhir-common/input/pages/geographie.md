@@ -5,78 +5,47 @@
 Le référentiel expose les **données géographiques officielles françaises** pour valider et normaliser les adresses :
 
 - **~36 000 communes** selon le Code Officiel Géographique (COG) INSEE
-- **~6 000 codes postaux** selon la base La Poste
+- Historique complet : fusions, créations, suppressions (mise à jour annuelle 1er janvier)
 
-### Deux modèles complémentaires
-
-| Modèle | CodeSystem | Usage |
-|--------|------------|-------|
-| **CPage interne** | `communes-insee-cs` (URL CPage) | Legacy, compatibilité systèmes existants |
-| **TRE-R13 (recommandé)** | `fr-commune-cog` — URL ANS SMT | Interopérabilité nationale, communes déléguées, historique fusions |
-
-Pour tout nouveau développement, utiliser le **modèle TRE-R13**.
-
----
-
-## Codes Commune INSEE
-
-Chaque commune française possède un code **5 caractères** : 2 chiffres département + 3 chiffres commune.
+Chaque commune possède un code **5 caractères** : 2 chiffres département + 3 chiffres commune.
 Exemples : Paris = `75056`, Marseille = `13055`, Lyon = `69123`.
 
-**URL** : `https://www.cpage.fr/ig/masterdata/geo/CodeSystem/communes-insee-cs`
-**Source** : [INSEE - Code Officiel Géographique](https://www.insee.fr/fr/information/6800675) — mise à jour annuelle (janvier).
-
-> ⚠ Pour les échanges interopérables, préférer l'extension FR Core `fr-core-address-insee-code` avec le CodeSystem TRE-R13 (voir section suivante).
-
 ---
 
-## Codes Postaux Français
-
-Identifiants La Poste de **5 chiffres**. Un code postal peut couvrir plusieurs communes ; une grande ville peut avoir plusieurs codes postaux (Paris : 20 codes, Lyon : 9 codes, Marseille : 16 codes).
-
-**URL** : `https://www.cpage.fr/ig/masterdata/geo/CodeSystem/codes-postaux-cs`
-**Source** : [La Poste - HEXASIMAL](https://datanova.laposte.fr/datasets/laposte-hexasmal) — mise à jour annuelle.
-
----
-
-## Gestion de l'Historique
-
-Les communes évoluent chaque année (fusions, créations, suppressions). Les propriétés temporelles permettent de valider des adresses historiques.
-
-| Propriété | Description |
-|-----------|-------------|
-| `status` | `active` / `inactive` / `deprecated` |
-| `effectiveDate` | Date d'entrée en vigueur |
-| `deprecationDate` | Date de suppression/fusion |
-| `replacedBy` | Code commune de remplacement |
-| `parent` | Code département (2 chiffres) |
-
----
-
-## Modélisation COG via TRE-R13 (ANS SMT)
-
-### Architecture des ressources
+## Architecture des ressources
 
 | Ressource | Id | Rôle |
 |-----------|-----|------|
-| **CodeSystem** | [`fr-commune-cog`](CodeSystem-fr-commune-cog.html) | Codes COG avec propriétés historiques et hiérarchie `part-of` |
-| **ValueSet** | [`fr-communes-actives`](ValueSet-fr-communes-actives.html) | Communes en vigueur (`inactive = false`) |
-| **ValueSet** | [`fr-communes-cog-complet`](ValueSet-fr-communes-cog-complet.html) | Toutes les communes (actives + historique) |
-| **NamingSystem** | [`insee-cog-commune`](NamingSystem-insee-cog-commune.html) | OID `1.2.250.1.213.2.12` + URI ANS SMT |
+| **CodeSystem** | [`communes-fr-cs`](CodeSystem-communes-fr-cs.html) | Codes COG avec propriétés historiques et hiérarchie `part-of` |
+| **ValueSet** | [`communes-fr-actives-vs`](ValueSet-communes-fr-actives-vs.html) | Communes en vigueur (`inactive = false`) |
+| **NamingSystem** | [`insee-cog-commune`](NamingSystem-insee-cog-commune.html) | OID `1.2.250.1.213.2.12` + URI CPage |
 
-**URL canonique CodeSystem** : `https://smt.esante.gouv.fr/fhir/CodeSystem/TRE-R13-CommuneOM`
+**URL canonique CodeSystem** : `https://www.cpage.fr/ig/masterdata/common/CodeSystem/communes-fr-cs`
+**Source** : [INSEE — Code Officiel Géographique](https://www.insee.fr/fr/information/6800675)
 
-### Quel ValueSet utiliser ?
+---
 
-| Besoin | ValueSet |
-|--------|----------|
-| Saisie d'adresse, validation courante | [`fr-communes-actives`](ValueSet-fr-communes-actives.html) |
-| Migration, audit, données historiques | [`fr-communes-cog-complet`](ValueSet-fr-communes-cog-complet.html) |
+## Propriétés du CodeSystem
 
-### Modèle hiérarchique (`hierarchyMeaning = part-of`)
+| Propriété | Type | Description |
+|-----------|------|-------------|
+| `inactive` | boolean | `true` si la commune a été supprimée ou fusionnée |
+| `dateCreation` | dateTime | Date de création de la commune |
+| `dateSuppression` | dateTime | Date de suppression / fusion |
+| `successeur` | code | Code de la commune qui remplace (en cas de fusion) |
+| `predecesseur` | code | Code(s) des communes absorbées (répétable) |
+| `codePostal` | string | Code(s) postal(aux) associé(s) (répétable) |
+| `typeTerritoire` | code | `commune` \| `commune-nouvelle` \| `commune-deleguee` |
+| `codeDepartement` | code | Code département (2 caractères) |
+| `codeRegion` | code | Code région (2 chiffres) |
+| `communeNouvelle` | code | Si commune déléguée : code de la commune nouvelle parente |
+
+---
+
+## Modèle hiérarchique (`hierarchyMeaning = part-of`)
 
 ```
-CodeSystem TRE-R13-CommuneOM
+CodeSystem communes-fr-cs
 ├── 69282  Saint-Jean-d'Ardières    [inactive=true,  successeur=69264]
 └── 69264  Belleville-en-Beaujolais [inactive=false, typeTerritoire=commune-nouvelle]
     ├── 69282  (déléguée) Saint-Jean-d'Ardières  [typeTerritoire=commune-deleguee]
@@ -93,7 +62,7 @@ Le code `69282` apparaît deux fois : commune historique inactive en racine, et 
 
 ```http
 GET [base]/CodeSystem/$lookup
-  ?system=https://smt.esante.gouv.fr/fhir/CodeSystem/TRE-R13-CommuneOM
+  ?system=https://www.cpage.fr/ig/masterdata/common/CodeSystem/communes-fr-cs
   &code=69282
   &property=communeNouvelle
   &property=typeTerritoire
@@ -108,7 +77,7 @@ Exemple FSH : [`ExempleParametersLookupCommuneNouvelle`](Parameters-ExempleParam
 
 ```http
 GET [base]/CodeSystem/$lookup
-  ?system=https://smt.esante.gouv.fr/fhir/CodeSystem/TRE-R13-CommuneOM
+  ?system=https://www.cpage.fr/ig/masterdata/common/CodeSystem/communes-fr-cs
   &code=69282
   &property=inactive&property=dateSuppression&property=successeur
 ```
@@ -121,21 +90,17 @@ Exemple FSH : [`ExempleParametersLookupSuccesseur`](Parameters-ExempleParameters
 ### `$validate-code` — Vérifier qu'une commune est active
 
 ```http
-GET [base]/ValueSet/fr-communes-actives/$validate-code
-  ?system=https://smt.esante.gouv.fr/fhir/CodeSystem/TRE-R13-CommuneOM
+GET [base]/ValueSet/communes-fr-actives-vs/$validate-code
+  ?system=https://www.cpage.fr/ig/masterdata/common/CodeSystem/communes-fr-cs
   &code=69264
 ```
 
 ---
 
-### `$expand` — Lister les communes
+### `$expand` — Lister les communes actives
 
 ```http
-# Communes actives
-GET [base]/ValueSet/fr-communes-actives/$expand?count=20&offset=0
-
-# Historique complet (actives + inactives)
-GET [base]/ValueSet/fr-communes-cog-complet/$expand?count=100&offset=0
+GET [base]/ValueSet/communes-fr-actives-vs/$expand?count=20&offset=0
 ```
 
 ---

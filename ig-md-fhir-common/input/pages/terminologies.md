@@ -7,7 +7,7 @@
 | Catégorie | Contenu |
 |-----------|---------|
 | **Classifications Tiers** | 10 CodeSystems CPage — natures juridiques, catégories, civilités, rôles, moyens de paiement… |
-| **Nomenclatures géographiques** | Communes COG via TRE-R13 (ANS SMT) → [Données Géographiques COG](geographie.html) |
+| **Nomenclatures géographiques** | Communes COG CPage (`communes-fr-cs`) → [Données Géographiques COG](geographie.html) |
 
 ---
 
