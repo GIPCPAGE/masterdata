@@ -11,7 +11,7 @@ Description: "Exemple de payeur santé du régime complémentaire (mutuelle). Il
 * identifier[etierId].value = "MGEN000001"
 
 * active = true
-* type = https://mos.esante.gouv.fr/NOS/TRE_R66-CategorieEtablissement/FHIR/TRE-R66-CategorieEtablissement#63 "Mutuelle"
+* type = https://www.cpage.fr/ig/masterdata/common/CodeSystem/tiers-category-cs#64 "Mutuelle et organisme d'assurance"
 
 * name = "MGEN - Mutuelle Générale de l'Éducation Nationale"
 * alias = "MGEN"
@@ -39,7 +39,7 @@ Description: "Exemple de payeur santé du régime complémentaire (mutuelle). Il
 * extension[legalNature].valueCodeableConcept = https://www.cpage.fr/ig/masterdata/common/CodeSystem/tiers-legal-nature-cs#05 "Caisse complémentaire"
 
 // TG Category
-* extension[tgCategory].valueCodeableConcept = https://mos.esante.gouv.fr/NOS/TRE_R66-CategorieEtablissement/FHIR/TRE-R66-CategorieEtablissement#63 "Mutuelle"
+* extension[tgCategory].valueCodeableConcept = https://www.cpage.fr/ig/masterdata/common/CodeSystem/tiers-category-cs#64 "Mutuelle et organisme d'assurance"
 
 // === Extension Payeur Santé ===
 * extension[payeurSante].extension[typePayeur].valueString = "RC"

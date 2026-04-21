@@ -13,7 +13,7 @@ Description: "Exemple d'une succursale (point de livraison, facturation, ou site
 * identifier[siret].value = "85211234500026"
 
 * active = true
-* type = https://mos.esante.gouv.fr/NOS/TRE_R66-CategorieEtablissement/FHIR/TRE-R66-CategorieEtablissement#07 "Centre de santé"
+* type = https://www.cpage.fr/ig/masterdata/common/CodeSystem/tiers-category-cs#27 "Établissement public de santé"
 
 * name = "Centre Médical Raspail - Annexe Montparnasse"
 * alias = "CMR Montparnasse"
@@ -39,7 +39,7 @@ Description: "Exemple d'une succursale (point de livraison, facturation, ou site
 * extension[legalNature].valueCodeableConcept = https://www.cpage.fr/ig/masterdata/common/CodeSystem/tiers-legal-nature-cs#03 "Société"
 
 // TG Category
-* extension[tgCategory].valueCodeableConcept = https://mos.esante.gouv.fr/NOS/TRE_R66-CategorieEtablissement/FHIR/TRE-R66-CategorieEtablissement#07 "Centre de santé"
+* extension[tgCategory].valueCodeableConcept = https://www.cpage.fr/ig/masterdata/common/CodeSystem/tiers-category-cs#27 "Établissement public de santé"
 
 // === PARTOF: Rattachement à l'établissement principal ===
 // IMPORTANT: partOf est une relation hiérarchique (runtime), PAS un héritage de profil

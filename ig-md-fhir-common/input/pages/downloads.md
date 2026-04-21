@@ -1,19 +1,23 @@
 ﻿# Téléchargements
 
-Ce guide d'implémentation expose deux axes de ressources FHIR :
-1. **Tiers** — profils `Organization`, extensions, paramètres de recherche
-2. **Nomenclatures géographiques** — CodeSystem communes COG CPage (`communes-fr-cs`), ValueSet communes actives, NamingSystem INSEE
+Ce guide d'implémentation regroupe les ressources FHIR du socle commun CPage MasterData :
+- **Profils Organization** — Tiers, Fournisseur, Débiteur, PayeurSanté, Succursale
+- **Extensions** — rôles, identifiants, coordonnées bancaires, Chorus, conditions de paiement, etc.
+- **Terminologies** — CodeSystems et ValueSets (catégories, civilités, natures juridiques, moyens de paiement, régimes SS, communes COG)
+- **Paramètres de recherche** personnalisés
 
 Le package NPM de cet IG est [téléchargeable ici](package.tgz). Il permet de valider des instances FHIR contre les profils qu'il contient.
 
-Pour l'importer dans un serveur HAPI FHIR, vous pouvez utiliser ce [script python](https://github.com/nmdp-bioinformatics/igloader) open source.
+Pour l'importer dans un serveur HAPI FHIR, vous pouvez utiliser ce [script Python](https://github.com/nmdp-bioinformatics/igloader) open source.
 
 Vous pourrez ensuite utiliser l'opération [$validate](https://www.hl7.org/fhir/resource-operation-validate.html) pour valider les instances de ressource contre un profil issu de cette spécification.
 
-## Ensemble des ressources téléchargeables
+---
 
-* [L'ensemble de la spécification (zip)](full-ig.zip)
-* [Package (tgz)](package.tgz)
+## Ressources téléchargeables
+
+* [Spécification complète (zip)](full-ig.zip)
+* [Package NPM (tgz)](package.tgz)
 
 ### Définitions
 
@@ -25,8 +29,6 @@ Vous pourrez ensuite utiliser l'opération [$validate](https://www.hl7.org/fhir/
 
 * [Exemples XML (zip)](examples.xml.zip)
 * [Exemples JSON (zip)](examples.json.zip)
-
----
 
 ## Contenu du package
 
@@ -57,5 +59,4 @@ Vous pourrez ensuite utiliser l'opération [$validate](https://www.hl7.org/fhir/
 
 ## Voir aussi
 
-- [Données Géographiques COG](geographie.html) — utilisation des terminologies communes
-- [Artifacts de conformité](artifacts.html) — liste complète de toutes les ressources FHIR
+- [Artefacts de conformité](artifacts.html) — liste complète de toutes les ressources FHIR définies dans cet IG

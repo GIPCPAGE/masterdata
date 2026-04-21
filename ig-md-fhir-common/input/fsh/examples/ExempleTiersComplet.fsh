@@ -15,7 +15,7 @@ Description: "Exemple d'un tiers qui cumule trois rôles: fournisseur, débiteur
 * identifier[finess].value = "750012345"
 
 * active = true
-* type = https://mos.esante.gouv.fr/NOS/TRE_R66-CategorieEtablissement/FHIR/TRE-R66-CategorieEtablissement#61 "CPAM"
+* type = https://www.cpage.fr/ig/masterdata/common/CodeSystem/tiers-category-cs#60 "Caisse de sécurité sociale régime général"
 
 * name = "Multiservices Santé et Logistique"
 * alias = "MSL France"
@@ -42,7 +42,7 @@ Description: "Exemple d'un tiers qui cumule trois rôles: fournisseur, débiteur
 * extension[legalNature].valueCodeableConcept = https://www.cpage.fr/ig/masterdata/common/CodeSystem/tiers-legal-nature-cs#03 "Société"
 
 // TG Category
-* extension[tgCategory].valueCodeableConcept = https://mos.esante.gouv.fr/NOS/TRE_R66-CategorieEtablissement/FHIR/TRE-R66-CategorieEtablissement#61 "CPAM"
+* extension[tgCategory].valueCodeableConcept = https://www.cpage.fr/ig/masterdata/common/CodeSystem/tiers-category-cs#60 "Caisse de sécurité sociale régime général"
 
 // === Extensions Fournisseur ===
 * extension[codeFournisseur].valueString = "FRSUP00456"

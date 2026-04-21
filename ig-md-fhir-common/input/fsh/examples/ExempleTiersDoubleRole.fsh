@@ -15,7 +15,7 @@ Description: "Exemple d'un tiers qui est à la fois fournisseur (vend des marcha
 * identifier[tva].value = "FR12453123456"
 
 * active = true
-* type = https://mos.esante.gouv.fr/NOS/TRE_R66-CategorieEtablissement/FHIR/TRE-R66-CategorieEtablissement#03 "Clinique"
+* type = https://www.cpage.fr/ig/masterdata/common/CodeSystem/tiers-category-cs#50 "Personne morale de droit privé"
 
 * name = "Clinique du Parc"
 * alias = "CDP SAS"
@@ -48,7 +48,7 @@ Description: "Exemple d'un tiers qui est à la fois fournisseur (vend des marcha
 * extension[legalNature].valueCodeableConcept = https://www.cpage.fr/ig/masterdata/common/CodeSystem/tiers-legal-nature-cs#03 "Société"
 
 // TG Category
-* extension[tgCategory].valueCodeableConcept = https://mos.esante.gouv.fr/NOS/TRE_R66-CategorieEtablissement/FHIR/TRE-R66-CategorieEtablissement#03 "Clinique"
+* extension[tgCategory].valueCodeableConcept = https://www.cpage.fr/ig/masterdata/common/CodeSystem/tiers-category-cs#50 "Personne morale de droit privé"
 
 // === Extensions Fournisseur (la clinique vend des prestations) ===
 * extension[codeFournisseur].valueString = "FRCLIN00123"

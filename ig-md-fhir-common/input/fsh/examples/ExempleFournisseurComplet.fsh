@@ -15,7 +15,7 @@ Description: "Exemple d'un fournisseur avec tous les paramètres de gestion: cod
 * identifier[tva].value = "FR23425123456"
 
 * active = true
-* type = https://mos.esante.gouv.fr/NOS/TRE_R66-CategorieEtablissement/FHIR/TRE-R66-CategorieEtablissement#26 "Entreprise (autre secteur)"
+* type = https://www.cpage.fr/ig/masterdata/common/CodeSystem/tiers-category-cs#50 "Personne morale de droit privé"
 
 * name = "Laboratoires Pharmaceutiques Durand"
 * alias = "LPD SA"
@@ -47,7 +47,7 @@ Description: "Exemple d'un fournisseur avec tous les paramètres de gestion: cod
 * extension[legalNature].valueCodeableConcept = https://www.cpage.fr/ig/masterdata/common/CodeSystem/tiers-legal-nature-cs#03 "Société"
 
 // TG Category
-* extension[tgCategory].valueCodeableConcept = https://mos.esante.gouv.fr/NOS/TRE_R66-CategorieEtablissement/FHIR/TRE-R66-CategorieEtablissement#26 "Entreprise (autre secteur)"
+* extension[tgCategory].valueCodeableConcept = https://www.cpage.fr/ig/masterdata/common/CodeSystem/tiers-category-cs#50 "Personne morale de droit privé"
 
 // === Extensions Fournisseur ===
 * extension[codeFournisseur].valueString = "FRNSLPD001"

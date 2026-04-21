@@ -11,7 +11,7 @@ Description: "Exemple de payeur santé du régime obligatoire (CPAM). Illustre l
 * identifier[etierId].value = "CPAM75001"
 
 * active = true
-* type = https://mos.esante.gouv.fr/NOS/TRE_R66-CategorieEtablissement/FHIR/TRE-R66-CategorieEtablissement#60 "Assurance maladie (caté. générique)"
+* type = https://www.cpage.fr/ig/masterdata/common/CodeSystem/tiers-category-cs#60 "Caisse de sécurité sociale régime général"
 
 * name = "CPAM de Paris"
 * alias = "Caisse Primaire d'Assurance Maladie de Paris"
@@ -35,7 +35,7 @@ Description: "Exemple de payeur santé du régime obligatoire (CPAM). Illustre l
 * extension[legalNature].valueCodeableConcept = https://www.cpage.fr/ig/masterdata/common/CodeSystem/tiers-legal-nature-cs#04 "CAM ou caisse appliquant les mêmes règles"
 
 // TG Category
-* extension[tgCategory].valueCodeableConcept = https://mos.esante.gouv.fr/NOS/TRE_R66-CategorieEtablissement/FHIR/TRE-R66-CategorieEtablissement#60 "Assurance maladie (caté. générique)"
+* extension[tgCategory].valueCodeableConcept = https://www.cpage.fr/ig/masterdata/common/CodeSystem/tiers-category-cs#60 "Caisse de sécurité sociale régime général"
 
 // === Extension Payeur Santé ===
 * extension[payeurSante].extension[typePayeur].valueString = "RO"

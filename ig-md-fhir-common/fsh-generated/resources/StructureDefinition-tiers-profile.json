@@ -298,7 +298,7 @@
       {
         "id": "Organization.identifier:siren.system",
         "path": "Organization.identifier.system",
-        "fixedUri": "https://sirene.fr"
+        "fixedUri": "https://sirene.fr/siren"
       },
       {
         "id": "Organization.identifier:finess",

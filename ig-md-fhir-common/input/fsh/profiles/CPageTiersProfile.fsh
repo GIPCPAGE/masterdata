@@ -148,7 +148,7 @@ Description: "Profil générique pour la notion de Tiers (commun débiteur/fourn
 * identifier[siret].value 1..1
 * identifier[siret] ^short = "Numéro SIRET (14 chiffres)"
 
-* identifier[siren].system = "https://sirene.fr" (exactly)
+* identifier[siren].system = "https://sirene.fr/siren" (exactly)
 * identifier[siren].value 1..1
 * identifier[siren] ^short = "Numéro SIREN (9 chiffres)"
 

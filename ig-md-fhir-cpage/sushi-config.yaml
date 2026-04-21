@@ -36,6 +36,6 @@ pages:
 menu:
   "Accueil": index.html
   Documentation:
-    IG Tiers Générique: new-tab https://www.cpage.fr/ig/masterdata/tiers/
+    IG Socle Commun: new-tab https://www.cpage.fr/ig/masterdata/common/
   Ressources de conformité: artifacts.html
   Téléchargements: downloads.html

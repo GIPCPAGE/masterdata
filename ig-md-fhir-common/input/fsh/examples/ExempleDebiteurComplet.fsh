@@ -15,7 +15,7 @@ Description: "Exemple d'un débiteur (établissement acheteur) avec tous les par
 * identifier[finess].value = "920023456"
 
 * active = true
-* type = https://mos.esante.gouv.fr/NOS/TRE_R66-CategorieEtablissement/FHIR/TRE-R66-CategorieEtablissement#02 "CHU"
+* type = https://www.cpage.fr/ig/masterdata/common/CodeSystem/tiers-category-cs#27 "Établissement public de santé"
 
 * name = "Centre Hospitalier Universitaire Necker"
 * alias = "CHU Necker-Enfants Malades"
@@ -43,7 +43,7 @@ Description: "Exemple d'un débiteur (établissement acheteur) avec tous les par
 * extension[legalNature].valueCodeableConcept = https://www.cpage.fr/ig/masterdata/common/CodeSystem/tiers-legal-nature-cs#09 "Collectivité territoriale - EPL - EPS"
 
 // TG Category
-* extension[tgCategory].valueCodeableConcept = https://mos.esante.gouv.fr/NOS/TRE_R66-CategorieEtablissement/FHIR/TRE-R66-CategorieEtablissement#02 "CHU"
+* extension[tgCategory].valueCodeableConcept = https://www.cpage.fr/ig/masterdata/common/CodeSystem/tiers-category-cs#27 "Établissement public de santé"
 
 // === Extensions Débiteur ===
 * extension[codeDebiteur].valueString = "DEBNECKER01"

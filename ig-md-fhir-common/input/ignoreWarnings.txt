@@ -1,1 +1,6 @@
 == Suppressed Messages ==
+
+# Les codes communes CPage (communes-fr-cs) sont des codes CPage propriétaires basés sur le COG INSEE.
+# Ils ne font pas partie du ValueSet national TRE_R13 / fr-core-vs-insee-code mais sont cohérents avec le référentiel.
+The Coding provided (https://www.cpage.fr/ig/masterdata/common/CodeSystem/communes-fr-cs
+
