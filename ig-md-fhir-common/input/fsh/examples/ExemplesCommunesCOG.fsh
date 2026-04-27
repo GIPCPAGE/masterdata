@@ -50,7 +50,7 @@ retourne immédiatement `69264`, sans ambiguïté et sans table de jointure exte
 * address.city = "Belleville-en-Beaujolais"
 // Extension fr-core sur l'adresse → code INSEE de la COMMUNE DÉLÉGUÉE
 * address.extension[+].url = "https://hl7.fr/ig/fhir/core/StructureDefinition/fr-core-address-insee-code"
-* address.extension[=].valueCoding.system = "https://www.cpage.fr/ig/masterdata/common/CodeSystem/communes-fr-cs"
+* address.extension[=].valueCoding.system = "https://mos.esante.gouv.fr/NOS/TRE_R13-CommuneOM/FHIR/TRE-R13-CommuneOM"
 * address.extension[=].valueCoding.code = #69282
 * address.extension[=].valueCoding.display = "Saint-Jean-d'Ardières"
 * address.line = "14 Route des Vignes"
@@ -86,7 +86,7 @@ nécessite aucune résolution de commune déléguée.
 * address.city = "Belleville-en-Beaujolais"
 // Extension fr-core sur l'adresse → code INSEE de la commune NOUVELLE
 * address.extension[+].url = "https://hl7.fr/ig/fhir/core/StructureDefinition/fr-core-address-insee-code"
-* address.extension[=].valueCoding.system = "https://www.cpage.fr/ig/masterdata/common/CodeSystem/communes-fr-cs"
+* address.extension[=].valueCoding.system = "https://mos.esante.gouv.fr/NOS/TRE_R13-CommuneOM/FHIR/TRE-R13-CommuneOM"
 * address.extension[=].valueCoding.code = #69264
 * address.extension[=].valueCoding.display = "Belleville-en-Beaujolais"
 * address.line = "3 Place de l'Église"

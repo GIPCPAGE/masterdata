@@ -50,11 +50,13 @@ Description: "Exemple d'un fournisseur avec tous les paramètres de gestion: cod
 * extension[tgCategory].valueCodeableConcept = https://www.cpage.fr/ig/masterdata/common/CodeSystem/tiers-category-cs#50 "Personne morale de droit privé"
 
 // === Extensions Fournisseur ===
-* extension[codeFournisseur].valueString = "FRNSLPD001"
+* extension[codeInterne].valueString = "FRNSLPD001"
 
 // Paramètres comptables
-* extension[comptabilite].extension[compteLettreClasse2].valueString = "4011LPD"
-* extension[comptabilite].extension[compteLettreClasse6].valueString = "6012MED"
+* extension[comptabilite].extension[compteLettreClasse2].valueString = "4"
+* extension[comptabilite].extension[compteNumeroClasse2].valueString = "4011LPD"
+* extension[comptabilite].extension[compteLettreClasse6].valueString = "6"
+* extension[comptabilite].extension[compteNumeroClasse6].valueString = "6012MED"
 
 // Paramètres de paiement
 * extension[paiement].extension[delaiPaiement].valueInteger = 60

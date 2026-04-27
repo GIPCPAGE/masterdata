@@ -5,7 +5,7 @@
 Extension: TiersAddressLocalization
 Id: tiers-address-localization
 Title: "Localisation Adresse"
-Description: "Extension pour la localisation géographique de l'adresse selon la nomenclature. Correspond au champ KERD 'Localisation' de l'adresse. Permet de qualifier si l'adresse se situe en France (métropole + DOM-TOM), en Europe (UE et pays européens hors UE), ou dans le reste du monde."
+Description: "Extension pour la localisation géographique de l'adresse. Permet de qualifier si l'adresse se situe en France (métropole + DOM-TOM), en Europe (UE et pays européens hors UE), ou dans le reste du monde."
 Context: Address
 * ^url = "https://www.cpage.fr/ig/masterdata/common/StructureDefinition/tiers-address-localization"
 * ^version = "1.0.0"

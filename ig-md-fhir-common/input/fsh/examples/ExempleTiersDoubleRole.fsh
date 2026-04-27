@@ -50,28 +50,12 @@ Description: "Exemple d'un tiers qui est à la fois fournisseur (vend des marcha
 // TG Category
 * extension[tgCategory].valueCodeableConcept = https://www.cpage.fr/ig/masterdata/common/CodeSystem/tiers-category-cs#50 "Personne morale de droit privé"
 
-// === Extensions Fournisseur (la clinique vend des prestations) ===
-* extension[codeFournisseur].valueString = "FRCLIN00123"
+// === Code interne (partagé entre les deux rôles) ===
+* extension[codeInterne].valueString = "FRCLIN00123"
 
-* extension[comptabilite].extension[compteLettreClasse2].valueString = "4011CDP"
-* extension[comptabilite].extension[compteLettreClasse6].valueString = "6011CDP"
-
-* extension[paiement].extension[delaiPaiement].valueInteger = 30
-* extension[paiement].extension[jourPaiement].valueInteger = 30
-* extension[paiement].extension[montantMinimum].valueDecimal = 100.00
-* extension[paiement].extension[tauxTransitaire].valueDecimal = 0.0
-* extension[paiement].extension[escomptable].valueBoolean = false
-
-// === Extensions Débiteur (la clinique achète médicaments et équipements) ===
-* extension[codeDebiteur].valueString = "DEB123456"
-
-* extension[parametres].extension[compteLettre].valueString = "411CDP"
-* extension[parametres].extension[typeResident].valueCode = #R
-* extension[parametres].extension[typeDebiteur].valueString = "CLI"
-* extension[parametres].extension[assuAutorise].valueBoolean = true
-* extension[parametres].extension[forceImpressionCoh].valueBoolean = true
-
-* extension[debtorType].valueCode = #N
+// Note: les détails spécifiques à chaque rôle sont portés par des instances enfant dédiées :
+//   - rôle fournisseur : instance FournisseurProfile (avec extensions comptabilite/paiement)
+//   - rôle débiteur   : instance DebiteurProfile (avec extensions parametres/debtorAttributs)
 
 // === Domiciliation bancaire (compte unique pour flux créditeurs et débiteurs) ===
 * extension[bankAccount][0].extension[bankCode].valueString = "30002"

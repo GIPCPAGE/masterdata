@@ -3,7 +3,7 @@
 // =============================================
 
 Instance: ExempleSuccursale
-InstanceOf: TiersProfile
+InstanceOf: DebiteurProfile
 Usage: #example
 Title: "Succursale rattachée à un établissement principal"
 Description: "Exemple d'une succursale (point de livraison, facturation, ou site secondaire) rattachée à son établissement principal via partOf. Illustre la relation hiérarchique organisation parente → succursale, distincte de l'héritage de profil."
@@ -51,7 +51,7 @@ Description: "Exemple d'une succursale (point de livraison, facturation, ou site
 * extension[succursaleUsage][1].valueCode = #FACTURATION
 
 // === Extensions Débiteur ===
-* extension[codeDebiteur].valueString = "DEBSUCC789"
+* extension[codeInterne].valueString = "DEBSUCC789"
 
 * extension[parametres].extension[compteLettre].valueString = "411CMRMT"
 * extension[parametres].extension[typeResident].valueCode = #R
@@ -59,7 +59,7 @@ Description: "Exemple d'une succursale (point de livraison, facturation, ou site
 * extension[parametres].extension[assuAutorise].valueBoolean = false
 * extension[parametres].extension[forceImpressionCoh].valueBoolean = false
 
-* extension[debtorType].valueCode = #N
+* extension[debtorAttributs].extension[debtorType].valueCode = #N
 
 // === Domiciliation bancaire (peut être différente du siège) ===
 * extension[bankAccount][0].extension[bankCode].valueString = "10278"

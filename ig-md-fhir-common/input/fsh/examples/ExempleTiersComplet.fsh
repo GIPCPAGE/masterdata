@@ -44,37 +44,13 @@ Description: "Exemple d'un tiers qui cumule trois rôles: fournisseur, débiteur
 // TG Category
 * extension[tgCategory].valueCodeableConcept = https://www.cpage.fr/ig/masterdata/common/CodeSystem/tiers-category-cs#60 "Caisse de sécurité sociale régime général"
 
-// === Extensions Fournisseur ===
-* extension[codeFournisseur].valueString = "FRSUP00456"
+// Code interne (partagé entre les rôles)
+* extension[codeInterne].valueString = "FRSUP00456"
 
-* extension[comptabilite].extension[compteLettreClasse2].valueString = "4011MSL"
-* extension[comptabilite].extension[compteLettreClasse6].valueString = "6011MSL"
-
-* extension[paiement].extension[delaiPaiement].valueInteger = 45
-* extension[paiement].extension[jourPaiement].valueInteger = 15
-* extension[paiement].extension[montantMinimum].valueDecimal = 500.00
-* extension[paiement].extension[tauxTransitaire].valueDecimal = 2.5
-* extension[paiement].extension[escomptable].valueBoolean = true
-
-// === Extensions Débiteur ===
-* extension[codeDebiteur].valueString = "DEB000789"
-
-* extension[parametres].extension[compteLettre].valueString = "411MSL"
-* extension[parametres].extension[typeResident].valueCode = #R
-* extension[parametres].extension[typeDebiteur].valueString = "ETB"
-* extension[parametres].extension[assuAutorise].valueBoolean = true
-* extension[parametres].extension[forceImpressionCoh].valueBoolean = false
-
-* extension[debtorType].valueCode = #N
-
-// === Extension Payeur Santé ===
-* extension[payeurSante].extension[typePayeur].valueString = "RO"
-* extension[payeurSante].extension[codeCentre].valueString = "750"
-* extension[payeurSante].extension[numeroCaisse].valueString = "75001"
-* extension[payeurSante].extension[grandRegime].valueCodeableConcept = https://www.cpage.fr/ig/masterdata/common/CodeSystem/grand-regime-cs#SS
-* extension[payeurSante].extension[numeroOrganisme].valueString = "007501"
-* extension[payeurSante].extension[flagEclatement].valueString = "false"
-* extension[payeurSante].extension[delaiPec].valueInteger = 90
+// Note: les détails spécifiques à chaque rôle sont portés par des instances enfant dédiées :
+//   - rôle fournisseur : instance FournisseurProfile (avec extensions comptabilite/paiement)
+//   - rôle débiteur   : instance DebiteurProfile (avec extensions parametres/debtorAttributs)
+//   - rôle payeur     : instance PayeurSanteProfile (avec extension payeurSante)
 
 // === Domiciliation bancaire ===
 * extension[bankAccount][0].extension[bankCode].valueString = "30004"

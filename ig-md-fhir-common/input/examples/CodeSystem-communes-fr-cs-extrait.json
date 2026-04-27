@@ -10,7 +10,7 @@
     "status": "additional",
     "div": "<div xmlns=\"http://www.w3.org/1999/xhtml\"><p>Extrait illustratif du CodeSystem des communes françaises (COG INSEE). Présente les 3 patrons structurels : commune historique inactive (fusion), commune nouvelle active, commune déléguée imbriquée.</p></div>"
   },
-  "url": "https://www.cpage.fr/ig/masterdata/common/CodeSystem/communes-fr-cs",
+  "url": "https://www.cpage.fr/ig/masterdata/common/CodeSystem/communes-fr-cs-extrait",
   "version": "2026.1.0",
   "name": "CommunesFrancaisesCodeSystem",
   "title": "Communes françaises (COG INSEE) — Extrait 3 communes",
@@ -88,7 +88,6 @@
   ],
   "concept": [
     {
-      "_comment_patron": "PATRON A — Commune historique inactive (fusionnée dans 69264 au 01/01/2019)",
       "code": "69282",
       "display": "Saint-Jean-d'Ardières",
       "definition": "Ancienne commune du Rhône, fusionnée dans Belleville-en-Beaujolais (69264) au 01/01/2019.",
@@ -104,7 +103,6 @@
       ]
     },
     {
-      "_comment_patron": "PATRON B — Commune nouvelle active (créée le 01/01/2019)",
       "code": "69264",
       "display": "Belleville-en-Beaujolais",
       "definition": "Commune nouvelle du Rhône créée au 01/01/2019, regroupant Belleville-sur-Saône (69019) et Saint-Jean-d'Ardières (69282).",
@@ -120,7 +118,6 @@
       ],
       "concept": [
         {
-          "_comment_patron": "PATRON B' — Commune déléguée imbriquée (sous-concept de 69264)",
           "code": "69019",
           "display": "Belleville-sur-Saône (déléguée)",
           "definition": "Commune déléguée de Belleville-en-Beaujolais. Ancienne ville-centre, conserve son code INSEE d'origine. La propriété communeNouvelle permet de remonter vers 69264 via $lookup.",
