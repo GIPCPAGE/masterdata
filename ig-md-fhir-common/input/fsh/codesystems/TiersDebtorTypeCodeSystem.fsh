@@ -5,7 +5,7 @@
 CodeSystem: TiersDebtorTypeCS
 Id: tiers-debtor-type-cs
 Title: "Type Débiteur"
-Description: "Type de débiteur selon la nomenclature. Utilisé dans les messages KERD (position 2) pour distinguer les débiteurs occasionnels des débiteurs normaux/réguliers."
+Description: "Type de débiteur selon la nomenclature : Occasionnel (O) ou Normal (N)."
 * ^url = "https://www.cpage.fr/ig/masterdata/common/CodeSystem/tiers-debtor-type-cs"
 * ^version = "1.0.0"
 * ^status = #active

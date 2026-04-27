@@ -6,7 +6,7 @@ Instance: ExempleDebiteurEPSPublic
 InstanceOf: DebiteurProfile
 Usage: #example
 Title: "Exemple Débiteur - EPS Comptabilité Publique"
-Description: "Exemple d'un établissement public de santé en tant que débiteur, avec FINESS, compte de contrepartie comptabilité publique et code régie. Illustre la Catégorie TG 27 (EPS), Nature juridique 09 (Collectivité territoriale - EPL - EPS), type débiteur Normal, et les extensions spécifiques au secteur public (TiersPublicAccountingCounterpart, TiersRegieCode). Démontre aussi l'identifiant CHORUS."
+Description: "Exemple d'un établissement public de santé en tant que débiteur, avec FINESS, compte de contrepartie en comptabilité publique et code régie. Illustre la Catégorie TG 27 (EPS), Nature juridique 09 (Collectivité territoriale - EPL - EPS), type débiteur Normal, et les attributs spécifiques au secteur public (TiersPublicSectorExtension). Démontre aussi l'identifiant CHORUS."
 
 * identifier[etierId].value = "ETIER901234"
 * identifier[etierId].use = #official
@@ -24,14 +24,14 @@ Description: "Exemple d'un établissement public de santé en tant que débiteur
 * extension[tiersRole].valueCoding = https://www.cpage.fr/ig/masterdata/common/CodeSystem/tiers-role-cs#debtor "Débiteur"
 
 // Type débiteur Normal
-* extension[debtorType].valueCode = #N
+* extension[debtorAttributs].extension[debtorType].valueCode = #N
 
-// Compte contrepartie comptabilité publique (KERD positions 3-4)
-* extension[counterpart].extension[letterCode].valueString = "A"
-* extension[counterpart].extension[accountNumber].valueString = "4110000000"
+// Compte contrepartie et code régie (secteur public)
+* extension[secteurPublic].extension[letterCode].valueString = "A"
+* extension[secteurPublic].extension[accountNumber].valueString = "4110000000"
 
-// Code régie (KERD position 7)
-* extension[regieCode].valueString = "REG001"
+// Code régie
+* extension[secteurPublic].extension[regieCode].valueString = "REG001"
 
 // RIB obligatoire pour débiteur
 * extension[bankAccount][0].extension[bankCode].valueString = "10071"

@@ -9,7 +9,7 @@
 //   - partOf lie la succursale à son siège (relation organisationnelle)
 //   - La succursale a son propre SIRET (établissement distinct au sens INSEE)
 //   - L'extension succursaleUsage qualifie le rôle du site (livraison / facturation / siège)
-//   - Chaque ressource a son propre codeFournisseur si elle est gérée indépendamment
+//   - Chaque ressource a son propre codeInterne si elle est gérée indépendamment
 // =============================================
 
 // --------------------------------------------------
@@ -50,10 +50,12 @@ Description: "Siège social du fournisseur Laboratoires Durand. Identifié par s
 * extension[legalNature].valueCodeableConcept = https://www.cpage.fr/ig/masterdata/common/CodeSystem/tiers-legal-nature-cs#03 "Société"
 * extension[tgCategory].valueCodeableConcept = https://www.cpage.fr/ig/masterdata/common/CodeSystem/tiers-category-cs#50 "Personne morale de droit privé"
 
-* extension[codeFournisseur].valueString = "FRNSLPD000"
+* extension[codeInterne].valueString = "FRNSLPD000"
 
-* extension[comptabilite].extension[compteLettreClasse2].valueString = "4011LPD"
-* extension[comptabilite].extension[compteLettreClasse6].valueString = "6012MED"
+* extension[comptabilite].extension[compteLettreClasse2].valueString = "4"
+* extension[comptabilite].extension[compteNumeroClasse2].valueString = "4011LPD"
+* extension[comptabilite].extension[compteLettreClasse6].valueString = "6"
+* extension[comptabilite].extension[compteNumeroClasse6].valueString = "6012MED"
 
 * extension[paiement].extension[delaiPaiement].valueInteger = 60
 * extension[paiement].extension[jourPaiement].valueInteger = 10
@@ -122,11 +124,13 @@ Description: "Succursale parisienne des Laboratoires Durand, utilisée comme poi
 * extension[succursaleUsage][1].valueCode = #FACTURATION
 
 // Code fournisseur propre au site (gestion différenciée des commandes)
-* extension[codeFournisseur].valueString = "FRNSLPDPN1"
+* extension[codeInterne].valueString = "FRNSLPDPN1"
 
 // Paramètres comptables du site (même comptes que le siège dans cet exemple)
-* extension[comptabilite].extension[compteLettreClasse2].valueString = "4011LPD"
-* extension[comptabilite].extension[compteLettreClasse6].valueString = "6012MED"
+* extension[comptabilite].extension[compteLettreClasse2].valueString = "4"
+* extension[comptabilite].extension[compteNumeroClasse2].valueString = "4011LPD"
+* extension[comptabilite].extension[compteLettreClasse6].valueString = "6"
+* extension[comptabilite].extension[compteNumeroClasse6].valueString = "6012MED"
 
 // Conditions de paiement héritées du contrat siège
 * extension[paiement].extension[delaiPaiement].valueInteger = 60

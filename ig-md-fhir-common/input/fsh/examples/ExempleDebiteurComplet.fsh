@@ -46,7 +46,7 @@ Description: "Exemple d'un débiteur (établissement acheteur) avec tous les par
 * extension[tgCategory].valueCodeableConcept = https://www.cpage.fr/ig/masterdata/common/CodeSystem/tiers-category-cs#27 "Établissement public de santé"
 
 // === Extensions Débiteur ===
-* extension[codeDebiteur].valueString = "DEBNECKER01"
+* extension[codeInterne].valueString = "DEBNECKER01"
 
 // Paramètres de gestion débiteur
 * extension[parametres].extension[compteLettre].valueString = "411NECKER"
@@ -55,7 +55,7 @@ Description: "Exemple d'un débiteur (établissement acheteur) avec tous les par
 * extension[parametres].extension[assuAutorise].valueBoolean = true
 * extension[parametres].extension[forceImpressionCoh].valueBoolean = true
 
-* extension[debtorType].valueCode = #N
+* extension[debtorAttributs].extension[debtorType].valueCode = #N
 
 // === Domiciliation bancaire pour recettes ===
 * extension[bankAccount][0].extension[bankCode].valueString = "30001"

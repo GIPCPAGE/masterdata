@@ -17,3 +17,5 @@ Alias: $id-tva = urn:oid:1.2.250.1.69.1.1011
 
 // Terminologies géographiques — CPage (communes COG INSEE)
 Alias: $communes-fr-cs = https://www.cpage.fr/ig/masterdata/common/CodeSystem/communes-fr-cs
+Alias: $commune-type-territoire-cs = https://www.cpage.fr/ig/masterdata/common/CodeSystem/commune-type-territoire-cs
+Alias: $location-physical-type = http://terminology.hl7.org/CodeSystem/location-physical-type

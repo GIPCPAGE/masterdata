@@ -21,8 +21,8 @@ Description: "Exemple d'une personne physique en tant que débiteur, avec NIR (S
 
 * extension[tiersRole].valueCoding = https://www.cpage.fr/ig/masterdata/common/CodeSystem/tiers-role-cs#debtor "Débiteur"
 
-// Type débiteur Normal (Phase 2)
-* extension[debtorType].valueCode = #N
+// Type débiteur Normal
+* extension[debtorAttributs].extension[debtorType].valueCode = #N
 
 // Détails personne physique : civilité + prénom (OBLIGATOIRE pour Catégorie TG = 01)
 * extension[personDetails].extension[civility].valueCode = #M

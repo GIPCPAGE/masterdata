@@ -19,7 +19,7 @@
         "path": "Organization.extension",
         "sliceName": "tiersRole",
         "short": "Rôle(s) du tiers",
-        "definition": "Rôle(s) générique(s) du tiers : fournisseur (supplier) si présent dans table fournisseurs, débiteur (debtor) si présent dans table debiteurs.",
+        "definition": "Rôle(s) du tiers : fournisseur (supplier), débiteur (debtor) ou payeur (payer).",
         "min": 0,
         "max": "*",
         "type": [
@@ -73,7 +73,7 @@
         "path": "Organization.extension",
         "sliceName": "bankAccount",
         "short": "Coordonnées bancaires RIB/IBAN",
-        "definition": "Domiciliation bancaire du tiers (RIB français ou IBAN/BIC international). Conforme aux formats.",
+        "definition": "Domiciliation bancaire du tiers (RIB français ou IBAN/BIC international).",
         "min": 0,
         "max": "*",
         "type": [
@@ -105,112 +105,16 @@
         "mustSupport": true
       },
       {
-        "id": "Organization.extension:codeFournisseur",
+        "id": "Organization.extension:codeInterne",
         "path": "Organization.extension",
-        "sliceName": "codeFournisseur",
+        "sliceName": "codeInterne",
         "min": 0,
         "max": "1",
         "type": [
           {
             "code": "Extension",
             "profile": [
-              "https://www.cpage.fr/ig/masterdata/common/StructureDefinition/fournisseur-code"
-            ]
-          }
-        ],
-        "mustSupport": true
-      },
-      {
-        "id": "Organization.extension:comptabilite",
-        "path": "Organization.extension",
-        "sliceName": "comptabilite",
-        "min": 0,
-        "max": "1",
-        "type": [
-          {
-            "code": "Extension",
-            "profile": [
-              "https://www.cpage.fr/ig/masterdata/common/StructureDefinition/fournisseur-comptabilite"
-            ]
-          }
-        ],
-        "mustSupport": true
-      },
-      {
-        "id": "Organization.extension:paiement",
-        "path": "Organization.extension",
-        "sliceName": "paiement",
-        "min": 0,
-        "max": "1",
-        "type": [
-          {
-            "code": "Extension",
-            "profile": [
-              "https://www.cpage.fr/ig/masterdata/common/StructureDefinition/fournisseur-paiement"
-            ]
-          }
-        ],
-        "mustSupport": true
-      },
-      {
-        "id": "Organization.extension:codeDebiteur",
-        "path": "Organization.extension",
-        "sliceName": "codeDebiteur",
-        "min": 0,
-        "max": "1",
-        "type": [
-          {
-            "code": "Extension",
-            "profile": [
-              "https://www.cpage.fr/ig/masterdata/common/StructureDefinition/debiteur-code"
-            ]
-          }
-        ],
-        "mustSupport": true
-      },
-      {
-        "id": "Organization.extension:parametres",
-        "path": "Organization.extension",
-        "sliceName": "parametres",
-        "min": 0,
-        "max": "1",
-        "type": [
-          {
-            "code": "Extension",
-            "profile": [
-              "https://www.cpage.fr/ig/masterdata/common/StructureDefinition/debiteur-parametres"
-            ]
-          }
-        ],
-        "mustSupport": true
-      },
-      {
-        "id": "Organization.extension:debtorType",
-        "path": "Organization.extension",
-        "sliceName": "debtorType",
-        "min": 0,
-        "max": "1",
-        "type": [
-          {
-            "code": "Extension",
-            "profile": [
-              "https://www.cpage.fr/ig/masterdata/common/StructureDefinition/tiers-debtor-type"
-            ]
-          }
-        ],
-        "mustSupport": true
-      },
-      {
-        "id": "Organization.extension:payeurSante",
-        "path": "Organization.extension",
-        "sliceName": "payeurSante",
-        "min": 0,
-        "max": "1",
-        "type": [
-          {
-            "code": "Extension",
-            "profile": [
-              "https://www.cpage.fr/ig/masterdata/common/StructureDefinition/payeur-sante"
+              "https://www.cpage.fr/ig/masterdata/common/StructureDefinition/tiers-internal-code"
             ]
           }
         ],
@@ -248,8 +152,8 @@
         "id": "Organization.identifier:etierId",
         "path": "Organization.identifier",
         "sliceName": "etierId",
-        "short": "Identifiant interne du tiers (IDTITI)",
-        "definition": "Identifiant unique interne du tiers issu de la table ETIER (champ IDTITI).",
+        "short": "Identifiant interne du tiers",
+        "definition": "Identifiant interne unique du tiers.",
         "min": 0,
         "max": "*",
         "mustSupport": true
@@ -319,7 +223,7 @@
         "path": "Organization.identifier",
         "sliceName": "tva",
         "short": "Numéro de TVA intracommunautaire",
-        "definition": "Numéro de TVA intracommunautaire du tiers (champ TVAITI).",
+        "definition": "Numéro de TVA intracommunautaire du tiers.",
         "min": 0,
         "max": "1",
         "mustSupport": true
@@ -559,17 +463,179 @@
         "patternUri": "https://www.cpage.fr/ig/masterdata/common/NamingSystem/ridet-identifier"
       },
       {
+        "id": "Organization.identifier:frwf",
+        "path": "Organization.identifier",
+        "sliceName": "frwf",
+        "short": "Identifiant FRWF (Wallis-et-Futuna)",
+        "definition": "Identifiant spécifique aux entités de Wallis-et-Futuna. Type identifiant PESv2 : 10",
+        "min": 0,
+        "max": "1",
+        "mustSupport": true
+      },
+      {
+        "id": "Organization.identifier:frwf.extension:gefType",
+        "path": "Organization.identifier.extension",
+        "sliceName": "gefType",
+        "min": 0,
+        "max": "1",
+        "type": [
+          {
+            "code": "Extension",
+            "profile": [
+              "https://www.cpage.fr/ig/masterdata/common/StructureDefinition/tiers-identifier-type"
+            ]
+          }
+        ]
+      },
+      {
+        "id": "Organization.identifier:frwf.extension:gefType.value[x]",
+        "path": "Organization.identifier.extension.value[x]",
+        "patternCodeableConcept": {
+          "coding": [
+            {
+              "code": "10",
+              "system": "https://www.cpage.fr/ig/masterdata/common/CodeSystem/tiers-identifier-type-cs"
+            }
+          ]
+        }
+      },
+      {
+        "id": "Organization.identifier:frwf.type",
+        "path": "Organization.identifier.type",
+        "patternCodeableConcept": {
+          "coding": [
+            {
+              "code": "10",
+              "system": "https://www.cpage.fr/ig/masterdata/common/CodeSystem/tiers-identifier-type-cs"
+            }
+          ]
+        }
+      },
+      {
+        "id": "Organization.identifier:frwf.system",
+        "path": "Organization.identifier.system",
+        "patternUri": "https://www.cpage.fr/ig/masterdata/common/NamingSystem/frwf-identifier"
+      },
+      {
+        "id": "Organization.identifier:irep",
+        "path": "Organization.identifier",
+        "sliceName": "irep",
+        "short": "IREP (Polynésie française)",
+        "definition": "Identifiant du Répertoire des Établissements Publics de Polynésie française. Type identifiant PESv2 : 11",
+        "min": 0,
+        "max": "1",
+        "mustSupport": true
+      },
+      {
+        "id": "Organization.identifier:irep.extension:gefType",
+        "path": "Organization.identifier.extension",
+        "sliceName": "gefType",
+        "min": 0,
+        "max": "1",
+        "type": [
+          {
+            "code": "Extension",
+            "profile": [
+              "https://www.cpage.fr/ig/masterdata/common/StructureDefinition/tiers-identifier-type"
+            ]
+          }
+        ]
+      },
+      {
+        "id": "Organization.identifier:irep.extension:gefType.value[x]",
+        "path": "Organization.identifier.extension.value[x]",
+        "patternCodeableConcept": {
+          "coding": [
+            {
+              "code": "11",
+              "system": "https://www.cpage.fr/ig/masterdata/common/CodeSystem/tiers-identifier-type-cs"
+            }
+          ]
+        }
+      },
+      {
+        "id": "Organization.identifier:irep.type",
+        "path": "Organization.identifier.type",
+        "patternCodeableConcept": {
+          "coding": [
+            {
+              "code": "11",
+              "system": "https://www.cpage.fr/ig/masterdata/common/CodeSystem/tiers-identifier-type-cs"
+            }
+          ]
+        }
+      },
+      {
+        "id": "Organization.identifier:irep.system",
+        "path": "Organization.identifier.system",
+        "patternUri": "https://www.cpage.fr/ig/masterdata/common/NamingSystem/irep-identifier"
+      },
+      {
+        "id": "Organization.identifier:nfp",
+        "path": "Organization.identifier",
+        "sliceName": "nfp",
+        "short": "NFP — Numéro de Fichier de Paie",
+        "definition": "Identifiant employéur utilisé dans les échanges de paie (PESv2 flux paye). Type identifiant PESv2 : 12",
+        "min": 0,
+        "max": "1",
+        "mustSupport": true
+      },
+      {
+        "id": "Organization.identifier:nfp.extension:gefType",
+        "path": "Organization.identifier.extension",
+        "sliceName": "gefType",
+        "min": 0,
+        "max": "1",
+        "type": [
+          {
+            "code": "Extension",
+            "profile": [
+              "https://www.cpage.fr/ig/masterdata/common/StructureDefinition/tiers-identifier-type"
+            ]
+          }
+        ]
+      },
+      {
+        "id": "Organization.identifier:nfp.extension:gefType.value[x]",
+        "path": "Organization.identifier.extension.value[x]",
+        "patternCodeableConcept": {
+          "coding": [
+            {
+              "code": "12",
+              "system": "https://www.cpage.fr/ig/masterdata/common/CodeSystem/tiers-identifier-type-cs"
+            }
+          ]
+        }
+      },
+      {
+        "id": "Organization.identifier:nfp.type",
+        "path": "Organization.identifier.type",
+        "patternCodeableConcept": {
+          "coding": [
+            {
+              "code": "12",
+              "system": "https://www.cpage.fr/ig/masterdata/common/CodeSystem/tiers-identifier-type-cs"
+            }
+          ]
+        }
+      },
+      {
+        "id": "Organization.identifier:nfp.system",
+        "path": "Organization.identifier.system",
+        "patternUri": "https://www.cpage.fr/ig/masterdata/common/NamingSystem/nfp-identifier"
+      },
+      {
         "id": "Organization.active",
         "path": "Organization.active",
         "short": "Tiers actif",
-        "definition": "Indique si le tiers est actif. Peut être mappé depuis indicateur actif (V=true, I=false).",
+        "definition": "Indique si le tiers est actif.",
         "mustSupport": true
       },
       {
         "id": "Organization.name",
         "path": "Organization.name",
         "short": "Raison sociale / nom du tiers",
-        "definition": "Nom officiel du tiers (nom du tiers).",
+        "definition": "Nom officiel du tiers.",
         "min": 1,
         "mustSupport": true
       },
@@ -577,7 +643,7 @@
         "id": "Organization.alias",
         "path": "Organization.alias",
         "short": "Nom complémentaire",
-        "definition": "Nom complémentaire ou alternatif du tiers (nom complementaire).",
+        "definition": "Nom complémentaire ou alternatif du tiers.",
         "mustSupport": true
       },
       {

@@ -1,7 +1,7 @@
 // =============================================
 // Profil Tiers Organization (basé sur FR Core)
-// Profil de base pour interopérabilité
 // =============================================
+
 
 Profile: TiersProfile
 Parent: FRCoreOrganizationProfile
@@ -30,21 +30,24 @@ Description: "Profil générique pour la notion de Tiers (commun débiteur/fourn
     nir 0..1 MS and
     horsUE 0..1 MS and
     tahiti 0..1 MS and
-    ridet 0..1 MS
+    ridet 0..1 MS and
+    frwf 0..1 MS and
+    irep 0..1 MS and
+    nfp 0..1 MS
 
-// Identifiant interne ETIER (identifiant interne)
+// Identifiant interne
 * identifier[etierId].type = $v2-0203#RI "Resource identifier"
 * identifier[etierId].system = $id-etier (exactly)
 * identifier[etierId].value 1..1
-* identifier[etierId] ^short = "Identifiant interne du tiers (IDTITI)"
-* identifier[etierId] ^definition = "Identifiant unique interne du tiers issu de la table ETIER (champ IDTITI)."
+* identifier[etierId] ^short = "Identifiant interne du tiers"
+* identifier[etierId] ^definition = "Identifiant interne unique du tiers."
 
-// TVA intracommunautaire (TVA intracommunautaire)
+// TVA intracommunautaire
 * identifier[tva].type = $v2-0203#TAX "Tax ID number"
 * identifier[tva].system = $id-tva (exactly)
 * identifier[tva].value 1..1
 * identifier[tva] ^short = "Numéro de TVA intracommunautaire"
-* identifier[tva] ^definition = "Numéro de TVA intracommunautaire du tiers (champ TVAITI)."
+* identifier[tva] ^definition = "Numéro de TVA intracommunautaire du tiers."
 
 // NIR - Numéro Inscription Répertoire (Sécurité Sociale) - type 04
 * identifier[nir] ^short = "NIR - Numéro Sécurité Sociale"
@@ -82,33 +85,60 @@ Description: "Profil générique pour la notion de Tiers (commun débiteur/fourn
 * identifier[ridet].extension contains TiersIdentifierType named gefType 0..1
 * identifier[ridet].extension[gefType].valueCodeableConcept = TiersIdentifierTypeCS#08
 
-// Nom / raison sociale (NORSTI)
+// FRWF - Wallis-et-Futuna - type 10
+* identifier[frwf] ^short = "Identifiant FRWF (Wallis-et-Futuna)"
+* identifier[frwf] ^definition = "Identifiant spécifique aux entités de Wallis-et-Futuna. Type identifiant PESv2 : 10"
+* identifier[frwf].type = TiersIdentifierTypeCS#10
+* identifier[frwf].system = "https://www.cpage.fr/ig/masterdata/common/NamingSystem/frwf-identifier"
+* identifier[frwf].value 1..1
+* identifier[frwf].extension contains TiersIdentifierType named gefType 0..1
+* identifier[frwf].extension[gefType].valueCodeableConcept = TiersIdentifierTypeCS#10
+
+// IREP - Répertoire des Établissements Publics (Polynésie française) - type 11
+* identifier[irep] ^short = "IREP (Polynésie française)"
+* identifier[irep] ^definition = "Identifiant du Répertoire des Établissements Publics de Polynésie française. Type identifiant PESv2 : 11"
+* identifier[irep].type = TiersIdentifierTypeCS#11
+* identifier[irep].system = "https://www.cpage.fr/ig/masterdata/common/NamingSystem/irep-identifier"
+* identifier[irep].value 1..1
+* identifier[irep].extension contains TiersIdentifierType named gefType 0..1
+* identifier[irep].extension[gefType].valueCodeableConcept = TiersIdentifierTypeCS#11
+
+// NFP - Numéro de Fichier de Paie - type 12
+* identifier[nfp] ^short = "NFP — Numéro de Fichier de Paie"
+* identifier[nfp] ^definition = "Identifiant employéur utilisé dans les échanges de paie (PESv2 flux paye). Type identifiant PESv2 : 12"
+* identifier[nfp].type = TiersIdentifierTypeCS#12
+* identifier[nfp].system = "https://www.cpage.fr/ig/masterdata/common/NamingSystem/nfp-identifier"
+* identifier[nfp].value 1..1
+* identifier[nfp].extension contains TiersIdentifierType named gefType 0..1
+* identifier[nfp].extension[gefType].valueCodeableConcept = TiersIdentifierTypeCS#12
+
+// Nom / raison sociale
 * name 1..1 MS
 * name ^short = "Raison sociale / nom du tiers"
-* name ^definition = "Nom officiel du tiers (nom du tiers)."
+* name ^definition = "Nom officiel du tiers."
 
-// Complément de nom (COMPTI)
+// Complément de nom
 * alias 0..* MS
 * alias ^short = "Nom complémentaire"
-* alias ^definition = "Nom complémentaire ou alternatif du tiers (nom complementaire)."
+* alias ^definition = "Nom complémentaire ou alternatif du tiers."
 
-// Adresse siège (AL1STI, AL2STI, AL3STI, CPOSTI, BDISTI, PAYSTI)
+// Adresse du siège
 * address 0..* MS
 * address ^short = "Adresse du siège"
 
-// Télécom (TELETI, MAILTI, SITETI)
+// Télécom
 * telecom 0..* MS
 * telecom ^short = "Contacts téléphoniques et emails"
 
-// Actif / validité (VALITI)
+// Actif / validité
 * active 0..1 MS
 * active ^short = "Tiers actif"
-* active ^definition = "Indique si le tiers est actif. Peut être mappé depuis indicateur actif (V=true, I=false)."
+* active ^definition = "Indique si le tiers est actif."
 
-// Rôles génériques du tiers (debtor/supplier)
+// Rôles du tiers
 * extension contains TiersRoleExtension named tiersRole 0..* MS
 * extension[tiersRole] ^short = "Rôle(s) du tiers"
-* extension[tiersRole] ^definition = "Rôle(s) générique(s) du tiers : fournisseur (supplier) si présent dans table fournisseurs, débiteur (debtor) si présent dans table debiteurs."
+* extension[tiersRole] ^definition = "Rôle(s) du tiers : fournisseur (supplier), débiteur (debtor) ou payeur (payer)."
 
 // Catégorie TG (codes 00-74)
 * extension contains TiersCategory named tgCategory 0..1 MS
@@ -123,25 +153,15 @@ Description: "Profil générique pour la notion de Tiers (commun débiteur/fourn
 // Domiciliation bancaire (RIB/IBAN)
 * extension contains TiersBankAccount named bankAccount 0..* MS
 * extension[bankAccount] ^short = "Coordonnées bancaires RIB/IBAN"
-* extension[bankAccount] ^definition = "Domiciliation bancaire du tiers (RIB français ou IBAN/BIC international). Conforme aux formats."
+* extension[bankAccount] ^definition = "Domiciliation bancaire du tiers (RIB français ou IBAN/BIC international)."
 
 // Usage de la succursale (pour organisations rattachées via partOf)
 * extension contains SuccursaleUsageExtension named succursaleUsage 0..* MS
 * extension[succursaleUsage] ^short = "Usage de la succursale"
 * extension[succursaleUsage] ^definition = "Qualifie l'usage d'une succursale rattachée au siège: point de livraison, facturation, ou siège social secondaire."
 
-// Extensions spécifiques Fournisseur (optionnelles, utilisées si le tiers a le rôle supplier)
-* extension contains FournisseurCodeExtension named codeFournisseur 0..1 MS
-* extension contains FournisseurComptabiliteExtension named comptabilite 0..1 MS
-* extension contains FournisseurPaiementExtension named paiement 0..1 MS
-
-// Extensions spécifiques Débiteur (optionnelles, utilisées si le tiers a le rôle debtor)
-* extension contains DebiteurCodeExtension named codeDebiteur 0..1 MS
-* extension contains DebiteurParametresExtension named parametres 0..1 MS
-* extension contains TiersDebtorType named debtorType 0..1 MS
-
-// Extensions spécifiques Payeur Santé (optionnelles, utilisées si le tiers a le rôle payer)
-* extension contains PayeurSanteExtension named payeurSante 0..1 MS
+// Code interne (facultatif, pour fournisseur ou débiteur)
+* extension contains TiersInternalCodeExtension named codeInterne 0..1 MS
 
 // Slices SIREN / SIRET / FINESS (redéfinis ici car FR Core 2.2.0 ne les expose plus)
 * identifier[siret].system = "https://sirene.fr" (exactly)

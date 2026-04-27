@@ -5,7 +5,7 @@
 CodeSystem: TiersCivilityCS
 Id: tiers-civility-cs
 Title: "Civilité"
-Description: "Codes de civilité selon la nomenclature. Utilisé dans les messages KERD (position 10) pour les débiteurs de Catégorie TG = 01 (Personne physique). Obligatoire si le débiteur est une personne physique."
+Description: "Codes de civilité selon la nomenclature. Utilisé pour les débiteurs de Catégorie TG = 01 (Personne physique)."
 * ^url = "https://www.cpage.fr/ig/masterdata/common/CodeSystem/tiers-civility-cs"
 * ^version = "1.0.0"
 * ^status = #active

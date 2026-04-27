@@ -14,7 +14,7 @@ Description: "Profil pour les payeurs d'assurance maladie (régime obligatoire e
 * extension[tiersRole] ^comment = "Pour un payeur santé, l'extension tiersRole doit contenir le code 'payer'."
 
 // Extension payeur santé REQUISE
-* extension[payeurSante] 1..1 MS
+* extension contains PayeurSanteExtension named payeurSante 1..1 MS
 * extension[payeurSante] ^short = "Paramètres payeur santé (type, régime, caisse)"
 * extension[payeurSante] ^definition = "Extension contenant le type de payeur (obligatoire/complémentaire), le grand régime (SS/MSA/RSI/CNAV/Mutuelle), le code centre, le numéro de caisse, le numéro d'organisme, et les paramètres de gestion (éclatement factures, délai PEC)."
 
@@ -44,12 +44,6 @@ Description: "Profil pour les payeurs d'assurance maladie (régime obligatoire e
 * extension[bankAccount] 0..0
 * extension[bankAccount] ^comment = "Les payeurs santé ne fournissent généralement pas leur RIB, ce sont eux qui payent les établissements."
 
-// Extensions fournisseur/débiteur non utilisées
-* extension[codeFournisseur] 0..0
-* extension[comptabilite] 0..0
-* extension[paiement] 0..0
-* extension[codeDebiteur] 0..0
-* extension[parametres] 0..0
-* extension[debtorType] 0..0
-* extension[codeFournisseur] ^comment = "Un payeur santé n'a pas de paramètres fournisseur."
-* extension[codeDebiteur] ^comment = "Un payeur santé n'a pas de paramètres débiteur."
+// Extensions héritées non applicables à un payeur santé
+* extension[codeInterne] 0..0
+* extension[codeInterne] ^comment = "Un payeur santé n'a pas de code interne fournisseur/débiteur."
