@@ -1,10 +1,13 @@
 // =============================================
 // Extensions : Commune française (COG INSEE)
 // =============================================
-// Trois extensions portées par Location/CommuneFrancaiseProfile :
-//   1. CommuneCodePostalExt       — code postal (répétable 0..*)
-//   2. CommuneCodeDepartementExt  — code département INSEE (0..1)
-//   3. CommuneCodeRegionExt       — code région INSEE (0..1)
+// Six extensions portées par Location/CommuneFrancaiseProfile :
+//   1. CommuneCodePostalExt          — code postal (répétable 0..*)
+//   2. CommuneCodeDepartementExt     — code département INSEE (0..1)
+//   3. CommuneCodeRegionExt          — code région INSEE (0..1)
+//   4. CommuneDateDebutValiditeExt   — date de début de validité du code INSEE (0..1)
+//   5. CommuneDateFinValiditeExt     — date de fin de validité / suppression (0..1)
+//   6. CommuneDateMiseAJourExt       — date de dernière mise à jour de l'enregistrement (0..1)
 
 // -------------------------------------------------------
 // 1. Code postal
@@ -75,3 +78,69 @@ Context: Location
 * valueCode 1..1 MS
 * valueCode ^short = "Code région (ex : 84, 11, 93)"
 * valueCode ^definition = "Code région INSEE. Exemples : 11 (Île-de-France), 84 (Auvergne-Rhône-Alpes), 93 (Provence-Alpes-Côte d'Azur), 02 (Martinique), 03 (Guyane)."
+
+// -------------------------------------------------------
+// 4. Date de début de validité
+// -------------------------------------------------------
+// Correspond à la propriété `dateCreation` du CodeSystem communes-fr-cs.
+// Pour les communes antérieures au COG numérique : conventionnellement 1943-01-01.
+
+Extension: CommuneDateDebutValiditeExt
+Id: commune-date-debut-validite-ext
+Title: "Date de début de validité"
+Description: "Date d'entrée en vigueur du code INSEE de la commune. Correspond à la propriété `dateCreation` du CodeSystem communes-fr-cs. Pour les communes antérieures au COG numérique, la convention est 1943-01-01."
+Context: Location
+* ^url = "https://www.cpage.fr/ig/masterdata/common/StructureDefinition/commune-date-debut-validite-ext"
+* ^version = "1.0.0"
+* ^status = #active
+* ^context[0].type = #element
+* ^context[0].expression = "Location"
+
+* value[x] only date
+* valueDate 1..1 MS
+* valueDate ^short = "Date de début de validité du code INSEE (AAAA-MM-JJ)"
+* valueDate ^definition = "Date à partir de laquelle le code INSEE est en vigueur. Exemples : 1943-01-01 pour les communes historiques, 2019-01-01 pour Belleville-en-Beaujolais (commune nouvelle)."
+
+// -------------------------------------------------------
+// 5. Date de fin de validité
+// -------------------------------------------------------
+// Correspond à la propriété `dateSuppression` du CodeSystem communes-fr-cs.
+// Renseignée uniquement pour les communes inactives (fusionnées ou supprimées).
+
+Extension: CommuneDateFinValiditeExt
+Id: commune-date-fin-validite-ext
+Title: "Date de fin de validité"
+Description: "Date à laquelle le code INSEE a cessé d'être actif (fusion, suppression ou transformation). Correspond à la propriété `dateSuppression` du CodeSystem communes-fr-cs. Présente uniquement quand `status = inactive`."
+Context: Location
+* ^url = "https://www.cpage.fr/ig/masterdata/common/StructureDefinition/commune-date-fin-validite-ext"
+* ^version = "1.0.0"
+* ^status = #active
+* ^context[0].type = #element
+* ^context[0].expression = "Location"
+
+* value[x] only date
+* valueDate 1..1 MS
+* valueDate ^short = "Date de fin de validité du code INSEE (AAAA-MM-JJ)"
+* valueDate ^definition = "Date à laquelle la commune a été fusionnée, supprimée ou transformée. Exemples : 2019-01-01 pour Saint-Jean-d'Ardières (fusionnée dans Belleville-en-Beaujolais)."
+
+// -------------------------------------------------------
+// 6. Date de mise à jour
+// -------------------------------------------------------
+// Date de la dernière modification de la fiche dans le référentiel CPage.
+// Distincte de dateCreation (COG INSEE) : elle reflète la fraîcheur de l'enregistrement.
+
+Extension: CommuneDateMiseAJourExt
+Id: commune-date-mise-a-jour-ext
+Title: "Date de mise à jour"
+Description: "Date de la dernière mise à jour de l'enregistrement de la commune dans le référentiel CPage. Distinct de la date de création COG : il reflète la fraîcheur des données (ex : suite à une correction de code postal, un changement de nom ou une mise à jour annuelle COG)."
+Context: Location
+* ^url = "https://www.cpage.fr/ig/masterdata/common/StructureDefinition/commune-date-mise-a-jour-ext"
+* ^version = "1.0.0"
+* ^status = #active
+* ^context[0].type = #element
+* ^context[0].expression = "Location"
+
+* value[x] only dateTime
+* valueDateTime 1..1 MS
+* valueDateTime ^short = "Date et heure de dernière mise à jour (AAAA-MM-JJ ou AAAA-MM-JJThh:mm:ss+TZ)"
+* valueDateTime ^definition = "Horodatage de la dernière modification de la fiche commune dans le référentiel CPage (ex : 2026-01-01T00:00:00+01:00 lors de la mise à jour COG annuelle)."

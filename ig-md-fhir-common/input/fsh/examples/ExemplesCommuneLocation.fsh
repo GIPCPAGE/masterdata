@@ -50,6 +50,9 @@ Son code INSEE est conservé dans le COG avec `status = inactive`.
 * extension[codePostal].valueString = "69220"
 * extension[codeDepartement].valueCode = #69
 * extension[codeRegion].valueCode = #84
+* extension[dateDebutValidite].valueDate = "1943-01-01"
+* extension[dateFinValidite].valueDate = "2019-01-01"
+* extension[dateMiseAJour].valueDateTime = "2026-01-01T00:00:00+01:00"
 
 // -------------------------------------------------------
 // Patron B : Commune nouvelle active (codes postaux multiples)
@@ -94,6 +97,8 @@ Les communes déléguées sont référencées via leur propre instance Location.
 
 * extension[codeDepartement].valueCode = #69
 * extension[codeRegion].valueCode = #84
+* extension[dateDebutValidite].valueDate = "2019-01-01"
+* extension[dateMiseAJour].valueDateTime = "2026-01-01T00:00:00+01:00"
 
 // -------------------------------------------------------
 // Patron B' : Commune déléguée (partOf → commune nouvelle)
@@ -134,6 +139,8 @@ commune déléguée depuis la création de Belleville-en-Beaujolais (69264) au
 * extension[codePostal].valueString = "69220"
 * extension[codeDepartement].valueCode = #69
 * extension[codeRegion].valueCode = #84
+* extension[dateDebutValidite].valueDate = "2019-01-01"
+* extension[dateMiseAJour].valueDateTime = "2026-01-01T00:00:00+01:00"
 
 // Lien hiérarchique vers la commune nouvelle parente
 * partOf = Reference(CommuneBellevilleEnBeaujolais)

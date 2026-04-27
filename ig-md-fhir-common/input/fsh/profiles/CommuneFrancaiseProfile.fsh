@@ -119,7 +119,10 @@ Note : une commune déléguée peut être active (elle conserve son existence ad
 * extension contains
     CommuneCodePostalExt named codePostal 0..* MS and
     CommuneCodeDepartementExt named codeDepartement 0..1 MS and
-    CommuneCodeRegionExt named codeRegion 0..1 MS
+    CommuneCodeRegionExt named codeRegion 0..1 MS and
+    CommuneDateDebutValiditeExt named dateDebutValidite 0..1 MS and
+    CommuneDateFinValiditeExt named dateFinValidite 0..1 MS and
+    CommuneDateMiseAJourExt named dateMiseAJour 0..1 MS
 
 * extension[codePostal] ^short = "Code(s) postal(aux) de la commune"
 * extension[codePostal] ^definition = "Liste complète des codes postaux rattachés à la commune. Répétable : une commune peut couvrir plusieurs codes postaux (grandes villes, communes géographiquement étendues, arrondissements). Correspond à la propriété répétable `codePostal` du CodeSystem communes-fr-cs."
@@ -129,6 +132,15 @@ Note : une commune déléguée peut être active (elle conserve son existence ad
 
 * extension[codeRegion] ^short = "Code région INSEE (réforme 2016)"
 * extension[codeRegion] ^definition = "Code région INSEE issu de la réforme territoriale de 2016. Exemples : 84 = Auvergne-Rhône-Alpes, 11 = Île-de-France, 93 = PACA."
+
+* extension[dateDebutValidite] ^short = "Date d'entrée en vigueur du code INSEE"
+* extension[dateDebutValidite] ^definition = "Date à partir de laquelle la commune est reconnue par le COG INSEE. Correspond à `dateCreation` dans le CodeSystem communes-fr-cs. Pour les communes historiques : 1943-01-01 par convention."
+
+* extension[dateFinValidite] ^short = "Date de fin de validité (communes inactives)"
+* extension[dateFinValidite] ^definition = "Date à laquelle la commune a cessé d'exister de façon autonome (fusion, suppression). Renseignée uniquement quand `status = inactive`. Correspond à `dateSuppression` dans le CodeSystem communes-fr-cs."
+
+* extension[dateMiseAJour] ^short = "Date de dernière mise à jour de la fiche"
+* extension[dateMiseAJour] ^definition = "Horodatage de la dernière modification de l'enregistrement dans le référentiel CPage (correction de code postal, renommage, mise à jour COG annuelle…). Distinct de `dateDebutValidite` qui est la date COG officielle."
 
 // =============================================
 // Hiérarchie : commune déléguée → commune nouvelle
