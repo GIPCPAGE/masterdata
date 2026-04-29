@@ -7,7 +7,7 @@
 // Géographique (COG) de l'INSEE et transporte :
 //   - le code INSEE (identifiant 5 chars) via identifier[codeInsee]
 //   - le nom officiel de la commune via name
-//   - un ou plusieurs codes postaux via address.postalCode + extension[codePostal]
+//   - un ou plusieurs codes postaux via address.postalCode + extension[codePostal] (chaque occurrence contient codePostal + nomPostal)
 //   - le type de territoire (commune / commune-nouvelle / commune-déléguée) via type
 //   - les codes département et région INSEE via extensions
 //   - pour les communes déléguées : la commune nouvelle parente via partOf
@@ -27,7 +27,7 @@ Profil Location représentant une commune française selon le Code Officiel Géo
 Chaque instance porte :
 - le **code INSEE** (5 caractères) comme identifiant principal (`identifier[codeInsee]`)
 - le **nom officiel** de la commune (`name`)
-- un ou plusieurs **codes postaux** (`address.postalCode` pour le code principal, `extension[codePostal]` pour la liste complète)
+- un ou plusieurs **codes postaux** (`address.postalCode` pour le code principal, `extension[codePostal]` pour la liste complète — chaque occurrence regroupe le code 5 chiffres et le nom postal associé)
 - le **type de territoire** : commune ordinaire, commune nouvelle ou commune déléguée (`type`)
 - les **codes département** et **région** INSEE (extensions)
 - pour les **communes déléguées** : une référence vers la commune nouvelle parente (`partOf`)
@@ -125,7 +125,7 @@ Note : une commune déléguée peut être active (elle conserve son existence ad
     CommuneDateMiseAJourExt named dateMiseAJour 0..1 MS
 
 * extension[codePostal] ^short = "Code(s) postal(aux) de la commune"
-* extension[codePostal] ^definition = "Liste complète des codes postaux rattachés à la commune. Répétable : une commune peut couvrir plusieurs codes postaux (grandes villes, communes géographiquement étendues, arrondissements). Correspond à la propriété répétable `codePostal` du CodeSystem communes-fr-cs."
+* extension[codePostal] ^definition = "Liste complète des codes postaux rattachés à la commune. Répétable : une commune peut couvrir plusieurs codes postaux (grandes villes, communes géographiquement étendues, arrondissements). Chaque occurrence regroupe le code postal à 5 chiffres (`extension[codePostal].extension[codePostal]`) et le nom postal La Poste associé (`extension[codePostal].extension[nomPostal]`). Correspond à la propriété répétable `codePostal` du CodeSystem communes-fr-cs."
 
 * extension[codeDepartement] ^short = "Code département INSEE (2 ou 3 caractères)"
 * extension[codeDepartement] ^definition = "Code département INSEE de la commune. Format : 2 chars (01–95, 2A, 2B) ou 3 chars pour les DROM (971–976)."

@@ -47,7 +47,8 @@ Son code INSEE est conservé dans le COG avec `status = inactive`.
 * address.city = "Saint-Jean-d'Ardières"
 * address.state = "Rhône"
 
-* extension[codePostal].valueString = "69220"
+* extension[codePostal].extension[codePostal].valueString = "69220"
+* extension[codePostal].extension[nomPostal].valueString = "SAINT-JEAN-D'ARDIERES"
 * extension[codeDepartement].valueCode = #69
 * extension[codeRegion].valueCode = #84
 * extension[dateDebutValidite].valueDate = "1943-01-01"
@@ -92,8 +93,10 @@ Les communes déléguées sont référencées via leur propre instance Location.
 * address.state = "Rhône"
 
 // Tous les codes postaux dans les extensions (répétable)
-* extension[codePostal][0].valueString = "69220"
-* extension[codePostal][1].valueString = "69430"
+* extension[codePostal][0].extension[codePostal].valueString = "69220"
+* extension[codePostal][0].extension[nomPostal].valueString = "BELLEVILLE EN BEAUJOLAIS"
+* extension[codePostal][1].extension[codePostal].valueString = "69430"
+* extension[codePostal][1].extension[nomPostal].valueString = "SAINT-JEAN-D'ARDIERES"
 
 * extension[codeDepartement].valueCode = #69
 * extension[codeRegion].valueCode = #84
@@ -136,7 +139,8 @@ commune déléguée depuis la création de Belleville-en-Beaujolais (69264) au
 * address.city = "Belleville-sur-Saône"
 * address.state = "Rhône"
 
-* extension[codePostal].valueString = "69220"
+* extension[codePostal].extension[codePostal].valueString = "69220"
+* extension[codePostal].extension[nomPostal].valueString = "BELLEVILLE-SUR-SAONE"
 * extension[codeDepartement].valueCode = #69
 * extension[codeRegion].valueCode = #84
 * extension[dateDebutValidite].valueDate = "2019-01-01"
