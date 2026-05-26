@@ -34,3 +34,6 @@ Description: "Declaration de capacites du serveur FHIR pour les operations de pu
 * rest[=].operation[+].name = "$publication-bundle"
 * rest[=].operation[=].definition = Canonical(publication-bundle)
 * rest[=].operation[=].documentation = "Recupere le contenu publie d'un lot sous forme de Bundle FHIR (transaction ou batch). Supporte le mode asynchrone : si l'en-tete Prefer: respond-async est present, retourne 202 Accepted + Content-Location pour polling."
+* rest[=].operation[+].name = "$publication-list"
+* rest[=].operation[=].definition = Canonical(publication-list)
+* rest[=].operation[=].documentation = "Retourne la liste des identifiants de lots publies (format PB-{id}) compris dans un intervalle donne. Permet le rattrapage (gap detection) : un consommateur peut detecter les lots manques en fournissant son dernier lot connu via fromExclusiveBatchId."

@@ -8,6 +8,7 @@ Elle couvre :
 
 - `$publication-metadata`
 - `$publication-bundle`
+- `$publication-list`
 
 Elle ne couvre pas :
 
@@ -335,20 +336,100 @@ GET /fhir/async-jobs/12345
 
 ---
 
-## 7. Type de Bundle retourné
+## 7. Opération `$publication-list`
 
-### 7.1 `Bundle.type = transaction`
+### 7.1 Objectif
+
+Cette opération permet à un consommateur de lister les identifiants de lots publiés compris dans un intervalle donné.
+
+Elle est conçue pour le **rattrapage (gap detection)** : un consommateur peut détecter les lots qu'il aurait manqués en fournissant son dernier lot connu comme borne basse.
+
+### 7.2 Endpoint
+
+```http
+POST /fhir/$publication-list
+Content-Type: application/fhir+json
+```
+
+### 7.3 Paramètres d'entrée
+
+L'entrée est portée par une ressource `Parameters`.
+
+| Paramètre | Cardinalité | Type | Description |
+|-----------|------------|------|-------------|
+| `fromExclusiveBatchId` | 1..1 | string | Borne basse exclusive (format `PB-{id}`). Les lots dont l'identifiant est strictement supérieur à cette valeur sont retournés. |
+| `toInclusiveBatchId` | 0..1 | string | Borne haute inclusive (format `PB-{id}`). Si absent, tous les lots au-delà de `fromExclusiveBatchId` sont retournés. |
+
+Exemple avec borne haute :
+
+```json
+{
+  "resourceType": "Parameters",
+  "parameter": [
+    { "name": "fromExclusiveBatchId", "valueString": "PB-2026-000140" },
+    { "name": "toInclusiveBatchId",   "valueString": "PB-2026-000145" }
+  ]
+}
+```
+
+Exemple sans borne haute (rattrapage ouvert) :
+
+```json
+{
+  "resourceType": "Parameters",
+  "parameter": [
+    { "name": "fromExclusiveBatchId", "valueString": "PB-2026-000140" }
+  ]
+}
+```
+
+### 7.4 Paramètres de sortie
+
+La réponse est une ressource `Parameters` contenant zéro ou plusieurs occurrences du paramètre `batchId`, triées par identifiant ascendant.
+
+| Paramètre | Cardinalité | Type | Description |
+|-----------|------------|------|-------------|
+| `batchId` | 0..* | string | Identifiant d'un lot publié dans l'intervalle (format `PB-{id}`). |
+
+Exemple de réponse (3 lots trouvés, `PB-2026-000143` et `PB-2026-000144` absents — gap détecté) :
+
+```json
+{
+  "resourceType": "Parameters",
+  "parameter": [
+    { "name": "batchId", "valueString": "PB-2026-000141" },
+    { "name": "batchId", "valueString": "PB-2026-000142" },
+    { "name": "batchId", "valueString": "PB-2026-000145" }
+  ]
+}
+```
+
+Si aucun lot n'est trouvé dans l'intervalle, la réponse est une ressource `Parameters` vide.
+
+### 7.5 Règles de comportement
+
+- `fromExclusiveBatchId` est obligatoire ; le serveur retourne `400` si absent.
+- `toInclusiveBatchId` est optionnel ; s'il est absent, l'intervalle est ouvert vers le haut.
+- Les résultats sont triés par identifiant de lot ascendant.
+- L'opération ne filtre pas par scope ni par tenant ; elle retourne tous les lots publiés dans l'intervalle.
+- L'opération ne modifie aucune donnée (`affectsState = false`).
+
+---
+
+## 8. Type de Bundle retourné
+
+### 8.1 `Bundle.type = transaction`
 
 Le lot publié doit être interprété comme une unité cohérente.
 
 - soit le bundle peut être rejoué tel quel contre un serveur FHIR ;
 - soit il peut être traité localement comme un lot logique cohérent.
 
-### 7.2 `Bundle.type = batch`
+### 8.2 `Bundle.type = batch`
 
 Les entrées peuvent être traitées indépendamment.
 
-### 7.3 Règle de choix
+### 8.3 Règle de choix
 
 Le type de bundle est déterminé par :
 
@@ -358,21 +439,21 @@ Le type de bundle est déterminé par :
 
 ---
 
-## 8. Gestion des périmètres et projections
+## 9. Gestion des périmètres et projections
 
-### 8.1 Nomenclatures (lots GLOBAL)
+### 9.1 Nomenclatures (lots GLOBAL)
 
 - contenu identique pour tous les consommateurs concernés ;
 - pas d'identifiant local client à injecter ;
 - pas de contextualisation par client.
 
-### 8.2 Ressources métier (lots CLIENT)
+### 9.2 Ressources métier (lots CLIENT)
 
 - contenu contextualisé par client ;
 - identifiants locaux potentiellement différents selon le client ;
 - filtrage selon les règles de visibilité de la vue de publication.
 
-### 8.3 Transaction interne mixte
+### 9.3 Transaction interne mixte
 
 Si une transaction interne impacte à la fois une nomenclature et une ressource métier, il faut produire :
 
@@ -381,9 +462,9 @@ Si une transaction interne impacte à la fois une nomenclature et une ressource 
 
 ---
 
-## 9. Modèle logique de lot de publication
+## 10. Modèle logique de lot de publication
 
-### 9.1 PublicationBatch
+### 10.1 PublicationBatch
 
 | Champ | Cardinalité | Type | Description |
 |-------|------------|------|-------------|
@@ -400,7 +481,7 @@ Si une transaction interne impacte à la fois une nomenclature et une ressource 
 
 ---
 
-## 10. Gestion des erreurs
+## 11. Gestion des erreurs
 
 En cas d'erreur, le serveur retourne une ressource FHIR `OperationOutcome`.
 
