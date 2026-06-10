@@ -182,7 +182,9 @@ CPage : receveur comptable, numéros sociaux (URSSAF/CNRACL/IRCANTEC), TVA, TPG,
 * extension[numerosEmetteur]        ^short = "Numéros émetteur EH (NNETCH/NNECCH)"
 * extension[indicateurArrondissement] ^short = "Indicateur arrondissement O/N (ARROCH)"
 
-// ── Hiérarchie ─────────────────────────────────────────────────────────────────
+// ── Hiérarchie : GHT parent ──────────────────────────────────────────────────
+// Conforme FR Core structure_entites.html : l'EJ est membre d'un GHT.
 
 * partOf 0..1 MS
-* partOf ^short = "Entité juridique parente (GHT ou groupement)"
+* partOf only Reference(GHTProfile)
+* partOf ^short = "GHT parent — groupement hospitalier de territoire (GHTProfile)"

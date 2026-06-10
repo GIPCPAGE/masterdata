@@ -91,9 +91,11 @@ pas à l'Entité Géographique.
 * contact.name.text 0..1 MS
 * contact.name.text ^short = "Matricule de l'agent responsable (SAGE_NUAGAGE — 9 chars)"
 
-// ── Hiérarchie : rattachement direct à l'Entité Juridique ────────────────────
-// Note : le pôle est rattaché à CHO (Entité Juridique), pas à ETA (Entité Géographique)
+// ── Hiérarchie : rattachement à l'Entité Géographique ───────────────────────
+// Conforme FR Core : le pôle est rattaché à l'EG (site géographique), pas directement à l'EJ.
+// La table POA contient CHO_NUCHCH (FK vers EJ) mais c'est une référence de traçabilité ;
+// la hiérarchie FHIR exprime le lien organisationnel via l'EG.
 
 * partOf 0..1 MS
-* partOf only Reference(EntiteJuridiqueProfile)
-* partOf ^short = "Entité Juridique parente (CHO_NUCHCH — direct, pas via EG)"
+* partOf only Reference(EntiteGeographiqueProfile)
+* partOf ^short = "Entité Géographique parente (site où est localisé le pôle)"

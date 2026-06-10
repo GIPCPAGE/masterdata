@@ -140,3 +140,22 @@ indicateur UF HEB/SOIN/ADMIN/MED, UF externe, demandeuse/exécutante acte).
 * partOf 0..1 MS
 * partOf only Reference(CentreResponsabiliteProfile)
 * partOf ^short = "Centre de Responsabilité parent (CRE_NUCRCR)"
+
+// ── Relations multi-parents (FR Core member extension) ────────────────────────
+// Conforme FR Core structure_relations.html : une UF peut avoir plusieurs relations
+// organisationnelles simultanées via l'extension fr-core-organization-member.
+//
+// Cas d'usage :
+//   - UF appartient à un SERVICE (SER_COSESE — hiérarchie historique)
+//   - UF appartient à un CENTRE_ACTIVITE (CAC_NUACAC — analytique)
+//   - UF appartient à un POLE (POA_NUPAPA — optionnel)
+//
+// Remplace les attributs JSONB serviceId, centreActiviteId, poleId par des
+// références FHIR standard conformes FR Core.
+
+* extension[fr-core-organization-member] 0..* MS
+* extension[fr-core-organization-member] ^short = """
+    Relations multi-parents : service (SER_COSESE),
+    centre d activité (CAC_NUACAC), pôle (POA_NUPAPA).
+    Utiliser une extension par relation (FR Core member).
+    """
