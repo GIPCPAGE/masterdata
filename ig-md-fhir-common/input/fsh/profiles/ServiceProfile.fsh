@@ -1,12 +1,12 @@
 // =============================================
-// Profil : Service (STR.SER)
+// Profil : Service (service)
 // =============================================
 // Hérite de StructureHospitaliereOrganizationProfile.
 //
 // Le SERVICE est une structure parallèle au POLE (hiérarchie historique).
 // Les UFs lui sont rattachées via SER_COSESE (attribut serviceId sur UFProfile).
 //
-// Colonnes Oracle STR.SER → FHIR :
+// Colonnes Oracle service → FHIR :
 //   COSESE (PK)    → identifier[serCode]  (4 chars)
 //   LIBESE         → name
 //   LIBRSE         → alias[0]
@@ -23,7 +23,7 @@ Parent: StructureHospitaliereOrganizationProfile
 Id: strh-service-profile
 Title: "Service"
 Description: """
-Profil FHIR R4 représentant un service hospitalier (table Oracle `STR.SER`).
+Profil FHIR R4 représentant un service hospitalier.
 
 Hérite de `StructureHospitaliereOrganizationProfile`.
 
@@ -100,11 +100,11 @@ Structure parallèle au Pôle (historique) — les UF lui sont rattachées via `
 
 * extension[periodValidite] ^short = "Période de validité (DATDSE / DATFSE)"
 * extension[codeValidite]   ^short = "Code validité (INVASE : F=Fermé / I=Invalide / V=Valide)"
-* extension[sigle]          ^short = "Sigle du service (SIGLSE — 10 chars)"
+* extension[sigle]          ^short = "Sigle du service"
 * extension[typeService]    ^short = "Type service (TYPESE : D=Direction / S=Service)"
 
 // ── Hiérarchie : Entité Géographique ─────────────────────────────────────────
 
 * partOf 0..1 MS
 * partOf only Reference(EntiteGeographiqueProfile)
-* partOf ^short = "Entité Géographique parente (ETA_NUETET)"
+* partOf ^short = "Entité Géographique parente "

@@ -1,5 +1,5 @@
 // =============================================
-// Profil : Unité Fonctionnelle (STR.UFO)
+// Profil : Unité Fonctionnelle (unité fonctionnelle)
 // =============================================
 // Hérite de FRCoreOrganizationUFProfile (FR Core 2.2.0).
 //
@@ -27,7 +27,7 @@ Parent: FRCoreOrganizationUFProfile
 Id: strh-uf-profile
 Title: "Unité Fonctionnelle"
 Description: """
-Profil FHIR R4 représentant une unité fonctionnelle hospitalière (table Oracle `STR.UFO`).
+Profil FHIR R4 représentant une unité fonctionnelle hospitalière.
 
 Hérite de `FRCoreOrganizationUFProfile` (FR Core 2.2.0) qui porte déjà les 9 extensions
 FR Core (discipline équipement, type activité, champ activité MCO/HAD/PSY, capacité lits,
@@ -36,9 +36,9 @@ indicateur UF HEB/SOIN/ADMIN/MED, UF externe, demandeuse/exécutante acte).
 **Modèle temporel** : PK composite (NUUFUF + DATDUF).
 
 **Hiérarchie** :
-- `partOf` → Centre de Responsabilité (`CentreResponsabiliteProfile`) via CRE_NUCRCR
-- `extension[siteLocalisation]` → site géographique (ETA_NUETET — où l'UF est physiquement)
-- `extension[poleId]` → pôle optionnel (POA_NUPAPA)
+- `partOf` → Centre de Responsabilité (`CentreResponsabiliteProfile`) via le Centre de Responsabilité
+- `extension[siteLocalisation]` → site géographique : site géographique de localisation physique
+- `extension[poleId]` → pôle optionnel du pôle
 
 **Scope** : TENANT uniquement.
 """
@@ -117,8 +117,8 @@ indicateur UF HEB/SOIN/ADMIN/MED, UF externe, demandeuse/exécutante acte).
 
 * extension[periodValidite]     ^short = "Période de validité (DATDUF / DATFUF)"
 * extension[codeValidite]       ^short = "Code validité (INVAUF : F=Fermé / I=Invalide / V=Valide)"
-* extension[siteLocalisation]   ^short = "Site géographique de localisation (ETA_NUETET — obligatoire)"
-* extension[pole]               ^short = "Pôle d'activité optionnel (POA_NUPAPA)"
+* extension[siteLocalisation]   ^short = "Site géographique de localisation — obligatoire"
+* extension[pole]               ^short = "Pôle d'activité optionnel du pôle"
 * extension[typeUFMedicale]     ^short = "Type UF médicale (TYPEUF : H=Hosp / E=Externe / D=Divers / A=Autre)"
 * extension[indicateurSeances]  ^short = "UF à séances (SEANUF : O/N)"
 * extension[classeDominante]    ^short = "Classe dominante UF médicale (CLDOUF)"
@@ -139,7 +139,7 @@ indicateur UF HEB/SOIN/ADMIN/MED, UF externe, demandeuse/exécutante acte).
 
 * partOf 0..1 MS
 * partOf only Reference(CentreResponsabiliteProfile)
-* partOf ^short = "Centre de Responsabilité parent (CRE_NUCRCR)"
+* partOf ^short = "Centre de Responsabilité parent du centre de responsabilité"
 
 // ── Relations multi-parents (FR Core member extension) ────────────────────────
 // Conforme FR Core structure_relations.html : une UF peut avoir plusieurs relations
@@ -156,6 +156,6 @@ indicateur UF HEB/SOIN/ADMIN/MED, UF externe, demandeuse/exécutante acte).
 * extension[fr-core-organization-member] 0..* MS
 * extension[fr-core-organization-member] ^short = """
     Relations multi-parents : service (SER_COSESE),
-    centre d activité (CAC_NUACAC), pôle (POA_NUPAPA).
+    centre d activité (CAC_NUACAC), pôle du pôle.
     Utiliser une extension par relation (FR Core member).
     """

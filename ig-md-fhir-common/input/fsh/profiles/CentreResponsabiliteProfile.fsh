@@ -1,10 +1,10 @@
 // =============================================
-// Profil : Centre de Responsabilité (STR.CRE)
+// Profil : Centre de Responsabilité (centre de responsabilité)
 // =============================================
 // Hérite de StructureHospitaliereOrganizationProfile.
 //
-// Colonnes Oracle STR.CRE → FHIR :
-//   CHO_NUCHCH    → extension[entiteJuridique] (EJ parente — toujours présente)
+// Colonnes Oracle centre de responsabilité → FHIR :
+//   entiteJuridique    → extension[entiteJuridique] (EJ parente — toujours présente)
 //   NUCRCR (PK)   → identifier[creCode]  (4 chars)
 //   LIBECR        → name
 //   LIBRCR        → alias[0]
@@ -18,25 +18,25 @@
 //                   sinon partOf → EntiteJuridiqueProfile
 //
 // Hiérarchie :
-//   - Si POA_NUPAPA renseigné  : partOf = Pôle
+//   - Si pôle parent renseigné  : partOf = Pôle
 //   - Sinon                    : partOf = Entité Juridique
-//   - CHO_NUCHCH toujours porté en extension[entiteJuridique]
+//   - entiteJuridique toujours porté en extension[entiteJuridique]
 
 Profile: CentreResponsabiliteProfile
 Parent: StructureHospitaliereOrganizationProfile
 Id: strh-centre-responsabilite-profile
 Title: "Centre de Responsabilité"
 Description: """
-Profil FHIR R4 représentant un centre de responsabilité hospitalier (table Oracle `STR.CRE`).
+Profil FHIR R4 représentant un centre de responsabilité hospitalier.
 
 Hérite de `StructureHospitaliereOrganizationProfile`.
 
-**Modèle temporel** : PK composite (NUCRCR + DATDCR).
+**Modèle temporel** : PK composite.
 
 **Hiérarchie** :
-- Si `POA_NUPAPA` est renseigné → `partOf` référence le pôle parent (`PoleProfile`)
+- Si un pôle parent est renseigné → `partOf` référence le pôle parent (`PoleProfile`)
 - Sinon → `partOf` référence l'entité juridique (`EntiteJuridiqueProfile`)
-- L'entité juridique parente (CHO_NUCHCH) est toujours portée en `extension[entiteJuridique]`.
+- L'entité juridique parente  est toujours portée en `extension[entiteJuridique]`.
 
 **Scope** : TENANT uniquement.
 """
@@ -55,10 +55,10 @@ Hérite de `StructureHospitaliereOrganizationProfile`.
 * identifier[strHId].value 1..1 MS
 * identifier[strHId] ^short = "Identifiant MDM interne (UUID)"
 
-// Code CR (NUCRCR — 4 chars)
+// Code CR
 * identifier[creCode].system = "https://www.cpage.fr/ig/masterdata/common/identifiers/cre-code" (exactly)
 * identifier[creCode].value 1..1 MS
-* identifier[creCode] ^short = "Code centre de responsabilité (NUCRCR — 4 chars)"
+* identifier[creCode] ^short = "Code centre de responsabilité"
 
 // ── Type organisationnel ──────────────────────────────────────────────────────
 
@@ -106,14 +106,14 @@ Hérite de `StructureHospitaliereOrganizationProfile`.
 * extension[lettreBudgetaire]          ^short = "Lettre budgétaire (SBUD_CODEBUD — 1 char, obligatoire)"
 * extension[codeSecteurBudgetaire]     ^short = "Code secteur budgétaire (SSBU_NUSBSB — 3 chars)"
 * extension[codeDirectionTransversale] ^short = "Code direction transversale (SDTR_NUDTSD — 10 chars)"
-* extension[entiteJuridique]           ^short = "Entité juridique parente (CHO_NUCHCH — toujours présente)"
+* extension[entiteJuridique]           ^short = "Entité juridique parente "
 
 // ── Hiérarchie : Pôle (si renseigné) sinon Entité Juridique ──────────────────
 
 * partOf 0..1 MS
 * partOf only Reference(PoleProfile or EntiteJuridiqueProfile)
 * partOf ^short = """
-    Pôle parent si POA_NUPAPA renseigné (PoleProfile),
+    Pôle parent si pôle parent renseigné (PoleProfile),
     sinon Entité Juridique (EntiteJuridiqueProfile).
     L'EJ est toujours portée en extension[entiteJuridique].
     """

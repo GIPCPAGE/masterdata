@@ -3,7 +3,7 @@
 // =============================================
 // Entité légale d'un établissement hospitalier.
 // Hérite de FRCoreOrganizationEtablissementProfile (FR Core 2.2.0).
-// Source Oracle : STR.CHO
+// Source Oracle : entité juridique
 //
 // Colonnes Oracle → FHIR :
 //   NUCHCH (PK)         → identifier[choCode]       Code interne CPage (2 chars)
@@ -44,7 +44,7 @@ Profil FHIR R4 représentant l'entité légale d'un établissement hospitalier d
 Hérite de `FRCoreOrganizationEtablissementProfile` (FR Core 2.2.0) qui porte déjà
 les extensions SAE (catégorie établissement) et les contraintes hospitalo-centriques.
 
-Source Oracle : table `STR.CHO` — colonnes génériques (non CPage-spécifiques).
+Source Oracle : table `entité juridique` — colonnes génériques (non CPage-spécifiques).
 
 **Scope** : TENANT uniquement — propre à l'établissement propriétaire.
 **Profil CPage** : `CPageEntiteJuridiqueProfile` (ig-md-fhir-cpage) — champs spécifiques
@@ -72,10 +72,10 @@ CPage : receveur comptable, numéros sociaux (URSSAF/CNRACL/IRCANTEC), TVA, TPG,
 * identifier[strHId].value 1..1 MS
 * identifier[strHId] ^short = "Identifiant MDM interne (UUID)"
 
-// Code CPage établissement (NUCHCH — 2 chars)
+// Code CPage établissement
 * identifier[choCode].system = "https://www.cpage.fr/ig/masterdata/common/identifiers/cho-code" (exactly)
 * identifier[choCode].value 1..1 MS
-* identifier[choCode] ^short = "Code centre hospitalier CPage (NUCHCH — 2 chars)"
+* identifier[choCode] ^short = "Code centre hospitalier CPage"
 
 // SIRET (SIRECH)
 * identifier[siret].system = "https://sirene.fr" (exactly)

@@ -2,13 +2,13 @@
 // Profil : Centre d'Activité (UAC/PAC)
 // =============================================
 // Hérite de FRCoreOrganizationUACProfile (FR Core 2.2.0).
-// Correspond à CAC_NUACAC dans STR.UFO (attribut des UF).
+// Correspond à CAC_NUACAC dans unité fonctionnelle (attribut des UF).
 //
 // Le Centre d'Activité est un regroupement analytique des UF,
 // distinct du Pôle (structurel) et du CR (budgétaire).
 // FR Core définit FRCoreOrganizationUACProfile pour cette entité.
 //
-// Référence Oracle : STR.UFO.CAC_NUACAC = 'Code Centre d activité'
+// Référence Oracle : unité fonctionnelle.CAC_NUACAC = 'Code Centre d activité'
 
 Profile: CentreActiviteProfile
 Parent: FRCoreOrganizationUACProfile
@@ -21,7 +21,7 @@ Hérite de `FRCoreOrganizationUACProfile` (FR Core 2.2.0).
 
 Le Centre d'Activité est un regroupement analytique d'UF, distinct du Pôle
 (organisationnel) et du Centre de Responsabilité (budgétaire).
-Il est référencé dans les UF via `CAC_NUACAC` (champ analytique `STR.UFO`).
+Il est référencé dans les UF via `CAC_NUACAC` (champ analytique `unité fonctionnelle`).
 
 **Scope** : TENANT uniquement.
 """
@@ -72,6 +72,6 @@ Il est référencé dans les UF via `CAC_NUACAC` (champ analytique `STR.UFO`).
 
 * partOf 0..1 MS
 * partOf only Reference(EntiteGeographiqueProfile)
-// Conforme STR.CAC.CRE_NUCRCR — le Centre d'Activité est sous un CR (pas sous EG)
+// Conforme centre d'activité.CRE_NUCRCR — le Centre d'Activité est sous un CR (pas sous EG)
 * partOf only Reference(CentreResponsabiliteProfile)
-* partOf ^short = "Centre de Responsabilité parent (CRE_NUCRCR)"
+* partOf ^short = "Centre de Responsabilité parent "

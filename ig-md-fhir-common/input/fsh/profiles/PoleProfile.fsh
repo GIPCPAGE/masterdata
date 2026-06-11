@@ -1,10 +1,10 @@
 // =============================================
-// Profil : Pôle d'activité (STR.POA)
+// Profil : Pôle d'activité (pôle)
 // =============================================
 // Hérite de StructureHospitaliereOrganizationProfile.
 //
-// Colonnes Oracle STR.POA → FHIR :
-//   CHO_NUCHCH  → partOf (référence Entité Juridique — direct, pas via EG)
+// Colonnes Oracle pôle → FHIR :
+//   entiteJuridique  → partOf (référence Entité Juridique — direct, pas via EG)
 //   NUPAPA (PK) → identifier[poaCode]
 //   LIBEPA      → name
 //   LIBRPA      → alias[0]
@@ -17,15 +17,15 @@ Parent: StructureHospitaliereOrganizationProfile
 Id: strh-pole-profile
 Title: "Pôle d'activité"
 Description: """
-Profil FHIR R4 représentant un pôle d'activité hospitalier (table Oracle `STR.POA`).
+Profil FHIR R4 représentant un pôle d'activité hospitalier.
 
 Hérite de `StructureHospitaliereOrganizationProfile`.
 
-**Modèle temporel** : PK composite (NUPAPA + DATDPA).
+**Modèle temporel** : PK composite.
 La période de validité est portée par `extension[periodValidite]`,
 le code de validité par `extension[codeValidite]` (F/I/V).
 
-**Important** : le pôle est rattaché directement à l'**Entité Juridique** (CHO_NUCHCH),
+**Important** : le pôle est rattaché directement à l'**Entité Juridique** ,
 pas à l'Entité Géographique.
 
 **Scope** : TENANT uniquement.
@@ -45,10 +45,10 @@ pas à l'Entité Géographique.
 * identifier[strHId].value 1..1 MS
 * identifier[strHId] ^short = "Identifiant MDM interne (UUID)"
 
-// Code pôle (NUPAPA — 10 chars)
+// Code pôle
 * identifier[poaCode].system = "https://www.cpage.fr/ig/masterdata/common/identifiers/poa-code" (exactly)
 * identifier[poaCode].value 1..1 MS
-* identifier[poaCode] ^short = "Code pôle d'activité (NUPAPA — 10 chars)"
+* identifier[poaCode] ^short = "Code pôle d'activité"
 
 // ── Type organisationnel ──────────────────────────────────────────────────────
 
@@ -93,7 +93,7 @@ pas à l'Entité Géographique.
 
 // ── Hiérarchie : rattachement à l'Entité Géographique ───────────────────────
 // Conforme FR Core : le pôle est rattaché à l'EG (site géographique), pas directement à l'EJ.
-// La table POA contient CHO_NUCHCH (FK vers EJ) mais c'est une référence de traçabilité ;
+// La table POA contient entiteJuridique (FK vers EJ) mais c'est une référence de traçabilité ;
 // la hiérarchie FHIR exprime le lien organisationnel via l'EG.
 
 * partOf 0..1 MS

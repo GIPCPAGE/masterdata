@@ -1,11 +1,11 @@
 // =============================================
-// Profil : Entité Géographique (STR.ETA)
+// Profil : Entité Géographique (entité géographique)
 // =============================================
 // Site géographique d'un établissement hospitalier.
 // Hérite de FRCoreOrganizationEtablissementProfile (FR Core 2.2.0).
 //
-// Colonnes Oracle STR.ETA → FHIR :
-//   CHO_NUCHCH       → partOf (référence Entité Juridique)
+// Colonnes Oracle entité géographique → FHIR :
+//   entiteJuridique       → partOf (référence Entité Juridique)
 //   NUETET (PK)      → identifier[etaCode]
 //   DATDET/DATFET    → extension[periodValidite]  (modèle temporel)
 //   INVAET (F/I/V)   → active + extension[codeValidite]
@@ -39,11 +39,11 @@ Parent: FRCoreOrganizationEtablissementProfile
 Id: strh-entite-geographique-profile
 Title: "Entité Géographique"
 Description: """
-Profil FHIR R4 représentant un site géographique d'un établissement hospitalier (table Oracle `STR.ETA`).
+Profil FHIR R4 représentant un site géographique d'un établissement hospitalier.
 
 Hérite de `FRCoreOrganizationEtablissementProfile` (FR Core 2.2.0).
 
-**Modèle temporel** : la table ETA utilise un PK composé (NUETET + DATDET).
+**Modèle temporel** : la table ETA utilise un PK composé.
 Chaque instance représente UNE PÉRIODE de validité d'un site géographique.
 La période est portée par `extension[periodValidite]` et le code de validité par `extension[codeValidite]`.
 
@@ -71,10 +71,10 @@ La période est portée par `extension[periodValidite]` et le code de validité 
 * identifier[strHId].value 1..1 MS
 * identifier[strHId] ^short = "Identifiant MDM interne (UUID)"
 
-// Code site géographique (NUETET — 2 chars)
+// Code site géographique
 * identifier[etaCode].system = "https://www.cpage.fr/ig/masterdata/common/identifiers/eta-code" (exactly)
 * identifier[etaCode].value 1..1 MS
-* identifier[etaCode] ^short = "Code site géographique CPage (NUETET — 2 chars)"
+* identifier[etaCode] ^short = "Code site géographique CPage"
 
 // FINESS (NUFIET)
 * identifier[finess].system = "https://finess.esante.gouv.fr" (exactly)
@@ -175,4 +175,4 @@ La période est portée par `extension[periodValidite]` et le code de validité 
 
 * partOf 0..1 MS
 * partOf only Reference(EntiteJuridiqueProfile)
-* partOf ^short = "Entité Juridique parente (CHO_NUCHCH)"
+* partOf ^short = "Entité Juridique parente "

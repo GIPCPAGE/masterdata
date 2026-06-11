@@ -1,9 +1,9 @@
 // =============================================
-// Profil : Chambre (PAT.PIE)
+// Profil : Chambre (chambre)
 // =============================================
 // Hérite de StructureHospitaliereSiteProfile.
 //
-// Colonnes Oracle PAT.PIE → FHIR :
+// Colonnes Oracle chambre → FHIR :
 //   UFO_NUUFUF (FK) → managingOrganization (UF parente — obligatoire)
 //   NUPIPI (PK)     → identifier[chambreCode]  (4 chars)
 //   LIBCPI          → name
@@ -23,7 +23,7 @@ Parent: StructureHospitaliereSiteProfile
 Id: strh-chambre-profile
 Title: "Chambre"
 Description: """
-Profil FHIR R4 représentant une chambre d'hospitalisation (table Oracle `PAT.PIE`).
+Profil FHIR R4 représentant une chambre d'hospitalisation.
 
 Hérite de `StructureHospitaliereSiteProfile` (issu de `FRCoreLocationProfile`).
 

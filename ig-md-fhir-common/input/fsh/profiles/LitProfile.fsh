@@ -1,9 +1,9 @@
 // =============================================
-// Profil : Lit (PAT.LLI)
+// Profil : Lit (lit)
 // =============================================
 // Hérite de StructureHospitaliereSiteProfile.
 //
-// Colonnes Oracle PAT.LLI → FHIR :
+// Colonnes Oracle lit → FHIR :
 //   PIE_UFO_NUUFUF + PIE_NUPIPI → parentId (UUID de la chambre parente)
 //   NULLLL (PK) → identifier[litCode]   (5 chars)
 //   LIBCLL       → name
@@ -25,7 +25,7 @@ Parent: StructureHospitaliereSiteProfile
 Id: strh-lit-profile
 Title: "Lit"
 Description: """
-Profil FHIR R4 représentant un lit d'hospitalisation (table Oracle `PAT.LLI`).
+Profil FHIR R4 représentant un lit d'hospitalisation.
 
 Hérite de `StructureHospitaliereSiteProfile` (issu de `FRCoreLocationProfile`).
 
