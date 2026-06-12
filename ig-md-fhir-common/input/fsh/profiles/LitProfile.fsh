@@ -64,9 +64,9 @@ Hérite de `StructureHospitaliereSiteProfile` (issu de `FRCoreLocationProfile`).
 * type ^slicing.rules = #open
 
 * type contains litType 1..1 MS
-* type[litType].coding.system = "http://terminology.hl7.org/CodeSystem/v3-RoleCode" (exactly)
-* type[litType].coding.code = #BED (exactly)
-* type[litType] ^short = "Type : Lit (BED)"
+* type[litType].coding.system = "https://hl7.fr/ig/fhir/core/CodeSystem/fr-core-cs-location-type" (exactly)
+* type[litType].coding.code = #LIT (exactly)
+* type[litType] ^short = "Type : Lit (LIT) — FR Core cs-location-type"
 
 // ── Dénomination ─────────────────────────────────────────────────────────────
 

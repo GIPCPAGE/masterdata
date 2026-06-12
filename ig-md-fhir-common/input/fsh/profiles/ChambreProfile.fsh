@@ -62,9 +62,9 @@ Hérite de `StructureHospitaliereSiteProfile` (issu de `FRCoreLocationProfile`).
 * type ^slicing.rules = #open
 
 * type contains chambreType 1..1 MS
-* type[chambreType].coding.system = "http://terminology.hl7.org/CodeSystem/v3-RoleCode" (exactly)
+* type[chambreType].coding.system = "https://hl7.fr/ig/fhir/core/CodeSystem/fr-core-cs-location-type" (exactly)
 * type[chambreType].coding.code = #CHAMB (exactly)
-* type[chambreType] ^short = "Type : Chambre (CHAMB)"
+* type[chambreType] ^short = "Type : Chambre (CHAMB) — FR Core cs-location-type"
 
 // ── Dénomination ─────────────────────────────────────────────────────────────
 
