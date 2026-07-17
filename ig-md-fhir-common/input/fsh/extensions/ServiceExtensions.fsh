@@ -43,6 +43,8 @@ Context: Organization
 ValueSet: SERTypeServiceVS
 Id: ser-type-service-vs
 Title: "Type de service (TYPESE)"
+Description: "Type de service hospitalier selon le code TYPESE : Direction ou Service standard."
+* ^experimental = false
 * ^meta.profile = "http://hl7.org/fhir/StructureDefinition/shareablevalueset"
 * SERTypeServiceCS#D "Direction"
 * SERTypeServiceCS#S "Service"
@@ -50,6 +52,8 @@ Title: "Type de service (TYPESE)"
 CodeSystem: SERTypeServiceCS
 Id: ser-type-service-cs
 Title: "Type de service"
+Description: "Code de type de service hospitalier (TYPESE) : D=Direction, S=Service standard."
+* ^experimental = false
 * ^meta.profile = "http://hl7.org/fhir/StructureDefinition/shareablecodesystem"
 * #D "Direction"
 * #S "Service"
@@ -60,5 +64,6 @@ CodeSystem: StrhOrganizationTypeCS
 Id: strh-organization-type-cs
 Title: "Types organisationnels CPage (complément FR Core v2-3307)"
 Description: "Codes organisationnels CPage non couverts par fr-core-cs-v2-3307."
+* ^experimental = false
 * ^meta.profile = "http://hl7.org/fhir/StructureDefinition/shareablecodesystem"
 * #SERVICE "Service hospitalier"

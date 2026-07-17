@@ -65,6 +65,8 @@ Context: Organization
 ValueSet: UFTypeUFMedicaleVS
 Id: uf-type-uf-medicale-vs
 Title: "Type d'UF médicale (TYPEUF)"
+Description: "Type d'unité fonctionnelle médicale selon le code TYPEUF : Hospitalisation, Externe, Divers ou Autre."
+* ^experimental = false
 * ^meta.profile = "http://hl7.org/fhir/StructureDefinition/shareablevalueset"
 * UFTypeUFMedicaleCS#H "Hospitalisation"
 * UFTypeUFMedicaleCS#E "Externe"
@@ -74,6 +76,8 @@ Title: "Type d'UF médicale (TYPEUF)"
 CodeSystem: UFTypeUFMedicaleCS
 Id: uf-type-uf-medicale-cs
 Title: "Type d'UF médicale"
+Description: "Code de type d'unité fonctionnelle médicale (TYPEUF) : H=Hospitalisation, E=Externe, D=Divers, A=Autre."
+* ^experimental = false
 * ^meta.profile = "http://hl7.org/fhir/StructureDefinition/shareablecodesystem"
 * #H "Hospitalisation"
 * #E "Externe"

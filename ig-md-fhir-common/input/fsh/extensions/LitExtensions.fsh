@@ -38,6 +38,8 @@ Context: Location
 ValueSet: LitTypeVS
 Id: lit-type-vs
 Title: "Type de lit (CARALL)"
+Description: "Types de lit possibles selon le code CARALL : Standard, Bébé, Hospitalisation, Isolement, Pédiatrie, Soins, Urgences, Chirurgie, Rééducation."
+* ^experimental = false
 * ^meta.profile = "http://hl7.org/fhir/StructureDefinition/shareablevalueset"
 * LitTypeCS#A "Standard (A)"
 * LitTypeCS#B "Bébé (B)"
@@ -52,6 +54,8 @@ Title: "Type de lit (CARALL)"
 CodeSystem: LitTypeCS
 Id: lit-type-cs
 Title: "Type de lit (CARALL)"
+Description: "Code de type de lit (CARALL) : A=Standard, B=Bébé, H=Hospitalisation, I=Isolement, P=Pédiatrie, S=Soins, U=Urgences, C=Chirurgie, R=Rééducation."
+* ^experimental = false
 * ^meta.profile = "http://hl7.org/fhir/StructureDefinition/shareablecodesystem"
 * #A "Standard"
 * #B "Bébé"

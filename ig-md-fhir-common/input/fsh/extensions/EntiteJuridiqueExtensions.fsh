@@ -64,6 +64,7 @@ ValueSet: EJCategoriePmsiVS
 Id: ej-categorie-pmsi-vs
 Title: "Catégorie PMSI"
 Description: "Catégories d'établissement PMSI (CAPMCH)."
+* ^experimental = false
 * ^meta.profile = "http://hl7.org/fhir/StructureDefinition/shareablevalueset"
 * EJCategoriePmsiCS#10 "MCO public"
 * EJCategoriePmsiCS#20 "Psychiatrie publique"
@@ -75,6 +76,8 @@ Description: "Catégories d'établissement PMSI (CAPMCH)."
 CodeSystem: EJCategoriePmsiCS
 Id: ej-categorie-pmsi-cs
 Title: "Catégorie PMSI"
+Description: "Catégories d'établissement PMSI (CAPMCH) : MCO public, Psychiatrie publique, Psychiatrie privée, MCO privé, SSR public, SSR privé."
+* ^experimental = false
 * ^meta.profile = "http://hl7.org/fhir/StructureDefinition/shareablecodesystem"
 * #10 "MCO public"
 * #20 "Psychiatrie publique"
@@ -112,6 +115,8 @@ Context: Organization
 ValueSet: EJLocalisationDomTomVS
 Id: ej-localisation-dom-tom-vs
 Title: "Localisation DOM/TOM"
+Description: "Localisation de l'établissement en métropole ou dans un département/région d'outre-mer (CDOMCH) : Métropole, Guadeloupe, Martinique, Guyane ou La Réunion."
+* ^experimental = false
 * ^meta.profile = "http://hl7.org/fhir/StructureDefinition/shareablevalueset"
 * EJLocalisationDomTomCS#970 "Métropole"
 * EJLocalisationDomTomCS#971 "Guadeloupe"
@@ -122,6 +127,8 @@ Title: "Localisation DOM/TOM"
 CodeSystem: EJLocalisationDomTomCS
 Id: ej-localisation-dom-tom-cs
 Title: "Localisation DOM/TOM"
+Description: "Code de localisation de l'établissement en métropole ou dans un département/région d'outre-mer (CDOMCH) : 970=Métropole, 971=Guadeloupe, 972=Martinique, 973=Guyane, 974=La Réunion."
+* ^experimental = false
 * ^meta.profile = "http://hl7.org/fhir/StructureDefinition/shareablecodesystem"
 * #970 "Métropole"
 * #971 "Guadeloupe"
