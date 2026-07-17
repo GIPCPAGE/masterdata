@@ -52,10 +52,8 @@ CPage : receveur comptable, numéros sociaux (URSSAF/CNRACL/IRCANTEC), TVA, TPG,
 """
 
 // ── Identifiants ──────────────────────────────────────────────────────────────
-
-* identifier ^slicing.discriminator.type = #value
-* identifier ^slicing.discriminator.path = "system"
-* identifier ^slicing.rules = #open
+// Slicing déjà défini par le parent FRCoreOrganizationEtablissementProfile
+// (discriminator pattern:system) — ne pas redéclarer, seulement ajouter des slices.
 
 * identifier 1..* MS
 
