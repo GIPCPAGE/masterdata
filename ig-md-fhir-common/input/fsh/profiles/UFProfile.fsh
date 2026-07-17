@@ -153,8 +153,8 @@ indicateur UF HEB/SOIN/ADMIN/MED, UF externe, demandeuse/exécutante acte).
 // Remplace les attributs JSONB serviceId, centreActiviteId, poleId par des
 // références FHIR standard conformes FR Core.
 
-* extension[fr-core-organization-member] 0..* MS
-* extension[fr-core-organization-member] ^short = """
+* extension[member] 0..* MS
+* extension[member] ^short = """
     Relations multi-parents : service (SER_COSESE),
     centre d activité (CAC_NUACAC), pôle du pôle.
     Utiliser une extension par relation (FR Core member).
