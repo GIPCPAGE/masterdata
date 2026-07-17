@@ -30,7 +30,7 @@ Description: "Paramètre de timeout TENANT pour le module CORE, propre à l'éta
 * parameter[typeParametre].valueCode = #C
 
 * parameter[module].name = "module"
-* parameter[module].valueString = "CORE"
+* parameter[module].valueString = "COR"
 
 * parameter[connecteur].name = "connecteur"
 * parameter[connecteur].valueString = "HL7"

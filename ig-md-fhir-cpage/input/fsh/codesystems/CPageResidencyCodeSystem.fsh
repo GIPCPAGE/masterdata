@@ -7,6 +7,7 @@ Id: cpage-residency-codesystem
 Title: "Résidence (CPage - Débiteur)"
 Description: "Codes de résidence du débiteur selon la codification CPage (RESIDT)."
 * ^status = #active
+* ^experimental = false
 * ^content = #complete
 * ^caseSensitive = true
 * ^meta.profile = "http://hl7.org/fhir/StructureDefinition/shareablecodesystem"

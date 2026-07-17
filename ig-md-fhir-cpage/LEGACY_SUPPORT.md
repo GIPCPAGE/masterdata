@@ -5,6 +5,12 @@ Ce document décrit, profil par profil, comment les extensions FHIR spécifiques
 (schémas `ECO` et `STR`). Il s'adresse aux personnes qui doivent écrire ou relire un
 mapping de migration ou d'interfaçage entre le legacy Oracle et FHIR.
 
+**Hors périmètre de ce document** : `CPageParametresApplicatifProfile` n'a pas de
+table Oracle source — sa terminologie vient de deux énumérations Java du code
+applicatif (`master-data-api`), pas d'un schéma Oracle. Voir la page dédiée
+[Paramètres techniques](https://gipcpage.github.io/masterdata/cpage/parametres-techniques.html)
+plutôt qu'une section ici.
+
 ## Méthode et fiabilité des sources
 
 Deux niveaux de vérification coexistent dans ce document, et sont indiqués

@@ -46,6 +46,7 @@ adresse, hiérarchie organisationnelle, etc.).
 | `CPageEntiteJuridiqueProfile` | `EntiteJuridiqueProfile` | `STR.CHO` | Commentaires FSH uniquement |
 | `CPageEntiteGeographiqueProfile` | `EntiteGeographiqueProfile` | `STR.ETA` | Commentaires FSH uniquement |
 | `CPageUFProfile` | `UFProfile` | `STR.UFO` | Commentaires FSH uniquement |
+| `CPageParametresApplicatifProfile` | *(aucun — `Parent: Parameters`)* | *(aucune — source Java `master-data-api`)* | Voir [Paramètres techniques](parametres-techniques.html) |
 
 Pour les deux premiers profils, chaque colonne Oracle citée dans ce guide a été
 vérifiée contre l'export `CREATE TABLE` réel de `ECO.ETIER`/`ECO.FOU`/`ECO.DBT`.
@@ -94,6 +95,17 @@ Ajoute, depuis `STR.UFO`, les trois modules métier historiques : **MAL** (lits,
 magasin, UF prestataire, paramètres comptables) et **PER** (personnel/RH,
 indicateurs de paie).
 
+### CPageParametresApplicatifProfile
+
+Profil d'une nature différente des cinq précédents : il ne spécialise aucun
+profil du socle commun (`Parent: Parameters`, ressource FHIR standard) et sa
+terminologie ne vient pas d'Oracle mais de deux énumérations Java du code
+applicatif `master-data-api`. Représente un paramètre de configuration
+fonctionnelle centralisé (durée de session, taux de TVA, timeout de connecteur...) —
+CPage ou **legacy** —, avec gestion optionnelle de périodes de validité
+successives. Voir la page dédiée
+[Paramètres techniques](parametres-techniques.html) pour le détail complet.
+
 ## Terminologies CPage
 
 | CodeSystem | Codes | Rôle |
@@ -101,6 +113,8 @@ indicateurs de paie).
 | `CPageValidityCodeSystem` | `V` / `I` | Validité (Valide / Invalide) |
 | `CPageEUZoneCodeSystem` | `F` / `O` / `A` | Zone géographique (France / Europe hors France / Autre) |
 | `CPageResidencyCodeSystem` | `R` / `N` / `E` | Résidence débiteur (Résident / Non-résident / Étranger) |
+| `CPageParametresApplicatifTypeCodeSystem` | `A`/`S`/`U`/`C`/`D`/`P` | Type fonctionnel d'un paramètre applicatif (source : `TypeParametreEnum`, `master-data-api`) |
+| `CPageParametresApplicatifTypeDonneeCodeSystem` | `B`/`D`/`I`/`S`/`F`/`C` | Type de la valeur d'un paramètre applicatif (source : `TypeDonneeEnum`, `master-data-api`) |
 
 Chaque CodeSystem est accompagné d'un ValueSet `required` du même nom.
 

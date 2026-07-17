@@ -12,7 +12,7 @@ Description: "Paramètre de durée de session partagé à l'ensemble du GHT. Auc
 * id = "exemple-parametres-applicatif-global"
 
 * parameter[identifiant].name = "identifiant"
-* parameter[identifiant].valueString = "CORE_SESSION_EXPIRATION_480"
+* parameter[identifiant].valueString = "CORE_SESSION_EXP_480"
 
 * parameter[libelle].name = "libelle"
 * parameter[libelle].valueString = "Durée d'expiration de session (minutes)"
@@ -30,7 +30,7 @@ Description: "Paramètre de durée de session partagé à l'ensemble du GHT. Auc
 * parameter[typeParametre].valueCode = #S
 
 * parameter[module].name = "module"
-* parameter[module].valueString = "CORE"
+* parameter[module].valueString = "COR"
 
 * parameter[commentaire].name = "commentaire"
 * parameter[commentaire].valueString = "Durée de validité d'une session utilisateur en minutes — valeur commune à l'ensemble du GHT."

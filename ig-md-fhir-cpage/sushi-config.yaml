@@ -30,6 +30,8 @@ dependencies:
 pages:
   index.md:
     title: Accueil
+  parametres-techniques.md:
+    title: Paramètres techniques
   downloads.md:
     title: Téléchargements
 
@@ -37,5 +39,6 @@ menu:
   "Accueil": index.html
   Documentation:
     IG Socle Commun: new-tab https://www.cpage.fr/ig/masterdata/common/
+    Paramètres techniques: parametres-techniques.html
   Ressources de conformité: artifacts.html
   Téléchargements: downloads.html

@@ -7,6 +7,7 @@ Id: cpage-euzone-codesystem
 Title: "Zone Europe (CPage)"
 Description: "Classification européenne du tiers selon CPage (EUROTI)."
 * ^status = #active
+* ^experimental = false
 * ^content = #complete
 * ^caseSensitive = true
 * ^meta.profile = "http://hl7.org/fhir/StructureDefinition/shareablecodesystem"
