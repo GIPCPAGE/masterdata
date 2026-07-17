@@ -1,6 +1,9 @@
 # Fichiers temporaires Claude
 tmpclaude-*
 
+# Répertoire de configuration IDE (IntelliJ/JetBrains)
+.idea/
+
 # Dossier temporaire pour GitHub Pages
 pages-output/
 
