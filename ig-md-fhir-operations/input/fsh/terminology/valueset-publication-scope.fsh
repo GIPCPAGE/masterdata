@@ -7,4 +7,5 @@ Description: "Valeurs autorisees pour le parametre scope d'un lot de publication
 * ^status = #active
 * ^experimental = false
 * ^publisher = "CPage"
+* ^meta.profile = "http://hl7.org/fhir/StructureDefinition/shareablevalueset"
 * include codes from system PublicationScope

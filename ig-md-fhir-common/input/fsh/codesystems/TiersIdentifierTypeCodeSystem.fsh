@@ -28,6 +28,7 @@ PESv2 disponible sur le portail de la DGFiP (https://www.collectivites-locales.g
 * ^caseSensitive = true
 * ^content = #complete
 * ^count = 12
+* ^meta.profile = "http://hl7.org/fhir/StructureDefinition/shareablecodesystem"
 
 * #01 "SIRET" "Système d'Identification du Répertoire des ETablissements (14 caractères)"
 * #02 "SIREN" "Système d'Identification du Répertoire des ENtreprises (9 caractères)"

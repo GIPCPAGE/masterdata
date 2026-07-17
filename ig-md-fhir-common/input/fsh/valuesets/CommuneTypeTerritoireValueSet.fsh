@@ -12,5 +12,6 @@ Description: "Nature administrative d'une commune française : commune ordinaire
 * ^experimental = false
 * ^immutable = true
 * ^publisher = "CPage"
+* ^meta.profile = "http://hl7.org/fhir/StructureDefinition/shareablevalueset"
 
 * include codes from system CommuneTypeTerritoireCS

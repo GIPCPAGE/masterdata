@@ -10,4 +10,5 @@ Description: "ValueSet pour les types de moyens de paiement"
 * ^version = "1.0.0"
 * ^status = #active
 * ^experimental = false
+* ^meta.profile = "http://hl7.org/fhir/StructureDefinition/shareablevalueset"
 * include codes from system MoyenPaiementCS

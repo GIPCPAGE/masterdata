@@ -70,6 +70,7 @@ vers la commune nouvelle parente via un `$lookup`.
 * ^contact.telecom.value = "https://www.cpage.fr"
 * ^copyright = "Source : INSEE — Code Officiel Géographique (COG). Données publiques sous Licence Ouverte 2.0."
 * ^purpose = "Identifier et valider les communes françaises dans les adresses. Gérer l'historique des fusions et des créations administratives."
+* ^meta.profile = "http://hl7.org/fhir/StructureDefinition/shareablecodesystem"
 
 // =============================================
 // Déclaration des propriétés

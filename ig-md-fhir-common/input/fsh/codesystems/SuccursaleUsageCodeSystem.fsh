@@ -13,6 +13,7 @@ Description: "Types d'usage pour les succursales/filiales d'un tiers"
 * ^caseSensitive = true
 * ^content = #complete
 * ^count = 3
+* ^meta.profile = "http://hl7.org/fhir/StructureDefinition/shareablecodesystem"
 
 * #POINT_LIVRAISON "Point de livraison" "Succursale utilisée comme point de livraison"
 * #FACTURATION "Point de facturation" "Succursale utilisée pour la facturation"

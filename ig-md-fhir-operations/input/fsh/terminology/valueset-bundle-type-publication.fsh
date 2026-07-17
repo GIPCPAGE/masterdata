@@ -7,5 +7,6 @@ Description: "Restreint les types de Bundle autorises dans les lots de publicati
 * ^status = #active
 * ^experimental = false
 * ^publisher = "CPage"
+* ^meta.profile = "http://hl7.org/fhir/StructureDefinition/shareablevalueset"
 * http://hl7.org/fhir/bundle-type#transaction "Transaction"
 * http://hl7.org/fhir/bundle-type#batch "Batch"

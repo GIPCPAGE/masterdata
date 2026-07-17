@@ -26,6 +26,7 @@ PESv2 disponible sur le portail de la DGFiP (https://www.collectivites-locales.g
 * ^caseSensitive = true
 * ^content = #complete
 * ^count = 24
+* ^meta.profile = "http://hl7.org/fhir/StructureDefinition/shareablecodesystem"
 
 * #00 "Inconnue" "Catégorie non renseignée ou inconnue. Extension CPage — code absent de la définition normative TCatTiers du PESv2."
 * #01 "Personne physique" "Personne physique (particulier, artisan, commerçant, agriculteur)"

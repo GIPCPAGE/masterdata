@@ -13,6 +13,7 @@ Description: "Codes de civilité selon la nomenclature. Utilisé pour les débit
 * ^caseSensitive = true
 * ^content = #complete
 * ^count = 5
+* ^meta.profile = "http://hl7.org/fhir/StructureDefinition/shareablecodesystem"
 
 * #M "Monsieur" "Monsieur"
 * #MME "Madame" "Madame"

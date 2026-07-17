@@ -24,6 +24,7 @@ Description: "Nature administrative d'une commune française selon la réforme d
 * ^contact.telecom.system = #url
 * ^contact.telecom.value = "https://www.cpage.fr"
 * ^copyright = "Source : loi NOTRe 2015, décrets de création de communes nouvelles. Données publiques."
+* ^meta.profile = "http://hl7.org/fhir/StructureDefinition/shareablecodesystem"
 
 * #commune "Commune ordinaire"
     "Commune française classique n'ayant pas fusionné, ou issue d'une fusion antérieure à 2016."
