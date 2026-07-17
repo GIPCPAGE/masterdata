@@ -13,9 +13,9 @@ champ `string` **est** directement exprimable en FSH, via le chemin caret :
 ```
 
 C'est un champ natif de `ElementDefinition` (`ElementDefinition.maxLength`), et il est
-utilisé abondamment dans l'IG Socle Commun (`ig-md-fhir-common`) — par exemple dans
-`TiersBankAccountExtension.fsh`, `FournisseurAttributsExtension.fsh`,
-`FournisseurComptabiliteExtension.fsh` (36 occurrences au total dans ce dépôt).
+utilisé abondamment dans l'IG Socle Commun (`ig-md-fhir-common`) — 39 occurrences
+au total, réparties sur 10 fichiers d'extension, dont `TiersBankAccountExtension.fsh`,
+`FournisseurAttributsExtension.fsh` et `FournisseurComptabiliteExtension.fsh`.
 
 **Aucune extension de cet IG CPage ne l'utilise**, alors que beaucoup de champs
 documentent une longueur fixe uniquement dans leur `^short` (ex. `CBARCH — 5 chars`,

@@ -1,184 +1,128 @@
-# Guide d'Implémentation FHIR — CPage MasterData
+# Masterdata — IG FHIR CPage
 
-**Version** : 0.1.0 | **Date** : 2026-02-11 | **Statut** : Draft
+Cet Implementation Guide (IG) FHIR R4 définit les profils et extensions
+**spécifiques à CPage** pour le Master Data Management (MDM) hospitalier : les
+Tiers (Fournisseurs, Débiteurs) et les structures hospitalières (Entité Juridique,
+Entité Géographique, Unité Fonctionnelle).
 
-Cet Implementation Guide FHIR définit les profils et extensions **spécifiques à CPage**
-pour la gestion des Tiers (Fournisseurs, Débiteurs) et des structures hospitalières
-(Entité Juridique, Entité Géographique, Unité Fonctionnelle) dans le contexte du
-Master Data Management (MDM).
+Il n'est pas autonome : il **hérite** de l'[IG Socle Commun](https://www.cpage.fr/ig/masterdata/common/)
+(`ig.mdm.fhir.common`, déclaré en dépendance `dev` dans `sushi-config.yaml`), qui
+porte déjà les profils génériques, les contraintes FR Core et la majorité des
+extensions. Ce guide n'ajoute que ce qui est propre au système CPage : les champs
+issus des tables Oracle historiques `ECO.FOU`, `ECO.DBT`, `ECO.ETIER`, `STR.CHO`,
+`STR.ETA` et `STR.UFO`.
 
-Il hérite du [IG Socle Commun](https://www.cpage.fr/ig/masterdata/common/) et y ajoute
-les extensions métier issues des tables Oracle historiques CPage (schémas `ECO` et
-`STR`).
-
----
-
-## Architecture Multi-IG
+## Architecture multi-IG
 
 ```text
-┌───────────────────────────────────────────┐
-│  FR Core 2.2.0 (HL7 France)               │
-│  • FRCoreOrganizationEtablissementProfile │
-│  • FRCoreOrganizationUFProfile            │
-└──────────────────┬────────────────────────┘
-                    │
-          ┌─────────▼──────────────────┐
-          │  IG Socle Commun           │
-          │  (ig-md-fhir-common)       │
-          │  • TiersProfile            │
-          │  • FournisseurProfile      │
-          │  • DebiteurProfile         │
-          │  • EntiteJuridiqueProfile  │
-          │  • EntiteGeographiqueProfile│
-          │  • UFProfile               │
-          │  • Extensions génériques   │
-          └─────────┬───────────────────┘
-                    │
-          ┌─────────▼──────────────────────────┐
-          │  IG CPage (CE GUIDE)               │
-          │  • CPageFournisseurProfile         │
-          │  • CPageDebiteurProfile            │
-          │  • CPageEntiteJuridiqueProfile     │
-          │  • CPageEntiteGeographiqueProfile  │
-          │  • CPageUFProfile                  │
-          │  • Terminologies CPage             │
-          └─────────────────────────────────────┘
+FR Core 2.2.0 (HL7 France)
+  FRCoreOrganizationEtablissementProfile, FRCoreOrganizationUFProfile
+        │
+        ▼
+IG Socle Commun (ig-md-fhir-common)
+  TiersProfile, FournisseurProfile, DebiteurProfile,
+  EntiteJuridiqueProfile, EntiteGeographiqueProfile, UFProfile
+  + extensions génériques et hiérarchie structure hospitalière (GHT, Pôle,
+    Centre de Responsabilité, Service, Centre d'Activité, Secteur...)
+        │
+        ▼
+IG CPage (ce guide)
+  CPageFournisseurProfile, CPageDebiteurProfile,
+  CPageEntiteJuridiqueProfile, CPageEntiteGeographiqueProfile, CPageUFProfile
+  + terminologies CPage (validité, zone Europe, résidence)
 ```
 
----
+Chaque profil CPage a pour unique responsabilité d'ajouter les extensions
+manquantes issues du legacy Oracle CPage ; il n'entre jamais en contradiction avec
+son parent commun et ne redéfinit rien de ce que celui-ci porte déjà (identifiants,
+adresse, hiérarchie organisationnelle, etc.).
 
-## Contenu de ce guide
+## Catalogue des profils
 
-### Profils
+| Profil CPage | Parent (IG commun) | Table Oracle source | Fiabilité du mapping |
+|---|---|---|---|
+| `CPageFournisseurProfile` | `FournisseurProfile` | `ECO.FOU` (+ `ECO.ETIER`) | DDL Oracle réel |
+| `CPageDebiteurProfile` | `DebiteurProfile` | `ECO.DBT` (+ `ECO.ETIER`) | DDL Oracle réel |
+| `CPageEntiteJuridiqueProfile` | `EntiteJuridiqueProfile` | `STR.CHO` | Commentaires FSH uniquement |
+| `CPageEntiteGeographiqueProfile` | `EntiteGeographiqueProfile` | `STR.ETA` | Commentaires FSH uniquement |
+| `CPageUFProfile` | `UFProfile` | `STR.UFO` | Commentaires FSH uniquement |
 
-#### CPageFournisseurProfile
+Pour les deux premiers profils, chaque colonne Oracle citée dans ce guide a été
+vérifiée contre l'export `CREATE TABLE` réel de `ECO.ETIER`/`ECO.FOU`/`ECO.DBT`.
+Pour les trois derniers, aucun export DDL équivalent n'existe pour `STR.CHO`,
+`STR.ETA` ou `STR.UFO` dans ce dépôt : le mapping restitue fidèlement les
+commentaires déjà présents dans le FSH, sans pouvoir les confronter à un schéma
+Oracle indépendant. Cette différence de niveau de confiance est rappelée à chaque
+section du document de mapping détaillé.
 
-Profil fournisseur CPage, héritant de `FournisseurProfile` (IG commun).
-Ajoute les extensions issues de la table Oracle **`ECO.FOU`** :
+### CPageFournisseurProfile
 
-| Extension CPage | Champ(s) Oracle | Description |
-|---|---|---|
-| `CPageValidity` | `FOU.VALIFO` | Validité du fournisseur (V/I) |
-| `CPageEUZone` | `FOU.EUROFO` | Zone Europe (F = France, O = Europe, A = Autre) |
-| `CPageSupplierAccountingClass6` | `FOU.LBU6FO`, `FOU.CPT6FO` | Comptabilité classe 6 (charges) |
-| `CPageSupplierAccountingClass2` | `FOU.LBU2FO`, `FOU.CPT2FO` | Comptabilité classe 2 (immobilisations) |
-| `CPageSupplierPaymentTerms` | `FOU.DEPAFO`, `FOU.JOSPFO`, `FOU.MTMIFO` | Délai de paiement, jour spécifique, montant minimum |
-| `CPageSupplierPublicProcurement` | `FOU.TCMPFO`, `FOU.GACHFO`, `FOU.ESCOFO` | Marchés publics, groupement d'achat, escomptable |
-| `CPageSupplierChorus` | `FOU.CHORFO`, `FOU.TIDCFO`, `FOU.IDCHFO` | Assujettissement et identifiants Chorus |
-| `CPageSupplierInternalFlags` | `FOU.EXTRFO`, `FOU.MAJ_FO` | Indicateurs internes d'extraction |
+Ajoute, depuis `ECO.FOU`, la validité (`VALIFO`), la zone Europe (`EUROFO`), les
+comptes comptables classe 2 et classe 6, les conditions de paiement, les
+indicateurs marchés publics/groupement d'achat/escompte, les informations Chorus
+et deux drapeaux internes d'extraction.
 
-#### CPageDebiteurProfile
+### CPageDebiteurProfile
 
-Profil débiteur CPage, héritant de `DebiteurProfile` (IG commun).
-Ajoute les extensions issues de la table Oracle **`ECO.DBT`** :
+Ajoute, depuis `ECO.DBT`, la validité (`INVADT`), la résidence (`RESIDT`), le
+compte de tiers débiteur, les paramètres ASAP, l'identifiant externe et une
+référence vers le fournisseur associé (`NUFODT`). L'extension `CPageEUZone` existe
+aussi sur ce profil, mais ne correspond en l'état du modèle à aucune colonne propre
+à `ECO.DBT` — voir la section 2 de `LEGACY_SUPPORT.md`.
 
-| Extension CPage | Champ(s) Oracle | Description |
-|---|---|---|
-| `CPageValidity` | `DBT.INVADT` | Validité du débiteur (V/I) |
-| `CPageDebtorResidency` | `DBT.RESIDT` | Résidence (R = résident, N = non-résident, E = étranger) |
-| `CPageDebtorAccount` | `DBT.LBTIDT`, `DBT.CPTIDT` | Lettre budgétaire et compte de tiers débiteur |
-| `CPageDebtorAsap` | `DBT.ASAPDT`, `DBT.FCENDT` | Désactivation ASAP dématérialisé / impression CEN forcée |
-| `CPageDebtorExternalId` | `DBT.IDEXDT` | Identifiant externe du débiteur |
-| `CPageDebtorAssociatedSupplier` | `DBT.NUFODT` | Fournisseur associé (référence `CPageFournisseurProfile`) |
+### CPageEntiteJuridiqueProfile
 
-`CPageEUZone` existe aussi sur ce profil mais ne correspond, en l'état du modèle, à
-aucune colonne propre à `ECO.DBT` — voir le détail et les réserves dans
-[`LEGACY_SUPPORT.md`](https://github.com/GIPCPAGE/masterdata/blob/master/ig-md-fhir-cpage/LEGACY_SUPPORT.md).
+Ajoute, depuis `STR.CHO`, le receveur comptable (raison sociale, adresse, RIB,
+BIC/IBAN, poste comptable, téléphones), les numéros d'organismes patronaux
+(accident du travail, retraite complémentaire, CNAVTS, IRCANTEC, CAMARCA, CNRACL,
+URSSAF), les paramètres de TVA et trois indicateurs (M22, TPG, BIC). Le profil
+parent `EntiteJuridiqueProfile` (IG commun) porte déjà, indépendamment de CPage, le
+rattachement à un GHT et la liste des Centres de Responsabilité membres — ce guide
+ne les redéfinit pas.
 
-#### CPageEntiteJuridiqueProfile
+### CPageEntiteGeographiqueProfile
 
-Profil de l'entité légale d'un établissement hospitalier, héritant de
-`EntiteJuridiqueProfile` (IG commun). Ajoute, depuis la table Oracle **`STR.CHO`**, le
-receveur comptable (coordonnées, RIB/IBAN, poste comptable), les numéros d'organismes
-patronaux (URSSAF, CNRACL, IRCANTEC, CAMARCA, CNAVTS), les paramètres de TVA et les
-indicateurs M22/TPG/BIC.
+Ajoute, depuis `STR.ETA`, les 14 dates d'activation T2A par type de séjour
+(MCO/HAD, SSR, PSY, Long séjour, chacune en Externe et en Hospitalisation, pour les
+bases de remboursement et pour la facturation individuelle), les paramètres de TVA
+et quatre coefficients tarifaires (prudentiel, MCO, CFISC, SEGUR).
 
-#### CPageEntiteGeographiqueProfile
+### CPageUFProfile
 
-Profil du site géographique d'un établissement, héritant de
-`EntiteGeographiqueProfile` (IG commun). Ajoute, depuis la table Oracle **`STR.ETA`**,
-les 14 dates d'activation T2A par type de séjour et voie d'entrée, les paramètres de
-TVA et les coefficients tarifaires (prudentiel, MCO, CFISC, SEGUR).
-
-#### CPageUFProfile
-
-Profil de l'unité fonctionnelle hospitalière, héritant de `UFProfile` (IG commun).
-Ajoute, depuis la table Oracle **`STR.UFO`**, les trois modules métier CPage : MAL
-(lits, étiquettes, options patients), ECO (TVA, magasin, comptabilité) et PER
-(personnel/RH).
-
-> Les mappings des profils Entité Juridique / Entité Géographique / UF sont sourcés
-> depuis les commentaires embarqués dans le FSH lui-même : il n'existe pas, pour
-> `STR.CHO`/`STR.ETA`/`STR.UFO`, d'export DDL Oracle indépendant permettant de les
-> vérifier de la même façon que pour Fournisseur/Débiteur. Voir
-> [`LEGACY_SUPPORT.md`](https://github.com/GIPCPAGE/masterdata/blob/master/ig-md-fhir-cpage/LEGACY_SUPPORT.md)
-> pour le détail complet colonne par colonne et les niveaux de vérification.
-
----
+Ajoute, depuis `STR.UFO`, les trois modules métier historiques : **MAL** (lits,
+étiquettes, options cliniques, fermetures automatiques, PMSI), **ECO** (TVA,
+magasin, UF prestataire, paramètres comptables) et **PER** (personnel/RH,
+indicateurs de paie).
 
 ## Terminologies CPage
 
-### CodeSystems
-
-| CodeSystem | Valeurs | Description |
+| CodeSystem | Codes | Rôle |
 |---|---|---|
-| `CPageValidityCodeSystem` | `V` / `I` | Validité : Valide / Invalide |
-| `CPageResidencyCodeSystem` | `R` / `N` / `E` | Résidence : Résident / Non-résident / Étranger |
-| `CPageEUZoneCodeSystem` | `F` / `O` / `A` | Zone géographique : France / Europe (hors France) / Autre |
+| `CPageValidityCodeSystem` | `V` / `I` | Validité (Valide / Invalide) |
+| `CPageEUZoneCodeSystem` | `F` / `O` / `A` | Zone géographique (France / Europe hors France / Autre) |
+| `CPageResidencyCodeSystem` | `R` / `N` / `E` | Résidence débiteur (Résident / Non-résident / Étranger) |
 
-### ValueSets
+Chaque CodeSystem est accompagné d'un ValueSet `required` du même nom.
 
-- `CPageValidityValueSet` — codes `V` et `I`
-- `CPageResidencyValueSet` — codes `R`, `N` et `E`
-- `CPageEUZoneValueSet` — codes `F`, `O` et `A`
+## Mapping Oracle → FHIR détaillé
 
----
+Le tableau ci-dessus donne un résumé de premier niveau. Le mapping complet,
+colonne Oracle par colonne, avec le niveau de vérification et les points de
+vigilance identifiés pour chaque profil, est maintenu dans
+[`LEGACY_SUPPORT.md`](https://github.com/GIPCPAGE/masterdata/blob/master/ig-md-fhir-cpage/LEGACY_SUPPORT.md)
+à la racine du dépôt source. Toute décision d'implémentation ou de migration doit
+s'y référer directement plutôt qu'à ce résumé.
 
-## Mapping Oracle → FHIR
+## Limitations connues
 
-Le détail complet, colonne par colonne, du mapping entre les tables Oracle legacy
-(`ECO.ETIER`, `ECO.FOU`, `ECO.DBT`, `STR.CHO`, `STR.ETA`, `STR.UFO`) et les extensions
-FHIR de cet IG est maintenu dans un document dédié à la racine du dépôt source :
-
-**[`LEGACY_SUPPORT.md`](https://github.com/GIPCPAGE/masterdata/blob/master/ig-md-fhir-cpage/LEGACY_SUPPORT.md)**
-
-Ce document précise, pour chaque profil :
-
-- la table Oracle source et, le cas échéant, les tables liées (`ECO.ETIER` pour
-  Fournisseur/Débiteur) ;
-- le niveau de vérification du mapping (DDL Oracle réel pour Fournisseur/Débiteur ;
-  commentaires FSH uniquement pour Entité Juridique/Entité Géographique/UF, en
-  l'absence d'export DDL indépendant pour `STR.*`) ;
-- les points de vigilance identifiés (colonnes mentionnées dans un commentaire mais non
-  câblées sur un élément FHIR, chevauchements avec des extensions génériques de l'IG
-  commun, etc.).
-
-Les tables ci-dessus (sections Profils) donnent un résumé de premier niveau ; s'y
-référer directement pour toute décision d'implémentation ou de migration.
-
----
-
-## Dépendances
-
-| Package | Version | Rôle |
-|---------|---------|------|
-| `ig.mdm.fhir.common` | dev | IG Socle Commun CPage MasterData |
-| `hl7.fhir.fr.core` | 2.2.0 | Via IG commun |
-| FHIR R4 | 4.0.1 | Standard de base |
-
----
+Les contraintes de longueur (`maxLength`) et de motif sur les champs `string` de
+cet IG ne sont, à ce jour, documentées que dans les annotations `^short` des
+extensions CPage, pas appliquées comme contrainte FHIR de validation. Voir
+[`FSH-LIMITATIONS.md`](https://github.com/GIPCPAGE/masterdata/blob/master/ig-md-fhir-cpage/FSH-LIMITATIONS.md)
+pour le détail technique et les solutions FSH disponibles (`^maxLength`,
+Invariant).
 
 ## Ressources de conformité
 
-L'ensemble des profils, extensions, terminologies et exemples est disponible sur la
-page [Ressources de conformité](artifacts.html).
-
----
-
-## Liens
-
-- **IG Socle Commun** : [ig-md-fhir-common](https://www.cpage.fr/ig/masterdata/common/)
-- **Dépôt source** : [GIPCPAGE/masterdata](https://github.com/GIPCPAGE/masterdata)
-- **FR Core** : [hl7.fr/ig/fhir/core](https://hl7.fr/ig/fhir/core/)
-- **FHIR R4** : [hl7.org/fhir/R4](https://www.hl7.org/fhir/R4/)
-- **Contact** : <contact@cpage.fr>
+L'ensemble des profils, extensions, terminologies et exemples publiés par cet IG
+est disponible sur la page [Ressources de conformité](artifacts.html).
