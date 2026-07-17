@@ -11,17 +11,20 @@
 // Référence Oracle : unité fonctionnelle.CAC_NUACAC = 'Code Centre d activité'
 
 Profile: CentreActiviteProfile
-Parent: FRCoreOrganizationUACProfile
+Parent: FRCoreOrganizationProfile
 Id: strh-centre-activite-profile
-Title: "Centre d'Activité (UAC/PAC)"
+Title: "Centre d'Activité"
 Description: """
-Profil FHIR R4 représentant un Centre d'Activité hospitalier (UAC/PAC).
+Profil FHIR R4 représentant un Centre d'Activité hospitalier.
 
-Hérite de `FRCoreOrganizationUACProfile` (FR Core 2.2.0).
+Hérite de `FRCoreOrganizationProfile` (FR Core 2.2.0).
 
 Le Centre d'Activité est un regroupement analytique d'UF, distinct du Pôle
 (organisationnel) et du Centre de Responsabilité (budgétaire).
 Il est référencé dans les UF via `CAC_NUACAC` (champ analytique `unité fonctionnelle`).
+
+Ne pas confondre avec PAC/UAC (Poste / Unité d'Activité Complémentaire, facturation PMSI)
+qui hérite de `FRCoreOrganizationUACProfile` → voir `PacUacProfile`.
 
 **Scope** : TENANT uniquement.
 """
@@ -71,7 +74,6 @@ Il est référencé dans les UF via `CAC_NUACAC` (champ analytique `unité fonct
 // ── Hiérarchie ────────────────────────────────────────────────────────────────
 
 * partOf 0..1 MS
-* partOf only Reference(EntiteGeographiqueProfile)
 // Conforme centre d'activité.CRE_NUCRCR — le Centre d'Activité est sous un CR (pas sous EG)
 * partOf only Reference(CentreResponsabiliteProfile)
-* partOf ^short = "Centre de Responsabilité parent "
+* partOf ^short = "Centre de Responsabilité parent"
