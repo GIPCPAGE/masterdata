@@ -73,13 +73,11 @@ CPage : receveur comptable, numéros sociaux (URSSAF/CNRACL/IRCANTEC), TVA, TPG,
 * identifier[choCode].value 1..1 MS
 * identifier[choCode] ^short = "Code centre hospitalier CPage"
 
-// SIRET (SIRECH)
-* identifier[siret].system = "https://sirene.fr" (exactly)
+// SIRET (SIRECH) — system déjà fixé par le parent FR Core (patternUri https://sirene.fr)
 * identifier[siret].value 1..1
 * identifier[siret] ^short = "Numéro SIRET (14 chiffres)"
 
-// FINESS établissement (NUFICH)
-* identifier[finess].system = "https://finess.esante.gouv.fr" (exactly)
+// FINESS établissement (NUFICH) — system déjà fixé par le parent FR Core (patternUri https://finess.esante.gouv.fr)
 * identifier[finess].value 1..1
 * identifier[finess] ^short = "Numéro FINESS de l'établissement (NUFICH)"
 
@@ -100,7 +98,7 @@ CPage : receveur comptable, numéros sociaux (URSSAF/CNRACL/IRCANTEC), TVA, TPG,
 * type 1..* MS
 
 * type contains legalEntityType 1..1 MS
-* type[legalEntityType] = https://hl7.fr/ig/fhir/core/CodeSystem/fr-core-cs-v2-3307#LEGAL-ENTITY (exactly)
+* type[legalEntityType] = https://hl7.fr/ig/fhir/core/CodeSystem/fr-core-cs-v2-3307#LEGAL-ENTITY
 * type[legalEntityType] ^short = "Type : Entité légale (LEGAL-ENTITY)"
 
 // ── Dénomination ─────────────────────────────────────────────────────────────

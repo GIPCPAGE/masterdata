@@ -72,13 +72,11 @@ La période est portée par `extension[periodValidite]` et le code de validité 
 * identifier[etaCode].value 1..1 MS
 * identifier[etaCode] ^short = "Code site géographique CPage"
 
-// FINESS (NUFIET)
-* identifier[finess].system = "https://finess.esante.gouv.fr" (exactly)
+// FINESS (NUFIET) — system déjà fixé par le parent FR Core (patternUri https://finess.esante.gouv.fr)
 * identifier[finess].value 1..1
 * identifier[finess] ^short = "Numéro FINESS du site (NUFIET)"
 
-// SIRET (SIREET)
-* identifier[siret].system = "https://sirene.fr" (exactly)
+// SIRET (SIREET) — system déjà fixé par le parent FR Core (patternUri https://sirene.fr)
 * identifier[siret].value 1..1
 * identifier[siret] ^short = "Numéro SIRET (SIREET)"
 
@@ -94,7 +92,7 @@ La période est portée par `extension[periodValidite]` et le code de validité 
 * type 1..* MS
 
 * type contains geoEntityType 1..1 MS
-* type[geoEntityType] = https://hl7.fr/ig/fhir/core/CodeSystem/fr-core-cs-v2-3307#GEOGRAPHICAL-ENTITY (exactly)
+* type[geoEntityType] = https://hl7.fr/ig/fhir/core/CodeSystem/fr-core-cs-v2-3307#GEOGRAPHICAL-ENTITY
 * type[geoEntityType] ^short = "Type : Entité géographique (GEOGRAPHICAL-ENTITY)"
 
 // ── Dénomination ─────────────────────────────────────────────────────────────
