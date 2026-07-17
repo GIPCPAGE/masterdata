@@ -12,6 +12,7 @@ Description: "Definit le perimetre de diffusion d'un lot de publication MDM : GL
 * ^contact[=].telecom[=].value = "contact@cpage.fr"
 * ^caseSensitive = true
 * ^content = #complete
+* ^meta.profile = "http://hl7.org/fhir/StructureDefinition/shareablecodesystem"
 
 * #GLOBAL "GLOBAL" "Lot de diffusion global, applicable a tous les tenants. Utilise typiquement pour les nomenclatures et referentiels partages (CodeSystem, ValueSet, etc.)."
 * #CLIENT "CLIENT" "Lot de diffusion client-specifique, ciblant un tenant precis. Utilise pour les ressources metier contextualisees (Organization, Location, etc.)."

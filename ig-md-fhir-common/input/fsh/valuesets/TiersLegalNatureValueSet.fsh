@@ -10,4 +10,5 @@ Description: "ValueSet des natures juridiques selon la nomenclature. Utilisé po
 * ^version = "1.0.0"
 * ^status = #active
 * ^experimental = false
+* ^meta.profile = "http://hl7.org/fhir/StructureDefinition/shareablevalueset"
 * include codes from system TiersLegalNatureCS

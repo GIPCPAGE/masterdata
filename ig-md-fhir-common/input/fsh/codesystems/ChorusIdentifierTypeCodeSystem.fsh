@@ -13,6 +13,7 @@ Description: "Types d'identifiants reconnus par CHORUS (système de comptabilit�
 * ^caseSensitive = true
 * ^content = #complete
 * ^count = 8
+* ^meta.profile = "http://hl7.org/fhir/StructureDefinition/shareablecodesystem"
 
 * #01 "SIRET" "SIRET - Système d'Identification du Répertoire des Établissements (14 caractères)"
 * #02 "SIREN" "SIREN - Système d'Identification du Répertoire des Entreprises (9 caractères)"

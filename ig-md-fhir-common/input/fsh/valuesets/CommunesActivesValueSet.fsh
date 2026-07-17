@@ -37,6 +37,7 @@ Il inclut les communes ordinaires, les communes nouvelles et les communes délé
 * ^contact.telecom.value = "https://www.cpage.fr"
 * ^copyright = "Source : INSEE — Code Officiel Géographique (COG). Données publiques sous Licence Ouverte 2.0."
 * ^immutable = false
+* ^meta.profile = "http://hl7.org/fhir/StructureDefinition/shareablevalueset"
 
 * ^compose.include[+].system = "https://www.cpage.fr/ig/masterdata/common/CodeSystem/communes-fr-cs"
 * ^compose.include[=].filter[+].property = #inactive

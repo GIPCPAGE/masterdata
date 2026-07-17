@@ -42,6 +42,7 @@ Context: Organization
 ValueSet: EGCodeValiditeVS
 Id: eg-code-validite-vs
 Title: "Code de validité (INVAET)"
+* ^meta.profile = "http://hl7.org/fhir/StructureDefinition/shareablevalueset"
 * EGCodeValiditeCS#F "Fermé"
 * EGCodeValiditeCS#I "Invalide"
 * EGCodeValiditeCS#V "Valide"
@@ -49,6 +50,7 @@ Title: "Code de validité (INVAET)"
 CodeSystem: EGCodeValiditeCS
 Id: eg-code-validite-cs
 Title: "Code de validité du site"
+* ^meta.profile = "http://hl7.org/fhir/StructureDefinition/shareablecodesystem"
 * #F "Fermé"
 * #I "Invalide"
 * #V "Valide"

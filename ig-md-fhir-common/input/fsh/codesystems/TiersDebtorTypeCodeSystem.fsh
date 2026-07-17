@@ -13,6 +13,7 @@ Description: "Type de débiteur selon la nomenclature : Occasionnel (O) ou Norma
 * ^caseSensitive = true
 * ^content = #complete
 * ^count = 2
+* ^meta.profile = "http://hl7.org/fhir/StructureDefinition/shareablecodesystem"
 
 * #O "Occasionnel" "Débiteur occasionnel - enregistrement ponctuel, non récurrent"
 * #N "Normal" "Débiteur normal/régulier - enregistrement permanent, utilisé de façon récurrente"

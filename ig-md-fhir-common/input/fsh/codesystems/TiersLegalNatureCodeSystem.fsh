@@ -28,6 +28,7 @@ PESv2 disponible sur le portail de la DGFiP (https://www.collectivites-locales.g
 * ^caseSensitive = true
 * ^content = #complete
 * ^count = 12
+* ^meta.profile = "http://hl7.org/fhir/StructureDefinition/shareablecodesystem"
 
 * #00 "Inconnue" "Nature juridique non renseignée ou inconnue. Extension CPage — code absent de la définition normative TNatJur du PESv2."
 * #01 "Particulier" "Personne physique - Particulier"

@@ -13,6 +13,7 @@ Description: "Principaux régimes de Sécurité sociale et organismes payeurs en
 * ^caseSensitive = true
 * ^content = #complete
 * ^count = 5
+* ^meta.profile = "http://hl7.org/fhir/StructureDefinition/shareablecodesystem"
 
 * #SS "Sécurité Sociale générale" "Régime général de la Sécurité Sociale"
 * #MSA "Mutualité Sociale Agricole" "Régime agricole"

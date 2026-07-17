@@ -13,6 +13,7 @@ Description: "Codes de localisation géographique pour les adresses selon la nom
 * ^caseSensitive = true
 * ^content = #complete
 * ^count = 3
+* ^meta.profile = "http://hl7.org/fhir/StructureDefinition/shareablecodesystem"
 
 * #FRANCE "France" "France métropolitaine et départements/territoires d'outre-mer"
 * #EUROPE "Europe" "Union Européenne (hors France) et pays européens hors UE"

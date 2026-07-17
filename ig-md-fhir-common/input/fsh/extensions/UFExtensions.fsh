@@ -65,6 +65,7 @@ Context: Organization
 ValueSet: UFTypeUFMedicaleVS
 Id: uf-type-uf-medicale-vs
 Title: "Type d'UF médicale (TYPEUF)"
+* ^meta.profile = "http://hl7.org/fhir/StructureDefinition/shareablevalueset"
 * UFTypeUFMedicaleCS#H "Hospitalisation"
 * UFTypeUFMedicaleCS#E "Externe"
 * UFTypeUFMedicaleCS#D "Divers"
@@ -73,6 +74,7 @@ Title: "Type d'UF médicale (TYPEUF)"
 CodeSystem: UFTypeUFMedicaleCS
 Id: uf-type-uf-medicale-cs
 Title: "Type d'UF médicale"
+* ^meta.profile = "http://hl7.org/fhir/StructureDefinition/shareablecodesystem"
 * #H "Hospitalisation"
 * #E "Externe"
 * #D "Divers"

@@ -13,6 +13,7 @@ Description: "Types de moyens de paiement acceptés ou utilisés pour les transa
 * ^caseSensitive = true
 * ^content = #complete
 * ^count = 6
+* ^meta.profile = "http://hl7.org/fhir/StructureDefinition/shareablecodesystem"
 
 * #NUMERAIRE "Numéraire" "Paiement en espèces (cash)"
 * #CHEQUE "Chèque" "Paiement par chèque bancaire"

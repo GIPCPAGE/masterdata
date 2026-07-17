@@ -7,4 +7,5 @@ Id: tiers-role-valueset
 Title: "ValueSet Rôles Tiers"
 Description: "Rôles génériques d'un tiers."
 * ^status = #active
+* ^meta.profile = "http://hl7.org/fhir/StructureDefinition/shareablevalueset"
 * include codes from system TiersRoleCodeSystem

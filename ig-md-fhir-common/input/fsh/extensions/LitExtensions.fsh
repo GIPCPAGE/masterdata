@@ -38,6 +38,7 @@ Context: Location
 ValueSet: LitTypeVS
 Id: lit-type-vs
 Title: "Type de lit (CARALL)"
+* ^meta.profile = "http://hl7.org/fhir/StructureDefinition/shareablevalueset"
 * LitTypeCS#A "Standard (A)"
 * LitTypeCS#B "Bébé (B)"
 * LitTypeCS#H "Hospitalisation (H)"
@@ -51,6 +52,7 @@ Title: "Type de lit (CARALL)"
 CodeSystem: LitTypeCS
 Id: lit-type-cs
 Title: "Type de lit (CARALL)"
+* ^meta.profile = "http://hl7.org/fhir/StructureDefinition/shareablecodesystem"
 * #A "Standard"
 * #B "Bébé"
 * #H "Hospitalisation"

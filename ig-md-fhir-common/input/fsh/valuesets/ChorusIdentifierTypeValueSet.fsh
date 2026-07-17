@@ -10,4 +10,5 @@ Description: "ValueSet des types d'identifiants acceptés par CHORUS (codes 01-0
 * ^version = "1.0.0"
 * ^status = #active
 * ^experimental = false
+* ^meta.profile = "http://hl7.org/fhir/StructureDefinition/shareablevalueset"
 * include codes from system ChorusIdentifierTypeCS

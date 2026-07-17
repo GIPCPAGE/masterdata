@@ -64,6 +64,7 @@ ValueSet: EJCategoriePmsiVS
 Id: ej-categorie-pmsi-vs
 Title: "Catégorie PMSI"
 Description: "Catégories d'établissement PMSI (CAPMCH)."
+* ^meta.profile = "http://hl7.org/fhir/StructureDefinition/shareablevalueset"
 * EJCategoriePmsiCS#10 "MCO public"
 * EJCategoriePmsiCS#20 "Psychiatrie publique"
 * EJCategoriePmsiCS#21 "Psychiatrie privée"
@@ -74,6 +75,7 @@ Description: "Catégories d'établissement PMSI (CAPMCH)."
 CodeSystem: EJCategoriePmsiCS
 Id: ej-categorie-pmsi-cs
 Title: "Catégorie PMSI"
+* ^meta.profile = "http://hl7.org/fhir/StructureDefinition/shareablecodesystem"
 * #10 "MCO public"
 * #20 "Psychiatrie publique"
 * #21 "Psychiatrie privée"
@@ -110,6 +112,7 @@ Context: Organization
 ValueSet: EJLocalisationDomTomVS
 Id: ej-localisation-dom-tom-vs
 Title: "Localisation DOM/TOM"
+* ^meta.profile = "http://hl7.org/fhir/StructureDefinition/shareablevalueset"
 * EJLocalisationDomTomCS#970 "Métropole"
 * EJLocalisationDomTomCS#971 "Guadeloupe"
 * EJLocalisationDomTomCS#972 "Martinique"
@@ -119,6 +122,7 @@ Title: "Localisation DOM/TOM"
 CodeSystem: EJLocalisationDomTomCS
 Id: ej-localisation-dom-tom-cs
 Title: "Localisation DOM/TOM"
+* ^meta.profile = "http://hl7.org/fhir/StructureDefinition/shareablecodesystem"
 * #970 "Métropole"
 * #971 "Guadeloupe"
 * #972 "Martinique"

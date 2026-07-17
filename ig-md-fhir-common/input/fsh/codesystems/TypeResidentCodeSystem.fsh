@@ -13,6 +13,7 @@ Description: "Type de résident fiscal pour un débiteur"
 * ^caseSensitive = true
 * ^content = #complete
 * ^count = 2
+* ^meta.profile = "http://hl7.org/fhir/StructureDefinition/shareablecodesystem"
 
 * #R "Résident" "Résident fiscal français"
 * #NR "Non résident" "Non résident fiscal français"

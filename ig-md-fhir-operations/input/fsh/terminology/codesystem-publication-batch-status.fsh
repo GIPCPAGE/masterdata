@@ -12,6 +12,7 @@ Description: "Decrit le cycle de vie d'un lot de publication MDM, depuis sa crea
 * ^contact[=].telecom[=].value = "contact@cpage.fr"
 * ^caseSensitive = true
 * ^content = #complete
+* ^meta.profile = "http://hl7.org/fhir/StructureDefinition/shareablecodesystem"
 
 * #READY "Pret" "Le lot est disponible et consultable par les consommateurs via les operations FHIR."
 * #PROCESSING "En cours de traitement" "Le lot est en cours de generation ou de consolidation. Il n'est pas encore disponible a la consultation."
