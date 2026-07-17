@@ -94,8 +94,7 @@ La période est portée par `extension[periodValidite]` et le code de validité 
 * type 1..* MS
 
 * type contains geoEntityType 1..1 MS
-* type[geoEntityType].coding.system = "https://hl7.fr/ig/fhir/core/CodeSystem/fr-core-cs-v2-3307" (exactly)
-* type[geoEntityType].coding.code = #GEOGRAPHICAL-ENTITY (exactly)
+* type[geoEntityType] = https://hl7.fr/ig/fhir/core/CodeSystem/fr-core-cs-v2-3307#GEOGRAPHICAL-ENTITY (exactly)
 * type[geoEntityType] ^short = "Type : Entité géographique (GEOGRAPHICAL-ENTITY)"
 
 // ── Dénomination ─────────────────────────────────────────────────────────────

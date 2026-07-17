@@ -38,7 +38,8 @@ Ce CodeSystem fait référence aux communes françaises officielles selon le Cod
 * ^contact.telecom.value = "https://www.cpage.fr"
 * ^copyright = "Source: INSEE - Code Officiel Géographique (COG) 2026. Données publiques sous Licence Ouverte 2.0"
 * ^purpose = "Identifier de manière unique les communes françaises dans les adresses et localisations. Permet la validation des codes commune INSEE, la normalisation des adresses et le suivi des modifications administratives (fusions, créations, suppressions)."
-* ^meta.profile = "http://hl7.org/fhir/StructureDefinition/shareablecodesystem"
+// Pas de meta.profile shareablecodesystem : ce profil exige au moins 1 concept énuméré,
+// incompatible avec content=#not-present (référentiel externe non énuméré ici).
 
 // =============================================
 // Propriétés pour gestion historique et temporalité

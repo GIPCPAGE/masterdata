@@ -100,8 +100,7 @@ CPage : receveur comptable, numéros sociaux (URSSAF/CNRACL/IRCANTEC), TVA, TPG,
 * type 1..* MS
 
 * type contains legalEntityType 1..1 MS
-* type[legalEntityType].coding.system = "https://hl7.fr/ig/fhir/core/CodeSystem/fr-core-cs-v2-3307" (exactly)
-* type[legalEntityType].coding.code = #LEGAL-ENTITY (exactly)
+* type[legalEntityType] = https://hl7.fr/ig/fhir/core/CodeSystem/fr-core-cs-v2-3307#LEGAL-ENTITY (exactly)
 * type[legalEntityType] ^short = "Type : Entité légale (LEGAL-ENTITY)"
 
 // ── Dénomination ─────────────────────────────────────────────────────────────
