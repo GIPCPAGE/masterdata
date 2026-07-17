@@ -4,7 +4,10 @@
 // Hérite de StructureHospitaliereOrganizationProfile.
 //
 // Colonnes Oracle centre de responsabilité → FHIR :
-//   entiteJuridique    → extension[entiteJuridique] (EJ parente — toujours présente)
+//   entiteJuridique    → conforme FR Core (member porté par le parent) : quand
+//                         partOf référence un Pôle plutôt que l'EJ directement,
+//                         c'est EntiteJuridiqueProfile qui liste ce CR comme membre
+//                         (extension[membres]) — pas ce profil qui référence l'EJ.
 //   NUCRCR (PK)   → identifier[creCode]  (4 chars)
 //   LIBECR        → name
 //   LIBRCR        → alias[0]
@@ -20,7 +23,9 @@
 // Hiérarchie :
 //   - Si pôle parent renseigné  : partOf = Pôle
 //   - Sinon                    : partOf = Entité Juridique
-//   - entiteJuridique toujours porté en extension[entiteJuridique]
+//   - Conforme FR Core (structure_relations.html, STRU-1) : quand partOf pointe
+//     vers un Pôle, le rattachement concurrent à l'EJ est exprimé côté EJ
+//     (EntiteJuridiqueProfile.extension[membres]), pas par une extension sur ce CR.
 
 Profile: CentreResponsabiliteProfile
 Parent: StructureHospitaliereOrganizationProfile
@@ -36,7 +41,9 @@ Hérite de `StructureHospitaliereOrganizationProfile`.
 **Hiérarchie** :
 - Si un pôle parent est renseigné → `partOf` référence le pôle parent (`PoleProfile`)
 - Sinon → `partOf` référence l'entité juridique (`EntiteJuridiqueProfile`)
-- L'entité juridique parente  est toujours portée en `extension[entiteJuridique]`.
+- Conforme FR Core (STRU-1) : quand `partOf` référence un pôle, le rattachement
+  concurrent à l'Entité Juridique est exprimé côté EJ (`extension[membres]` sur
+  `EntiteJuridiqueProfile`), pas par une extension portée par ce CR.
 
 **Scope** : TENANT uniquement.
 """
@@ -97,15 +104,13 @@ Hérite de `StructureHospitaliereOrganizationProfile`.
     CRECodeValiditeExtension             named codeValidite           0..1 MS and
     CRELettreBudgetaireExtension         named lettreBudgetaire       1..1 MS and
     CRECodeSecteurBudgetaireExtension    named codeSecteurBudgetaire  0..1 MS and
-    CRECodeDirectionTransversaleExtension named codeDirectionTransversale 0..1 MS and
-    CREEntiteJuridiqueExtension          named entiteJuridique        1..1 MS
+    CRECodeDirectionTransversaleExtension named codeDirectionTransversale 0..1 MS
 
 * extension[periodValidite]            ^short = "Période de validité (DATDCR / DATFCR)"
 * extension[codeValidite]              ^short = "Code validité (INVACR : F=Fermé / I=Invalide / V=Valide)"
 * extension[lettreBudgetaire]          ^short = "Lettre budgétaire (SBUD_CODEBUD — 1 char, obligatoire)"
 * extension[codeSecteurBudgetaire]     ^short = "Code secteur budgétaire (SSBU_NUSBSB — 3 chars)"
 * extension[codeDirectionTransversale] ^short = "Code direction transversale (SDTR_NUDTSD — 10 chars)"
-* extension[entiteJuridique]           ^short = "Entité juridique parente "
 
 // ── Hiérarchie : Pôle (si renseigné) sinon Entité Juridique ──────────────────
 
@@ -114,5 +119,6 @@ Hérite de `StructureHospitaliereOrganizationProfile`.
 * partOf ^short = """
     Pôle parent si pôle parent renseigné (PoleProfile),
     sinon Entité Juridique (EntiteJuridiqueProfile).
-    L'EJ est toujours portée en extension[entiteJuridique].
+    Si partOf référence un Pôle, ce CR est aussi listé comme membre
+    de son EJ (EntiteJuridiqueProfile.extension[membres] — conforme FR Core).
     """

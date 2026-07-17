@@ -68,9 +68,10 @@ leurs UF membres, sur le même modèle que `GHTProfile` qui liste ses Entités J
   Secteur liste ses UF membres via `member`.
 - **Centre de Responsabilité (CR)** : unité budgétaire — un centre de coût au sens de la comptabilité
   publique hospitalière (cadres M21/M22), identifié par une lettre budgétaire obligatoire. Rattaché
-  soit à un Pôle, soit directement à l'Entité Juridique si aucun pôle n'est renseigné.
-  L'entité juridique parente reste toujours portée par une extension dédiée
-  (`CREEntiteJuridiqueExtension`), quel que soit le chemin hiérarchique emprunté.
+  soit à un Pôle, soit directement à l'Entité Juridique si aucun pôle n'est renseigné. Conforme FR
+  Core (`member` porté par le parent) : le rattachement à l'Entité Juridique, y compris quand
+  `partOf` référence un Pôle, est exprimé côté EJ (`EntiteJuridiqueProfile.extension[membres]`) plutôt
+  que par une extension portée par le CR lui-même.
 - **Centre d'Activité (CAC)** : regroupement **analytique** des UF — un troisième axe de
   classification, distinct de l'axe organisationnel (Pôle) et de l'axe budgétaire (CR), utilisé pour
   la comptabilité analytique et les statistiques d'activité.
@@ -145,13 +146,13 @@ consommateurs.
 
 | Entité | Extensions propres (hors paire période/validité) |
 |---|---|
-| Entité Juridique | Statut juridique, code APE/NAF, numéro CPCM, catégorie PMSI (10/20/21/22/30/40), code CEDEX, localisation DOM/TOM, numéros émetteur EH, indicateur arrondissement |
+| Entité Juridique | Statut juridique, code APE/NAF, numéro CPCM, catégorie PMSI (10/20/21/22/30/40), code CEDEX, localisation DOM/TOM, numéros émetteur EH, indicateur arrondissement, Centres de Responsabilité membres (`member`) |
 | Entité Géographique | Secteur sanitaire, code NAF, libellé de localisation, indicateur SAE, horaires d'ouverture, coefficients géographique et de transition T2A |
 | Pôle | UF membres (`member`) |
 | Service | Sigle, type de service (Direction/Service), UF membres (`member`) |
 | Secteur | Responsable du secteur (contact), UF membres (`member`) |
 | Centre d'Activité | UF membres (`member`) |
-| Centre de Responsabilité | Lettre budgétaire (obligatoire), code secteur budgétaire, code direction transversale, référence à l'Entité Juridique parente |
+| Centre de Responsabilité | Lettre budgétaire (obligatoire), code secteur budgétaire, code direction transversale |
 | Unité Fonctionnelle | Site de localisation géographique (obligatoire), pôle optionnel, type d'UF médicale, indicateur séances, classe dominante, lits urgence, activité libérale, maternité, confidentialité, UF de responsabilité, lettre budgétaire (obligatoire), domaine d'activité, libellé très long, type d'autorisation UM, type d'autorisation urgence, catégorie d'UF, regroupements analytiques (RU1/RU2/urgence, centre d'activité, département, section de prix de revient...) |
 | Chambre | Indicateur chambre individuelle |
 | Lit | Type de lit (9 valeurs : standard, bébé, hospitalisation, isolement, pédiatrie, soins, urgences, chirurgie, rééducation), indicateur lit de séances, date d'indisponibilité, type d'autorisation |

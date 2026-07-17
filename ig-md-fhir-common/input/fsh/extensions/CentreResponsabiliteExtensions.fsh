@@ -70,18 +70,7 @@ Context: Organization
 * value[x] only string
 * valueString ^short = "Code direction transversale (SDTR_NUDTSD — 10 chars)"
 
-// ── Entité juridique parente (CHO_NUCHCH) ─────────────────────────────────────
-// Portée systématiquement même si partOf pointe vers un Pôle
-
-Extension: CREEntiteJuridiqueExtension
-Id: cre-entite-juridique
-Title: "Entité juridique parente du CR"
-Description: """
-Référence à l'entité juridique parente (CHO_NUCHCH).
-Toujours présente même quand partOf référence un pôle.
-Permet de retrouver l'EJ quelle que soit la hiérarchie utilisée.
-"""
-Context: Organization
-
-* value[x] only Reference(EntiteJuridiqueProfile)
-* valueReference ^short = "Entité juridique parente (CHO_NUCHCH)"
+// Note : le rattachement à l'entité juridique parente quand partOf référence un
+// Pôle n'est plus porté par une extension sur ce profil — conforme FR Core
+// (structure_relations.html, STRU-1), c'est EntiteJuridiqueProfile qui liste ce
+// CR comme membre via extension[membres] (fr-core-organization-member).

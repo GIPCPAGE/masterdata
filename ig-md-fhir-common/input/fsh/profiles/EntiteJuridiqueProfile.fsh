@@ -180,3 +180,12 @@ CPage : receveur comptable, numéros sociaux (URSSAF/CNRACL/IRCANTEC), TVA, TPG,
 * partOf 0..1 MS
 * partOf only Reference(GHTProfile)
 * partOf ^short = "GHT parent — groupement hospitalier de territoire (GHTProfile)"
+
+// ── Membres : Centres de Responsabilité rattachés directement ───────────────
+// Conforme FR Core structure_relations.html (STRU-1) : quand un Centre de
+// Responsabilité n'a pas de Pôle parent (CentreResponsabiliteProfile.partOf
+// référence alors directement cette EJ), ou même quand il en a un, l'EJ peut
+// lister ce CR comme membre. Porté par le PARENT (l'EJ) — jamais par le CR.
+
+* extension contains fr-core-organization-member named membres 0..* MS
+* extension[membres] ^short = "Centres de Responsabilité membres de cette Entité Juridique"
