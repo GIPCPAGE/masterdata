@@ -1,159 +1,79 @@
 # ig-md-fhir-common
 
-**IG FHIR Commun pour le Système d'Information Hospitalier (SIH) - CPage**
+IG FHIR — Socle commun du Master Data CPage
 
 | | |
 |---|---|
 | **Version** | 0.1.0 |
 | **Statut** | Draft |
 | **FHIR** | 4.0.1 |
-| **Juridiction** | 🇫🇷 France |
+| **Dépendance** | `hl7.fhir.fr.core` 2.2.0 |
+| **Jurisdiction** | France |
 
-## 📋 Vue d'ensemble
+## Vue d'ensemble
 
-Cet **Implementation Guide (IG) FHIR Commun** définit les ressources et profils de base partagés par tous les logiciels du Système d'Information Hospitalier (SIH) de CPage.
+Cet Implementation Guide définit le socle FHIR générique, vendor-neutral, du Master Data CPage : les
+profils, extensions et terminologies communs à deux domaines métier — les **tiers financiers**
+(fournisseurs, débiteurs, payeurs santé) et la **structure hospitalière** (GHT, entité juridique,
+entité géographique, pôles, unités fonctionnelles, chambres, lits...). Il est construit directement
+sur `hl7.fhir.fr.core` 2.2.0 et sert de socle aux IG spécialisés `ig-md-fhir-cpage` (extensions
+propriétaires CPage) et `ig-md-fhir-operations` (opérations de publication/synchronisation).
 
-### Architecture Multi-IG
+Le narratif complet — architecture, catalogue de profils, extensions, terminologies, méthodologie et
+gouvernance — est publié dans le guide lui-même : voir **[`input/pages/index.md`](input/pages/index.md)**
+(page « Accueil » une fois l'IG construit), ainsi que ses deux pages de détail
+[`tiers-financiers.md`](input/pages/tiers-financiers.md) et
+[`structure-hospitaliere.md`](input/pages/structure-hospitaliere.md). Ce README ne duplique pas ce
+contenu : il se limite au strict nécessaire pour construire et naviguer dans le dépôt.
 
-```
-IG Commun (ce projet)
-  ├── Fournisseurs de Produits (Supplier)
-  ├── Établissements de Santé (FINESS)
-  ├── CodeSystems et ValueSets
-  └── Extensions de base
-       ↓
-       └─→ IG Spécialisé CPage
-           └── Extensions/profils spécifiques CPage
-```
+Pour la disposition des fichiers du projet, voir [`STRUCTURE.md`](STRUCTURE.md).
 
-## 🎯 Ressources Modélisées
+## Prérequis
 
-### 1. **Fournisseurs** (Supplier)
-- Profil: `SupplierProfile` (Organization)
-- Identifiant: SIRET
-- Statuts: Actif/Inactif/Suspendu/Fermé/En attente
-- 📖 [Documentation complète](input/pages/supplier/supplier.md)
+- [Node.js](https://nodejs.org/) (pour SUSHI, le compilateur FHIR Shorthand)
+- Java (pour le IG Publisher HL7, téléchargé automatiquement par les scripts `_updatePublisher.*`)
+- [SUSHI](https://fshschool.org/) : `npm install -g fsh-sushi` (ou via `npx fsh-sushi`)
 
-### 2. **Établissements de Santé** (FINESS)
-- Profil: `EstablishmentProfile` (Organization)
-- Identifiant: FINESS (11 chiffres)
-- **Recherche par nom d'établissement**
-- 📖 [Documentation complète](input/pages/establishment/establishment.md)
-
-## 📦 Contenus du Projet
-
-```
-input/
-├── fsh/
-│   ├── codesystems/
-│   │   ├── SupplierStatusCodeSystem.fsh      # Statuts fournisseur
-│   │   └── PostalCodeCodeSystem.fsh          # Codes postaux FR
-│   ├── valuesets/
-│   │   ├── SupplierStatusValueSet.fsh
-│   │   └── PostalCodeValueSet.fsh
-│   └── profiles/
-│       ├── SupplierProfile.fsh               # Profil Fournisseur
-│       ├── EstablishmentProfile.fsh          # Profil Établissement
-│       ├── SupplierStatusExtension.fsh
-│       ├── EstablishmentTypeExtension.fsh
-│       └── FinessNumberExtension.fsh
-└── pages/
-    ├── index.md                              # Accueil
-    ├── supplier/supplier.md                  # Docs Fournisseurs
-    └── establishment/establishment.md        # Docs Établissements
-```
-
-## 🚀 Utilisation
-
-### Pour les Implémenteurs
-1. Consultez la **documentation des Fournisseurs** et **Établissements**
-2. Téléchargez les profils FHIR et ValueSets
-3. Implémentez selon les cas d'usage documentés
-
-### Pour les Architectes
-1. Comprenez l'architecture multi-IG
-2. Planifiez l'implémentation des profils communs
-3. Préparez les extensions spécifiques pour l'IG CPage
-
-### Pour les Contributeurs
-1. Consultez [STRUCTURE.md](STRUCTURE.md) pour les détails
-2. Modifiez les fichiers `.fsh` dans `input/fsh/`
-3. Construisez avec SUSHI
-
-## 🛠️ Commandes
+## Construire l'IG
 
 ```bash
-# Construire l'IG (nécessite SUSHI et IG Publisher)
-sushi build
+# Compiler uniquement les FSH (rapide, pour vérifier les erreurs de profils)
+npx fsh-sushi build .
 
-# Valider les fichiers FSH
-sushi validate
+# Construction complète avec le IG Publisher (génère le site HTML, qa.html, etc.)
+# Sous Windows :
+_genonce.bat
+# Sous Linux/macOS :
+./_genonce.sh
 
-# Voir la structure
-tree input/
+# Mettre à jour le IG Publisher local
+_updatePublisher.bat   # ou _updatePublisher.sh
 ```
 
-## 📚 Convention de Nommage
+La sortie SUSHI se trouve dans `fsh-generated/`, la sortie du IG Publisher dans `output/`
+(non versionnés, voir `.gitignore`).
 
-- **CodeSystems**: `[Concept]CodeSystem.fsh`
-- **ValueSets**: `[Concept]ValueSet.fsh`
-- **Profils**: `[Concept]Profile.fsh`
-- **Extensions**: `[Concept]Extension.fsh`
+## Où trouver quoi
 
-## 🔗 Liens Importants
+- `input/fsh/profiles/` — 21 profils (Organization / Location), voir le catalogue complet dans
+  `input/pages/tiers-financiers.md` et `input/pages/structure-hospitaliere.md`.
+- `input/fsh/extensions/` — environ 80 extensions FHIR.
+- `input/fsh/codesystems/`, `input/fsh/valuesets/` — terminologies (nomenclatures PESv2, référentiel
+  communes COG INSEE, nomenclatures internes CPage).
+- `input/fsh/searchparameters/` — 10 SearchParameter personnalisés (domaine Tiers).
+- `input/fsh/operations/` — l'opération personnalisée `$hierarchy` (reconstruction de la hiérarchie
+  hospitalière en un seul Bundle).
+- `input/fsh/examples/` — instances d'exemple et NamingSystem (RIDET, Tahiti, COG INSEE).
+- `input/pages/` — narratif publié de l'IG.
 
-- 📖 **Documentation FHIR**: https://www.hl7.org/fhir/
-- 🏥 **FINESS**: https://www.data.gouv.fr/
-- 🇫🇷 **France**: ISO 3166 Code: FR
-- 📦 **Repository**: https://github.com/NicolasMoreauCPage/ig-md-fhir-common
+## Dépôts liés
 
-## 📞 Contact
+Ce dépôt fait partie d'un ensemble de trois IG publiés ensemble sous
+<https://gipcpage.github.io/masterdata/> :
 
-- **Éditeur**: CPage
-- **Email**: contact@cpage.fr
-- **URL**: https://www.cpage.fr
+- `ig-md-fhir-common` (ce dépôt) — socle générique.
+- `ig-md-fhir-cpage` — extensions et profils propriétaires CPage.
+- `ig-md-fhir-operations` — opérations de publication/synchronisation du Master Data
+  (`PublicationBatch`/`PublicationBatchItem`, etc.).
 
-## 📄 Fichiers Clés
-
-| Fichier | Rôle |
-|---------|------|
-| `sushi-config.yaml` | Configuration SUSHI |
-| `input/fsh/` | Définitions FHIR Shorthand |
-| `input/pages/` | Documentation markdown |
-| `STRUCTURE.md` | Architecture détaillée |
-
-## 🎓 Ressources pour Apprendre
-
-### FHIR 4.0.1
-- [Organization Resource](https://www.hl7.org/fhir/organization.html)
-- [StructureDefinition (Profiles)](https://www.hl7.org/fhir/structuredefinition.html)
-- [CodeSystem & ValueSet](https://www.hl7.org/fhir/codesystem.html)
-- [Extensions](https://www.hl7.org/fhir/extensibility.html)
-
-### FHIR Shorthand (FSH)
-- [FSH Documentation](https://fshschool.org/)
-- [FSH Syntax](https://fshschool.org/docs/FSH-Syntax/)
-
-### Conventions Françaises
-- [Dossier ANS France](https://esante.gouv.fr/)
-- [SIRET/SIREN](https://www.insee.fr/)
-- [FINESS](https://www.data.gouv.fr/datasets/61e56eaea8882370c18ab1cc)
-
-## ✅ Checkliste de Démarrage
-
-- [x] Structure de base créée
-- [x] CodeSystems définis
-- [x] ValueSets créés
-- [x] Profils modélisés
-- [x] Extensions définies
-- [x] Documentation écrite
-- [ ] Validation SUSHI
-- [ ] Codes postaux complets
-- [ ] Exemples instances
-- [ ] Publication
-
----
-
-**Créé**: 2026-02-11  
-**Statut**: Draft 0.1.0  
-**Licence**: À définir
+Ces deux autres dépôts ont leur propre documentation ; ce README ne les décrit pas en détail.

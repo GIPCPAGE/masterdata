@@ -32,10 +32,16 @@ dependencies:
 pages:
   index.md:
     title: Accueil
+  tiers-financiers.md:
+    title: Tiers financiers
+  structure-hospitaliere.md:
+    title: Structure hospitalière
   downloads.md:
     title: Téléchargements
 
 menu:
   "Accueil": index.html
+  "Tiers financiers": tiers-financiers.html
+  "Structure hospitalière": structure-hospitaliere.html
   Ressources de conformité: artifacts.html
   Téléchargements: downloads.html

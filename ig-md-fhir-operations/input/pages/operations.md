@@ -1,143 +1,69 @@
-﻿# Opérations de publication
+# Opérations de publication
 
 ## 1. Périmètre
 
-Cette spécification décrit les opérations FHIR exposées pour la consultation des publications produites par le MDM.
+Cette page est la référence technique des trois opérations FHIR système exposées par le serveur de publication MDM :
 
-Elle couvre :
+- [`$publication-metadata`](#op-publication-metadata)
+- [`$publication-bundle`](#op-publication-bundle)
+- [`$publication-list`](#op-publication-list)
 
-- `$publication-metadata`
-- `$publication-bundle`
-- `$publication-list`
+Les trois sont des opérations **système** (`system = true`, `type = false`, `instance = false`) invoquées sur la racine du serveur (`POST /fhir/$nom-operation`), et aucune ne modifie l'état du serveur (`affectsState = false`).
 
-Elle ne couvre pas :
-
-- la fabrication interne des lots ;
-- les règles métier internes de versionnement ;
-- les traitements hors interface FHIR.
+Pour l'architecture d'ensemble (production, notification NATS, récupération), voir [Accueil](index.html). Pour le contrat vu côté consommateur (typologie de lot, synchrone/asynchrone, erreurs), voir [API FHIR de récupération des lots publiés](api-publication-batch.html).
 
 ---
 
-## 2. Articulation avec NATS
+## 2. Opération `$publication-metadata` {#op-publication-metadata}
 
-Les opérations FHIR de cet IG constituent le point d'accès de consultation des lots publiés.
+### 2.1 Objectif
 
-NATS est utilisé comme canal de notification de disponibilité à destination des consommateurs.
-Le message NATS annonce qu'un lot publié est disponible. Le consommateur récupère ensuite ses métadonnées et son contenu via les opérations FHIR.
+Retourne les métadonnées d'un lot de publication identifié par `publicationBatchId`, sans en récupérer le contenu. Permet à un consommateur de décider s'il doit appeler `$publication-bundle` (le lot est-il prêt ? quel est son scope ? quelles ressources contient-il ?) avant de le faire.
 
-Pour le détail des scénarios de notification, voir : [Cas d'exemple NATS](nats-cases.html).
-
----
-
-## 3. Modèle de publication
-
-Le modèle est structuré en trois niveaux.
-
-### 3.1 Transaction métier interne
-
-La transaction métier interne regroupe les validations applicatives dans Master Data.
-Elle peut impacter dans un même commit :
-
-- une nomenclature ;
-- une ou plusieurs ressources métier.
-
-### 3.2 Lots de publication dérivés
-
-La transaction interne n'est pas diffusée telle quelle.
-Elle est transformée en lots de publication homogènes :
-
-- lot `GLOBAL` pour les contenus globaux (ex. nomenclatures) ;
-- lot(s) `CLIENT` pour les contenus contextualisés par tenant.
-
-### 3.3 Notification broker
-
-Le broker NATS transporte une notification de disponibilité de lot — et non la transaction métier brute.
-La notification contient au minimum :
-
-- `publicationBatchId`
-- `scope`
-- le type de contenu ou les types de ressources concernés
-- le client cible si applicable
-
-Le consommateur récupère ensuite le lot via les opérations FHIR.
-
----
-
-## 4. Principe de découpage des publications
-
-Une transaction métier interne peut impacter plusieurs objets simultanément.
-
-Le principe retenu est le suivant :
-
-- une transaction interne peut produire plusieurs lots de publication ;
-- chaque lot publié doit rester homogène en termes de périmètre de diffusion ;
-- les lots globaux et les lots client-spécifiques doivent être séparés ;
-- un lot `GLOBAL` est identique pour tous les consommateurs concernés ;
-- un lot `CLIENT` est calculé pour un client cible et peut contenir des identifiants locaux propres à ce client.
-
----
-
-## 5. Opération `$publication-metadata`
-
-### 5.1 Objectif
-
-Cette opération permet de récupérer les métadonnées d'un lot publié.
-
-Elle permet au consommateur de comprendre :
-
-- la nature du lot ;
-- son scope ;
-- le type de bundle attendu ;
-- les ressources concernées ;
-- le client cible éventuel ;
-- la version source ;
-- le statut du lot.
-
-### 5.2 Endpoint
+### 2.2 Endpoint
 
 ```http
 POST /fhir/$publication-metadata
 Content-Type: application/fhir+json
 ```
 
-### 5.3 Paramètres d'entrée
-
-L'entrée est portée par une ressource `Parameters`.
+### 2.3 Paramètres d'entrée
 
 | Paramètre | Cardinalité | Type | Description |
-|-----------|------------|------|-------------|
-| `publicationBatchId` | 1..1 | string | Identifiant technique du lot publié |
+|-----------|:-----------:|------|-------------|
+| `publicationBatchId` | 1..1 | `string` | Identifiant technique du lot publié |
 
-Exemple :
+### 2.4 Paramètres de sortie
+
+| Paramètre | Cardinalité | Type | Description |
+|-----------|:-----------:|------|-------------|
+| `publicationBatchId` | 1..1 | `string` | Identifiant technique du lot |
+| `scope` | 1..1 | `code` | `GLOBAL` ou `CLIENT` — bindé (required) sur [ValueSet publication-scope](ValueSet-publication-scope.html) |
+| `targetTenant` | 0..1 | `string` | Tenant cible lorsque le lot est client-spécifique |
+| `bundleType` | 1..1 | `code` | `transaction` ou `batch` — bindé (required) sur [ValueSet bundle-type-publication](ValueSet-bundle-type-publication.html) |
+| `publicationViewCode` | 0..1 | `string` | Code de la vue de publication utilisée pour fabriquer le lot |
+| `sourceTransactionId` | 0..1 | `string` | Identifiant de la transaction métier interne source |
+| `sourceVersionNum` | 0..1 | `integer` | Numéro de version de l'objet source au moment de la fabrication du lot |
+| `resourceType` | 0..* | `string` | Un type de ressource FHIR présent dans le lot (répété une fois par type distinct) |
+| `status` | 1..1 | `code` | `READY`, `PROCESSING`, `FAILED` ou `EXPIRED` — bindé (required) sur [ValueSet publication-batch-status](ValueSet-publication-batch-status.html) |
+| `createdAt` | 0..1 | `dateTime` | Date de création du lot |
+
+> Le nom de paramètre `publicationViewCode` désigne, côté opération, la même notion que le champ `publicationViewId` du modèle logique `PublicationBatch` (voir [§5](#modele-logique)). Les deux noms coexistent délibérément : l'un est le nom du champ dans le modèle de transport interne, l'autre celui du paramètre exposé publiquement.
+
+### 2.5 Exemple
+
+Requête :
 
 ```json
 {
   "resourceType": "Parameters",
   "parameter": [
-    {
-      "name": "publicationBatchId",
-      "valueString": "PB-2026-000145"
-    }
+    { "name": "publicationBatchId", "valueString": "PB-2026-000145" }
   ]
 }
 ```
 
-### 5.4 Paramètres de sortie
-
-| Paramètre | Cardinalité | Type | Description |
-|-----------|------------|------|-------------|
-| `publicationBatchId` | 1..1 | string | Identifiant technique du lot |
-| `scope` | 1..1 | code | `GLOBAL` ou `CLIENT` |
-| `targetTenant` | 0..1 | string | Client destinataire si applicable |
-| `bundleType` | 1..1 | code | `transaction` ou `batch` |
-| `publicationViewCode` | 0..1 | string | Vue de publication utilisée |
-| `sourceTransactionId` | 0..1 | string | Transaction métier source |
-| `sourceVersionNum` | 0..1 | integer | Version source |
-| `resourceType` | 0..* | string | Type(s) de ressource présents dans le lot |
-| `status` | 1..1 | code | État du lot (`READY`, `PROCESSING`, `FAILED`) |
-| `createdAt` | 1..1 | dateTime | Date de création du lot |
-
-Exemple de réponse pour un lot `CLIENT` :
+Réponse (lot `CLIENT`) :
 
 ```json
 {
@@ -158,58 +84,48 @@ Exemple de réponse pour un lot `CLIENT` :
 }
 ```
 
-Exemple de réponse pour un lot `GLOBAL` :
+### 2.6 Règles de comportement
 
-```json
-{
-  "resourceType": "Parameters",
-  "parameter": [
-    { "name": "publicationBatchId", "valueString": "PB-GLOBAL-001" },
-    { "name": "scope", "valueCode": "GLOBAL" },
-    { "name": "bundleType", "valueCode": "batch" },
-    { "name": "publicationViewCode", "valueString": "NOMENCLATURES_GLOBAL" },
-    { "name": "sourceTransactionId", "valueString": "TX-2026-000654" },
-    { "name": "sourceVersionNum", "valueInteger": 12 },
-    { "name": "resourceType", "valueString": "CodeSystem" },
-    { "name": "resourceType", "valueString": "ValueSet" },
-    { "name": "status", "valueCode": "READY" },
-    { "name": "createdAt", "valueDateTime": "2026-03-30T08:30:00Z" }
-  ]
-}
-```
-
-### 5.5 Règles de comportement
-
-- `publicationBatchId` est obligatoire ;
-- si le lot est inconnu, le serveur retourne un `OperationOutcome` avec `issue.code = not-found` ;
-- si le lot est de scope `CLIENT`, le champ `targetTenant` est renseigné dans la réponse ;
-- plusieurs occurrences de `resourceType` peuvent être retournées ;
-- un lot `GLOBAL` ne doit pas annoncer de contenu client-spécifique.
+- `publicationBatchId` est obligatoire ; son absence entraîne une erreur `400`.
+- Si l'identifiant ne correspond à aucun lot connu, le serveur retourne un `OperationOutcome` (`404` / `issue.code = not-found`) — voir [Gestion des erreurs](api-publication-batch.html#gestion-des-erreurs).
+- `targetTenant` n'est renseigné en sortie que pour un lot `CLIENT`.
+- `resourceType` peut apparaître zéro, une ou plusieurs fois : c'est l'ensemble des types de ressources distincts portés par les items du lot (voir modèle `PublicationBatchItem`, [§5.2](#publicationbatchitem)).
+- `status` peut valoir `EXPIRED` : un lot `READY` peut être retiré de la consultation après une politique de rétention, sans que son identifiant soit réutilisé.
 
 ---
 
-## 6. Opération `$publication-bundle`
+## 3. Opération `$publication-bundle` {#op-publication-bundle}
 
-### 6.1 Objectif
+### 3.1 Objectif
 
-Cette opération permet de récupérer le contenu publié sous forme de `Bundle` FHIR.
+Retourne le contenu publié d'un lot sous la forme d'un `Bundle` FHIR (`transaction` ou `batch`, selon la valeur de `bundleType` du lot).
 
-### 6.2 Endpoint
+### 3.2 Endpoint
 
 ```http
 POST /fhir/$publication-bundle
 Content-Type: application/fhir+json
 ```
 
-### 6.3 Paramètres d'entrée
+### 3.3 Paramètres d'entrée
 
 | Paramètre | Cardinalité | Type | Description |
-|-----------|------------|------|-------------|
-| `publicationBatchId` | 1..1 | string | Identifiant technique du lot |
-| `targetTenant` | 0..1 | string | Tenant cible (obligatoire pour lot `CLIENT` si non déterminé par le contexte de sécurité) |
-| `publicationViewCode` | 0..1 | string | Vue de publication attendue (optionnelle) |
+|-----------|:-----------:|------|-------------|
+| `publicationBatchId` | 1..1 | `string` | Identifiant technique du lot publié |
+| `targetTenant` | 0..1 | `string` | Tenant cible, transmis pour **contrôle de cohérence** avec le lot demandé |
+| `publicationViewCode` | 0..1 | `string` | Vue de publication attendue, transmise pour **contrôle de cohérence** avec le lot demandé |
 
-Exemple pour un lot `CLIENT` :
+`targetTenant` et `publicationViewCode` ne sélectionnent pas de contenu : ils permettent au serveur de vérifier que l'appelant demande bien le lot qu'il croit demander, et de renvoyer une erreur si ce n'est pas le cas (voir [§3.6](#op-publication-bundle-comportement) et le tableau d'erreurs de [API FHIR de récupération des lots publiés](api-publication-batch.html#gestion-des-erreurs)).
+
+### 3.4 Paramètre de sortie
+
+| Paramètre | Cardinalité | Type | Description |
+|-----------|:-----------:|------|-------------|
+| `return` | 1..1 | `Bundle` | Bundle FHIR correspondant au lot publié |
+
+### 3.5 Exemple
+
+Requête :
 
 ```json
 {
@@ -222,22 +138,7 @@ Exemple pour un lot `CLIENT` :
 }
 ```
 
-Exemple pour un lot `GLOBAL` :
-
-```json
-{
-  "resourceType": "Parameters",
-  "parameter": [
-    { "name": "publicationBatchId", "valueString": "PB-GLOBAL-001" }
-  ]
-}
-```
-
-### 6.4 Réponse synchrone
-
-Si le lot est disponible immédiatement et de volumétrie raisonnable, l'API retourne directement un `Bundle`.
-
-Exemple pour un lot `CLIENT` :
+Réponse (`Bundle` de type `transaction`) :
 
 ```json
 {
@@ -266,101 +167,46 @@ Exemple pour un lot `CLIENT` :
 }
 ```
 
-Exemple pour un lot `GLOBAL` :
+Les entrées apparaissent dans l'ordre `sortOrder` défini par les items du lot (voir [§5.2](#publicationbatchitem)) : dans un `Bundle` de type `transaction`, le consommateur doit les appliquer dans cet ordre.
 
-```json
-{
-  "resourceType": "Bundle",
-  "type": "batch",
-  "timestamp": "2026-03-30T08:30:02Z",
-  "entry": [
-    {
-      "resource": {
-        "resourceType": "CodeSystem",
-        "id": "codes-postaux-fr",
-        "url": "https://www.cpage.fr/fhir/CodeSystem/codes-postaux-fr",
-        "version": "2026-03",
-        "status": "active"
-      },
-      "request": { "method": "PUT", "url": "CodeSystem/codes-postaux-fr" }
-    },
-    {
-      "resource": {
-        "resourceType": "ValueSet",
-        "id": "codes-postaux-fr-vs",
-        "url": "https://www.cpage.fr/fhir/ValueSet/codes-postaux-fr-vs",
-        "version": "2026-03",
-        "status": "active"
-      },
-      "request": { "method": "PUT", "url": "ValueSet/codes-postaux-fr-vs" }
-    }
-  ]
-}
-```
+### 3.6 Règles de comportement {#op-publication-bundle-comportement}
 
-### 6.5 Réponse asynchrone
-
-Pour les lots volumineux ou les traitements différés, l'opération peut suivre le pattern FHIR asynchrone standard :
-
-```http
-POST /fhir/$publication-bundle
-Prefer: respond-async
-Content-Type: application/fhir+json
-```
-
-Réponse immédiate :
-
-```http
-HTTP/1.1 202 Accepted
-Content-Location: /fhir/async-jobs/12345
-```
-
-Polling :
-
-```http
-GET /fhir/async-jobs/12345
-```
-
-- `202 Accepted` tant que le traitement est en cours ;
-- `200 OK` avec le `Bundle` lorsque le lot est prêt ;
-- `OperationOutcome` en cas d'erreur.
-
-### 6.6 Règles de comportement
-
-- `publicationBatchId` est obligatoire ;
-- si le lot n'existe pas, le serveur retourne une erreur FHIR ;
-- si le lot n'est pas prêt, le serveur retourne une erreur applicative documentée ;
-- pour un lot `CLIENT`, le serveur doit vérifier la cohérence entre le lot demandé, le `targetTenant` fourni et le contexte de sécurité ;
-- si `publicationViewCode` est transmis, il doit être cohérent avec le lot demandé ;
-- le serveur ne doit jamais retourner un lot `CLIENT` pour un tenant différent de celui autorisé.
+- `publicationBatchId` est obligatoire.
+- Le mode de réponse peut être synchrone ou asynchrone (`Prefer: respond-async`) — détaillé dans [API FHIR de récupération des lots publiés](api-publication-batch.html#synchrone-asynchrone).
+- Si `targetTenant` ou `publicationViewCode` sont transmis et ne correspondent pas au lot réellement désigné par `publicationBatchId`, le serveur retourne une erreur (incohérence tenant / incohérence vue).
+- Le serveur ne doit jamais retourner le contenu d'un lot `CLIENT` pour un tenant différent de celui autorisé par le contexte de sécurité de l'appelant.
 
 ---
 
-## 7. Opération `$publication-list`
+## 4. Opération `$publication-list` {#op-publication-list}
 
-### 7.1 Objectif
+### 4.1 Objectif
 
-Cette opération permet à un consommateur de lister les identifiants de lots publiés compris dans un intervalle donné.
+Retourne la liste des identifiants de lots publiés compris dans un intervalle donné. Cette opération est le mécanisme de **rattrapage (gap detection)** de cet IG : un consommateur qui a pu manquer une ou plusieurs notifications NATS (redémarrage, indisponibilité, perte de message) peut, à partir du dernier lot qu'il sait avoir traité, demander la liste de tout ce qui a été publié depuis.
 
-Elle est conçue pour le **rattrapage (gap detection)** : un consommateur peut détecter les lots qu'il aurait manqués en fournissant son dernier lot connu comme borne basse.
-
-### 7.2 Endpoint
+### 4.2 Endpoint
 
 ```http
 POST /fhir/$publication-list
 Content-Type: application/fhir+json
 ```
 
-### 7.3 Paramètres d'entrée
-
-L'entrée est portée par une ressource `Parameters`.
+### 4.3 Paramètres d'entrée
 
 | Paramètre | Cardinalité | Type | Description |
-|-----------|------------|------|-------------|
-| `fromExclusiveBatchId` | 1..1 | string | Borne basse exclusive (format `PB-{id}`). Les lots dont l'identifiant est strictement supérieur à cette valeur sont retournés. |
-| `toInclusiveBatchId` | 0..1 | string | Borne haute inclusive (format `PB-{id}`). Si absent, tous les lots au-delà de `fromExclusiveBatchId` sont retournés. |
+|-----------|:-----------:|------|-------------|
+| `fromExclusiveBatchId` | 1..1 | `string` | Borne basse **exclusive** (format `PB-{id}`). Seuls les lots dont l'identifiant est strictement supérieur à cette valeur sont retournés. |
+| `toInclusiveBatchId` | 0..1 | `string` | Borne haute **inclusive** (format `PB-{id}`). Si absente, tous les lots publiés au-delà de `fromExclusiveBatchId` sont retournés. |
 
-Exemple avec borne haute :
+### 4.4 Paramètre de sortie
+
+| Paramètre | Cardinalité | Type | Description |
+|-----------|:-----------:|------|-------------|
+| `batchId` | 0..* | `string` | Identifiant d'un lot publié compris dans l'intervalle (format `PB-{id}`), un paramètre par lot trouvé. Les résultats sont triés par identifiant croissant. |
+
+### 4.5 Exemple — détection d'un trou de publication
+
+Requête (« qu'est-ce qui a été publié entre le lot 140, exclu, et le lot 145, inclus ? ») :
 
 ```json
 {
@@ -372,26 +218,7 @@ Exemple avec borne haute :
 }
 ```
 
-Exemple sans borne haute (rattrapage ouvert) :
-
-```json
-{
-  "resourceType": "Parameters",
-  "parameter": [
-    { "name": "fromExclusiveBatchId", "valueString": "PB-2026-000140" }
-  ]
-}
-```
-
-### 7.4 Paramètres de sortie
-
-La réponse est une ressource `Parameters` contenant zéro ou plusieurs occurrences du paramètre `batchId`, triées par identifiant ascendant.
-
-| Paramètre | Cardinalité | Type | Description |
-|-----------|------------|------|-------------|
-| `batchId` | 0..* | string | Identifiant d'un lot publié dans l'intervalle (format `PB-{id}`). |
-
-Exemple de réponse (3 lots trouvés, `PB-2026-000143` et `PB-2026-000144` absents — gap détecté) :
+Réponse :
 
 ```json
 {
@@ -404,109 +231,86 @@ Exemple de réponse (3 lots trouvés, `PB-2026-000143` et `PB-2026-000144` absen
 }
 ```
 
-Si aucun lot n'est trouvé dans l'intervalle, la réponse est une ressource `Parameters` vide.
+Le consommateur connaissait déjà `PB-2026-000140`. La réponse lui apprend que trois lots ont depuis été publiés, mais que **`PB-2026-000143` et `PB-2026-000144` n'y figurent pas** : soit ils n'ont jamais existé, soit ils ont expiré ou échoué entre-temps. Dans tous les cas, la liste retournée est faisant foi — c'est elle, et non une simple différence arithmétique d'identifiants, qui indique ce qui reste réellement à récupérer. Le consommateur enchaîne alors un appel `$publication-metadata` puis `$publication-bundle` pour chaque `batchId` reçu, dans l'ordre croissant renvoyé.
 
-### 7.5 Règles de comportement
-
-- `fromExclusiveBatchId` est obligatoire ; le serveur retourne `400` si absent.
-- `toInclusiveBatchId` est optionnel ; s'il est absent, l'intervalle est ouvert vers le haut.
-- Les résultats sont triés par identifiant de lot ascendant.
-- L'opération ne filtre pas par scope ni par tenant ; elle retourne tous les lots publiés dans l'intervalle.
-- L'opération ne modifie aucune donnée (`affectsState = false`).
-
----
-
-## 8. Type de Bundle retourné
-
-### 8.1 `Bundle.type = transaction`
-
-Le lot publié doit être interprété comme une unité cohérente.
-
-- soit le bundle peut être rejoué tel quel contre un serveur FHIR ;
-- soit il peut être traité localement comme un lot logique cohérent.
-
-### 8.2 `Bundle.type = batch`
-
-Les entrées peuvent être traitées indépendamment.
-
-### 8.3 Règle de choix
-
-Le type de bundle est déterminé par :
-
-- la vue de publication ;
-- la nature du contenu publié ;
-- le besoin de cohérence du lot.
-
----
-
-## 9. Gestion des périmètres et projections
-
-### 9.1 Nomenclatures (lots GLOBAL)
-
-- contenu identique pour tous les consommateurs concernés ;
-- pas d'identifiant local client à injecter ;
-- pas de contextualisation par client.
-
-### 9.2 Ressources métier (lots CLIENT)
-
-- contenu contextualisé par client ;
-- identifiants locaux potentiellement différents selon le client ;
-- filtrage selon les règles de visibilité de la vue de publication.
-
-### 9.3 Transaction interne mixte
-
-Si une transaction interne impacte à la fois une nomenclature et une ressource métier, il faut produire :
-
-- un lot `GLOBAL` pour le contenu global ;
-- un ou plusieurs lots `CLIENT` pour le contenu contextualisé.
-
----
-
-## 10. Modèle logique de lot de publication
-
-### 10.1 PublicationBatch
-
-| Champ | Cardinalité | Type | Description |
-|-------|------------|------|-------------|
-| `publicationBatchId` | 1..1 | string | Identifiant unique du lot |
-| `scope` | 1..1 | code | `GLOBAL` ou `CLIENT` |
-| `targetTenant` | 0..1 | string | Identifiant du tenant cible pour les lots CLIENT |
-| `publicationViewId` | 0..1 | string | Vue de publication appliquée lors de la fabrication du lot |
-| `bundleType` | 1..1 | code | `transaction` ou `batch` |
-| `resourceTypes` | 1..* | string | Types de ressources présents dans le lot |
-| `sourceTransactionId` | 0..1 | string | Identifiant de la transaction métier source |
-| `sourceVersionNum` | 0..1 | integer | Numéro de version de la transaction source |
-| `status` | 1..1 | code | `READY`, `PROCESSING` ou `FAILED` |
-| `createdAt` | 1..1 | dateTime | Date de création du lot |
-
----
-
-## 11. Gestion des erreurs
-
-En cas d'erreur, le serveur retourne une ressource FHIR `OperationOutcome`.
+Requête en rattrapage ouvert (pas de borne haute — « tout ce qui est paru depuis ») :
 
 ```json
 {
-  "resourceType": "OperationOutcome",
-  "issue": [
-    {
-      "severity": "error",
-      "code": "not-found",
-      "details": { "text": "Lot de publication PB-2026-000999 inconnu." },
-      "diagnostics": "publicationBatchId PB-2026-000999 not found"
-    }
+  "resourceType": "Parameters",
+  "parameter": [
+    { "name": "fromExclusiveBatchId", "valueString": "PB-2026-000140" }
   ]
 }
 ```
 
-Codes d'erreur fonctionnels :
+Si aucun lot n'est trouvé dans l'intervalle, la réponse est une ressource `Parameters` sans occurrence de `batchId`.
 
-| Situation | HTTP | `issue.code` | Description |
-|-----------|------|-------------|-------------|
-| Lot inconnu | 404 | `not-found` | `publicationBatchId` ne correspond à aucun lot connu |
-| Paramètres invalides | 400 | `required` / `value` | Paramètre obligatoire manquant ou valeur incohérente |
-| Accès interdit | 403 | `forbidden` | Le jeton de l'appelant n'autorise pas l'accès à ce lot |
-| Lot non prêt | 409 | `conflict` | Le lot existe mais son statut n'est pas READY |
-| Incohérence tenant | 422 | `business-rule` | Le `targetTenant` transmis ne correspond pas au lot demandé |
-| Incohérence vue | 422 | `business-rule` | Le `publicationViewCode` transmis ne correspond pas au lot demandé |
-| Erreur interne | 500 | `exception` | Erreur inattendue côté serveur |
+### 4.6 Règles de comportement
+
+- `fromExclusiveBatchId` est obligatoire ; son absence entraîne une erreur `400`.
+- `toInclusiveBatchId` est optionnel ; en son absence, l'intervalle est ouvert vers le haut.
+- Les résultats sont triés par identifiant de lot croissant.
+- L'opération ne filtre pas par scope ni par tenant : elle retourne tous les lots publiés dans l'intervalle, quel que soit leur destinataire. Le filtrage par droits d'accès s'opère ensuite, lot par lot, lors des appels à `$publication-metadata` / `$publication-bundle`.
+- L'opération ne modifie aucune donnée (`affectsState = false`).
+
+---
+
+## 5. Modèle logique {#modele-logique}
+
+Les paramètres des trois opérations dérivent de deux modèles logiques, qui ne sont pas eux-mêmes des ressources FHIR exposées : ce sont des structures de transport internes documentées pour expliciter d'où viennent les champs manipulés par les opérations.
+
+### 5.1 `PublicationBatch`
+
+Un lot de publication ([`PublicationBatch`](StructureDefinition-PublicationBatch.html)) est l'unité de diffusion homogène produite à partir d'une ou plusieurs transactions métier internes. Il devient consultable dès qu'il passe au statut `READY`.
+
+| Champ | Cardinalité | Type | Description |
+|-------|:-----------:|------|-------------|
+| `publicationBatchId` | 1..1 | `string` | Identifiant technique unique du lot, généré par la plateforme MDM |
+| `scope` | 1..1 | `code` | `GLOBAL` (nomenclatures partagées) ou `CLIENT` (ressources métier contextualisées par tenant) |
+| `targetTenant` | 0..1 | `string` | Tenant destinataire ; renseigné uniquement pour les lots `CLIENT` |
+| `publicationViewId` | 0..1 | `string` | Identifiant de la vue de publication appliquée lors de la fabrication du lot |
+| `sourceTransactionId` | 0..1 | `string` | Référence de la transaction métier interne qui a déclenché la production du lot |
+| `sourceVersionNum` | 0..1 | `integer` | Version de l'objet métier au moment de la création du lot |
+| `bundleType` | 1..1 | `code` | `transaction` (unité cohérente) ou `batch` (entrées indépendantes) |
+| `status` | 1..1 | `code` | `PROCESSING`, `READY`, `FAILED` ou `EXPIRED` |
+| `createdAt` | 0..1 | `dateTime` | Date et heure de création du lot |
+
+### 5.2 `PublicationBatchItem` {#publicationbatchitem}
+
+Un item ([`PublicationBatchItem`](StructureDefinition-PublicationBatchItem.html)) représente une ressource individuelle appartenant à un lot — un item par entrée du `Bundle` retourné par `$publication-bundle`.
+
+| Champ | Cardinalité | Type | Description |
+|-------|:-----------:|------|-------------|
+| `publicationBatchId` | 1..1 | `string` | Lot de publication auquel appartient l'item |
+| `resourceType` | 1..1 | `string` | Type de ressource FHIR (ex. `Organization`, `Location`, `CodeSystem`, `ValueSet`, `Practitioner`) |
+| `logicalId` | 1..1 | `string` | Identifiant logique de la ressource FHIR — correspond au champ `id` dans le lot |
+| `rootInstanceId` | 0..1 | `string` | Identifiant de l'instance racine dans le référentiel métier, lorsqu'il diffère de `logicalId` |
+| `eventType` | 1..1 | `code` | Nature de la modification, bindée (required) sur [`http://hl7.org/fhir/ValueSet/audit-event-action`](http://hl7.org/fhir/ValueSet/audit-event-action) |
+| `sortOrder` | 1..1 | `integer` | Ordre d'application dans le lot (entier positif, croissant) |
+
+`eventType` est bindé sur le ValueSet FHIR standard `audit-event-action`, qui compte cinq codes (`C` Create, `R` Read, `U` Update, `D` Delete, `E` Execute). Dans le contexte de la publication MDM, seuls **`C`, `U` et `D`** ont un sens fonctionnel (création, mise à jour, suppression logique) ; `R` et `E` sont hérités du binding standard mais ne sont pas produits par le moteur de publication.
+
+---
+
+## 6. Traçabilité des publications {#tracabilite}
+
+`PublicationBatchItem` (via `eventType`, `logicalId`, `rootInstanceId`, `sortOrder`) et `PublicationBatch` (via `sourceTransactionId`, `sourceVersionNum`) permettent ensemble de répondre, pour une ressource donnée d'un lot donné, aux questions suivantes :
+
+- **quel type d'événement** a produit cet item (`eventType` : création, mise à jour, suppression) ;
+- **dans quel lot** il a été publié, et **à quelle position** il doit être appliqué par rapport aux autres items du même lot (`sortOrder`) ;
+- **à partir de quelle transaction métier interne** et **quelle version source** il a été généré (`sourceTransactionId`, `sourceVersionNum`, portés par le lot parent) ;
+- **quel est son identifiant métier racine** lorsqu'il diffère de l'identifiant FHIR exposé (`rootInstanceId`).
+
+Combinée à `$publication-list` (§4), cette traçabilité permet à un consommateur de détecter un lot manqué, de le récupérer, et de rejouer ses items dans le bon ordre sans dupliquer ni perdre une modification : c'est un mécanisme de **lignage de publication**, pensé pour la fiabilité de la réplication.
+
+**Ce que ce mécanisme ne fournit pas :** il ne s'agit pas d'un audit de gouvernance au sens FHIR `Provenance`. Aucun champ ne capture *qui* a réalisé la modification (agent, utilisateur, système appelant), *pourquoi* elle a été faite (motif métier, activité), ni ne fournit de preuve d'intégrité de type signature. `PublicationBatchItem` répond à « quoi a changé, dans quel lot, dans quel ordre » — un besoin d'intégration technique — pas à « qui a changé quoi et pour quelle raison » — un besoin d'audit métier ou réglementaire. Si un tel audit est nécessaire en aval, il relève d'un mécanisme distinct (par exemple des ressources `Provenance` produites par les systèmes métier eux-mêmes), hors périmètre de cet IG.
+
+---
+
+## 7. Ressources de conformité liées
+
+- [CapabilityStatement `mdm-publication-server`](CapabilityStatement-mdm-publication-server.html) — déclaration des 3 opérations, sécurité (Bearer token OAuth2 / SMART-on-FHIR), formats supportés
+- [CodeSystem `publication-scope`](CodeSystem-publication-scope.html) / [ValueSet `publication-scope`](ValueSet-publication-scope.html)
+- [CodeSystem `publication-batch-status`](CodeSystem-publication-batch-status.html) / [ValueSet `publication-batch-status`](ValueSet-publication-batch-status.html)
+- [ValueSet `bundle-type-publication`](ValueSet-bundle-type-publication.html)

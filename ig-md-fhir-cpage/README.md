@@ -1,193 +1,70 @@
 # ig-md-fhir-cpage
 
-**IG FHIR Spécialisé pour CPage Masterdata**
+IG FHIR spécialisé CPage pour le Master Data Management (MDM) hospitalier.
 
 | | |
 |---|---|
 | **Version** | 0.1.0 |
 | **Statut** | Draft |
 | **FHIR** | 4.0.1 |
-| **Juridiction** | 🇫🇷 France |
+| **Juridiction** | France |
 
-## 📋 Vue d'ensemble
+## Vue d'ensemble
 
-Cet **Implementation Guide (IG) FHIR Spécialisé** définit les ressources, profils et extensions **propres à CPage** pour son système **Masterdata**.
+Cet Implementation Guide (IG) hérite du [IG Socle Commun](../ig-md-fhir-common)
+(`ig.mdm.fhir.common`, dépendance `dev` déclarée dans `sushi-config.yaml`) et ajoute les
+extensions et profils propres au système CPage, câblés sur les tables Oracle historiques
+(`ECO.FOU`, `ECO.DBT`, `ECO.ETIER`, `STR.CHO`, `STR.ETA`, `STR.UFO`).
 
-Cet IG **hérite du [IG Commun](https://github.com/NicolasMoreauCPage/ig-md-fhir-common)** et ajoute des spécialisations métier.
+Ce dépôt fait partie du monorepo [GIPCPAGE/masterdata](https://github.com/GIPCPAGE/masterdata),
+publié sur <https://gipcpage.github.io/masterdata/>.
 
-### Architecture Multi-IG
+## Contenu
 
-```
-IG Commun              IG CPage (ce projet)
-(Profiles communs) ──→ (Enrichissements métier)
-                       └─ Codes internes
-                       └─ Catégories CPage
-                       └─ Données régionales
-```
+- `input/fsh/profiles/` — 5 profils : `CPageFournisseurProfile`, `CPageDebiteurProfile`,
+  `CPageEntiteJuridiqueProfile`, `CPageEntiteGeographiqueProfile`, `CPageUFProfile`.
+- `input/fsh/extensions/` — 16 fichiers, 26 définitions d'extension CPage.
+- `input/fsh/codesystems/` et `input/fsh/valuesets/` — terminologies CPage (validité,
+  résidence, zone Europe).
+- `input/pages/` — pages narratives publiées (`index.md`, `downloads.md`).
 
-## 🎯 Fonctionnalités Principales
+Voir [`STRUCTURE.md`](STRUCTURE.md) pour le détail de l'arborescence.
 
-### 1. Fournisseurs CPage (`CPageSupplierProfile`)
-Hérite de `SupplierProfile` du commun + ajoute :
-- 🔹 **Code interne CPage** pour identification système
-- 🔹 **Catégories** (local/national/spécialiste santé/IT/logistique)
-- 🔹 **Mapping** systèmes legacy
+## Mapping Oracle → FHIR
 
-### 2. Établissements CPage (`CPageEstablishmentProfile`)
-Hérite de `EstablishmentProfile` du commun + ajoute :
-- 🔹 **Région administrative** française
-- 🔹 **Département** (numéro)
-- 🔹 **Recherche géographique** enrichie
+Le mapping complet, colonne Oracle par élément FHIR, pour chaque profil, est documenté
+dans [`LEGACY_SUPPORT.md`](LEGACY_SUPPORT.md). Ce document précise aussi, pour chaque
+profil, si le mapping a pu être vérifié contre un export DDL Oracle réel (Fournisseur,
+Débiteur) ou seulement contre les commentaires embarqués dans le FSH (Entité Juridique,
+Entité Géographique, UF — aucun DDL indépendant n'est disponible pour `STR.CHO`/
+`STR.ETA`/`STR.UFO` dans ce dépôt).
 
-## 📦 Contenus du Projet
+## Limitations connues
 
-```
-input/
-├── fsh/
-│   ├── extensions/              # 4 extensions CPage
-│   │   ├── CPageSupplierInternalCodeExtension.fsh
-│   │   ├── CPageSupplierCategoryExtension.fsh
-│   │   ├── CPageEstablishmentRegionExtension.fsh
-│   │   └── CPageEstablishmentDepartmentExtension.fsh
-│   ├── codesystems/             # CodeSystems CPage
-│   │   └── CPageSupplierCategoryCodeSystem.fsh
-│   ├── valuesets/               # ValueSets CPage
-│   │   └── CPageSupplierCategoryValueSet.fsh
-│   └── profiles/                # Profils CPage
-│       ├── CPageSupplierProfile.fsh
-│       └── CPageEstablishmentProfile.fsh
-└── pages/
-    ├── index.md
-    ├── cpage-supplier/cpage-supplier.md
-    └── cpage-establishment/cpage-establishment.md
-```
+Voir [`FSH-LIMITATIONS.md`](FSH-LIMITATIONS.md) pour la limitation FSH/SUSHI actuelle
+sur les contraintes de longueur/motif appliquées aux champs `string`.
 
-## 🔗 Dépendances
+## Construire l'IG
 
-Dépend de **IG Commun** (`ig-md-fhir-common` v0.1.0):
-- Profils : SupplierProfile, EstablishmentProfile
-- CodeSystems : SupplierStatusCS, PostalCodeCS
-- ValueSets : SupplierStatusVS, PostalCodeVS
-- Extensions : SupplierStatusExtension, FinessNumberExtension, etc.
-
-## 🚀 Utilisation
-
-### Pour les Implémenteurs CPage
-```bash
-# 1. Consulter la documentation
-# - Fournisseurs CPage: input/pages/cpage-supplier/cpage-supplier.md
-# - Établissements CPage: input/pages/cpage-establishment/cpage-establishment.md
-
-# 2. Implémenter les profils
-# - CPageSupplierProfile
-# - CPageEstablishmentProfile
-
-# 3. Utiliser les extensions CPage
-# - CPageSupplierInternalCodeExtension
-# - CPageSupplierCategoryExtension
-# - CPageEstablishmentRegionExtension
-# - CPageEstablishmentDepartmentExtension
-```
-
-### Pour Construire l'IG
-
-```bash
-# Installer les dépendances (SUSHI, IG Publisher)
+```powershell
 npm install -g fsh-sushi
-npm install -g fhir
-
-# Construire
-sushi .
-
-# Publier (générer HTML)
-_updatePublisher.bat  # Windows
-./_updatePublisher.sh # Linux/Mac
-_genonce.bat          # Windows
-./_genonce.sh         # Linux/Mac
+sushi build .
 ```
 
-## 📚 Extensions Créées
+Cet IG dépend de `ig.mdm.fhir.common` (`dev`) : sa résolution nécessite que le paquet du
+IG commun soit disponible dans le cache local FHIR (`~/.fhir/packages`), sans quoi le
+build échoue uniquement sur la résolution des profils parents — c'est une limitation
+connue de l'environnement local, pas un défaut de ce dépôt.
 
-### Fournisseurs (2 extensions)
-| Extension | Type | Obligatoire | Usage |
-|-----------|------|-------------|--------|
-| `CPageSupplierInternalCodeExtension` | String | Non | Code interne CPage (ex: SUP-CPA-0042) |
-| `CPageSupplierCategoryExtension` | Code | Non | Classification (local/national/healthcare/IT) |
+## Documentation publiée
 
-### Établissements (2 extensions)
-| Extension | Type | Obligatoire | Usage |
-|-----------|------|-------------|--------|
-| `CPageEstablishmentRegionExtension` | String | Non | Région administrative (Île-de-France, PACA) |
-| `CPageEstablishmentDepartmentExtension` | String | Non | Numéro de département (75, 93, 13) |
+La documentation narrative de cet IG (page d'accueil, téléchargements, ressources de
+conformité) est générée depuis `input/pages/` et publiée sur
+<https://gipcpage.github.io/masterdata/>. Consulter `sushi-config.yaml` pour la
+configuration des pages et du menu.
 
-## 💡 Cas d'Usage Principaux
+## Contact
 
-### Cas 1: Intégrer un Fournisseur
-```json
-{
-  "resourceType": "Organization",
-  "meta": {"profile": ["...cpage-supplier-profile"]},
-  "identifier": [{"system": "...siret", "value": "123..."}],
-  "name": "Pharmalogic",
-  "extension": [
-    {"url": "...cpage-supplier-internal-code-extension", "valueString": "SUP-CPA-0042"},
-    {"url": "...cpage-supplier-category-extension", "valueCode": "healthcare-specialist"}
-  ]
-}
-```
-
-### Cas 2: Intégrer un Établissement
-```json
-{
-  "resourceType": "Organization",
-  "meta": {"profile": ["...cpage-establishment-profile"]},
-  "identifier": [{"system": "...finess", "value": "75056000111"}],
-  "name": "Hôpital Cochin",
-  "extension": [
-    {"url": "...cpage-establishment-region-extension", "valueString": "Île-de-France"},
-    {"url": "...cpage-establishment-department-extension", "valueString": "75"}
-  ]
-}
-```
-
-## ✅ Checkliste
-
-- [x] Structure de base créée
-- [x] 4 Extensions CPage définies
-- [x] CodeSystems & ValueSets
-- [x] 2 Profils CPage (héritage du commun)
-- [x] Documentation détaillée
-- [x] Configuration SUSHI avec dépendances
-- [x] Pages d'accueil et spécialisées
-- [ ] Validation SUSHI
-- [ ] Publication
-- [ ] Exemples instances supplémentaires
-
-## 📖 Documentation
-
-| Section | Contenu |
-|---------|---------|
-| **Fournisseurs CPage** | Extensions, profil, cas d'usage |
-| **Établissements CPage** | Région/Département, recherche géographique |
-| **Artefacts** | Tous les profils et extensions |
-| **IG Commun** | Lien vers le guide parent |
-
-## 🔗 Liens
-
-- 📦 **IG Commun**: https://github.com/NicolasMoreauCPage/ig-md-fhir-common
-- 📦 **Repository CPage**: https://github.com/NicolasMoreauCPage/ig-md-fhir-cpage
-- 🌐 **CPage**: https://www.cpage.fr
-- 📚 **FHIR 4.0.1**: https://www.hl7.org/fhir/
-- 🇫🇷 **INSEE**: https://www.insee.fr/
-
-## 📞 Contact
-
-- **Éditeur**: CPage
-- **Email**: contact@cpage.fr
-- **Web**: https://www.cpage.fr
-
----
-
-**Créé**: 2026-02-11  
-**Statut**: Draft 0.1.0  
-**Licence**: À définir
+- **Éditeur** : CPage
+- **Email** : <contact@cpage.fr>
+- **Web** : <https://www.cpage.fr>
