@@ -95,10 +95,9 @@ CPage : receveur comptable, numéros sociaux (URSSAF/CNRACL/IRCANTEC), TVA, TPG,
 
 // ── Type organisationnel ──────────────────────────────────────────────────────
 
+// Slicing déjà défini par le parent FRCoreOrganizationEtablissementProfile
+// (discriminator value:$this) — ne pas redéclarer.
 * type 1..* MS
-* type ^slicing.discriminator.type = #value
-* type ^slicing.discriminator.path = "coding.code"
-* type ^slicing.rules = #open
 
 * type contains legalEntityType 1..1 MS
 * type[legalEntityType].coding.system = "https://hl7.fr/ig/fhir/core/CodeSystem/fr-core-cs-v2-3307" (exactly)
