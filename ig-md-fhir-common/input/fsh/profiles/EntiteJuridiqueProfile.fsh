@@ -62,8 +62,6 @@ CPage : receveur comptable, numéros sociaux (URSSAF/CNRACL/IRCANTEC), TVA, TPG,
 * identifier contains
     strHId     1..1 MS and
     choCode    1..1 MS and
-    siret      0..1 MS and
-    finess     0..1 MS and
     finessHQ   0..1 MS and
     tva        0..1 MS
 

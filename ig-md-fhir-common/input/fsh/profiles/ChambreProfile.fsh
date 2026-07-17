@@ -42,7 +42,6 @@ Hérite de `StructureHospitaliereSiteProfile` (issu de `FRCoreLocationProfile`).
 * identifier ^slicing.rules = #open
 
 * identifier contains
-    strHId     1..1 MS and
     chambreCode 1..1 MS
 
 * identifier[strHId].system = "https://www.cpage.fr/ig/masterdata/common/identifiers/strh" (exactly)

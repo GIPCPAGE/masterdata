@@ -62,8 +62,6 @@ La période est portée par `extension[periodValidite]` et le code de validité 
 * identifier contains
     strHId     1..1 MS and
     etaCode    1..1 MS and
-    finess     0..1 MS and
-    siret      0..1 MS and
     eanGencod  0..1 MS
 
 // UUID MDM interne
