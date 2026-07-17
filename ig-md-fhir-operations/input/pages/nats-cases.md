@@ -1,60 +1,42 @@
 # Cas d'exemple NATS
 
-## Objectif
+Cette page décrit le rôle de NATS dans l'architecture de publication et détaille la convention de sujets ainsi que plusieurs scénarios concrets de notification.
 
-Cette page décrit le rôle de NATS dans l'architecture de publication du MasterData et détaille la convention de nommage des sujets ainsi que plusieurs scénarios de notification.
-
-NATS n'est utilisé ici que comme **canal de notification de disponibilité**. Il n'embarque jamais le contenu métier détaillé du lot : celui-ci est récupéré séparément via les opérations FHIR décrites dans [Opérations de publication](operations.html) et [API FHIR de récupération des lots publiés](api-publication-batch.html).
+NATS ne sert ici que de **canal de signalement** : il annonce qu'un lot est disponible, il n'embarque jamais son contenu. Le contenu se récupère toujours séparément via les opérations FHIR — voir [Opérations de publication](operations.html) et [API FHIR de récupération des lots publiés](api-publication-batch.html).
 
 ---
 
-## 1. Principe général
+## Principe général
 
-Lorsqu'un lot passe au statut `READY` :
-
-1. le serveur publie une notification NATS ;
-2. le consommateur reçoit cette notification ;
-3. le consommateur appelle `$publication-metadata` avec le `publicationBatchId` annoncé ;
-4. le consommateur appelle `$publication-bundle` pour récupérer le contenu.
-
-Le message NATS ne transporte pas la transaction métier brute : il annonce uniquement qu'un lot de publication est disponible, avec de quoi le router et décider s'il concerne le consommateur.
+Dès qu'un lot passe au statut `READY`, le serveur publie un message NATS. Le consommateur qui le reçoit ne dispose encore d'aucune donnée métier : il sait seulement qu'un `publicationBatchId` donné est désormais consultable, et de quoi décider s'il le concerne. La suite du traitement — `$publication-metadata` puis `$publication-bundle` — est strictement identique quel que soit le sujet NATS ayant déclenché l'appel.
 
 ---
 
-## 2. Convention de nommage des sujets
+## Convention de nommage des sujets
 
-### 2.1 Lots globaux
+### Lots `GLOBAL`
 
 ```text
 publication.global.<artefact>.available
 ```
 
-Exemples :
+Exemples : `publication.global.codesystem.available`, `publication.global.valueset.available`, `publication.global.nomenclature.available`.
 
-- `publication.global.codesystem.available`
-- `publication.global.valueset.available`
-- `publication.global.nomenclature.available`
-
-### 2.2 Lots client-spécifiques
+### Lots `CLIENT`
 
 ```text
 publication.<tenant>.<resource>.available
 ```
 
-Exemples :
+Exemples : `publication.ght21.organization.available`, `publication.ght21.transaction.available`, `publication.chu_dijon.location.available`.
 
-- `publication.ght21.organization.available`
-- `publication.ght21.transaction.available`
-- `publication.chu_dijon.organization.available`
-- `publication.chu_dijon.location.available`
-
-Le segment final peut désigner soit le type de ressource principal, soit `transaction` lorsque le lot regroupe plusieurs types cohérents (voir [Cas 4](#cas-4)). Le point important est que la convention retenue reste stable dans tout le système, pour que les consommateurs puissent s'abonner de façon fiable.
+Le dernier segment peut désigner le type de ressource principal du lot, ou le mot `transaction` lorsque le lot regroupe plusieurs types de ressources appliqués comme un tout cohérent (voir [Cas 4](#cas-4)). Ce qui compte n'est pas tel ou tel nom de segment mais la stabilité de la convention dans le temps : un consommateur construit ses abonnements sur cette structure, elle ne doit pas changer de forme d'un déploiement à l'autre.
 
 ---
 
-## 3. Structure minimale du message NATS
+## Structure du message
 
-Le message reste volontairement léger : juste assez d'informations pour permettre au consommateur de décider s'il est concerné et de récupérer le lot via l'API FHIR.
+Le message reste minimal — juste assez pour router la notification et savoir quel appel FHIR déclencher.
 
 ```json
 {
@@ -69,34 +51,26 @@ Le message reste volontairement léger : juste assez d'informations pour permett
 }
 ```
 
-| Champ | Description |
-|-------|-------------|
-| `messageId` | Identifiant unique du message NATS |
-| `correlationId` | Identifiant de corrélation avec la transaction ou l'événement source (peut être partagé par plusieurs messages issus de la même transaction, voir [Cas 3](#cas-3)) |
-| `publicationBatchId` | Identifiant du lot à récupérer via `$publication-metadata` / `$publication-bundle` |
-| `scope` | `GLOBAL` ou `CLIENT` — reflète le champ `scope` du lot ([CodeSystem publication-scope](CodeSystem-publication-scope.html)) |
-| `targetTenant` | Tenant cible, présent si `scope = CLIENT` |
-| `bundleType` | `transaction` ou `batch` — reflète le champ `bundleType` du lot |
-| `resourceTypes` | Types de ressources présents dans le lot ; agrège les valeurs `resourceType` distinctes des items du lot (`PublicationBatchItem`) |
-| `occurredAt` | Date de mise à disposition du lot |
+| Champ | Rôle |
+|-------|------|
+| `messageId` | Identifiant unique du message NATS lui-même |
+| `correlationId` | Identifiant de corrélation avec la transaction/l'événement source ; peut être partagé par plusieurs messages issus d'une même transaction mixte (voir [Cas 3](#cas-3)) |
+| `publicationBatchId` | Le lot à interroger via `$publication-metadata` / `$publication-bundle` |
+| `scope` | `GLOBAL` ou `CLIENT` — reflète le `scope` du lot ([CodeSystem publication-scope](CodeSystem-publication-scope.html)) |
+| `targetTenant` | Présent si `scope = CLIENT` |
+| `bundleType` | `transaction` ou `batch` — reflète le `bundleType` du lot |
+| `resourceTypes` | Les types de ressources distincts présents dans le lot, agrégés depuis les items (`PublicationBatchItem`) |
+| `occurredAt` | Horodatage de mise à disposition |
 
-Ce payload est une convention documentée par cet IG (il n'est pas porté par un artefact FSH), construite pour rester cohérente avec le vocabulaire des opérations : les valeurs de `scope` et `bundleType` correspondent exactement aux codes des CodeSystems/ValueSets de cet IG.
+Ce format de message est une convention documentée par cet IG — il n'est adossé à aucun artefact FSH formel — mais son vocabulaire (`scope`, `bundleType`) reprend volontairement les codes exacts des terminologies de cet IG, pour qu'un consommateur n'ait pas à faire de correspondance entre deux jeux de valeurs.
 
 ---
 
-## 4. Cas 1 — Publication d'une nomenclature globale
+## Cas 1 — Nomenclature globale
 
-**Contexte** : une transaction métier interne met à jour une nomenclature partagée.
+Une transaction interne met à jour une nomenclature partagée : le moteur produit un lot `GLOBAL`.
 
-**Résultat** : le moteur de publication produit un lot `GLOBAL`.
-
-**Sujet NATS** :
-
-```text
-publication.global.codesystem.available
-```
-
-**Payload** :
+Sujet : `publication.global.codesystem.available`
 
 ```json
 {
@@ -110,23 +84,15 @@ publication.global.codesystem.available
 }
 ```
 
-**Comportement du consommateur** : reçoit la notification → appelle `$publication-metadata` avec `PB-GLOBAL-001` → appelle `$publication-bundle` avec le même identifiant → applique le contenu.
+Traitement : réception → `$publication-metadata(PB-GLOBAL-001)` → `$publication-bundle(PB-GLOBAL-001)` → application.
 
 ---
 
-## 5. Cas 2 — Publication d'une ressource client-spécifique
+## Cas 2 — Ressource client-spécifique
 
-**Contexte** : une ressource métier est mise à jour et doit être publiée avec les identifiants visibles pour un tenant donné.
+Une ressource métier est mise à jour pour un tenant donné : le moteur produit un lot `CLIENT`.
 
-**Résultat** : le moteur de publication produit un lot `CLIENT`.
-
-**Sujet NATS** :
-
-```text
-publication.ght21.organization.available
-```
-
-**Payload** :
+Sujet : `publication.ght21.organization.available`
 
 ```json
 {
@@ -141,24 +107,15 @@ publication.ght21.organization.available
 }
 ```
 
-**Comportement du consommateur** : reçoit la notification → appelle `$publication-metadata` avec `PB-CLIENT-0456` → appelle `$publication-bundle` avec le même identifiant → applique la projection tenant-aware.
+Traitement : réception → `$publication-metadata(PB-CLIENT-0456)` → `$publication-bundle(PB-CLIENT-0456)` → application de la projection propre au tenant.
 
 ---
 
-## 6. Cas 3 — Transaction métier interne mixte {#cas-3}
+## Cas 3 — Transaction mixte, deux lots {#cas-3}
 
-**Contexte** : une transaction métier interne met à jour simultanément une nomenclature et une ressource métier.
+Une transaction interne touche simultanément une nomenclature et une ressource métier. La règle de découpage homogène (voir [API FHIR de récupération des lots publiés](api-publication-batch.html)) interdit un lot mixte : deux lots sont produits, partageant un `correlationId` commun mais chacun son propre `publicationBatchId`.
 
-**Règle** : la notification ne doit jamais annoncer un lot mixte lorsque les périmètres de diffusion diffèrent ; la transaction interne produit alors plusieurs lots publiés (un `GLOBAL`, un ou plusieurs `CLIENT`), reliés par un `correlationId` commun mais des `publicationBatchId` distincts.
-
-**Sujets NATS** :
-
-```text
-publication.global.codesystem.available
-publication.ght21.organization.available
-```
-
-**Payloads** :
+Sujets : `publication.global.codesystem.available` et `publication.ght21.organization.available`
 
 ```json
 {
@@ -185,23 +142,15 @@ publication.ght21.organization.available
 }
 ```
 
-Les deux messages partagent `correlationId = evt-3001` (même transaction source) mais pointent vers deux lots distincts, à récupérer et appliquer indépendamment.
+`correlationId = evt-3001` est identique dans les deux messages : c'est le même événement source. Les deux lots restent néanmoins entièrement indépendants à récupérer et à appliquer.
 
 ---
 
-## 7. Cas 4 — Lot client avec plusieurs ressources cohérentes {#cas-4}
+## Cas 4 — Lot client à plusieurs ressources cohérentes {#cas-4}
 
-**Contexte** : une mise à jour métier implique plusieurs ressources FHIR liées (`Organization`, `Location`) qui doivent être appliquées ensemble.
+Une mise à jour métier implique plusieurs ressources liées (`Organization` + `Location`) qui doivent être appliquées comme un tout : un seul lot `CLIENT` de type `transaction` est produit.
 
-**Résultat** : le moteur produit un lot `CLIENT` unique de type `transaction`.
-
-**Sujet NATS** :
-
-```text
-publication.ght21.transaction.available
-```
-
-**Payload** :
+Sujet : `publication.ght21.transaction.available`
 
 ```json
 {
@@ -216,19 +165,15 @@ publication.ght21.transaction.available
 }
 ```
 
-Le `Bundle` retourné par `$publication-bundle` sera de type `transaction` : le consommateur doit appliquer ses entrées dans l'ordre `sortOrder` des items, comme une unité cohérente.
+Le `Bundle` renvoyé par `$publication-bundle` sera de type `transaction` : le consommateur applique ses entrées dans l'ordre `sortOrder` des items, comme un tout indivisible.
 
 ---
 
-## 8. Cas 5 — Lot volumineux récupéré en asynchrone
+## Cas 5 — Lot volumineux, récupération asynchrone
 
-**Contexte** : le lot publié est volumineux ou sa reconstruction prend du temps.
+La notification ne change pas de forme selon la volumétrie du lot annoncé :
 
-**Notification NATS** : identique dans son principe — la volumétrie du lot n'affecte pas le format du message.
-
-```text
-publication.global.nomenclature.available
-```
+Sujet : `publication.global.nomenclature.available`
 
 ```json
 {
@@ -242,20 +187,20 @@ publication.global.nomenclature.available
 }
 ```
 
-**Comportement du consommateur** : appelle `$publication-bundle` avec `Prefer: respond-async`, reçoit `202 Accepted` + `Content-Location`, puis interroge cette URL jusqu'à `200 OK` (Bundle prêt) ou `OperationOutcome` (erreur). Voir [API FHIR de récupération des lots publiés — synchrone et asynchrone](api-publication-batch.html#synchrone-asynchrone).
+C'est au moment de l'appel à `$publication-bundle` que le consommateur décide du mode de récupération : `Prefer: respond-async` reçoit `202 Accepted` + `Content-Location`, puis interroge cette URL jusqu'à `200 OK` (contenu prêt) ou `OperationOutcome` (échec). Voir [API FHIR de récupération des lots publiés — synchrone et asynchrone](api-publication-batch.html#synchrone-asynchrone).
 
 ---
 
-## 9. Cas 6 — Rattrapage après une notification manquée
+## Cas 6 — Rattrapage après une notification manquée
 
-**Contexte** : un consommateur a été indisponible (redémarrage, incident réseau) et soupçonne avoir manqué une ou plusieurs notifications NATS entre le dernier lot qu'il a traité (`PB-2026-000140`) et maintenant.
+Un consommateur a été indisponible (redémarrage, incident réseau) et soupçonne avoir manqué une ou plusieurs notifications entre le dernier lot traité (`PB-2026-000140`) et aujourd'hui.
 
-**Ce que NATS ne peut pas garantir seul** : NATS notifie en temps réel, mais ne fournit pas nativement de mécanisme de relecture des messages passés dans le cadre de cet IG. C'est précisément le rôle de l'opération FHIR `$publication-list` (voir [Opérations de publication — `$publication-list`](operations.html#op-publication-list)) : elle ne dépend pas du broker et interroge directement l'état des lots publiés côté serveur.
+NATS ne peut rien garantir seul ici : il notifie en temps réel, sans mécanisme de relecture des messages passés dans le cadre de cet IG. C'est le rôle de `$publication-list` (voir [Opérations de publication — `$publication-list`](operations.html#op-publication-list)), qui interroge directement l'état des lots côté serveur, indépendamment du broker.
 
-**Séquence de rattrapage** :
+Séquence :
 
-1. appel de `$publication-list` avec `fromExclusiveBatchId = PB-2026-000140` (pas de borne haute) ;
+1. `$publication-list(fromExclusiveBatchId = PB-2026-000140)`, sans borne haute ;
 2. réception de la liste ordonnée des `batchId` publiés depuis ;
-3. pour chaque `batchId` reçu, dans l'ordre : appel `$publication-metadata` puis `$publication-bundle`, application locale.
+3. pour chacun, dans l'ordre reçu : `$publication-metadata` puis `$publication-bundle`, puis application locale.
 
-Ce cas ne produit pas de nouveau message NATS : il documente comment un consommateur comble, via l'API FHIR, un manque que le canal de notification n'a pas comblé lui-même.
+Ce cas ne génère aucun nouveau message NATS : il montre comment l'API FHIR comble, après coup, un manque que le canal de notification n'a pas comblé de lui-même.

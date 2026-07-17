@@ -1,14 +1,12 @@
 # Téléchargements
 
-Ce guide d'implémentation contient les artefacts FHIR relatifs aux opérations de publication du CPage MasterData :
+Cet IG regroupe uniquement les artefacts liés au contrat de publication/récupération du CPage MasterData — aucune ressource métier n'y est profilée :
 
-- Définitions des opérations `$publication-metadata`, `$publication-bundle` et `$publication-list`
-- Modèles logiques (`PublicationBatch`, `PublicationBatchItem`)
-- Terminologies (`publication-scope`, `publication-batch-status`, `bundle-type-publication`)
-- CapabilityStatement serveur (`mdm-publication-server`)
-- Exemples d'appel et de réponse pour chacune des trois opérations
-
-Le package NPM de cet IG est [téléchargeable ici](package.tgz).
+- les trois `OperationDefinition` : `$publication-metadata`, `$publication-bundle`, `$publication-list` ;
+- les modèles logiques `PublicationBatch` et `PublicationBatchItem` ;
+- les terminologies `publication-scope`, `publication-batch-status` et `bundle-type-publication` (CodeSystems et ValueSets) ;
+- le `CapabilityStatement` du serveur de publication (`mdm-publication-server`) ;
+- des exemples `Parameters`/`Bundle` pour chacune des trois opérations.
 
 ---
 
@@ -25,5 +23,5 @@ Le package NPM de cet IG est [téléchargeable ici](package.tgz).
 
 ### Exemples
 
-- [Exemples XML (zip)](examples.xml.zip)
 - [Exemples JSON (zip)](examples.json.zip)
+- [Exemples XML (zip)](examples.xml.zip)

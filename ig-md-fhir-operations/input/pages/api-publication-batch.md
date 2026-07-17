@@ -1,71 +1,57 @@
 # API FHIR de récupération des lots publiés
 
-## Objectif
+Cette page décrit le contrat vu du côté d'un système consommateur : comment récupérer un lot après une notification, à quoi s'attendre selon le type de lot, quand utiliser le mode asynchrone, comment est protégé l'accès, et comment sont signalées les erreurs.
 
-Cette page décrit le contrat d'API vu du point de vue d'un système consommateur : comment récupérer un lot publié par le MasterData après avoir reçu une notification de disponibilité sur NATS, quelle typologie de lot s'attendre à recevoir, quand utiliser le mode asynchrone, et comment interpréter les erreurs retournées par le serveur.
-
-Pour la référence paramètre par paramètre des trois opérations, voir [Opérations de publication](operations.html). Pour le détail des notifications NATS, voir [Cas d'exemple NATS](nats-cases.html).
+Pour la référence exhaustive des paramètres des trois opérations, voir [Opérations de publication](operations.html). Pour le détail des notifications, voir [Cas d'exemple NATS](nats-cases.html).
 
 ---
 
-## 1. Principe général
+## Le cycle de récupération
 
-Le broker NATS ne transporte pas le contenu publié : il transporte une notification de disponibilité. Le consommateur suit ensuite le cycle suivant :
+Le broker NATS ne transporte qu'un signal de disponibilité, jamais le contenu. Un consommateur suit donc systématiquement l'un des deux enchaînements suivants.
 
-1. il reçoit une notification NATS (ou détecte un manque via `$publication-list`, voir [§6](#rattrapage)) ;
-2. il récupère les métadonnées du lot via `$publication-metadata` ;
-3. il récupère le contenu du lot via `$publication-bundle` ;
-4. il applique localement les créations, mises à jour ou suppressions portées par le `Bundle`, dans l'ordre des entrées.
+**Flux normal**, déclenché par une notification :
 
-## 2. Pourquoi une API FHIR dédiée
+1. réception d'une notification NATS annonçant un `publicationBatchId` ;
+2. appel `$publication-metadata` — le lot est-il `READY`, quel est son `scope`, quelles ressources contient-il ;
+3. appel `$publication-bundle` — récupération du contenu ;
+4. application locale des créations, mises à jour ou suppressions, dans l'ordre des entrées du `Bundle`.
 
-Le standard FHIR permet de soumettre un `Bundle` (`transaction`/`batch`) et d'exposer des opérations personnalisées via le mécanisme `$operation`, y compris en mode asynchrone. Il ne définit en revanche pas nativement de sémantique du type « donne-moi le lot publié numéro X avec ses métadonnées de diffusion ». Cet IG comble ce vide avec trois opérations système dédiées plutôt que de détourner les interactions REST standard (`read`/`search`), qui ne portent pas la notion de lot, de scope de diffusion ni de rattrapage.
+**Flux de rattrapage**, déclenché par un doute (voir [§ Rattrapage](#rattrapage)) :
 
-## 3. Positionnement dans l'architecture
+1. appel `$publication-list` à partir du dernier lot connu ;
+2. pour chaque `batchId` reçu, dans l'ordre : `$publication-metadata` puis `$publication-bundle`, puis application locale.
 
-```text
-Master Data
-  │  Transaction métier validée
-  ▼
-Moteur de publication
-  │  Lot(s) produit(s)
-  ├──► Notification NATS (disponibilité)
-  └──► API FHIR (récupération)
-          │
-          ▼
-Consommateur
-  1. Reçoit notification NATS (ou détecte un trou via $publication-list)
-  2. Appelle $publication-metadata
-  3. Appelle $publication-bundle
-  4. Applique le lot localement
-```
+## Pourquoi des opérations dédiées plutôt que `read`/`search`
 
-## 4. Typologie des lots publiés
+FHIR sait nativement soumettre un `Bundle` et exposer des opérations personnalisées, y compris en asynchrone — mais il ne définit aucune sémantique standard pour « donne-moi le lot publié numéro X, avec ses métadonnées de diffusion ». Les interactions REST classiques (`read`, `search`) n'ont pas de notion de lot, de périmètre de diffusion ni de rattrapage sur un historique de publications. Plutôt que de plier ces interactions à un usage qu'elles ne couvrent pas, cet IG introduit trois opérations système dédiées, dont le contrat est fixé indépendamment de la façon dont les ressources elles-mêmes sont par ailleurs profilées.
 
-### 4.1 Lot `GLOBAL`
+## Typologie des lots
 
-Contenu identique pour tous les destinataires : nomenclatures (`CodeSystem`, `ValueSet`), référentiels partagés. Pas de tenant cible (`targetTenant` absent), pas d'identifiant local à injecter.
+### Lot `GLOBAL`
 
-### 4.2 Lot `CLIENT`
+Contenu identique pour tous les destinataires — nomenclatures (`CodeSystem`, `ValueSet`), référentiels partagés. `targetTenant` n'est jamais renseigné dans les métadonnées de ce type de lot ; il n'y a rien à contextualiser par tenant.
 
-Contenu contextualisé pour un tenant précis (`Organization`, `Location`, `Practitioner`, etc.), avec des identifiants et une visibilité propres à ce tenant. `targetTenant` identifie le destinataire.
+### Lot `CLIENT`
 
-### 4.3 Règle de découpage
+Contenu propre à un tenant : ressources métier (`Organization`, `Location`, `Practitioner`...) portant des identifiants et une visibilité spécifiques à ce tenant. `targetTenant` identifie le destinataire dans les métadonnées.
 
-Une transaction métier interne peut impacter plusieurs objets simultanément, mais chaque lot publié doit rester homogène en périmètre de diffusion : un lot `GLOBAL` et un lot `CLIENT` ne sont jamais fusionnés, même s'ils proviennent de la même transaction source. Une transaction mixte (nomenclature + ressource métier) produit donc systématiquement plusieurs lots.
+### La règle de découpage homogène
 
-## 5. Synchrone et asynchrone {#synchrone-asynchrone}
+Une transaction métier interne peut affecter simultanément une nomenclature et une ressource métier. Dans ce cas, le moteur de publication ne produit jamais un lot mixte : il produit un lot `GLOBAL` et un ou plusieurs lots `CLIENT` séparés, reliés entre eux par le `sourceTransactionId` qu'ils partagent mais portant chacun leur propre `publicationBatchId`. Un consommateur qui suit une seule notification pour une transaction mixte n'a donc reçu qu'une partie du tableau.
 
-D'après le [`CapabilityStatement mdm-publication-server`](CapabilityStatement-mdm-publication-server.html), `$publication-bundle` supporte les deux modes de réponse.
+## Synchrone et asynchrone {#synchrone-asynchrone}
 
-**Synchrone** — pour un lot de volumétrie raisonnable, l'opération retourne directement le `Bundle` :
+Le [CapabilityStatement `mdm-publication-server`](CapabilityStatement-mdm-publication-server.html) déclare que `$publication-bundle` supporte les deux modes.
+
+En synchrone, l'appel retourne directement le `Bundle` :
 
 ```http
 POST /fhir/$publication-bundle
 Content-Type: application/fhir+json
 ```
 
-**Asynchrone** — recommandé pour un lot volumineux ou dont la reconstruction prend du temps :
+En asynchrone — préférable pour un lot volumineux ou dont la reconstruction prend du temps — l'appelant ajoute l'en-tête `Prefer` :
 
 ```http
 POST /fhir/$publication-bundle
@@ -73,38 +59,38 @@ Prefer: respond-async
 Content-Type: application/fhir+json
 ```
 
-Réponse immédiate :
+Le serveur répond immédiatement sans le contenu :
 
 ```http
 HTTP/1.1 202 Accepted
 Content-Location: /fhir/async-jobs/12345
 ```
 
-Le consommateur interroge ensuite l'URL de suivi jusqu'à obtenir le résultat :
+Le consommateur interroge ensuite l'URL de suivi jusqu'à obtenir un résultat définitif :
 
 ```http
 GET /fhir/async-jobs/12345
 ```
 
-- `202 Accepted` tant que le traitement est en cours ;
-- `200 OK` avec le `Bundle` lorsque le lot est prêt ;
-- `OperationOutcome` en cas d'erreur.
+- `202 Accepted` : traitement toujours en cours ;
+- `200 OK` avec le `Bundle` : lot prêt, contenu livré ;
+- `OperationOutcome` : échec du traitement asynchrone.
 
-## 6. Rattrapage après une notification manquée {#rattrapage}
+## Sécurité
 
-Un consommateur qui redémarre après une indisponibilité, ou qui soupçonne une notification NATS perdue, ne doit pas se fier uniquement au flux temps réel. Il peut interroger `$publication-list` avec le dernier `publicationBatchId` qu'il sait avoir appliqué comme borne basse exclusive, pour obtenir la liste ordonnée de tout ce qui a été publié depuis. Le détail de l'opération et un exemple de trou détecté figurent dans [Opérations de publication — `$publication-list`](operations.html#op-publication-list).
+D'après le `CapabilityStatement`, toutes les opérations exigent un jeton **Bearer OAuth2 / OpenID Connect** valide (service `SMART-on-FHIR` déclaré dans `rest.security.service`) ; le CORS n'est pas activé côté serveur (`rest.security.cors = false`). Le `targetTenant` porté par un lot `CLIENT` est confronté aux droits associés au jeton de l'appelant : un consommateur ne doit en aucun cas pouvoir récupérer un lot `CLIENT` destiné à un tenant qui n'est pas le sien, même s'il en connaît l'identifiant.
 
-## 7. Sécurité
+## Rattrapage après une notification manquée {#rattrapage}
 
-D'après le `CapabilityStatement`, l'accès à toutes les opérations exige un jeton **Bearer OAuth2 / OpenID Connect valide** (service `SMART-on-FHIR` déclaré dans `rest.security.service`). Le CORS n'est pas activé côté serveur (`rest.security.cors = false`). Le champ `targetTenant` d'un lot `CLIENT` est contrôlé au regard des droits portés par le jeton de l'appelant : un consommateur ne doit jamais pouvoir récupérer le contenu d'un lot `CLIENT` destiné à un autre tenant que le sien.
+NATS notifie en temps réel mais ne fournit, dans le cadre de cet IG, aucun mécanisme de relecture des messages passés. Un consommateur qui redémarre après un incident, ou qui n'a simplement pas confiance dans la continuité de son flux de notifications, ne doit pas attendre passivement le prochain message : il interroge `$publication-list` avec le dernier `publicationBatchId` qu'il sait avoir traité comme borne basse exclusive, obtient la liste ordonnée de ce qui a été publié depuis, et rejoue chaque lot manquant. Le détail de l'opération, avec un exemple de trou détecté, est dans [Opérations de publication — `$publication-list`](operations.html#op-publication-list).
 
-## 8. Abonnement partiel et projections
+## Projection et périmètre du contenu livré
 
-Le lot retourné est une projection de publication adaptée à son destinataire (la vue de publication référencée par `publicationViewCode`/`publicationViewId`). Si un consommateur n'est concerné que par une partie du contenu métier, il ne reçoit que le périmètre qui lui est destiné ; les ressources hors périmètre ne sont pas incluses dans le `Bundle`.
+Le contenu d'un lot `CLIENT` est déjà une projection adaptée à son destinataire — la vue référencée par `publicationViewCode` (paramètre exposé) / `publicationViewId` (champ du modèle logique). Un consommateur qui n'est concerné que par une partie du contenu métier ne reçoit, dans le `Bundle`, que ce qui relève de son périmètre : il n'y a pas de filtrage supplémentaire à effectuer côté client sur le contenu d'un lot donné.
 
-## 9. Gestion des erreurs {#gestion-des-erreurs}
+## Gestion des erreurs {#gestion-des-erreurs}
 
-En cas d'erreur, le serveur retourne une ressource FHIR `OperationOutcome`, par exemple :
+Toute erreur est signalée par une ressource `OperationOutcome`, par exemple :
 
 ```json
 {
@@ -120,25 +106,26 @@ En cas d'erreur, le serveur retourne une ressource FHIR `OperationOutcome`, par 
 }
 ```
 
-Codes d'erreur fonctionnels attendus par les opérations `$publication-metadata` et `$publication-bundle` :
+Situations attendues pour `$publication-metadata` et `$publication-bundle` :
 
 | Situation | HTTP | `issue.code` | Description |
 |-----------|:----:|---------------|-------------|
 | Lot inconnu | 404 | `not-found` | `publicationBatchId` ne correspond à aucun lot connu |
-| Paramètres invalides | 400 | `required` / `value` | Paramètre obligatoire manquant ou valeur incohérente (ex. `fromExclusiveBatchId` absent sur `$publication-list`) |
-| Accès interdit | 403 | `forbidden` | Le jeton de l'appelant n'autorise pas l'accès à ce lot |
-| Lot non prêt | 409 | `conflict` | Le lot existe mais son statut n'est pas `READY` (ex. `PROCESSING`, `FAILED`) |
-| Incohérence tenant | 422 | `business-rule` | Le `targetTenant` transmis ne correspond pas au lot demandé |
-| Incohérence vue | 422 | `business-rule` | Le `publicationViewCode` transmis ne correspond pas au lot demandé |
+| Paramètre obligatoire manquant | 400 | `required` | Ex. `publicationBatchId` absent, ou `fromExclusiveBatchId` absent sur `$publication-list` |
+| Valeur incohérente | 400 | `value` | Format d'identifiant invalide |
+| Accès refusé | 403 | `forbidden` | Le jeton de l'appelant n'autorise pas l'accès au lot demandé |
+| Lot non prêt | 409 | `conflict` | Le lot existe mais son statut n'est pas `READY` |
+| Incohérence tenant | 422 | `business-rule` | Le `targetTenant` transmis à `$publication-bundle` ne correspond pas au lot réellement désigné |
+| Incohérence vue | 422 | `business-rule` | Le `publicationViewCode` transmis ne correspond pas au lot réellement désigné |
 | Erreur interne | 500 | `exception` | Erreur inattendue côté serveur |
 
-Ce tableau n'est pas porté par une contrainte FSH formelle (les `OperationDefinition` de cet IG ne déclarent pas de liste fermée de codes d'erreur) ; il documente le comportement attendu du serveur de référence, cohérent avec les usages `issue.code` standards de FHIR R4.
+Ce tableau documente le comportement attendu du serveur de référence ; il n'est pas porté par une contrainte formelle dans les `OperationDefinition` de cet IG, qui ne fixent pas de liste fermée de codes `issue.code`.
 
-## 10. Cas des nomenclatures
+## Cas particulier des nomenclatures
 
-Pour les nomenclatures, le lot est généralement de scope `GLOBAL`. Deux voies de récupération coexistent selon le contexte : via `$publication-bundle` après notification NATS (flux de publication), ou via l'API FHIR standard si l'artefact est par ailleurs exposé nativement comme `CodeSystem`/`ValueSet` consultable (hors périmètre de cet IG).
+Les nomenclatures sont en général publiées en lot `GLOBAL`. Deux voies coexistent selon le contexte : la voie de publication décrite ici (`$publication-bundle` après notification NATS), ou une exposition native comme `CodeSystem`/`ValueSet` consultable par les interactions FHIR standard si l'artefact est par ailleurs publié tel quel — ce second cas est hors périmètre de cet IG.
 
-## 11. Liens
+## Liens
 
 - [Opérations de publication](operations.html) — référence complète des paramètres
 - [Cas d'exemple NATS](nats-cases.html) — scénarios de notification

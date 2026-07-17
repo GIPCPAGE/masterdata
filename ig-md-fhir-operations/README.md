@@ -1,8 +1,8 @@
 # ig-md-fhir-operations
 
-IG FHIR (FSH/SUSHI) décrivant le contrat de publication/récupération du CPage MasterData : comment un système consommateur retrouve, via trois opérations FHIR, le contenu des lots de publication produits par le MasterData après une notification de disponibilité sur NATS.
+IG FHIR (FSH/SUSHI) qui définit le contrat de publication/récupération du CPage MasterData : comment un système consommateur, après avoir été notifié de la disponibilité d'un lot sur NATS, retrouve son contenu via trois opérations FHIR système — sans qu'aucune ressource métier ne soit profilée ici.
 
-Cet IG ne modélise pas de ressources métier ; il dépend de `hl7.fhir.fr.core` et de `ig.mdm.fhir.common` pour cela. Il ajoute uniquement des opérations, deux modèles logiques de transport et les terminologies associées à la publication.
+Aucun profil métier n'est ajouté par cet IG : il dépend de `hl7.fhir.fr.core` et de `ig.mdm.fhir.common` pour la modélisation, et n'ajoute que des opérations, deux modèles logiques de transport et les terminologies qui les encadrent.
 
 Publié dans le cadre de : https://gipcpage.github.io/masterdata/
 
@@ -12,18 +12,17 @@ Publié dans le cadre de : https://gipcpage.github.io/masterdata/
 input/fsh/
 ├── logical/         PublicationBatch, PublicationBatchItem
 ├── operations/      $publication-metadata, $publication-bundle, $publication-list
-├── terminology/     CodeSystems/ValueSets : publication-scope, publication-batch-status,
-│                    bundle-type-publication
+├── terminology/     publication-scope, publication-batch-status, bundle-type-publication
 ├── conformance/     CapabilityStatement mdm-publication-server
 ├── examples/        Exemples Parameters/Bundle pour les 3 opérations
 └── aliases.fsh
 
 input/pages/
-├── index.md                    Vue d'ensemble de l'architecture pub/sub
-├── operations.md                Référence des 3 opérations (paramètres, exemples, traçabilité)
-├── api-publication-batch.md    Contrat API côté consommateur (typologie, sync/async, erreurs)
-├── nats-cases.md                Convention de nommage des sujets NATS, scénarios de notification
-└── downloads.md                 Artefacts téléchargeables
+├── index.md                    Architecture pub/sub, GLOBAL/CLIENT, traçabilité
+├── operations.md               Référence des 3 opérations + modèles logiques + traçabilité détaillée
+├── api-publication-batch.md    Contrat consommateur : typologie, sync/async, sécurité, erreurs
+├── nats-cases.md               Convention de sujets NATS et scénarios de notification
+└── downloads.md                Artefacts téléchargeables
 ```
 
 ## Prérequis
@@ -39,7 +38,7 @@ Compilation FSH seule (rapide, valide la syntaxe et les références) :
 npx --yes fsh-sushi .
 ```
 
-ou, de manière équivalente :
+ou :
 
 ```bash
 npm run build
@@ -63,7 +62,7 @@ Le résultat HTML publié est généré dans `output/index.html`.
 | `hl7.fhir.fr.core` | 2.2.0 |
 | `ig.mdm.fhir.common` | dev |
 
-La dépendance `ig.mdm.fhir.common: dev` se résout depuis le cache local FHIR (`~/.fhir` ou équivalent) lorsqu'elle n'est pas publiée sur un registre : un build sans ce cache renseigné signalera une erreur de résolution de dépendance, qui n'affecte pas la validité des artefacts propres à cet IG.
+La dépendance `ig.mdm.fhir.common: dev` se résout depuis le cache FHIR local (`~/.fhir` ou équivalent) : sans ce cache renseigné, le build signale une erreur de résolution de dépendance qui n'affecte pas la validité des artefacts propres à cet IG.
 
 ## Ne pas modifier sans raison
 
