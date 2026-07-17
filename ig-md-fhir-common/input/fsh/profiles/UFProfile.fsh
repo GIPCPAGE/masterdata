@@ -142,20 +142,17 @@ indicateur UF HEB/SOIN/ADMIN/MED, UF externe, demandeuse/exécutante acte).
 * partOf ^short = "Centre de Responsabilité parent du centre de responsabilité"
 
 // ── Relations multi-parents (FR Core member extension) ────────────────────────
-// Conforme FR Core structure_relations.html : une UF peut avoir plusieurs relations
-// organisationnelles simultanées via l'extension fr-core-organization-member.
+// Conforme FR Core structure_relations.html (STRU-1/STRU-6) : une UF peut avoir
+// plusieurs relations organisationnelles simultanées (Service, Centre d'Activité,
+// Pôle). L'extension FR Core member est sémantiquement portée par le PARENT, qui
+// liste ses membres (cf. GHTProfile → EntiteJuridiqueProfile) — PAS par l'enfant.
+// Ces relations multi-parents sont donc exprimées côté ServiceProfile,
+// CentreActiviteProfile et PoleProfile (extension[membres]), pas ici.
 //
-// Cas d'usage :
+// Cas d'usage couverts par ces 3 profils :
 //   - UF appartient à un SERVICE (SER_COSESE — hiérarchie historique)
 //   - UF appartient à un CENTRE_ACTIVITE (CAC_NUACAC — analytique)
 //   - UF appartient à un POLE (POA_NUPAPA — optionnel)
 //
 // Remplace les attributs JSONB serviceId, centreActiviteId, poleId par des
 // références FHIR standard conformes FR Core.
-
-* extension[member] 0..* MS
-* extension[member] ^short = """
-    Relations multi-parents : service (SER_COSESE),
-    centre d activité (CAC_NUACAC), pôle du pôle.
-    Utiliser une extension par relation (FR Core member).
-    """

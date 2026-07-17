@@ -4,7 +4,8 @@
 // Hérite de StructureHospitaliereOrganizationProfile.
 //
 // Colonnes Oracle pôle → FHIR :
-//   entiteJuridique  → partOf (référence Entité Juridique — direct, pas via EG)
+//   entiteJuridique  → conforme FR Core, rattachement via partOf → EntiteGeographiqueProfile
+//                       (pas de rattachement direct à l'EJ — voir section Hiérarchie en bas de fichier)
 //   NUPAPA (PK) → identifier[poaCode]
 //   LIBEPA      → name
 //   LIBRPA      → alias[0]
@@ -98,3 +99,12 @@ pas à l'Entité Géographique.
 * partOf 0..1 MS
 * partOf only Reference(EntiteGeographiqueProfile)
 * partOf ^short = "Entité Géographique parente (site où est localisé le pôle)"
+
+// ── Membres : Unités Fonctionnelles ───────────────────────────────────────────
+// Conforme FR Core structure_relations.html (STRU-1/STRU-6) : une UF peut être
+// rattachée simultanément à un Service, un Centre d'Activité et un Pôle (POA_NUPAPA,
+// optionnel). L'extension FR Core member est portée par le PARENT (ici le Pôle),
+// qui liste ses UF membres — jamais par l'UF elle-même (voir UFProfile).
+
+* extension contains fr-core-organization-member named membres 0..* MS
+* extension[membres] ^short = "Unités Fonctionnelles membres de ce pôle (POA_NUPAPA)"

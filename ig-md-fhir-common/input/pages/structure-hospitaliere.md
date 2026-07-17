@@ -22,6 +22,7 @@ GHT (groupement de territoire)
  └─ Entité Juridique — l'établissement, personne morale (SIRET/FINESS de tête)
      └─ Entité Géographique — un site physique de cet établissement
          ├─ Service — hiérarchie historique parallèle au Pôle
+         ├─ Secteur — psychiatrie (CSP art. R3221-1), aucun cas Oracle réel à ce jour
          └─ Pôle — macro-structure médicale (loi HPST 2009)
              └─ Centre de Responsabilité — unité budgétaire (M21/M22)
                  ├─ Centre d'Activité — regroupement analytique d'UF
@@ -32,6 +33,16 @@ GHT (groupement de territoire)
                          └─ Lit
 Département / Unité Médicale — niveaux additionnels, absents d'Oracle, pour interopérabilité DPI/PMSI
 ```
+
+**Relations multi-parents (`partOf` vs `member`)** : le schéma ci-dessus montre le rattachement
+budgétaire/structurel principal de chaque entité (`partOf`, cardinalité unique). Conformément à FR
+Core (`structure_relations.html`, règles STRU-1/STRU-6 : *"une entité peut être rattachée à
+plusieurs entités père"*), une UF peut être **simultanément** membre d'un Service, d'un Secteur, d'un
+Centre d'Activité et d'un Pôle, en plus de son `partOf` budgétaire vers le Centre de Responsabilité.
+FR Core résout ce cas via l'extension `member`, portée par le **parent** qui liste ses membres
+(l'inverse de `partOf`, porté par l'enfant) — c'est donc `PoleProfile`, `ServiceProfile`,
+`CentreActiviteProfile` et `SecteurProfile` qui déclarent chacun `extension[membres]` pointant vers
+leurs UF membres, sur le même modèle que `GHTProfile` qui liste ses Entités Juridiques membres.
 
 - **GHT (Groupement Hospitalier de Territoire)** : dispositif créé par la loi de modernisation du
   système de santé (2016) regroupant plusieurs établissements publics d'un même territoire, qui
@@ -48,8 +59,13 @@ Département / Unité Médicale — niveaux additionnels, absents d'Oracle, pour
   (ordonnance de 2005, loi HPST de 2009), regroupant plusieurs services/UF autour d'une même
   discipline, pilotée par un chef de pôle avec une délégation de gestion budgétaire.
 - **Service** : hiérarchie historique, parallèle au Pôle. Certains établissements l'utilisent encore
-  comme structure de rattachement opérationnelle des UF (via une relation multi-parent, voir
-  ci-dessous), en plus ou à la place du Pôle.
+  comme structure de rattachement opérationnelle des UF, en plus ou à la place du Pôle — le Service
+  liste ses UF membres via l'extension multi-parent FR Core (`member`, voir ci-dessous).
+- **Secteur** : zone géographique et démographique définie pour l'organisation des soins
+  psychiatriques (Code de la santé publique, art. R3221-1, R3221-4, R3221-5). Ajouté au modèle bien
+  qu'**aucun établissement psychiatrique sectorisé ne soit géré à ce jour** par CPage — pour couvrir
+  le type FR Core `SECTEUR` sans attendre un premier cas d'usage réel. Comme le Pôle et le Service, un
+  Secteur liste ses UF membres via `member`.
 - **Centre de Responsabilité (CR)** : unité budgétaire — un centre de coût au sens de la comptabilité
   publique hospitalière (cadres M21/M22), identifié par une lettre budgétaire obligatoire. Rattaché
   soit à un Pôle, soit directement à l'Entité Juridique si aucun pôle n'est renseigné.
@@ -62,9 +78,11 @@ Département / Unité Médicale — niveaux additionnels, absents d'Oracle, pour
   MOS/DGOS — la plus petite unité de production médicale homogène. La quasi-totalité de l'activité
   clinique, administrative et budgétaire (lits, personnel, facturation) est rattachée à ce niveau.
   Une UF est budgétairement rattachée à un CR (`partOf`), physiquement localisée sur une Entité
-  Géographique (qui peut différer du site de son CR), optionnellement affectée à un Pôle, et peut être
-  reliée simultanément à un Service et à un Centre d'Activité via l'extension multi-parent FR Core
-  (`member`) plutôt que par un unique lien hiérarchique.
+  Géographique (qui peut différer du site de son CR), et peut être listée comme membre d'un Service,
+  d'un Secteur, d'un Centre d'Activité et/ou d'un Pôle simultanément — ces relations multi-parents
+  sont portées par l'extension FR Core `member`, déclarée du côté de ces quatre entités parentes (pas
+  sur l'UF elle-même, conformément à la sémantique FR Core — voir la note sur `partOf` vs `member`
+  ci-dessus).
 - **PAC/UAC (Poste / Unité d'Activité Complémentaire)** : l'unité élémentaire de **facturation** des
   activités de soins PMSI — associe une discipline de prestation à un tarif de nuit/jour de
   prestation (TNJP). À ne pas confondre avec le Centre d'Activité (CAC), qui est un concept analytique
@@ -95,6 +113,7 @@ Département / Unité Médicale — niveaux additionnels, absents d'Oracle, pour
 | `StructureHospitaliereOrganizationProfile` | `FRCoreOrganizationProfile` | *(socle, non instancié directement)* | Profil de base commun à Pôle, Service, CR, CAC, Département, UM |
 | `PoleProfile` | `StructureHospitaliereOrganizationProfile` | `STR.POA` | Macro-structure médicale (loi HPST) |
 | `ServiceProfile` | `StructureHospitaliereOrganizationProfile` | `STR.SER` | Hiérarchie historique parallèle au Pôle |
+| `SecteurProfile` | `StructureHospitaliereOrganizationProfile` | absent d'Oracle, aucun cas réel à ce jour | Secteur psychiatrique (CSP art. R3221-1) — couverture du type FR Core `SECTEUR` |
 | `CentreResponsabiliteProfile` | `StructureHospitaliereOrganizationProfile` | `STR.CRE` | Unité budgétaire (M21/M22) |
 | `CentreActiviteProfile` | `FRCoreOrganizationProfile` | attribut `CAC_NUACAC` de `STR.UFO` | Regroupement analytique d'UF |
 | `DepartementProfile` | `StructureHospitaliereOrganizationProfile` | absent d'Oracle, ajouté pour PMSI/DPI | Niveau intermédiaire optionnel pôle ↔ services (certains CHU) |
@@ -128,10 +147,12 @@ consommateurs.
 |---|---|
 | Entité Juridique | Statut juridique, code APE/NAF, numéro CPCM, catégorie PMSI (10/20/21/22/30/40), code CEDEX, localisation DOM/TOM, numéros émetteur EH, indicateur arrondissement |
 | Entité Géographique | Secteur sanitaire, code NAF, libellé de localisation, indicateur SAE, horaires d'ouverture, coefficients géographique et de transition T2A |
-| Pôle | *(paire période/validité uniquement — pas d'attribut métier additionnel dans le Common IG)* |
-| Service | Sigle, type de service (Direction/Service) |
+| Pôle | UF membres (`member`) |
+| Service | Sigle, type de service (Direction/Service), UF membres (`member`) |
+| Secteur | Responsable du secteur (contact), UF membres (`member`) |
+| Centre d'Activité | UF membres (`member`) |
 | Centre de Responsabilité | Lettre budgétaire (obligatoire), code secteur budgétaire, code direction transversale, référence à l'Entité Juridique parente |
-| Unité Fonctionnelle | Site de localisation géographique (obligatoire), pôle optionnel, type d'UF médicale, indicateur séances, classe dominante, lits urgence, activité libérale, maternité, confidentialité, UF de responsabilité, lettre budgétaire (obligatoire), domaine d'activité, libellé très long, type d'autorisation UM, type d'autorisation urgence, catégorie d'UF, regroupements analytiques (RU1/RU2/urgence, centre d'activité, département, section de prix de revient...), relations multi-parents (`member`) |
+| Unité Fonctionnelle | Site de localisation géographique (obligatoire), pôle optionnel, type d'UF médicale, indicateur séances, classe dominante, lits urgence, activité libérale, maternité, confidentialité, UF de responsabilité, lettre budgétaire (obligatoire), domaine d'activité, libellé très long, type d'autorisation UM, type d'autorisation urgence, catégorie d'UF, regroupements analytiques (RU1/RU2/urgence, centre d'activité, département, section de prix de revient...) |
 | Chambre | Indicateur chambre individuelle |
 | Lit | Type de lit (9 valeurs : standard, bébé, hospitalisation, isolement, pédiatrie, soins, urgences, chirurgie, rééducation), indicateur lit de séances, date d'indisponibilité, type d'autorisation |
 | Toutes (Organization et Location) | `StrHCodeInterneExtension` — code interne SIH source, générique |
@@ -170,10 +191,10 @@ administrateur sans `tenant_id` obtient tous les établissements.
 
 Reconstituer cette hiérarchie par une succession de requêtes `_include`/`_revinclude` récursives sur
 `partOf` serait possible en théorie, mais coûteux (autant d'aller-retours que de niveaux) et fragile
-en présence de relations multi-parents (une UF pouvant être rattachée simultanément à un Service et à
-un Centre d'Activité via l'extension FR Core `member`, en plus de son `partOf` vers le Centre de
-Responsabilité). L'opération `$hierarchy` résout ce graphe côté serveur et le restitue en un seul
-Bundle ordonné.
+en présence de relations multi-parents (une UF pouvant être listée comme membre d'un Service, d'un
+Secteur, d'un Centre d'Activité et d'un Pôle simultanément via l'extension FR Core `member`, en plus
+de son `partOf` budgétaire vers le Centre de Responsabilité). L'opération `$hierarchy` résout ce
+graphe côté serveur et le restitue en un seul Bundle ordonné.
 
 À noter : sur ce même point d'accès, l'historique complet est disponible via l'opération **standard**
 FHIR R4 `GET /Organization/_history` (avec le paramètre standard `_since`) — `$hierarchy` ne

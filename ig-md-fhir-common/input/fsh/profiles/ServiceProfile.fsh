@@ -107,3 +107,12 @@ Structure parallèle au Pôle (historique) — les UF lui sont rattachées via `
 * partOf 0..1 MS
 * partOf only Reference(EntiteGeographiqueProfile)
 * partOf ^short = "Entité Géographique parente "
+
+// ── Membres : Unités Fonctionnelles ───────────────────────────────────────────
+// Conforme FR Core structure_relations.html (STRU-1/STRU-6) : une UF peut être
+// rattachée simultanément à un Service, un Centre d'Activité et un Pôle. L'extension
+// FR Core member est portée par le PARENT (ici le Service), qui liste ses UF
+// membres — jamais par l'UF elle-même (voir UFProfile).
+
+* extension contains fr-core-organization-member named membres 0..* MS
+* extension[membres] ^short = "Unités Fonctionnelles membres de ce service (SER_COSESE)"
