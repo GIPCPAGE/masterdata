@@ -60,11 +60,11 @@ un concept Oracle CPage (CAC_NUACAC, analytique).
 // ── Extensions FR Core héritées (Must Support) ────────────────────────────────
 // FRCoreOrganizationUACProfile définit disciplinePrestation et tarif.
 
-* extension[fr-core-organization-uac-discipline-prestation] MS
-* extension[fr-core-organization-uac-discipline-prestation] ^short = "Discipline de prestation (Coding — FRCoreValueSetDisciplinePrestation)"
+* extension[disciplinePrestation] MS
+* extension[disciplinePrestation] ^short = "Discipline de prestation (Coding — FRCoreValueSetDisciplinePrestation)"
 
-* extension[fr-core-organization-uac-tarif] MS
-* extension[fr-core-organization-uac-tarif] ^short = "Tarif TNJP (Coding — FRCoreValueSetOrganizationCodeTarifTNJP)"
+* extension[tarif] MS
+* extension[tarif] ^short = "Tarif TNJP (Coding — FRCoreValueSetOrganizationCodeTarifTNJP)"
 
 // ── Hiérarchie : rattachement à l'UF ─────────────────────────────────────────
 
