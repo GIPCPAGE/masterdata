@@ -23,7 +23,7 @@ copyright: >-
   Copyright 2026 CPage. Tous droits reserves. Ce guide d'implementation est publie sous les termes
   de la licence Creative Commons Attribution 4.0 International (CC BY 4.0).
 releaseLabel: ci-build
-jurisdiction: urn:iso:std:iso:3166#FR "FRANCE"
+jurisdiction: urn:iso:std:iso:3166#FR "France (la)"
 
 parameters:
   shownav: true
