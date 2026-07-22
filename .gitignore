@@ -24,3 +24,7 @@ pages-output/
 **/liquid/
 **/scripts/
 **/template/
+/publisher.jar
+/.claude/
+/ig-md-fhir-common/fsh-generated/
+/ig-md-fhir-cpage/fsh-generated/
