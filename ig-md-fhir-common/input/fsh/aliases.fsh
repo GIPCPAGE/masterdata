@@ -27,6 +27,7 @@ Alias: $iso3166-alpha3      = urn:iso:std:iso:3166:-1:alpha3
 Alias: $iso3166-numeric     = urn:iso:std:iso:3166:-1:num
 Alias: $tre-r20-pays        = https://mos.esante.gouv.fr/NOS/TRE_R20-Pays/FHIR/TRE-R20-Pays
 Alias: $pays-type-entite-cs = https://www.cpage.fr/ig/masterdata/common/CodeSystem/pays-type-entite-cs
+Alias: $pays-cs             = https://www.cpage.fr/ig/masterdata/common/CodeSystem/pays-cs
 
 // FR Core
 Alias: $fr-core-location = https://hl7.fr/ig/fhir/core/StructureDefinition/fr-core-location
