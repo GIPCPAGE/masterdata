@@ -6,7 +6,6 @@ CodeSystem: MoyenPaiementCS
 Id: moyen-paiement-cs
 Title: "Types de moyen de paiement"
 Description: "Types de moyens de paiement acceptés ou utilisés pour les transactions avec les tiers"
-* ^url = "https://www.cpage.fr/ig/masterdata/common/CodeSystem/moyen-paiement-cs"
 * ^version = "1.0.0"
 * ^status = #active
 * ^experimental = false

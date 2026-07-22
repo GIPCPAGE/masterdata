@@ -16,7 +16,6 @@ financiers dématérialisés entre les collectivités et leur comptable public.
 
 Pour toute question relative à la maintenance de cette liste, se référer à la documentation officielle
 PESv2 disponible sur le portail de la DGFiP (https://www.collectivites-locales.gouv.fr/finances-locales/pesv2)."""
-* ^url = "https://www.cpage.fr/ig/masterdata/common/CodeSystem/tiers-identifier-type-cs"
 * ^version = "1.0.0"
 * ^status = #active
 * ^experimental = false

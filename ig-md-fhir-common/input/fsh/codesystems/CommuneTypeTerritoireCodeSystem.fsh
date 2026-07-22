@@ -13,7 +13,6 @@ CodeSystem: CommuneTypeTerritoireCS
 Id: commune-type-territoire-cs
 Title: "Type de territoire communal"
 Description: "Nature administrative d'une commune française selon la réforme des communes nouvelles (loi NOTRe 2015). Utilisé pour qualifier les instances Location CommuneFrancaise."
-* ^url = "https://www.cpage.fr/ig/masterdata/common/CodeSystem/commune-type-territoire-cs"
 * ^version = "1.0.0"
 * ^status = #active
 * ^experimental = false

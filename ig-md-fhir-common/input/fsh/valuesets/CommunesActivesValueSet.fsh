@@ -28,7 +28,6 @@ Il inclut les communes ordinaires, les communes nouvelles et les communes délé
 **CodeSystem source** : `https://www.cpage.fr/ig/masterdata/common/CodeSystem/communes-fr-cs`
 """
 
-* ^url = "https://www.cpage.fr/ig/masterdata/common/ValueSet/communes-fr-actives-vs"
 * ^status = #active
 * ^experimental = false
 * ^date = "2026-01-01"

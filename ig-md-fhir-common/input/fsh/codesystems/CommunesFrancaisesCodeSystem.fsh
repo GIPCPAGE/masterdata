@@ -57,7 +57,6 @@ La propriété `communeNouvelle`, posée sur une commune déléguée, permet de 
 vers la commune nouvelle parente via un `$lookup`.
 """
 
-* ^url = "https://www.cpage.fr/ig/masterdata/common/CodeSystem/communes-fr-cs"
 * ^version = "2026.1.0"
 * ^status = #active
 * ^experimental = false

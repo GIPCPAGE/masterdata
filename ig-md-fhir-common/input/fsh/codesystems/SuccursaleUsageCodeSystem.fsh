@@ -6,7 +6,6 @@ CodeSystem: SuccursaleUsageCS
 Id: succursale-usage-cs
 Title: "Types d'usage de succursale"
 Description: "Types d'usage pour les succursales/filiales d'un tiers"
-* ^url = "https://www.cpage.fr/ig/masterdata/common/CodeSystem/succursale-usage-cs"
 * ^version = "1.0.0"
 * ^status = #active
 * ^experimental = false
