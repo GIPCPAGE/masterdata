@@ -18,4 +18,3 @@ input-cache/
 output/
 temp/
 # (template/ déjà listé ci-dessus)
-/fsh-generated/
