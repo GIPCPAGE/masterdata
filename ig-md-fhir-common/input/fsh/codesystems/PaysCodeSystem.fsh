@@ -60,16 +60,10 @@ gouvernance métier à valider en amont avant intégration au jeu de données co
 non traité dans ce fragment d'exemple.
 """
 
-* ^url = "https://www.cpage.fr/ig/masterdata/common/CodeSystem/pays-cs"
-* ^version = "0.1.0"
-* ^status = #active
 * ^experimental = false
 * ^caseSensitive = true
 * ^hierarchyMeaning = #part-of
 * ^content = #fragment
-* ^publisher = "CPage"
-* ^contact.telecom.system = #url
-* ^contact.telecom.value = "https://www.cpage.fr"
 * ^purpose = "Transmettre en un seul payload l'ensemble des codes de représentation d'un pays/territoire, et exposer un binding réutilisable par d'autres profils (ex: Address.country)."
 
 // =============================================
