@@ -37,9 +37,10 @@ Description: "Profil pour les organisations de type fournisseur. Hérite du prof
 * identifier[siret] ^short = "Numéro SIRET fournisseur"
 
 // Rôle tiers doit contenir au moins 'supplier'
-* extension[tiersRole] ^comment = "Pour un fournisseur, l'extension tiersRole doit contenir au moins le code 'supplier'."
+* extension[tiersRole] ^comment = "Pour un fournisseur, l'extension tiersRole contient le code 'supplier' ou 'mixed'."
 
 // Domiciliation bancaire (RIB)
+* extension contains TiersBankAccount named bankAccount 0..* MS
 * extension[bankAccount] ^short = "RIB fournisseur"
 * extension[bankAccount] ^definition = "Coordonnées bancaires pour les paiements au fournisseur."
 
@@ -72,6 +73,5 @@ Description: "Profil pour les organisations de type fournisseur. Hérite du prof
 * extension[secteurPublic] ^definition = "Code régie (CREGFO) et identifiant Trésorerie Générale (IDTGFO)."
 
 // Détails personne physique (civilité + prénom)
-* extension contains TiersPersonDetails named personDetails 0..1 MS
 * extension[personDetails] ^short = "Civilité et prénom - Obligatoire si catégorie personne physique"
 * extension[personDetails] ^definition = "Informations personne physique : civilité (CIVIFO) et prénom (PRENFO)."

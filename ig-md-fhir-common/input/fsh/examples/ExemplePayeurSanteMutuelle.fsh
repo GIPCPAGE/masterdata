@@ -33,7 +33,7 @@ Description: "Exemple de payeur santé du régime complémentaire (mutuelle). Il
 * address.country = "FR"
 
 // Rôle: Payeur uniquement
-* extension[tiersRole][0].valueCoding = https://www.cpage.fr/ig/masterdata/common/CodeSystem/tiers-role-cs#payer
+* extension[tiersRole][0].valueCoding = https://www.cpage.fr/ig/masterdata/common/CodeSystem/tiers-role-cs#debtor
 
 // Nature juridique
 * extension[legalNature].valueCodeableConcept = https://www.cpage.fr/ig/masterdata/common/CodeSystem/tiers-legal-nature-cs#05 "Caisse complémentaire"

@@ -9,8 +9,9 @@ physiques) avec lesquelles un établissement de santé entretient une relation f
 Dans la comptabilité publique française, un **Tiers** est toute personne physique ou morale externe
 à l'établissement avec laquelle celui-ci a une relation financière : elle lui vend des biens ou
 services (fournisseur), elle lui doit de l'argent (débiteur), ou elle lui rembourse des frais de
-soins (payeur santé). Le même tiers peut cumuler plusieurs rôles : un exemple fourni dans l'IG
-(`ExempleTiersDoubleRole`) illustre une organisation qui est à la fois fournisseur et débitrice.
+soins (payeur santé : un tiers du circuit recette, donc de rôle débiteur). Un tiers porte un seul rôle :
+fournisseur (F), débiteur (D) ou mixte (M, les deux) ; le rôle payeur n'existe pas. L'exemple
+`ExempleTiersDoubleRole` illustre un tiers de rôle mixte.
 
 Le socle Oracle historique de ce domaine est la table **`ECO.ETIER`** (« tiers »), avec deux tables
 spécialisées : **`ECO.FOU`** (fournisseurs) et **`ECO.DBT`** (débiteurs des titres de recette). Les
@@ -28,7 +29,7 @@ Publiques) pour les échanges dématérialisés entre ordonnateurs et comptables
 
 | Profil | Parent FHIR | Table Oracle source | Rôle métier |
 |---|---|---|---|
-| `TiersProfile` | `FRCoreOrganizationProfile` (FR Core) | `ECO.ETIER` | Profil de base, commun aux trois rôles. Porte l'identité (nom, adresse, actif/inactif), les identifiants partagés (SIRET, SIREN, FINESS, TVA, NIR, hors UE, Tahiti, RIDET, FRWF, IREP, NFP), la catégorie TG, la nature juridique et la domiciliation bancaire. |
+| `TiersProfile` | `FRCoreOrganizationProfile` (FR Core) | `ECO.ETIER` | Profil du Tiers du Master Data (modèle `model_tiers` 2.0.0) : une Organization représente l'établissement principal. Porte l'identité (nom, complément de nom, alias, actif, valide), les identifiants partagés (SIRET, SIREN, FINESS, TVA, NIR, hors UE, Tahiti, RIDET, FRWF, IREP, NFP), le rôle unique, les spécificités, la catégorie TG, la nature juridique, la personne physique, l'adresse d'ordre 1 (`address`, contacts en `telecom`) et les autres adresses (`contact`). Les comptes bancaires sont portés par `FournisseurProfile` et `DebiteurProfile`. |
 | `FournisseurProfile` | `TiersProfile` | `ECO.FOU` | Un tiers dont on achète des biens ou services : porte les conditions de paiement, les comptes comptables (classes 2 et 6), les indicateurs réglementaires (marchés publics, UGAP, Chorus Pro) et les commentaires libres. |
 | `DebiteurProfile` | `TiersProfile` | `ECO.DBT` | Un tiers qui doit de l'argent à l'établissement (titres de recette) : domiciliation bancaire obligatoire (au moins un RIB ou IBAN), type (occasionnel/normal), indicateurs de catégorie particulière (laboratoire, locataire, agent, patient hospitalier). |
 | `PayeurSanteProfile` | `TiersProfile` | *(sous-ensemble qualifié de `ECO.ETIER`/organismes)* | Un organisme qui rembourse des frais de soins : assurance maladie obligatoire (CPAM, MSA...) ou complémentaire (mutuelle). Porte le grand régime, le numéro de caisse/organisme, et le référencement ROC (Référentiel des Organismes Complémentaires) pour le tiers payant. |
@@ -77,13 +78,16 @@ succursale peut cumuler plusieurs usages.
 
 | Extension | Contexte | Rôle |
 |---|---|---|
-| `TiersRoleExtension` | Organization | Rôle(s) du tiers : `supplier`, `debtor`, `payer` (répétable — un tiers peut cumuler des rôles) |
+| `TiersRoleExtension` | Organization | Rôle unique et obligatoire du tiers : `supplier` (F), `debtor` (D) ou `mixed` (M) |
+| `TiersSpecificityExtension` | Organization | Spécificités (répétable) : laboratoire, locataire, agent, débiteur mortuaire, hospitalier |
+| `TiersNameComplementExtension` | Organization | Complément de la raison sociale |
+| `TiersValidExtension` | Organization | Indicateur de validité de la fiche, repris du référentiel source |
 | `TiersCategory` | Organization | Catégorie TG (codes 00–74, nomenclature PESv2 `TCatTiers`) |
 | `TiersLegalNature` | Organization | Nature juridique (codes 00–11, nomenclature PESv2 `TNatJur`) |
-| `TiersBankAccount` | Organization | Domiciliation bancaire — structure `TBancaire` du PESv2 : RIB français (code établissement + guichet + compte + clé) **ou** IBAN/BIC international, plus paramètres CPage (EDI, affacturage, moyens de paiement) |
+| `TiersBankAccount` | Organization | (porté par `FournisseurProfile` et `DebiteurProfile`, plus par `TiersProfile`) Domiciliation bancaire — structure `TBancaire` du PESv2 : RIB français (code établissement + guichet + compte + clé) **ou** IBAN/BIC international, plus paramètres CPage (EDI, affacturage, moyens de paiement) |
 | `TiersIdentifierType` | Identifier | Qualifie le type d'un identifiant (codes 01–09) |
 | `TiersAddressLocalization` | Address | Zone géographique de l'adresse : `FRANCE`, `EUROPE`, `AUTRE` |
-| `TiersPersonDetails` | Organization | Civilité, prénom, matricule, numéro de dossier patient — pour les tiers personnes physiques (catégorie TG = 01) |
+| `TiersPersonDetails` | Organization | Civilité, prénom, date de naissance, matricule, numéro de dossier patient — pour les tiers personnes physiques (catégorie TG = 01) |
 | `TiersPublicSectorExtension` | Organization | Compte de contrepartie et code régie (secteur public) |
 | `TiersInternalCodeExtension` | Organization | Code interne fournisseur/débiteur |
 | `SuccursaleUsageExtension` | Organization | Usage d'une succursale rattachée par `partOf` |
@@ -120,7 +124,8 @@ succursale peut cumuler plusieurs usages.
 | `TiersCategoryCS` | PESv2 (`TCatTiers`) | 24 catégories : État, collectivités territoriales, établissements publics de santé, organismes sociaux (CPAM, MSA, CNRACL, IRCANTEC...), personne physique, etc. |
 | `TiersLegalNatureCS` | PESv2 (`TNatJur`) | 12 natures juridiques : particulier, société, association, établissement public national, collectivité territoriale, État étranger, CAF, etc. |
 | `TiersIdentifierTypeCS` | PESv2 (`TNatIdTiers`) | 12 types d'identifiant : SIRET, SIREN, FINESS, NIR, TVA, hors UE, Tahiti, RIDET, en cours d'immatriculation, FRWF, IREP, NFP |
-| `TiersRoleCodeSystem` | CPage | 3 rôles : `supplier`, `debtor`, `payer` |
+| `TiersRoleCodeSystem` | CPage | 3 rôles : `supplier`, `debtor`, `mixed` |
+| `TiersSpecificityCodeSystem` | CPage | 5 spécificités : LABORATOIRE, LOCATAIRE, AGENT, MORTUAIRE, HOSPITALIER |
 | `TiersCivilityCS` | CPage | 5 civilités (M, MME, MLLE, METMME, MOUMME) |
 | `TiersDebtorTypeCS` | CPage | Occasionnel / Normal |
 | `TypeResidentCS` | CPage | Résident / Non résident |
@@ -131,7 +136,7 @@ succursale peut cumuler plusieurs usages.
 | `MoyenPaiementCS` | CPage | Numéraire, chèque, virement (standard, application externe, gros montant, interne) |
 
 Chaque CodeSystem est accompagné de son ValueSet (`TiersCategoryVS`, `TiersLegalNatureVS`,
-`TiersIdentifierTypeVS`, `TiersRoleValueSet`, `TiersCivilityVS`, `TiersDebtorTypeVS`, `TypeResidentVS`,
+`TiersIdentifierTypeVS`, `TiersRoleValueSet`, `TiersSpecificityValueSet`, `TiersCivilityVS`, `TiersDebtorTypeVS`, `TypeResidentVS`,
 `TiersAddressLocalizationVS`, `SuccursaleUsageVS`, `ChorusIdentifierTypeVS`, `GrandRegimeVS`,
 `MoyenPaiementVS`), chacun un simple `include codes from system`.
 
@@ -139,7 +144,7 @@ Chaque CodeSystem est accompagné de son ValueSet (`TiersCategoryVS`, `TiersLega
 
 | SearchParameter | Code de recherche | Usage |
 |---|---|---|
-| `TiersRoleSearchParameter` | `tiers-role` | Filtrer par rôle (fournisseur/débiteur/payeur), multi-valeurs OR et AND |
+| `TiersRoleSearchParameter` | `tiers-role` | Filtrer par rôle (fournisseur/débiteur/mixte) |
 | `BankAccountIbanSearchParameter` | `bank-account-iban` | Retrouver un tiers par IBAN |
 | `TiersCategorySearchParameter` | — | Filtrer par catégorie TG |
 | `TiersLegalNatureSearchParameter` | — | Filtrer par nature juridique |

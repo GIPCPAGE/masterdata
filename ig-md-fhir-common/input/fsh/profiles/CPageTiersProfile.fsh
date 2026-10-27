@@ -7,7 +7,9 @@ Profile: TiersProfile
 Parent: FRCoreOrganizationProfile
 Id: tiers-profile
 Title: "Tiers"
-Description: "Profil générique pour la notion de Tiers (commun débiteur/fournisseur), basé sur FR Core Organization. Conforme aux spécifications. Ce profil hérite des slices identifier déjà définis par FR Core (SIREN, SIRET, FINESS) et ajoute les identifiants (NIR, hors UE, Tahiti, RIDET) ainsi qu'un identifiant de TVA intracommunautaire."
+Description: """Profil du Tiers du Master Data (modèle de concept model_tiers 2.0.0), basé sur FR Core Organization.
+
+Une Organization représente l'**établissement principal** du tiers : son SIRET, son adresse d'ordre 1 (`address`) et les contacts de cette adresse (`telecom`). Les adresses suivantes de l'établissement principal, avec leurs contacts, sont portées par `contact`. Le rôle du tiers (fournisseur, débiteur ou mixte) est obligatoire et unique. Les établissements secondaires, les comptes bancaires et les données de gouvernance (cycle de vie, statut d'harmonisation, liens source) ne sont pas exposés par ce profil."""
 
 // FR Core 2.2.0 ne définit plus le slicing sur Organization.identifier
 // On le redéfinit ici avec un discriminateur standard (system)
@@ -118,27 +120,53 @@ Description: "Profil générique pour la notion de Tiers (commun débiteur/fourn
 * name ^definition = "Nom officiel du tiers."
 
 // Complément de nom
+* extension contains TiersNameComplementExtension named complementNom 0..1 MS
+* extension[complementNom] ^short = "Complément de nom"
+* extension[complementNom] ^definition = "Complément de la raison sociale du tiers."
+
+// Alias / noms commerciaux
 * alias 0..* MS
-* alias ^short = "Nom complémentaire"
-* alias ^definition = "Nom complémentaire ou alternatif du tiers."
+* alias ^short = "Alias / nom commercial"
+* alias ^definition = "Noms alternatifs ou commerciaux du tiers."
 
-// Adresse du siège
-* address 0..* MS
-* address ^short = "Adresse du siège"
+// Adresse d'ordre 1 de l'établissement principal (obligatoire dans le modèle)
+* address 1..1 MS
+* address ^short = "Adresse principale (ordre 1) de l'établissement principal"
+* address ^definition = "Adresse d'ordre 1 de l'établissement principal. Les autres adresses de l'établissement principal sont portées par contact.address."
 
-// Télécom
+// Contacts de l'adresse d'ordre 1 (téléphone, email, télécopie, télex, site internet)
 * telecom 0..* MS
-* telecom ^short = "Contacts téléphoniques et emails"
+* telecom ^short = "Contacts de l'adresse principale"
+* telecom ^definition = "Contacts de l'adresse d'ordre 1 de l'établissement principal : téléphone, email, télécopie, télex, site internet."
 
-// Actif / validité
+// Adresses suivantes de l'établissement principal, avec leurs contacts
+* contact 0..* MS
+* contact ^short = "Autres adresses de l'établissement principal"
+* contact ^definition = "Une entrée par adresse d'ordre supérieur à 1 de l'établissement principal : contact.name porte le destinataire de l'adresse, contact.address l'adresse, contact.telecom ses contacts."
+* contact.address 1..1 MS
+
+// Actif (désactivation logique, sans suppression physique)
 * active 0..1 MS
 * active ^short = "Tiers actif"
-* active ^definition = "Indique si le tiers est actif."
+* active ^definition = "Statut actif ou inactif du tiers. Désactivation logique sans suppression physique."
 
-// Rôles du tiers
-* extension contains TiersRoleExtension named tiersRole 0..* MS
-* extension[tiersRole] ^short = "Rôle(s) du tiers"
-* extension[tiersRole] ^definition = "Rôle(s) du tiers : fournisseur (supplier), débiteur (debtor) ou payeur (payer)."
+// Fiche valide (référentiel source)
+* extension contains TiersValidExtension named valide 0..1 MS
+* extension[valide] ^short = "Fiche valide"
+* extension[valide] ^definition = "Indicateur de validité de la fiche, repris du référentiel source."
+
+// Rôle du tiers : un seul, obligatoire (supplier = F, debtor = D, mixed = M)
+* extension contains TiersRoleExtension named tiersRole 1..1 MS
+* extension[tiersRole] ^short = "Rôle du tiers"
+* extension[tiersRole] ^definition = "Rôle unique du tiers : fournisseur (supplier, circuit dépense), débiteur (debtor, circuit recette) ou mixte (mixed, les deux). Correspond aux valeurs F, D et M du modèle."
+
+// Spécificités (laboratoire, locataire, agent, débiteur mortuaire, hospitalier)
+* extension contains TiersSpecificityExtension named specificite 0..* MS
+* extension[specificite] ^short = "Spécificités du tiers"
+* extension[specificite] ^definition = "Particularités du tiers cochées sur la fiche : laboratoire, locataire, agent, débiteur mortuaire, hospitalier."
+
+// Personne physique (civilité, prénom, date de naissance)
+* extension contains TiersPersonDetails named personDetails 0..1 MS
 
 // Catégorie TG (codes 00-74)
 * extension contains TiersCategory named tgCategory 0..1 MS
@@ -150,10 +178,8 @@ Description: "Profil générique pour la notion de Tiers (commun débiteur/fourn
 * extension[legalNature] ^short = "Nature juridique"
 * extension[legalNature] ^definition = "Nature juridique du tiers selon nomenclature: particulier, société, association, établissement public, collectivité territoriale, etc. Codes 00-11."
 
-// Domiciliation bancaire (RIB/IBAN)
-* extension contains TiersBankAccount named bankAccount 0..* MS
-* extension[bankAccount] ^short = "Coordonnées bancaires RIB/IBAN"
-* extension[bankAccount] ^definition = "Domiciliation bancaire du tiers (RIB français ou IBAN/BIC international)."
+// Les comptes bancaires ne sont pas portés par TiersProfile (données internes et sensibles) :
+// FournisseurProfile et DebiteurProfile déclarent l'extension bankAccount.
 
 // Usage de la succursale (pour organisations rattachées via partOf)
 * extension contains SuccursaleUsageExtension named succursaleUsage 0..* MS

@@ -38,10 +38,10 @@ Description: "Profil pour les organisations de type débiteur. Hérite du profil
 * telecom ^definition = "Site internet, téléphone, télex (legacy), fax, email."
 
 // Rôle tiers doit contenir au moins 'debtor'
-* extension[tiersRole] ^comment = "Pour un débiteur, l'extension tiersRole doit contenir au moins le code 'debtor'."
+* extension[tiersRole] ^comment = "Pour un débiteur, l'extension tiersRole contient le code 'debtor' ou 'mixed'."
 
 // Domiciliation bancaire (RIB/IBAN)
-* extension[bankAccount] 1..* MS
+* extension contains TiersBankAccount named bankAccount 1..* MS
 * extension[bankAccount] ^short = "RIB/IBAN débiteur (obligatoire)"
 * extension[bankAccount] ^definition = "Coordonnées bancaires pour recettes. Code banque, code guichet, numéro compte, clé RIB, IBAN, BIC. Au moins un RIB ou IBAN requis."
 
@@ -66,7 +66,6 @@ Description: "Profil pour les organisations de type débiteur. Hérite du profil
 * identifier.extension[chorusType] ^definition = "Type d'identifiant reconnu par CHORUS (système d'information financière de l'État). Identique au type d'identifiant tiers mais n'accepte pas le code 09 (En cours d'immatriculation)."
 
 // Détails personne physique (civilité + prénom)
-* extension contains TiersPersonDetails named personDetails 0..1 MS
 * extension[personDetails] ^short = "Civilité et prénom - Obligatoire si catégorie personne physique"
 * extension[personDetails] ^definition = "Informations sur la personne physique : civilité (M, MME, MLLE, METMME, MOUMME) et prénom (38 car max). Obligatoire si le débiteur est une personne physique."
 

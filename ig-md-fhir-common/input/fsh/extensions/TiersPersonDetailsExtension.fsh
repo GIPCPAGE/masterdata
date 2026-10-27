@@ -5,7 +5,7 @@
 Extension: TiersPersonDetails
 Id: tiers-person-details
 Title: "Détails Personne Physique"
-Description: "Extension pour les informations spécifiques aux personnes physiques : civilité, prénom, numéro de matricule et numéro de dossier patient. Correspond aux colonnes CIVITI, PRENTI, NOMATI, NOPATI de la table ETIER."
+Description: "Extension pour les informations spécifiques aux personnes physiques : civilité, prénom, date de naissance, numéro de matricule et numéro de dossier patient. Correspond aux colonnes CIVITI, PRENTI, NOMATI, NOPATI de la table ETIER."
 Context: Organization
 * ^url = "https://www.cpage.fr/ig/masterdata/common/StructureDefinition/tiers-person-details"
 * ^version = "1.0.0"
@@ -16,6 +16,7 @@ Context: Organization
 * extension contains
     civility 0..1 MS and
     firstName 0..1 MS and
+    birthDate 0..1 MS and
     numeroMatricule 0..1 MS and
     numeroDossierPatient 0..1 MS
 
@@ -42,3 +43,8 @@ Context: Organization
 * extension[numeroDossierPatient].value[x] only string
 * extension[numeroDossierPatient].valueString 1..1 MS
 * extension[numeroDossierPatient].valueString ^maxLength = 20
+
+* extension[birthDate] ^short = "Date de naissance"
+* extension[birthDate] ^definition = "Date de naissance de la personne physique."
+* extension[birthDate].value[x] only date
+* extension[birthDate].valueDate 1..1 MS

@@ -1,13 +1,13 @@
 // =============================================
 // SearchParameter: Tiers Role
-// Permet de rechercher un tiers par son rôle (supplier, debtor, payer)
+// Permet de rechercher un tiers par son rôle (supplier, debtor, mixed)
 // =============================================
 
 Instance: tiers-role-search-parameter
 InstanceOf: SearchParameter
 Usage: #definition
 Title: "Search Tiers by Role"
-Description: "Permet de rechercher un tiers par son rôle: fournisseur (supplier), débiteur (debtor), ou payeur santé (payer). Supporte les recherches multi-rôles."
+Description: "Permet de rechercher un tiers par son rôle: fournisseur (supplier), débiteur (debtor) ou mixte (mixed)."
 
 * url = "https://www.cpage.fr/ig/masterdata/common/SearchParameter/tiers-role-search-parameter"
 * version = "1.0.0"
@@ -20,7 +20,7 @@ Description: "Permet de rechercher un tiers par son rôle: fournisseur (supplier
 * contact.telecom.system = #email
 * contact.telecom.value = "support@cpage.org"
 
-* description = "Recherche un tiers par son rôle. Permet de filtrer les organisations selon qu'elles sont fournisseurs, débiteurs, ou payeurs santé. Un même tiers peut avoir plusieurs rôles simultanément."
+* description = "Recherche un tiers par son rôle. Permet de filtrer les organisations selon qu'elles sont fournisseurs, débiteurs ou mixtes. Un tiers porte un seul rôle ; la valeur mixed désigne un tiers à la fois fournisseur et débiteur."
 
 * code = #tiers-role
 * base = #Organization
