@@ -14,10 +14,9 @@ Description: "Exemple d'un tiers fournisseur illustrant le modèle Tiers : étab
 * identifier[tva].value = "FR12852112345"
 
 * active = true
-* extension[valide].valueBoolean = true
 
 * name = "Multiservices Santé et Logistique"
-* extension[complementNom].valueString = "Division hospitalière"
+* extension[shortName].valueString = "Division hospitalière"
 * alias = "MSL France"
 
 // Rôle unique : fournisseur
@@ -28,6 +27,9 @@ Description: "Exemple d'un tiers fournisseur illustrant le modèle Tiers : étab
 
 // Adresse d'ordre 1 de l'établissement principal et ses contacts
 * address.line[0] = "12 Avenue de la République"
+* address.line[0].extension[numeroVoie].valueString = "12"
+* address.line[0].extension[typeVoie].valueString = "Avenue"
+* address.line[0].extension[nomVoie].valueString = "de la République"
 * address.city = "Paris"
 * address.postalCode = "75011"
 * address.country = "FR"
@@ -55,5 +57,20 @@ Description: "Exemple d'un tiers fournisseur illustrant le modèle Tiers : étab
 // Catégorie TG
 * extension[tgCategory].valueCodeableConcept = https://www.cpage.fr/ig/masterdata/common/CodeSystem/tiers-category-cs#50 "Personne morale de droit privé"
 
-// Code interne
-* extension[codeInterne].valueString = "FRSUP00456"
+
+// Restriction de rôle sur la seconde adresse : réservée au circuit fournisseur
+* contact[0].address.extension[roleRestriction].valueCoding = https://www.cpage.fr/ig/masterdata/common/CodeSystem/tiers-role-cs#supplier
+
+// Compte bancaire commun à toute la société (porté par l'établissement principal)
+* extension[bankAccount][0].extension[titulaire].valueString = "Multiservices Santé et Logistique"
+* extension[bankAccount][0].extension[iban].valueString = "FR7630002005500000157845Z02"
+* extension[bankAccount][0].extension[bic].valueString = "CRLYFRPPXXX"
+* extension[bankAccount][0].extension[actif].valueBoolean = true
+* extension[bankAccount][0].extension[communSociete].valueBoolean = true
+
+// Compte bancaire réservé au circuit fournisseur
+* extension[bankAccount][1].extension[titulaire].valueString = "Multiservices Santé et Logistique"
+* extension[bankAccount][1].extension[iban].valueString = "FR7630004000031234567890143"
+* extension[bankAccount][1].extension[actif].valueBoolean = true
+* extension[bankAccount][1].extension[role].valueCoding = https://www.cpage.fr/ig/masterdata/common/CodeSystem/tiers-role-cs#supplier
+* extension[bankAccount][1].extension[communSociete].valueBoolean = false

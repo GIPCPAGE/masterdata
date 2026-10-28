@@ -25,8 +25,8 @@ Description: "Permet de rechercher un tiers par son rôle: fournisseur (supplier
 * code = #tiers-role
 * base = #Organization
 * type = #token
-* expression = "Organization.extension('https://www.cpage.fr/ig/masterdata/common/StructureDefinition/tiers-role-extension').value.ofType(code)"
-* xpath = "f:Organization/f:extension[@url='https://www.cpage.fr/ig/masterdata/common/StructureDefinition/tiers-role-extension']/f:valueCode"
+* expression = "Organization.extension('https://www.cpage.fr/ig/masterdata/common/StructureDefinition/tiers-role-extension').value.ofType(Coding)"
+* xpath = "f:Organization/f:extension[@url='https://www.cpage.fr/ig/masterdata/common/StructureDefinition/tiers-role-extension']/f:valueCoding"
 * xpathUsage = #normal
 * multipleOr = true
 * multipleAnd = true
@@ -34,5 +34,4 @@ Description: "Permet de rechercher un tiers par son rôle: fournisseur (supplier
 // Exemples d'usage:
 // GET [base]/Organization?tiers-role=supplier
 // GET [base]/Organization?tiers-role=debtor
-// GET [base]/Organization?tiers-role=supplier,debtor (multi-rôles OU)
-// GET [base]/Organization?tiers-role=supplier&tiers-role=debtor (multi-rôles ET)
+// GET [base]/Organization?tiers-role=supplier,debtor (fournisseurs OU débiteurs)

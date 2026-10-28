@@ -7,12 +7,14 @@ Profile: TiersProfile
 Parent: FRCoreOrganizationProfile
 Id: tiers-profile
 Title: "Tiers"
-Description: """Profil du Tiers du Master Data (modèle de concept model_tiers 2.0.0), basé sur FR Core Organization.
+Description: """Profil du Tiers du Master Data (modèle de concept model_tiers), basé sur FR Core Organization.
 
-Une Organization représente l'**établissement principal** du tiers : son SIRET, son adresse d'ordre 1 (`address`) et les contacts de cette adresse (`telecom`). Les adresses suivantes de l'établissement principal, avec leurs contacts, sont portées par `contact`. Le rôle du tiers (fournisseur, débiteur ou mixte) est obligatoire et unique. Les établissements secondaires, les comptes bancaires et les données de gouvernance (cycle de vie, statut d'harmonisation, liens source) ne sont pas exposés par ce profil."""
+Une Organization représente l'**établissement principal** du tiers : son SIRET, son adresse d'ordre 1 (`address`) et les contacts de cette adresse (`telecom`). Les adresses suivantes de l'établissement principal, avec leurs contacts, sont portées par `contact`. Les comptes bancaires sont portés par l'extension `bankAccount`. Les établissements secondaires sont des Organization de profil `TiersEtablissementSecondaireProfile`, rattachées à l'établissement principal par `partOf`. Le rôle du tiers (fournisseur, débiteur ou mixte) est obligatoire et unique. Les données de gouvernance (cycle de vie, statut d'harmonisation, liens source) ne sont pas exposées par ce profil."""
 
 // FR Core 2.2.0 ne définit plus le slicing sur Organization.identifier
 // On le redéfinit ici avec un discriminateur standard (system)
+
+* obeys tiers-siret-siren and tiers-restriction-role
 
 * identifier ^slicing.discriminator.type = #value
 * identifier ^slicing.discriminator.path = "system"
@@ -119,10 +121,10 @@ Une Organization représente l'**établissement principal** du tiers : son SIRET
 * name ^short = "Raison sociale / nom du tiers"
 * name ^definition = "Nom officiel du tiers."
 
-// Complément de nom
-* extension contains TiersNameComplementExtension named complementNom 0..1 MS
-* extension[complementNom] ^short = "Complément de nom"
-* extension[complementNom] ^definition = "Complément de la raison sociale du tiers."
+// Complément de nom : extension shortName de FR Core (libellé court de l'organisation)
+* extension[shortName] MS
+* extension[shortName] ^short = "Complément de nom"
+* extension[shortName] ^definition = "Complément de la raison sociale du tiers, porté par l'extension FR Core shortName."
 
 // Alias / noms commerciaux
 * alias 0..* MS
@@ -133,27 +135,47 @@ Une Organization représente l'**établissement principal** du tiers : son SIRET
 * address 1..1 MS
 * address ^short = "Adresse principale (ordre 1) de l'établissement principal"
 * address ^definition = "Adresse d'ordre 1 de l'établissement principal. Les autres adresses de l'établissement principal sont portées par contact.address."
+* insert TiersAdresse(address)
 
 // Contacts de l'adresse d'ordre 1 (téléphone, email, télécopie, télex, site internet)
 * telecom 0..* MS
 * telecom ^short = "Contacts de l'adresse principale"
 * telecom ^definition = "Contacts de l'adresse d'ordre 1 de l'établissement principal : téléphone, email, télécopie, télex, site internet."
 
-// Adresses suivantes de l'établissement principal, avec leurs contacts
+// Adresses suivantes de l'établissement principal, avec leurs contacts (contacts sans purpose)
 * contact 0..* MS
-* contact ^short = "Autres adresses de l'établissement principal"
-* contact ^definition = "Une entrée par adresse d'ordre supérieur à 1 de l'établissement principal : contact.name porte le destinataire de l'adresse, contact.address l'adresse, contact.telecom ses contacts."
-* contact.address 1..1 MS
+* contact obeys tiers-contact-adresse
+* contact ^short = "Autres adresses de l'établissement principal, et personne physique"
+* contact ^definition = "Une entrée sans purpose par adresse d'ordre supérieur à 1 de l'établissement principal : contact.name porte le destinataire de l'adresse, contact.address l'adresse, contact.telecom ses contacts. Une entrée de purpose personne-physique porte l'identité du tiers personne physique."
+* contact.address 0..1 MS
+* insert TiersAdresse(contact.address)
+
+* contact ^slicing.discriminator.type = #value
+* contact ^slicing.discriminator.path = "purpose"
+* contact ^slicing.rules = #open
+* contact ^slicing.description = "Slice personnePhysique identifiée par son purpose ; les autres contacts sont des adresses."
+
+// Personne physique : civilité, prénom et nom dans contact.name, date de naissance en extension
+* contact contains personnePhysique 0..1 MS
+* contact[personnePhysique] ^short = "Personne physique"
+* contact[personnePhysique] ^definition = "Identité du tiers personne physique (catégorie TG = 01) : civilité (name.prefix), prénom (name.given), nom (name.family) et date de naissance (extension birthDate)."
+* contact[personnePhysique].purpose = TiersContactPurposeCS#personne-physique
+* contact[personnePhysique].name 1..1 MS
+* contact[personnePhysique].name.family 1..1 MS
+* contact[personnePhysique].name.family ^short = "Nom"
+* contact[personnePhysique].name.given 0..1 MS
+* contact[personnePhysique].name.given ^short = "Prénom (38 caractères max)"
+* contact[personnePhysique].name.given ^maxLength = 38
+* contact[personnePhysique].name.prefix 0..1 MS
+* contact[personnePhysique].name.prefix from TiersCivilityVS (required)
+* contact[personnePhysique].name.prefix ^short = "Civilité (M, MME, MLLE, METMME, MOUMME)"
+* contact[personnePhysique].address 0..0
+* contact[personnePhysique].extension contains TiersBirthDate named birthDate 0..1 MS
 
 // Actif (désactivation logique, sans suppression physique)
 * active 0..1 MS
 * active ^short = "Tiers actif"
 * active ^definition = "Statut actif ou inactif du tiers. Désactivation logique sans suppression physique."
-
-// Fiche valide (référentiel source)
-* extension contains TiersValidExtension named valide 0..1 MS
-* extension[valide] ^short = "Fiche valide"
-* extension[valide] ^definition = "Indicateur de validité de la fiche, repris du référentiel source."
 
 // Rôle du tiers : un seul, obligatoire (supplier = F, debtor = D, mixed = M)
 * extension contains TiersRoleExtension named tiersRole 1..1 MS
@@ -165,9 +187,6 @@ Une Organization représente l'**établissement principal** du tiers : son SIRET
 * extension[specificite] ^short = "Spécificités du tiers"
 * extension[specificite] ^definition = "Particularités du tiers cochées sur la fiche : laboratoire, locataire, agent, débiteur mortuaire, hospitalier."
 
-// Personne physique (civilité, prénom, date de naissance)
-* extension contains TiersPersonDetails named personDetails 0..1 MS
-
 // Catégorie TG (codes 00-74)
 * extension contains TiersCategory named tgCategory 0..1 MS
 * extension[tgCategory] ^short = "Catégorie TG"
@@ -178,16 +197,10 @@ Une Organization représente l'**établissement principal** du tiers : son SIRET
 * extension[legalNature] ^short = "Nature juridique"
 * extension[legalNature] ^definition = "Nature juridique du tiers selon nomenclature: particulier, société, association, établissement public, collectivité territoriale, etc. Codes 00-11."
 
-// Les comptes bancaires ne sont pas portés par TiersProfile (données internes et sensibles) :
-// FournisseurProfile et DebiteurProfile déclarent l'extension bankAccount.
-
-// Usage de la succursale (pour organisations rattachées via partOf)
-* extension contains SuccursaleUsageExtension named succursaleUsage 0..* MS
-* extension[succursaleUsage] ^short = "Usage de la succursale"
-* extension[succursaleUsage] ^definition = "Qualifie l'usage d'une succursale rattachée au siège: point de livraison, facturation, ou siège social secondaire."
-
-// Code interne (facultatif, pour fournisseur ou débiteur)
-* extension contains TiersInternalCodeExtension named codeInterne 0..1 MS
+// Comptes bancaires de l'établissement principal (IBAN maître ; compte commun à la société autorisé ici)
+* extension contains TiersBankAccount named bankAccount 0..* MS
+* extension[bankAccount] ^short = "Comptes bancaires"
+* extension[bankAccount] ^definition = "Comptes bancaires de l'établissement principal. Un compte avec communSociete = true est utilisable par tous les établissements du tiers."
 
 // Slices SIREN / SIRET / FINESS (redéfinis ici car FR Core 2.2.0 ne les expose plus)
 * identifier[siret].system = "https://sirene.fr" (exactly)

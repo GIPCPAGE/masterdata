@@ -49,12 +49,3 @@ Description: "Exemple d'un tiers de rôle mixte (M) : à la fois fournisseur (ve
 // TG Category
 * extension[tgCategory].valueCodeableConcept = https://www.cpage.fr/ig/masterdata/common/CodeSystem/tiers-category-cs#50 "Personne morale de droit privé"
 
-// === Code interne (partagé entre les deux rôles) ===
-* extension[codeInterne].valueString = "FRCLIN00123"
-
-// Note: les détails spécifiques à chaque rôle sont portés par des instances enfant dédiées :
-//   - rôle fournisseur : instance FournisseurProfile (avec extensions comptabilite/paiement)
-//   - rôle débiteur   : instance DebiteurProfile (avec extensions parametres/debtorAttributs)
-
-
-// === Second compte bancaire (Pour séparer flux importants) ===
