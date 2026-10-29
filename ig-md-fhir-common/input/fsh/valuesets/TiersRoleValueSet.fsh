@@ -5,7 +5,7 @@
 ValueSet: TiersRoleValueSet
 Id: tiers-role-valueset
 Title: "ValueSet Rôles Tiers"
-Description: "Rôles génériques d'un tiers."
+Description: "Rôle d'un tiers : fournisseur, débiteur ou mixte."
 * ^status = #active
 * ^experimental = false
 * ^meta.profile = "http://hl7.org/fhir/StructureDefinition/shareablevalueset"

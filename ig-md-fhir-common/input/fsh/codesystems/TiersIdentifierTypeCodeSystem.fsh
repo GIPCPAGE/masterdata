@@ -5,7 +5,7 @@
 CodeSystem: TiersIdentifierTypeCS
 Id: tiers-identifier-type-cs
 Title: "Type d'identifiant tiers"
-Description: """Codes qualifiant le type d'identifiant d'un tiers (codes 01-12).
+Description: """Codes qualifiant le type d'identifiant d'un tiers (codes 01-08 et 10-12).
 
 Cette nomenclature est issue du **Protocole d'Échange Standard v2 (PESv2)** publié par la Direction
 Générale des Finances Publiques (DGFiP). Elle correspond au type `TNatIdTiers` du bloc `<BlocTiers>`
@@ -26,7 +26,7 @@ PESv2 disponible sur le portail de la DGFiP (https://www.collectivites-locales.g
 * ^copyright = "Source : DGFiP — Protocole d'Échange Standard v2 (PESv2), nomenclature TypIdTiers. Données publiques issues de la réglementation financière des collectivités locales."
 * ^caseSensitive = true
 * ^content = #complete
-* ^count = 12
+* ^count = 11
 * ^meta.profile = "http://hl7.org/fhir/StructureDefinition/shareablecodesystem"
 
 * #01 "SIRET" "Système d'Identification du Répertoire des ETablissements (14 caractères)"
@@ -37,7 +37,6 @@ PESv2 disponible sur le portail de la DGFiP (https://www.collectivites-locales.g
 * #06 "HORS_UE" "Identifiant hors Union Européenne"
 * #07 "TAHITI" "Numéro Tahiti (Polynésie française)"
 * #08 "RIDET" "RIDET Nouméa (Nouvelle-Calédonie)"
-* #09 "EN_COURS" "Fournisseur en cours d'immatriculation (identifiant temporaire)"
 * #10 "FRWF" "Identifiant FRWF — Wallis-et-Futuna"
 * #11 "IREP" "IREP — Identifiant du Répertoire des Établissements Publics (Polynésie française)"
 * #12 "NFP" "NFP — Numéro de Fichier de Paie (identifiant employéur pour les échanges de paie)"

@@ -1,6 +1,6 @@
 # Téléchargements
 
-Ce guide d'implémentation contient les profils, extensions et terminologies FHIR spécifiques à CPage MasterData (tables Oracle ECO.FOU et ECO.DBT).
+Ce guide d'implémentation contient les profils, extensions et terminologies FHIR spécifiques à CPage MasterData (structure hospitalière et paramètres applicatifs).
 
 Le package NPM de cet IG est [téléchargeable ici](package.tgz). Il permet de valider des instances FHIR contre les profils qu'il contient.
 

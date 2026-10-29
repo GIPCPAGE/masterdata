@@ -1,24 +1,38 @@
 // =============================================
-// Exemple: Tiers Complet avec Multi-Rôles
+// Exemple: Tiers complet (modèle Tiers du Master Data)
 // =============================================
 
 Instance: ExempleTiersComplet
 InstanceOf: TiersProfile
 Usage: #example
-Title: "Tiers avec Multi-Rôles (Fournisseur + Débiteur + Payeur)"
-Description: "Exemple d'un tiers qui cumule trois rôles: fournisseur, débiteur ET payeur santé. Illustre la capacité d'un même organisme à avoir plusieurs profils actifs simultanément."
+Title: "Tiers complet (fournisseur, établissement principal)"
+Description: "Exemple d'un tiers fournisseur illustrant le modèle Tiers : établissement principal (SIRET, adresse d'ordre 1, contacts), seconde adresse portée par contact, complément de nom, alias, spécificité, identifiants légaux, catégorie TG et nature juridique."
 
 * identifier[etierId].value = "TIERS000123456"
-
+* identifier[siren].value = "852112345"
 * identifier[siret].value = "85211234500018"
-
-* identifier[finess].value = "750012345"
+* identifier[tva].value = "FR12852112345"
 
 * active = true
-* type = https://www.cpage.fr/ig/masterdata/common/CodeSystem/tiers-category-cs#60 "Caisse de sécurité sociale régime général"
 
 * name = "Multiservices Santé et Logistique"
+* extension[shortName].valueString = "Division hospitalière"
 * alias = "MSL France"
+
+// Rôle unique : fournisseur
+* extension[tiersRole].valueCoding = https://www.cpage.fr/ig/masterdata/common/CodeSystem/tiers-role-cs#supplier
+
+// Spécificités
+* extension[specificite][0].valueCoding = https://www.cpage.fr/ig/masterdata/common/CodeSystem/tiers-specificity-cs#LABORATOIRE
+
+// Adresse d'ordre 1 de l'établissement principal et ses contacts
+* address.line[0] = "12 Avenue de la République"
+* address.line[0].extension[numeroVoie].valueString = "12"
+* address.line[0].extension[typeVoie].valueString = "Avenue"
+* address.line[0].extension[nomVoie].valueString = "de la République"
+* address.city = "Paris"
+* address.postalCode = "75011"
+* address.country = "FR"
 
 * telecom[0].system = #phone
 * telecom[0].value = "+33140123456"
@@ -28,38 +42,35 @@ Description: "Exemple d'un tiers qui cumule trois rôles: fournisseur, débiteur
 * telecom[1].value = "contact@msl-france.fr"
 * telecom[1].use = #work
 
-* address.line[0] = "12 Avenue de la République"
-* address.city = "Paris"
-* address.postalCode = "75011"
-* address.country = "FR"
-
-// Multi-rôle: Fournisseur + Débiteur + Payeur
-* extension[tiersRole][0].valueCoding = https://www.cpage.fr/ig/masterdata/common/CodeSystem/tiers-role-cs#supplier
-* extension[tiersRole][1].valueCoding = https://www.cpage.fr/ig/masterdata/common/CodeSystem/tiers-role-cs#debtor
-* extension[tiersRole][2].valueCoding = https://www.cpage.fr/ig/masterdata/common/CodeSystem/tiers-role-cs#payer
+// Seconde adresse de l'établissement principal (ordre 2), avec son destinataire et ses contacts
+* contact[0].name.text = "Service comptabilité fournisseurs"
+* contact[0].address.line[0] = "4 Rue des Entrepôts"
+* contact[0].address.city = "Saint-Denis"
+* contact[0].address.postalCode = "93200"
+* contact[0].address.country = "FR"
+* contact[0].telecom[0].system = #phone
+* contact[0].telecom[0].value = "+33149876543"
 
 // Nature juridique
 * extension[legalNature].valueCodeableConcept = https://www.cpage.fr/ig/masterdata/common/CodeSystem/tiers-legal-nature-cs#03 "Société"
 
-// TG Category
-* extension[tgCategory].valueCodeableConcept = https://www.cpage.fr/ig/masterdata/common/CodeSystem/tiers-category-cs#60 "Caisse de sécurité sociale régime général"
+// Catégorie TG
+* extension[tgCategory].valueCodeableConcept = https://www.cpage.fr/ig/masterdata/common/CodeSystem/tiers-category-cs#50 "Personne morale de droit privé"
 
-// Code interne (partagé entre les rôles)
-* extension[codeInterne].valueString = "FRSUP00456"
 
-// Note: les détails spécifiques à chaque rôle sont portés par des instances enfant dédiées :
-//   - rôle fournisseur : instance FournisseurProfile (avec extensions comptabilite/paiement)
-//   - rôle débiteur   : instance DebiteurProfile (avec extensions parametres/debtorAttributs)
-//   - rôle payeur     : instance PayeurSanteProfile (avec extension payeurSante)
+// Restriction de rôle sur la seconde adresse : réservée au circuit fournisseur
+* contact[0].address.extension[roleRestriction].valueCoding = https://www.cpage.fr/ig/masterdata/common/CodeSystem/tiers-role-cs#supplier
 
-// === Domiciliation bancaire ===
-* extension[bankAccount][0].extension[bankCode].valueString = "30004"
-* extension[bankAccount][0].extension[branchCode].valueString = "00002"
-* extension[bankAccount][0].extension[accountNumber].valueString = "00000123456"
-* extension[bankAccount][0].extension[ribKey].valueString = "78"
-* extension[bankAccount][0].extension[iban].valueString = "FR7630004000020000012345678"
-* extension[bankAccount][0].extension[bic].valueString = "BNPAFRPP"
-* extension[bankAccount][0].extension[ediEnabled].valueBoolean = true
-* extension[bankAccount][0].extension[factoringEnabled].valueBoolean = false
-* extension[bankAccount][0].extension[paymentMethod][0].valueCodeableConcept = https://www.cpage.fr/ig/masterdata/common/CodeSystem/moyen-paiement-cs#VIREMENT "Virement bancaire"
-* extension[bankAccount][0].extension[paymentMethod][1].valueCodeableConcept = https://www.cpage.fr/ig/masterdata/common/CodeSystem/moyen-paiement-cs#CHEQUE "Chèque"
+// Compte bancaire commun à toute la société (porté par l'établissement principal)
+* extension[bankAccount][0].extension[titulaire].valueString = "Multiservices Santé et Logistique"
+* extension[bankAccount][0].extension[iban].valueString = "FR7630002005500000157845Z02"
+* extension[bankAccount][0].extension[bic].valueString = "CRLYFRPPXXX"
+* extension[bankAccount][0].extension[actif].valueBoolean = true
+* extension[bankAccount][0].extension[communSociete].valueBoolean = true
+
+// Compte bancaire réservé au circuit fournisseur
+* extension[bankAccount][1].extension[titulaire].valueString = "Multiservices Santé et Logistique"
+* extension[bankAccount][1].extension[iban].valueString = "FR7630004000031234567890143"
+* extension[bankAccount][1].extension[actif].valueBoolean = true
+* extension[bankAccount][1].extension[role].valueCoding = https://www.cpage.fr/ig/masterdata/common/CodeSystem/tiers-role-cs#supplier
+* extension[bankAccount][1].extension[communSociete].valueBoolean = false

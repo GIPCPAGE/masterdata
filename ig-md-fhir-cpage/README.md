@@ -14,8 +14,8 @@ IG FHIR R4 spécifique à CPage pour le Master Data Management (MDM) hospitalier
 
 Cet IG **hérite** de l'[IG Socle Commun](../ig-md-fhir-common) (`ig.mdm.fhir.common`,
 dépendance `dev` dans `sushi-config.yaml`) et n'ajoute que ce qui est spécifique au
-système CPage : 5 profils et 25 extensions câblés sur les tables Oracle historiques
-`ECO.FOU`, `ECO.DBT`, `ECO.ETIER`, `STR.CHO`, `STR.ETA` et `STR.UFO`. Il ne
+système CPage : 4 profils et 12 extensions câblés sur les tables Oracle historiques
+`STR.CHO`, `STR.ETA` et `STR.UFO`. Il ne
 redéfinit jamais ce que son IG parent porte déjà.
 
 Ce dépôt fait partie du monorepo [GIPCPAGE/masterdata](https://github.com/GIPCPAGE/masterdata),
@@ -23,14 +23,13 @@ publié sur <https://gipcpage.github.io/masterdata/>.
 
 ## Contenu
 
-- `input/fsh/profiles/` — 5 profils : `CPageFournisseurProfile`,
-  `CPageDebiteurProfile`, `CPageEntiteJuridiqueProfile`,
+- `input/fsh/profiles/` — 3 profils de structure hospitalière : `CPageEntiteJuridiqueProfile`,
   `CPageEntiteGeographiqueProfile`, `CPageUFProfile`.
-- `input/fsh/extensions/` — 16 fichiers portant 25 définitions d'`Extension`
+- `input/fsh/extensions/` — 3 fichiers portant 12 définitions d'`Extension`
   (certains fichiers en regroupent plusieurs, un par table/module Oracle : voir
   [`STRUCTURE.md`](STRUCTURE.md)).
-- `input/fsh/codesystems/` et `input/fsh/valuesets/` — 3 terminologies CPage
-  (validité, zone Europe, résidence).
+- `input/fsh/codesystems/` et `input/fsh/valuesets/` — 2 terminologies CPage
+  (type et type de donnée des paramètres applicatifs).
 - `input/pages/` — pages narratives publiées (`index.md`, `downloads.md`).
 
 ## Mapping Oracle → FHIR

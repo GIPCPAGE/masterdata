@@ -8,17 +8,17 @@ physiques) avec lesquelles un établissement de santé entretient une relation f
 
 Dans la comptabilité publique française, un **Tiers** est toute personne physique ou morale externe
 à l'établissement avec laquelle celui-ci a une relation financière : elle lui vend des biens ou
-services (fournisseur), elle lui doit de l'argent (débiteur), ou elle lui rembourse des frais de
-soins (payeur santé). Le même tiers peut cumuler plusieurs rôles : un exemple fourni dans l'IG
-(`ExempleTiersDoubleRole`) illustre une organisation qui est à la fois fournisseur et débitrice.
+services (fournisseur) ou elle lui doit de l'argent (débiteur). Un tiers porte un seul rôle :
+fournisseur (F), débiteur (D) ou mixte (M, les deux). L'exemple
+`ExempleTiersDoubleRole` illustre un tiers de rôle mixte.
 
-Le socle Oracle historique de ce domaine est la table **`ECO.ETIER`** (« tiers »), avec deux tables
-spécialisées : **`ECO.FOU`** (fournisseurs) et **`ECO.DBT`** (débiteurs des titres de recette). Les
-mappings colonne Oracle → élément FHIR décrits ci-dessous ont été **vérifiés contre un extrait réel
-du DDL Oracle** (`ECO.ETIER`, `ECO.FOU`, `ECO.DBT`, contraintes et commentaires de colonnes inclus),
-ce qui distingue ce domaine du domaine Structure hospitalière (voir la page dédiée), pour lequel
-aucun DDL équivalent n'était disponible et dont le mapping repose sur les commentaires des fichiers
-FSH.
+Le rôle suffit à dire ce qu'est le tiers : il n'existe pas de profil fournisseur ni de profil
+débiteur. Les paramètres propres aux circuits de traitement de la GEF (conditions de paiement,
+comptes comptables, Chorus, régie, EDI, affacturage, moyens de paiement, commentaires...) restent
+dans la GEF et ne remontent pas au Master Data.
+
+Le Master Data porte ce qui est vrai pour **tous** les tenants. Ce qui est propre au couple
+(tenant × tiers), comme le code tiers GEF (`IDTITI`), n'est pas exposé par ces profils.
 
 Toutes les nomenclatures de catégorie, nature juridique et type d'identifiant sont issues du
 **Protocole d'Échange Standard v2 (PESv2)**, publié par la DGFiP (Direction Générale des Finances
@@ -26,32 +26,55 @@ Publiques) pour les échanges dématérialisés entre ordonnateurs et comptables
 
 ## Catalogue des profils
 
-| Profil | Parent FHIR | Table Oracle source | Rôle métier |
-|---|---|---|---|
-| `TiersProfile` | `FRCoreOrganizationProfile` (FR Core) | `ECO.ETIER` | Profil de base, commun aux trois rôles. Porte l'identité (nom, adresse, actif/inactif), les identifiants partagés (SIRET, SIREN, FINESS, TVA, NIR, hors UE, Tahiti, RIDET, FRWF, IREP, NFP), la catégorie TG, la nature juridique et la domiciliation bancaire. |
-| `FournisseurProfile` | `TiersProfile` | `ECO.FOU` | Un tiers dont on achète des biens ou services : porte les conditions de paiement, les comptes comptables (classes 2 et 6), les indicateurs réglementaires (marchés publics, UGAP, Chorus Pro) et les commentaires libres. |
-| `DebiteurProfile` | `TiersProfile` | `ECO.DBT` | Un tiers qui doit de l'argent à l'établissement (titres de recette) : domiciliation bancaire obligatoire (au moins un RIB ou IBAN), type (occasionnel/normal), indicateurs de catégorie particulière (laboratoire, locataire, agent, patient hospitalier). |
-| `PayeurSanteProfile` | `TiersProfile` | *(sous-ensemble qualifié de `ECO.ETIER`/organismes)* | Un organisme qui rembourse des frais de soins : assurance maladie obligatoire (CPAM, MSA...) ou complémentaire (mutuelle). Porte le grand régime, le numéro de caisse/organisme, et le référencement ROC (Référentiel des Organismes Complémentaires) pour le tiers payant. |
+| Profil | Parent FHIR | Rôle métier |
+|---|---|---|
+| `TiersProfile` | `FRCoreOrganizationProfile` (FR Core) | Le tiers, représenté par son **établissement principal**. Porte l'identité (raison sociale, complément de nom, alias, actif), les identifiants (SIRET de l'établissement principal, SIREN, FINESS, TVA, NIR, hors UE, Tahiti, RIDET, FRWF, IREP, NFP), le rôle unique, les spécificités, la catégorie TG, la nature juridique, l'adresse d'ordre 1 (`address`, contacts en `telecom`), les autres adresses (`contact`), la personne physique (`contact[personnePhysique]`) et les comptes bancaires de l'établissement principal. |
+| `TiersEtablissementSecondaireProfile` | `FRCoreOrganizationProfile` (FR Core) | Un site du tiers distinct de l'établissement principal, rattaché à celui-ci par `partOf`. Porte son SIRET, son adresse, ses contacts et ses comptes bancaires propres. Il n'a pas de rôle : le rôle est celui du tiers. |
 
-Il n'existe **pas** de profil `SuccursaleProfile` distinct. Une succursale (point de livraison,
-adresse de facturation locale, siège secondaire) est simplement une **autre instance** du même profil
-(`FournisseurProfile` ou `DebiteurProfile`), reliée à son organisation principale par
-`Organization.partOf`, et qualifiée par `SuccursaleUsageExtension`. Voir la section
-[Succursales](#succursales--un-motif-pas-un-profil) ci-dessous : `partOf` est une relation
-hiérarchique entre instances au moment de l'exécution, pas un mécanisme d'héritage de profil FHIR.
+### Établissements
 
-### TiersProfile — le profil socle
+Tout tiers a exactement un établissement principal (la fiche tiers de la GEF) : c'est l'instance
+de `TiersProfile`. Chaque autre site est une instance de `TiersEtablissementSecondaireProfile`,
+avec son propre SIRET et une référence `partOf` vers l'établissement principal. `partOf` est une
+relation entre instances, pas un mécanisme d'héritage de profil.
+
+Règle de contrôle : les 9 premiers chiffres du SIRET d'un établissement sont le SIREN du tiers.
+
+### Adresses et contacts
+
+Pour chaque établissement, l'adresse d'ordre 1 est portée par `address` et ses contacts
+(téléphone, email, télécopie, télex, site internet) par `telecom`. Les adresses d'ordre supérieur
+sont portées par `contact` : `contact.address` porte l'adresse, `contact.name` son destinataire
+lorsqu'il diffère de la raison sociale, et `contact.telecom` ses contacts.
+
+Une adresse peut être **restreinte** à un circuit par l'extension `TiersRoleRestrictionExtension` :
+fournisseur (`supplier`) ou débiteur (`debtor`). Sans restriction, l'adresse est commune aux deux
+circuits. La restriction doit faire partie du rôle du tiers.
+
+### Comptes bancaires
+
+Un compte bancaire est toujours porté par un établissement, via l'extension `TiersBankAccount`.
+L'IBAN est la valeur maître : le RIB français s'en déduit.
+
+- Un compte commun à toute la société est porté par l'établissement principal avec
+  `communSociete = true`. Ce drapeau est interdit sur un établissement secondaire.
+- Un compte propre à un site est porté par l'établissement secondaire concerné.
+- Un site utilise ses propres comptes et les comptes communs de l'établissement principal.
+- Comme une adresse, un compte peut être restreint au circuit fournisseur ou débiteur (`role`).
+  Sans restriction, il est commun aux deux circuits.
+
+### Identifiants
 
 `TiersProfile` redéfinit le slicing `identifier` (FR Core 2.2.0 ne le fournit plus nativement pour
-`Organization`) avec un discriminateur `system`, et ajoute des slices pour chaque type
-d'identifiant reconnu par les interfaces CPage historiques (EFOU, KERD) :
+`Organization`) avec un discriminateur `system` :
 
 | Slice `identifier` | Code type d'identifiant | Origine |
 |---|---|---|
-| `etierId` | — | Identifiant interne CPage (`IDTITI`) |
-| `siret` / `siren` / `finess` | 01 / 02 / 03 | Slices déjà présents dans FR Core, redéclarés ici |
-| `tva` | 05 | TVA intracommunautaire |
+| `etierId` | — | Identifiant du tiers dans le Master Data |
+| `siret` | 01 | SIRET de l'établissement principal (le SIRET est porté par l'établissement) |
+| `siren` / `finess` | 02 / 03 | Slices redéclarés ici |
 | `nir` | 04 | Numéro de Sécurité sociale (15 caractères) |
+| `tva` | 05 | TVA intracommunautaire |
 | `horsUE` | 06 | Identifiant pour tiers hors Union Européenne |
 | `tahiti` | 07 | Numéro Tahiti (Polynésie française) |
 | `ridet` | 08 | RIDET (Nouvelle-Calédonie) |
@@ -62,54 +85,30 @@ d'identifiant reconnu par les interfaces CPage historiques (EFOU, KERD) :
 Ces identifiants ultramarins (Tahiti, RIDET, Wallis-et-Futuna, IREP) reflètent le fait que le SIH
 CPage couvre des établissements en dehors du régime SIRET/SIREN métropolitain classique.
 
-### Succursales — un motif, pas un profil
-
-Les fichiers d'exemple `ExempleSuccursale.fsh` et `ExempleSuccursaleFournisseur.fsh` illustrent le
-motif : une deuxième instance de `FournisseurProfile` (ou `DebiteurProfile`), avec son propre SIRET
-(établissement INSEE distinct du siège), son propre code interne, éventuellement son propre RIB, et
-une référence `partOf` vers l'instance représentant le siège. L'extension `SuccursaleUsageExtension`
-qualifie l'usage de cette succursale : `POINT_LIVRAISON`, `FACTURATION`, ou `SIEGE_SOCIAL` — une
-succursale peut cumuler plusieurs usages.
-
 ## Extensions
-
-### Extensions portées par `TiersProfile` (communes aux trois rôles)
 
 | Extension | Contexte | Rôle |
 |---|---|---|
-| `TiersRoleExtension` | Organization | Rôle(s) du tiers : `supplier`, `debtor`, `payer` (répétable — un tiers peut cumuler des rôles) |
+| `TiersRoleExtension` | Organization | Rôle unique et obligatoire du tiers : `supplier` (F), `debtor` (D) ou `mixed` (M) |
+| `TiersRoleRestrictionExtension` | Address | Restriction facultative d'une adresse au circuit fournisseur ou débiteur |
+| `TiersBankAccount` | Organization | Compte bancaire : titulaire, IBAN, BIC, actif, restriction de rôle, compte commun à la société |
+| `TiersSpecificityExtension` | Organization | Spécificités (répétable) : laboratoire, locataire, agent, débiteur mortuaire, hospitalier |
 | `TiersCategory` | Organization | Catégorie TG (codes 00–74, nomenclature PESv2 `TCatTiers`) |
 | `TiersLegalNature` | Organization | Nature juridique (codes 00–11, nomenclature PESv2 `TNatJur`) |
-| `TiersBankAccount` | Organization | Domiciliation bancaire — structure `TBancaire` du PESv2 : RIB français (code établissement + guichet + compte + clé) **ou** IBAN/BIC international, plus paramètres CPage (EDI, affacturage, moyens de paiement) |
-| `TiersIdentifierType` | Identifier | Qualifie le type d'un identifiant (codes 01–09) |
-| `TiersAddressLocalization` | Address | Zone géographique de l'adresse : `FRANCE`, `EUROPE`, `AUTRE` |
-| `TiersPersonDetails` | Organization | Civilité, prénom, matricule, numéro de dossier patient — pour les tiers personnes physiques (catégorie TG = 01) |
-| `TiersPublicSectorExtension` | Organization | Compte de contrepartie et code régie (secteur public) |
-| `TiersInternalCodeExtension` | Organization | Code interne fournisseur/débiteur |
-| `SuccursaleUsageExtension` | Organization | Usage d'une succursale rattachée par `partOf` |
-| `ChorusIdentifierType` | Identifier | Type d'identifiant reconnu par CHORUS Pro (codes 01–08, sans le code 09 « en cours d'immatriculation » — CHORUS n'accepte que les identifiants définitifs) |
+| `TiersIdentifierType` | Identifier | Qualifie le type d'un identifiant |
+| `TiersBirthDate` | Organization.contact | Date de naissance d'un tiers personne physique, sur le contact `personnePhysique` |
 
-### Extensions spécifiques `FournisseurProfile`
+Le complément de nom utilise l'extension FR Core `shortName`, et le statut actif l'élément
+`Organization.active`.
 
-| Extension | Contenu |
-|---|---|
-| `FournisseurComptabiliteExtension` | Lettre budgétaire + numéro de compte, classes comptables 2 (immobilisations) et 6 (charges) |
-| `FournisseurPaiementExtension` | Délai et jour de paiement, montant minimum de commande, taux transitaire, indicateur escompte |
-| `FournisseurAttributsExtension` | Type (fournisseur régulier / transitaire / régie / prestataire), priorité de règlement, catégorie interne, références croisées (numéro client, débiteur associé, Mutuelle Nationale des Hospitaliers), indicateurs réglementaires (marchés publics, UGAP, honoraires, Chorus), indicateurs techniques de synchronisation (à extraire, modifié depuis extraction) |
-| `FournisseurCommentairesExtension` | Trois commentaires libres + option d'édition sur les documents |
+### Personne physique
 
-### Extensions spécifiques `DebiteurProfile`
-
-| Extension | Contenu |
-|---|---|
-| `DebiteurParametresExtension` | Compte comptable, type de résident, facturation des actes de biologie, liquidation souple, désactivation ASAP dématérialisé, fournisseur associé |
-| `TiersDebtorAttributsExtension` | Type débiteur (occasionnel/normal) et indicateurs de catégorie particulière : laboratoire, locataire, agent, patient hospitalier (`HOSPTI`) |
-
-### Extension spécifique `PayeurSanteProfile`
-
-| Extension | Contenu |
-|---|---|
-| `PayeurSanteExtension` | Type de payeur, code centre, numéro de caisse, grand régime, numéro d'organisme, délai de prise en charge, et un bloc **ROC** (Référentiel des Organismes Complémentaires) répétable — numéro AMC, code CSR, convention — pour le tiers payant intégral avec les mutuelles |
+L'identité d'un tiers personne physique (catégorie TG = 01) est portée par le contact
+`personnePhysique`, identifié par son `purpose` (`TiersContactPurposeCS#personne-physique`) :
+la civilité dans `name.prefix` (codes `TiersCivilityVS`), le prénom dans `name.given`, le nom dans
+`name.family` et la date de naissance dans l'extension `TiersBirthDate`, `Organization.contact`
+n'ayant pas d'élément date de naissance. Les contacts sans `purpose` restent les adresses
+d'ordre supérieur à 1 et portent obligatoirement une adresse.
 
 ## Terminologies
 
@@ -119,36 +118,36 @@ succursale peut cumuler plusieurs usages.
 |---|---|---|
 | `TiersCategoryCS` | PESv2 (`TCatTiers`) | 24 catégories : État, collectivités territoriales, établissements publics de santé, organismes sociaux (CPAM, MSA, CNRACL, IRCANTEC...), personne physique, etc. |
 | `TiersLegalNatureCS` | PESv2 (`TNatJur`) | 12 natures juridiques : particulier, société, association, établissement public national, collectivité territoriale, État étranger, CAF, etc. |
-| `TiersIdentifierTypeCS` | PESv2 (`TNatIdTiers`) | 12 types d'identifiant : SIRET, SIREN, FINESS, NIR, TVA, hors UE, Tahiti, RIDET, en cours d'immatriculation, FRWF, IREP, NFP |
-| `TiersRoleCodeSystem` | CPage | 3 rôles : `supplier`, `debtor`, `payer` |
+| `TiersIdentifierTypeCS` | PESv2 (`TNatIdTiers`) | 11 types d'identifiant : SIRET, SIREN, FINESS, NIR, TVA, hors UE, Tahiti, RIDET, FRWF, IREP, NFP |
+| `TiersRoleCodeSystem` | CPage | 3 rôles : `supplier`, `debtor`, `mixed` |
+| `TiersSpecificityCodeSystem` | CPage | 5 spécificités : LABORATOIRE, LOCATAIRE, AGENT, MORTUAIRE, HOSPITALIER |
 | `TiersCivilityCS` | CPage | 5 civilités (M, MME, MLLE, METMME, MOUMME) |
-| `TiersDebtorTypeCS` | CPage | Occasionnel / Normal |
-| `TypeResidentCS` | CPage | Résident / Non résident |
-| `TiersAddressLocalizationCS` | CPage | FRANCE / EUROPE / AUTRE |
-| `SuccursaleUsageCS` | CPage | Point de livraison / Facturation / Siège social |
-| `ChorusIdentifierTypeCS` | CPage (dérivé PESv2) | 8 types d'identifiant acceptés par CHORUS Pro |
-| `GrandRegimeCS` | CPage | Sécurité Sociale, MSA, RSI, CNAV, Mutuelle |
-| `MoyenPaiementCS` | CPage | Numéraire, chèque, virement (standard, application externe, gros montant, interne) |
+| `TiersContactPurposeCS` | CPage | Objet d'un contact : `personne-physique` |
 
 Chaque CodeSystem est accompagné de son ValueSet (`TiersCategoryVS`, `TiersLegalNatureVS`,
-`TiersIdentifierTypeVS`, `TiersRoleValueSet`, `TiersCivilityVS`, `TiersDebtorTypeVS`, `TypeResidentVS`,
-`TiersAddressLocalizationVS`, `SuccursaleUsageVS`, `ChorusIdentifierTypeVS`, `GrandRegimeVS`,
-`MoyenPaiementVS`), chacun un simple `include codes from system`.
+`TiersIdentifierTypeVS`, `TiersRoleValueSet`, `TiersSpecificityValueSet`, `TiersCivilityVS`),
+chacun un simple `include codes from system`. `TiersContactPurposeCS` n'a pas de ValueSet : son
+unique code est fixé sur le contact `personnePhysique`. Le ValueSet `TiersRestrictionRoleValueSet` reprend
+les seuls codes `supplier` et `debtor` de `TiersRoleCodeSystem`, pour la restriction d'une adresse
+ou d'un compte bancaire.
 
 ### SearchParameter
 
 | SearchParameter | Code de recherche | Usage |
 |---|---|---|
-| `TiersRoleSearchParameter` | `tiers-role` | Filtrer par rôle (fournisseur/débiteur/payeur), multi-valeurs OR et AND |
+| `TiersRoleSearchParameter` | `tiers-role` | Filtrer par rôle (fournisseur/débiteur/mixte) |
 | `BankAccountIbanSearchParameter` | `bank-account-iban` | Retrouver un tiers par IBAN |
 | `TiersCategorySearchParameter` | — | Filtrer par catégorie TG |
 | `TiersLegalNatureSearchParameter` | — | Filtrer par nature juridique |
-| `DebiteurCodeSearchParameter` | — | Rechercher un débiteur par code interne |
-| `DebiteurTypeResidentSearchParameter` | — | Filtrer les débiteurs par type de résident fiscal |
-| `FournisseurCodeSearchParameter` | — | Rechercher un fournisseur par code interne |
-| `PayeurGrandRegimeSearchParameter` | — | Filtrer les payeurs santé par grand régime |
-| `PayeurTypeSearchParameter` | — | Filtrer par type de payeur |
-| `SuccursaleUsageSearchParameter` | — | Filtrer par usage de succursale |
+
+## Exemples
+
+| Exemple | Profil | Illustre |
+|---|---|---|
+| `ExempleTiersComplet` | `TiersProfile` | Tiers fournisseur : SIRET, adresse d'ordre 1 et seconde adresse restreinte au circuit fournisseur, complément de nom, compte commun à la société et compte restreint |
+| `ExempleTiersDoubleRole` | `TiersProfile` | Tiers de rôle mixte (fournisseur et débiteur) |
+| `ExempleTiersPersonnePhysique` | `TiersProfile` | Débiteur personne physique : NIR, contact `personnePhysique` (civilité, prénom, nom, date de naissance) |
+| `ExempleTiersEtablissementSecondaire` | `TiersEtablissementSecondaireProfile` | Site rattaché à `ExempleTiersComplet` : SIRET propre, adresse restreinte au circuit débiteur, compte propre au site |
 
 ## NamingSystem
 

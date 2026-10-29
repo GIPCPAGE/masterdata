@@ -19,3 +19,7 @@ Alias: $id-tva = urn:oid:1.2.250.1.69.1.1011
 Alias: $communes-fr-cs = https://www.cpage.fr/ig/masterdata/common/CodeSystem/communes-fr-cs
 Alias: $commune-type-territoire-cs = https://www.cpage.fr/ig/masterdata/common/CodeSystem/commune-type-territoire-cs
 Alias: $location-physical-type = http://terminology.hl7.org/CodeSystem/location-physical-type
+// Parties d'adresse ISO 21090 (extensions du standard FHIR R4)
+Alias: $adxp-houseNumber = http://hl7.org/fhir/StructureDefinition/iso21090-ADXP-houseNumber
+Alias: $adxp-streetNameType = http://hl7.org/fhir/StructureDefinition/iso21090-ADXP-streetNameType
+Alias: $adxp-streetNameBase = http://hl7.org/fhir/StructureDefinition/iso21090-ADXP-streetNameBase

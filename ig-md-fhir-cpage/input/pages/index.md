@@ -2,15 +2,14 @@
 
 Cet Implementation Guide (IG) FHIR R4 définit les profils et extensions
 **spécifiques à CPage** pour le Master Data Management (MDM) hospitalier : les
-Tiers (Fournisseurs, Débiteurs) et les structures hospitalières (Entité Juridique,
+Tiers et les structures hospitalières (Entité Juridique,
 Entité Géographique, Unité Fonctionnelle).
 
 Il n'est pas autonome : il **hérite** de l'[IG Socle Commun](https://www.cpage.fr/ig/masterdata/common/)
 (`ig.mdm.fhir.common`, déclaré en dépendance `dev` dans `sushi-config.yaml`), qui
 porte déjà les profils génériques, les contraintes FR Core et la majorité des
 extensions. Ce guide n'ajoute que ce qui est propre au système CPage : les champs
-issus des tables Oracle historiques `ECO.FOU`, `ECO.DBT`, `ECO.ETIER`, `STR.CHO`,
-`STR.ETA` et `STR.UFO`.
+issus des tables Oracle historiques `STR.CHO`, `STR.ETA` et `STR.UFO`.
 
 ## Architecture multi-IG
 
@@ -27,9 +26,8 @@ IG Socle Commun (ig-md-fhir-common)
         │
         ▼
 IG CPage (ce guide)
-  CPageFournisseurProfile, CPageDebiteurProfile,
   CPageEntiteJuridiqueProfile, CPageEntiteGeographiqueProfile, CPageUFProfile
-  + terminologies CPage (validité, zone Europe, résidence)
+  + terminologies CPage (paramètres applicatifs)
 ```
 
 Chaque profil CPage a pour unique responsabilité d'ajouter les extensions
@@ -41,35 +39,16 @@ adresse, hiérarchie organisationnelle, etc.).
 
 | Profil CPage | Parent (IG commun) | Table Oracle source | Fiabilité du mapping |
 |---|---|---|---|
-| `CPageFournisseurProfile` | `FournisseurProfile` | `ECO.FOU` (+ `ECO.ETIER`) | DDL Oracle réel |
-| `CPageDebiteurProfile` | `DebiteurProfile` | `ECO.DBT` (+ `ECO.ETIER`) | DDL Oracle réel |
 | `CPageEntiteJuridiqueProfile` | `EntiteJuridiqueProfile` | `STR.CHO` | Commentaires FSH uniquement |
 | `CPageEntiteGeographiqueProfile` | `EntiteGeographiqueProfile` | `STR.ETA` | Commentaires FSH uniquement |
 | `CPageUFProfile` | `UFProfile` | `STR.UFO` | Commentaires FSH uniquement |
 | `CPageParametresApplicatifProfile` | *(aucun — `Parent: Parameters`)* | *(aucune — source Java `master-data-api`)* | Voir [Paramètres techniques](parametres-techniques.html) |
 
-Pour les deux premiers profils, chaque colonne Oracle citée dans ce guide a été
-vérifiée contre l'export `CREATE TABLE` réel de `ECO.ETIER`/`ECO.FOU`/`ECO.DBT`.
-Pour les trois derniers, aucun export DDL équivalent n'existe pour `STR.CHO`,
+Pour les trois profils de structure hospitalière, aucun export DDL équivalent n'existe pour `STR.CHO`,
 `STR.ETA` ou `STR.UFO` dans ce dépôt : le mapping restitue fidèlement les
 commentaires déjà présents dans le FSH, sans pouvoir les confronter à un schéma
 Oracle indépendant. Cette différence de niveau de confiance est rappelée à chaque
 section du document de mapping détaillé.
-
-### CPageFournisseurProfile
-
-Ajoute, depuis `ECO.FOU`, la validité (`VALIFO`), la zone Europe (`EUROFO`), les
-comptes comptables classe 2 et classe 6, les conditions de paiement, les
-indicateurs marchés publics/groupement d'achat/escompte, les informations Chorus
-et deux drapeaux internes d'extraction.
-
-### CPageDebiteurProfile
-
-Ajoute, depuis `ECO.DBT`, la validité (`INVADT`), la résidence (`RESIDT`), le
-compte de tiers débiteur, les paramètres ASAP, l'identifiant externe et une
-référence vers le fournisseur associé (`NUFODT`). L'extension `CPageEUZone` existe
-aussi sur ce profil, mais ne correspond en l'état du modèle à aucune colonne propre
-à `ECO.DBT` — voir la section 2 de `LEGACY_SUPPORT.md`.
 
 ### CPageEntiteJuridiqueProfile
 
@@ -110,9 +89,6 @@ successives. Voir la page dédiée
 
 | CodeSystem | Codes | Rôle |
 |---|---|---|
-| `CPageValidityCodeSystem` | `V` / `I` | Validité (Valide / Invalide) |
-| `CPageEUZoneCodeSystem` | `F` / `O` / `A` | Zone géographique (France / Europe hors France / Autre) |
-| `CPageResidencyCodeSystem` | `R` / `N` / `E` | Résidence débiteur (Résident / Non-résident / Étranger) |
 | `CPageParametresApplicatifTypeCodeSystem` | `A`/`S`/`U`/`C`/`D`/`P` | Type fonctionnel d'un paramètre applicatif (source : `TypeParametreEnum`, `master-data-api`) |
 | `CPageParametresApplicatifTypeDonneeCodeSystem` | `B`/`D`/`I`/`S`/`F`/`C` | Type de la valeur d'un paramètre applicatif (source : `TypeDonneeEnum`, `master-data-api`) |
 
