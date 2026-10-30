@@ -51,6 +51,10 @@ Description: "Exemple d'un tiers fournisseur illustrant le modèle Tiers : étab
 * contact[0].telecom[0].system = #phone
 * contact[0].telecom[0].value = "+33149876543"
 
+// Destinataire de l'adresse d'ordre 1
+* contact[1].purpose = TiersContactPurposeCS#destinataire-adresse-principale
+* contact[1].name.text = "MSL France - Direction financière"
+
 // Nature juridique
 * extension[legalNature].valueCodeableConcept = https://www.cpage.fr/ig/masterdata/common/CodeSystem/tiers-legal-nature-cs#03 "Société"
 
