@@ -7,6 +7,7 @@ Usage: #example
 Title: "Établissement secondaire d'un tiers"
 Description: "Exemple d'un établissement secondaire rattaché à l'établissement principal ExempleTiersComplet : SIRET propre (même SIREN que le tiers), adresse, contact et compte bancaire propre au site. Le drapeau communSociete est interdit sur un établissement secondaire."
 
+* identifier[etablissementId].value = "11"
 * identifier[siret].value = "85211234500026"
 * active = true
 * name = "Multiservices Santé et Logistique - Site de Lyon"

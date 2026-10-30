@@ -140,20 +140,31 @@ Une Organization représente l'**établissement principal** du tiers : son SIRET
 // Contacts de l'adresse d'ordre 1 (téléphone, email, télécopie, télex, site internet)
 * telecom 0..* MS
 * telecom ^short = "Contacts de l'adresse principale"
-* telecom ^definition = "Contacts de l'adresse d'ordre 1 de l'établissement principal : téléphone, email, télécopie, télex, site internet."
+* telecom ^definition = "Contacts de l'adresse d'ordre 1 de l'établissement principal : téléphone (phone), email (email), télécopie (fax), télex (other, faute de système FHIR propre), site internet (url)."
 
 // Adresses suivantes de l'établissement principal, avec leurs contacts (contacts sans purpose)
 * contact 0..* MS
 * contact obeys tiers-contact-adresse
-* contact ^short = "Autres adresses de l'établissement principal, et personne physique"
-* contact ^definition = "Une entrée sans purpose par adresse d'ordre supérieur à 1 de l'établissement principal : contact.name porte le destinataire de l'adresse, contact.address l'adresse, contact.telecom ses contacts. Une entrée de purpose personne-physique porte l'identité du tiers personne physique."
+* contact ^short = "Autres adresses de l'établissement principal, destinataire de l'adresse principale, et personne physique"
+* contact ^definition = "Une entrée sans purpose par adresse d'ordre supérieur à 1 de l'établissement principal : contact.name porte le destinataire de l'adresse, contact.address l'adresse, contact.telecom ses contacts. Une entrée de purpose destinataire-adresse-principale porte le destinataire de l'adresse d'ordre 1 (address). Une entrée de purpose personne-physique porte l'identité du tiers personne physique."
 * contact.address 0..1 MS
 * insert TiersAdresse(contact.address)
 
 * contact ^slicing.discriminator.type = #value
 * contact ^slicing.discriminator.path = "purpose"
 * contact ^slicing.rules = #open
-* contact ^slicing.description = "Slice personnePhysique identifiée par son purpose ; les autres contacts sont des adresses."
+* contact ^slicing.description = "Slices personnePhysique et destinataire identifiées par leur purpose ; les autres contacts sont des adresses."
+
+// Destinataire de l'adresse d'ordre 1 : name porte la raison sociale, et Address n'a pas d'élément nom
+* contact contains destinataire 0..1 MS
+* contact[destinataire] ^short = "Destinataire de l'adresse principale"
+* contact[destinataire] ^definition = "Destinataire de l'adresse d'ordre 1 (address) de l'établissement principal, lorsqu'il diffère de la raison sociale (name), porté par name.text. L'adresse reste dans address et ses contacts dans telecom."
+* contact[destinataire].purpose = TiersContactPurposeCS#destinataire-adresse-principale
+* contact[destinataire].name 1..1 MS
+* contact[destinataire].name.text 1..1 MS
+* contact[destinataire].name.text ^short = "Destinataire"
+* contact[destinataire].address 0..0
+* contact[destinataire].telecom 0..0
 
 // Personne physique : civilité, prénom et nom dans contact.name, date de naissance en extension
 * contact contains personnePhysique 0..1 MS

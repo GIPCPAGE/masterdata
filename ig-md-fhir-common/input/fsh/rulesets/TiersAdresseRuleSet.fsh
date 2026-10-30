@@ -16,7 +16,8 @@ RuleSet: TiersAdresse(path)
 * {path}.postalCode MS
 * {path}.postalCode ^short = "Code postal"
 * {path}.city MS
-* {path}.city ^short = "Ville"
+* {path}.city ^short = "Ville, suivie du CEDEX éventuel (ex. DIJON CEDEX 9)"
+* {path}.city ^definition = "Ville de l'adresse. Une adresse CEDEX porte le CEDEX à la suite de la ville, tel qu'il s'écrit sur la dernière ligne de l'adresse postale (ex. DIJON CEDEX 9)."
 * {path}.extension[inseeCode] MS
 * {path}.extension[inseeCode] ^short = "Commune (référentiel Communes du Master Data, code INSEE)"
 * {path}.country MS

@@ -29,16 +29,22 @@ Publiques) pour les échanges dématérialisés entre ordonnateurs et comptables
 | Profil | Parent FHIR | Rôle métier |
 |---|---|---|
 | `TiersProfile` | `FRCoreOrganizationProfile` (FR Core) | Le tiers, représenté par son **établissement principal**. Porte l'identité (raison sociale, complément de nom, alias, actif), les identifiants (SIRET de l'établissement principal, SIREN, FINESS, TVA, NIR, hors UE, Tahiti, RIDET, FRWF, IREP, NFP), le rôle unique, les spécificités, la catégorie TG, la nature juridique, l'adresse d'ordre 1 (`address`, contacts en `telecom`), les autres adresses (`contact`), la personne physique (`contact[personnePhysique]`) et les comptes bancaires de l'établissement principal. |
-| `TiersEtablissementSecondaireProfile` | `FRCoreOrganizationProfile` (FR Core) | Un site du tiers distinct de l'établissement principal, rattaché à celui-ci par `partOf`. Porte son SIRET, son adresse, ses contacts et ses comptes bancaires propres. Il n'a pas de rôle : le rôle est celui du tiers. |
+| `TiersEtablissementSecondaireProfile` | `FRCoreOrganizationProfile` (FR Core) | Un site du tiers distinct de l'établissement principal, rattaché à celui-ci par `partOf`. Porte son SIRET (facultatif), son adresse, ses contacts et ses comptes bancaires propres. Il n'a pas de rôle : le rôle est celui du tiers. |
 
 ### Établissements
 
 Tout tiers a exactement un établissement principal (la fiche tiers de la GEF) : c'est l'instance
 de `TiersProfile`. Chaque autre site est une instance de `TiersEtablissementSecondaireProfile`,
-avec son propre SIRET et une référence `partOf` vers l'établissement principal. `partOf` est une
-relation entre instances, pas un mécanisme d'héritage de profil.
+avec son propre SIRET, facultatif, et une référence `partOf` vers l'établissement principal. `partOf`
+est une relation entre instances, pas un mécanisme d'héritage de profil.
 
-Règle de contrôle : les 9 premiers chiffres du SIRET d'un établissement sont le SIREN du tiers.
+Un établissement secondaire porte toujours au moins un identifiant. Publié par le Master Data, il
+porte l'identifiant que le Master Data lui attribue (slice `etablissementId`, NamingSystem
+`tiers-etablissement-identifier`), avec ou sans SIRET. Poussé par une application, il porte son
+SIRET ou, à défaut, l'identifiant de l'établissement chez l'émetteur.
+
+Règle de contrôle : quand il est renseigné, les 9 premiers chiffres du SIRET d'un établissement sont
+le SIREN du tiers.
 
 ### Adresses et contacts
 
@@ -46,6 +52,20 @@ Pour chaque établissement, l'adresse d'ordre 1 est portée par `address` et ses
 (téléphone, email, télécopie, télex, site internet) par `telecom`. Les adresses d'ordre supérieur
 sont portées par `contact` : `contact.address` porte l'adresse, `contact.name` son destinataire
 lorsqu'il diffère de la raison sociale, et `contact.telecom` ses contacts.
+
+Le type d'un contact est porté par `telecom.system` : `phone` (téléphone), `email`, `fax`
+(télécopie), `url` (site internet). Le télex, sans système FHIR propre, est porté en `other` ; un
+`other` reçu est lu comme un télex.
+
+Le destinataire de l'adresse d'ordre 1 dépend de l'établissement :
+
+- **établissement principal** : `contact.name.text` d'un contact de purpose
+  `destinataire-adresse-principale` (sans adresse ni telecom), car `name` y porte la raison sociale
+  du tiers ;
+- **établissement secondaire** : `name` de son Organization.
+
+Le CEDEX d'une adresse est porté à la suite de la ville dans `city`, tel qu'il s'écrit sur la
+dernière ligne de l'adresse postale : `DIJON CEDEX 9`.
 
 Une adresse peut être **restreinte** à un circuit par l'extension `TiersRoleRestrictionExtension` :
 fournisseur (`supplier`) ou débiteur (`debtor`). Sans restriction, l'adresse est commune aux deux
@@ -122,7 +142,7 @@ d'ordre supérieur à 1 et portent obligatoirement une adresse.
 | `TiersRoleCodeSystem` | CPage | 3 rôles : `supplier`, `debtor`, `mixed` |
 | `TiersSpecificityCodeSystem` | CPage | 5 spécificités : LABORATOIRE, LOCATAIRE, AGENT, MORTUAIRE, HOSPITALIER |
 | `TiersCivilityCS` | CPage | 5 civilités (M, MME, MLLE, METMME, MOUMME) |
-| `TiersContactPurposeCS` | CPage | Objet d'un contact : `personne-physique` |
+| `TiersContactPurposeCS` | CPage | Objet d'un contact : `personne-physique`, `destinataire-adresse-principale` |
 
 Chaque CodeSystem est accompagné de son ValueSet (`TiersCategoryVS`, `TiersLegalNatureVS`,
 `TiersIdentifierTypeVS`, `TiersRoleValueSet`, `TiersSpecificityValueSet`, `TiersCivilityVS`),
@@ -153,6 +173,7 @@ ou d'un compte bancaire.
 
 | NamingSystem | Objet |
 |---|---|
+| `tiers-etablissement-identifier-ns` | Identifiant attribué par le Master Data à un établissement de tiers |
 | `ridet-identifier-ns` | RIDET — Nouvelle-Calédonie (URI provisoire, en attente d'OID officiel) |
 | *(Tahiti)* | Identifiant Tahiti — Polynésie française (même statut provisoire) |
 
