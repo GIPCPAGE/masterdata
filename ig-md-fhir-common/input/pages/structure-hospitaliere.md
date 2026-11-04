@@ -49,7 +49,10 @@ leurs UF membres, sur le même modèle que `GHTProfile` qui liste ses Entités J
   mutualisent certaines fonctions (système d'information, achats...). Dans le contexte CPage, **une
   instance du Master Data est déployée pour un GHT** : `GHTProfile` permet d'exposer explicitement ce
   niveau racine dans les Bundles FHIR. C'est le seul profil de ce domaine à portée **GLOBAL** (visible
-  par tous les établissements membres) ; tous les autres sont à portée **TENANT**.
+  par tous les établissements membres) ; tous les autres sont à portée **TENANT**. Le libellé réduit
+  est porté par l'extension FR Core `shortName`, les dates de début et de fin de validité par
+  l'extension FR Core `usePeriod` ; le code interne et le libellé de diffusion par les extensions du
+  socle commun de la structure hospitalière. Le GHT n'a pas de profil dans l'IG CPage.
 - **Entité Juridique (EJ)** : l'établissement en tant que personne morale — celle qui porte le SIRET
   et le FINESS de tête, le statut juridique, la catégorie PMSI. Un GHT regroupe plusieurs EJ.
 - **Entité Géographique (EG)** : un site physique de cette entité juridique (un EJ peut avoir
@@ -146,6 +149,7 @@ consommateurs.
 
 | Entité | Extensions propres (hors paire période/validité) |
 |---|---|
+| GHT | Entités Juridiques membres (`member`). Libellé réduit (`shortName`) et période de validité (`usePeriod`), extensions FR Core. Code interne et libellé de diffusion (extensions du socle commun) |
 | Entité Juridique | Statut juridique, code APE/NAF, numéro CPCM, catégorie PMSI (10/20/21/22/30/40), code CEDEX, localisation DOM/TOM, numéros émetteur EH, indicateur arrondissement, Centres de Responsabilité membres (`member`) |
 | Entité Géographique | Secteur sanitaire, code NAF, libellé de localisation, indicateur SAE, horaires d'ouverture, coefficients géographique et de transition T2A |
 | Pôle | UF membres (`member`) |
