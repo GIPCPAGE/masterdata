@@ -250,6 +250,25 @@ Le `NamingSystem` `insee-cog-commune` relie l'URI canonique CPage à l'**OID off
 Le ValueSet `CommunesFrancaisesActivesValueSet` (`communes-fr-actives-vs`) filtre les communes dont
 la propriété `inactive = false`, pour l'usage courant (saisie/validation d'adresse).
 
+## Catégories d'établissement (FINESS, TRE_R66)
+
+Les entités juridiques et les établissements géographiques portent une **catégorie d'établissement** issue de la
+nomenclature nationale FINESS, publiée par l'ANS sous le nom `TRE_R66-CategorieEtablissement`. Cette
+nomenclature est **livrée avec Master Data et en lecture seule** : aucune création, modification ni suppression
+n'est possible par les consommateurs.
+
+- **`CategorieEtablissementCodeSystem`** (`categorie-etablissement-cs`, `content = #fragment`) : la terminologie de
+  référence externe, dont l'IG n'énumère qu'un **fragment représentatif** de quatre catégories (ouverte avec agrégats,
+  fermée avec agrégats, ouverte récente sans agrégat, fermée ancienne). L'ensemble des catégories (codes à 3 chiffres)
+  est servi par l'API Master Data. Le code est identique à celui de la `TRE_R66` (aucun ConceptMap vers l'ANS) ; le
+  display est le libellé long. Propriétés : `libelle_court`, `niv1`, `niv2`, `niv3`, `ars`, `drjscs`, `drihl`, `antenne_possible`,
+  `date_debut_validite` et `date_fin_validite`.
+- **`CategorieEtablissementValueSet`** (`categorie-etablissement-vs`) : toutes les catégories du CodeSystem, ouvertes
+  et fermées. Une catégorie fermée porte une `date_fin_validite`.
+
+Les trois agrégats (`niv1` à `niv3`) se déduisent les uns des autres par leurs codes : `niv2` est `niv3` tronqué
+à 2 chiffres suivi de `00`, et `niv1` est le premier chiffre de `niv3` suivi de `000`.
+
 ## Retour
 
 [Accueil](index.html) · [Tiers financiers](tiers-financiers.html) ·
