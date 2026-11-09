@@ -42,6 +42,8 @@ Description: "Exemple d'un tiers de rôle mixte (M) : à la fois fournisseur (ve
 
 // Rôle unique : mixte (fournisseur et débiteur)
 * extension[tiersRole].valueCoding = https://www.cpage.fr/ig/masterdata/common/CodeSystem/tiers-role-cs#mixed
+* extension[periodeValidite].valuePeriod.start = "2020-01-01"
+* extension[periodeValidite].valuePeriod.end = "2030-12-31"
 
 // Nature juridique
 * extension[legalNature].valueCodeableConcept = https://www.cpage.fr/ig/masterdata/common/CodeSystem/tiers-legal-nature-cs#03 "Société"
