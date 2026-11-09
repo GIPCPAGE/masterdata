@@ -21,6 +21,7 @@ Description: "Exemple d'un tiers fournisseur illustrant le modèle Tiers : étab
 
 // Rôle unique : fournisseur
 * extension[tiersRole].valueCoding = https://www.cpage.fr/ig/masterdata/common/CodeSystem/tiers-role-cs#supplier
+* extension[periodeValidite].valuePeriod.start = "1900-01-01"
 
 // Spécificités
 * extension[specificite][0].valueCoding = https://www.cpage.fr/ig/masterdata/common/CodeSystem/tiers-specificity-cs#LABORATOIRE
