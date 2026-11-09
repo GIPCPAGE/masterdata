@@ -193,6 +193,14 @@ Une Organization représente l'**établissement principal** du tiers : son SIRET
 * extension[tiersRole] ^short = "Rôle du tiers"
 * extension[tiersRole] ^definition = "Rôle unique du tiers : fournisseur (supplier, circuit dépense), débiteur (debtor, circuit recette) ou mixte (mixed, les deux). Correspond aux valeurs F, D et M du modèle."
 
+// Période de validité : extension standard HL7 organization-period (déjà utilisée par FR Core), début obligatoire,
+// fin facultative (absente = pas de date de fin de validité). Dates sans heure (AAAA-MM-JJ).
+* extension contains http://hl7.org/fhir/StructureDefinition/organization-period named periodeValidite 1..1 MS
+* extension[periodeValidite] ^short = "Période de validité du tiers"
+* extension[periodeValidite] ^definition = "Période pendant laquelle le tiers est en vigueur : start = date de début (obligatoire ; 1900-01-01 pour un tiers venu de la GEF, qui ne connaît pas cette date), end = date de fin, postérieure ou égale au début (absente : pas de date de fin de validité)."
+* extension[periodeValidite].valuePeriod.start 1..1 MS
+* extension[periodeValidite].valuePeriod.end MS
+
 // Spécificités (laboratoire, locataire, agent, débiteur mortuaire, hospitalier)
 * extension contains TiersSpecificityExtension named specificite 0..* MS
 * extension[specificite] ^short = "Spécificités du tiers"

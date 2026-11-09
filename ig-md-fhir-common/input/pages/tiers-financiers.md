@@ -111,6 +111,7 @@ CPage couvre des établissements en dehors du régime SIRET/SIREN métropolitain
 |---|---|---|
 | `TiersRoleExtension` | Organization | Rôle unique et obligatoire du tiers : `supplier` (F), `debtor` (D) ou `mixed` (M) |
 | `TiersRoleRestrictionExtension` | Address | Restriction facultative d'une adresse au circuit fournisseur ou débiteur |
+| `organization-period` (HL7, déjà utilisée par FR Core) | Organization | Période de validité du tiers : `start` obligatoire (01/01/1900 pour un tiers venu de la GEF), `end` facultatif (absent : pas de date de fin de validité) |
 | `TiersBankAccount` | Organization | Compte bancaire : titulaire, IBAN, BIC, actif, restriction de rôle, compte commun à la société |
 | `TiersSpecificityExtension` | Organization | Spécificités (répétable) : laboratoire, locataire, agent, débiteur mortuaire, hospitalier |
 | `TiersCategory` | Organization | Catégorie TG (codes 00–74, nomenclature PESv2 `TCatTiers`) |
