@@ -42,6 +42,7 @@ les consommateurs.
 """
 
 * ^status = #active
+* ^meta.profile = Canonical(CategorieEtablissementCodeSystemProfile)
 * ^experimental = false
 * ^date = "2026-11-05"
 * ^caseSensitive = true
