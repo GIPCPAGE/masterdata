@@ -8,7 +8,7 @@ et `ig-md-fhir-operations` (opérations de publication/synchronisation du Master
 Il modélise deux domaines métier distincts :
 
 1. **Tiers financiers** — les organisations avec lesquelles l'établissement a une relation
-   financière : fournisseurs, débiteurs, organismes payeurs de santé.
+   financière : fournisseurs, débiteurs.
 2. **Structure hospitalière** — la hiérarchie organisationnelle complète d'un établissement,
    du groupement de territoire jusqu'au lit.
 
@@ -30,7 +30,7 @@ cliniques individuelles.
                             │ dépendance FHIR IG (sushi-config.yaml)
               ┌─────────────▼──────────────┐
               │   ig-md-fhir-common (CE GUIDE)         │
-              │   • Tiers financiers (4 profils)       │
+              │   • Tiers financiers (2 profils)       │
               │   • Structure hospitalière (16 profils)│
               │   • Référentiel communes COG INSEE      │
               │   • ~80 extensions, ~25 terminologies   │
@@ -59,14 +59,13 @@ que les éléments spécifiques au Master Data CPage.
 ### 1. Tiers financiers
 
 Un **Tiers** (au sens de la comptabilité publique française) est toute personne physique ou morale
-avec laquelle l'établissement entretient une relation financière : elle lui doit de l'argent, elle en
-est créancière, ou elle lui reverse un remboursement de soins. Ce domaine modélise ces relations sous
-forme d'`Organization` FHIR, avec un profil de base (`TiersProfile`) spécialisé en trois rôles
-métier : **fournisseur** (comptes fournisseurs), **débiteur** (comptes clients / titres de recette),
-et **payeur santé** (assurance maladie obligatoire et complémentaire).
+avec laquelle l'établissement entretient une relation financière : elle lui doit de l'argent ou elle en
+est créancière. Ce domaine modélise ces relations sous
+forme d'`Organization` FHIR : un profil pour le tiers et son établissement principal (`TiersProfile`)
+et un profil pour ses établissements secondaires. Le tiers porte un rôle unique : **fournisseur**,
+**débiteur** ou **mixte** ; adresses et comptes bancaires peuvent être restreints à un circuit.
 
-Ce domaine est directement adossé aux tables Oracle historiques `ECO.ETIER` (tiers), `ECO.FOU`
-(fournisseurs) et `ECO.DBT` (débiteurs), et à la nomenclature **PESv2** (Protocole d'Échange Standard
+Ce domaine suit le modèle Tiers du Master Data, et s'appuie sur la nomenclature **PESv2** (Protocole d'Échange Standard
 v2, DGFiP) pour les catégories, natures juridiques et types d'identifiants.
 
 **Détail complet** : [Tiers financiers](tiers-financiers.html).
@@ -112,7 +111,7 @@ fusions (communes nouvelles / communes déléguées). Détails dans la page
 
 | Domaine | Profils | Nombre |
 |---|---|---|
-| Tiers financiers | `TiersProfile`, `FournisseurProfile`, `DebiteurProfile`, `PayeurSanteProfile` | 4 |
+| Tiers financiers | `TiersProfile`, `TiersEtablissementSecondaireProfile` | 2 |
 | Structure hospitalière | `EntiteJuridiqueProfile`, `EntiteGeographiqueProfile`, `GHTProfile`, `StructureHospitaliereOrganizationProfile` (socle), `PoleProfile`, `ServiceProfile`, `CentreResponsabiliteProfile`, `CentreActiviteProfile`, `DepartementProfile`, `UniteMedicaleProfile`, `UFProfile`, `PacUacProfile`, `StructureHospitaliereSiteProfile` (socle), `ChambreProfile`, `LitProfile`, `SalleExamenProfile` | 16 |
 | Référentiel géographique | `CommuneFrancaiseProfile` | 1 |
 | **Total** | | **21** |
@@ -122,12 +121,11 @@ dans les deux pages de domaine.
 
 ## Extensions et terminologies
 
-Cet IG définit environ **80 extensions** FHIR (StructureDefinition de type Extension) réparties
+Cet IG définit environ **70 extensions** FHIR (StructureDefinition de type Extension) réparties
 principalement en trois familles :
 
-- **Tiers** (18 extensions) : rôle, catégorie TG, nature juridique, domiciliation bancaire (structure
-  `TBancaire` du PESv2), type d'identifiant, attributs fournisseur/débiteur, paramètres payeur santé,
-  usage de succursale, identifiant CHORUS, etc.
+- **Tiers** (8 extensions) : rôle, restriction de rôle d'une adresse, compte bancaire, spécificités,
+  catégorie TG, nature juridique, type d'identifiant, personne physique.
 - **Structure hospitalière** (~58 extensions) : pour chaque entité (EJ, EG, Pôle, Service, CR, UF,
   Chambre, Lit), une paire récurrente `periodValidite` / `codeValidite` qui porte le modèle temporel
   des tables Oracle sources (clé primaire composite avec date de début), plus les attributs métier
@@ -138,8 +136,8 @@ principalement en trois familles :
 Cet IG définit également une **vingtaine de CodeSystems/ValueSets** — nomenclatures PESv2 (catégorie
 tiers, nature juridique, type d'identifiant), nomenclatures internes CPage (type de lit, type de
 service, catégorie PMSI, etc.), et le CodeSystem des communes françaises COG INSEE — ainsi que
-**10 SearchParameter** personnalisés (recherche par rôle de tiers, par IBAN, par code débiteur/
-fournisseur, par grand régime payeur, etc.).
+**4 SearchParameter** personnalisés (recherche par rôle de tiers, par IBAN, par catégorie TG et par
+nature juridique).
 
 Le détail complet de chaque extension et terminologie est présenté dans les pages de domaine, et
 la liste exhaustive de tous les artefacts est disponible sur la page

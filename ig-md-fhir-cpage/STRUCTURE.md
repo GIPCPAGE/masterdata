@@ -9,37 +9,16 @@ ig-md-fhir-cpage/
 ├── FSH-LIMITATIONS.md             # Limitation FSH/SUSHI (contraintes string)
 └── input/
     ├── fsh/
-    │   ├── profiles/                       # 5 fichiers, 1 profil chacun
-    │   │   ├── CPageFournisseurProfile.fsh        # Parent : FournisseurProfile (commun)
-    │   │   ├── CPageDebiteurProfile.fsh           # Parent : DebiteurProfile (commun)
+    │   ├── profiles/                       # 4 fichiers, 1 profil chacun
     │   │   ├── CPageEntiteJuridiqueProfile.fsh    # Parent : EntiteJuridiqueProfile (commun)
     │   │   ├── CPageEntiteGeographiqueProfile.fsh # Parent : EntiteGeographiqueProfile (commun)
     │   │   └── CPageUFProfile.fsh                 # Parent : UFProfile (commun)
-    │   ├── extensions/                     # 16 fichiers, 25 définitions Extension
-    │   │   ├── CPageValidityExtension.fsh          # 1 extension  — Fournisseur + Débiteur
-    │   │   ├── CPageEUZoneExtension.fsh             # 1 extension  — Fournisseur (+ Débiteur, non câblé)
-    │   │   ├── CPageSupplierAccountingClass6Extension.fsh  # 1 extension
-    │   │   ├── CPageSupplierAccountingClass2Extension.fsh  # 1 extension
-    │   │   ├── CPageSupplierPaymentTermsExtension.fsh      # 1 extension
-    │   │   ├── CPageSupplierPublicProcurementExtension.fsh # 1 extension
-    │   │   ├── CPageSupplierChorusExtension.fsh             # 1 extension
-    │   │   ├── CPageSupplierInternalFlagsExtension.fsh      # 1 extension
-    │   │   ├── CPageDebtorAccountExtension.fsh               # 1 extension
-    │   │   ├── CPageDebtorAsapExtension.fsh                  # 1 extension
-    │   │   ├── CPageDebtorAssociatedSupplierExtension.fsh    # 1 extension
-    │   │   ├── CPageDebtorExternalIdExtension.fsh            # 1 extension
-    │   │   ├── CPageDebtorResidencyExtension.fsh             # 1 extension
+    │   ├── extensions/                     # 3 fichiers, 12 définitions Extension
     │   │   ├── CPageEntiteJuridiqueExtensions.fsh    # 6 extensions (receveur, organismes patronaux, TVA, BIC, M22, TPG)
     │   │   ├── CPageEntiteGeographiqueExtensions.fsh # 3 extensions (dates T2A, coefficients, TVA)
     │   │   └── CPageUFExtensions.fsh                 # 3 extensions (modules MAL / ECO / PER)
-    │   ├── codesystems/                    # 3 fichiers
-    │   │   ├── CPageValidityCodeSystem.fsh          # V / I
-    │   │   ├── CPageEUZoneCodeSystem.fsh             # F / O / A
-    │   │   └── CPageResidencyCodeSystem.fsh          # R / N / E
-    │   ├── valuesets/                      # 3 fichiers, un par CodeSystem ci-dessus
-    │   │   ├── CPageValidityValueSet.fsh
-    │   │   ├── CPageEUZoneValueSet.fsh
-    │   │   └── CPageResidencyValueSet.fsh
+    │   ├── codesystems/                    # 2 fichiers (paramètres applicatifs)
+    │   ├── valuesets/                      # 2 fichiers, un par CodeSystem
     │   ├── examples/                       # vide à ce jour — aucun exemple FSH publié
     │   └── aliases.fsh                     # alias FHIR/HL7 + alias legacy vers l'IG commun
     └── pages/                              # Pages narratives publiées
@@ -51,8 +30,6 @@ ig-md-fhir-cpage/
 
 | Profil CPage | Parent (`ig-md-fhir-common`) | Table Oracle | Vérification du mapping |
 |---|---|---|---|
-| `CPageFournisseurProfile` | `FournisseurProfile` | `ECO.FOU` (+ `ECO.ETIER`) | DDL Oracle réel |
-| `CPageDebiteurProfile` | `DebiteurProfile` | `ECO.DBT` (+ `ECO.ETIER`) | DDL Oracle réel |
 | `CPageEntiteJuridiqueProfile` | `EntiteJuridiqueProfile` | `STR.CHO` | Commentaires FSH uniquement (pas de DDL indépendant) |
 | `CPageEntiteGeographiqueProfile` | `EntiteGeographiqueProfile` | `STR.ETA` | Commentaires FSH uniquement (pas de DDL indépendant) |
 | `CPageUFProfile` | `UFProfile` | `STR.UFO` | Commentaires FSH uniquement (pas de DDL indépendant) |

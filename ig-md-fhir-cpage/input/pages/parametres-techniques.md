@@ -1,7 +1,7 @@
 # Paramètres techniques (CPageParametresApplicatifProfile)
 
 Ce profil est d'une nature différente des autres profils de cet IG. Les profils
-`CPageFournisseurProfile`, `CPageDebiteurProfile`, `CPageEntiteJuridiqueProfile`,
+`CPageEntiteJuridiqueProfile`,
 `CPageEntiteGeographiqueProfile` et `CPageUFProfile` **spécialisent** un profil
 générique du [socle commun](https://www.cpage.fr/ig/masterdata/common/) pour
 exposer des colonnes issues de tables Oracle legacy (`ECO.*`, `STR.*`). Ce n'est

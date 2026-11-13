@@ -14,7 +14,7 @@ IG FHIR — Socle commun du Master Data CPage
 
 Cet Implementation Guide définit le socle FHIR générique, vendor-neutral, du Master Data CPage : les
 profils, extensions et terminologies communs à deux domaines métier — les **tiers financiers**
-(fournisseurs, débiteurs, payeurs santé) et la **structure hospitalière** (GHT, entité juridique,
+(fournisseurs, débiteurs, mixtes) et la **structure hospitalière** (GHT, entité juridique,
 entité géographique, pôles, unités fonctionnelles, chambres, lits...). Il est construit directement
 sur `hl7.fhir.fr.core` 2.2.0 et sert de socle aux IG spécialisés `ig-md-fhir-cpage` (extensions
 propriétaires CPage) et `ig-md-fhir-operations` (opérations de publication/synchronisation).
@@ -55,12 +55,12 @@ La sortie SUSHI se trouve dans `fsh-generated/`, la sortie du IG Publisher dans 
 
 ## Où trouver quoi
 
-- `input/fsh/profiles/` — 21 profils (Organization / Location), voir le catalogue complet dans
+- `input/fsh/profiles/` — 20 profils (Organization / Location), voir le catalogue complet dans
   `input/pages/tiers-financiers.md` et `input/pages/structure-hospitaliere.md`.
-- `input/fsh/extensions/` — environ 80 extensions FHIR.
+- `input/fsh/extensions/` — environ 70 extensions FHIR.
 - `input/fsh/codesystems/`, `input/fsh/valuesets/` — terminologies (nomenclatures PESv2, référentiel
   communes COG INSEE, nomenclatures internes CPage).
-- `input/fsh/searchparameters/` — 10 SearchParameter personnalisés (domaine Tiers).
+- `input/fsh/searchparameters/` — 4 SearchParameter personnalisés (domaine Tiers).
 - `input/fsh/operations/` — l'opération personnalisée `$hierarchy` (reconstruction de la hiérarchie
   hospitalière en un seul Bundle).
 - `input/fsh/examples/` — instances d'exemple et NamingSystem (RIDET, Tahiti, COG INSEE).

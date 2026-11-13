@@ -12,6 +12,7 @@ Alias: $org-type = http://terminology.hl7.org/CodeSystem/organization-type
 // Identifier systems for this IG
 // TODO: Replace with your official OIDs/URIs
 Alias: $id-etier = urn:oid:1.2.250.1.999.1.1.1
+Alias: $id-etablissement = https://www.cpage.fr/ig/masterdata/common/NamingSystem/tiers-etablissement-identifier
 // Pour le numero de TVA l'OID est correct : 
 Alias: $id-tva = urn:oid:1.2.250.1.69.1.1011
 
@@ -28,3 +29,8 @@ Alias: $iso3166-numeric     = urn:iso:std:iso:3166:-1:num
 Alias: $tre-r20-pays        = https://mos.esante.gouv.fr/NOS/TRE_R20-Pays/FHIR/TRE-R20-Pays
 Alias: $pays-type-entite-cs = https://www.cpage.fr/ig/masterdata/common/CodeSystem/pays-type-entite-cs
 Alias: $pays-cs             = https://www.cpage.fr/ig/masterdata/common/CodeSystem/pays-cs
+
+// Parties d'adresse ISO 21090 (extensions du standard FHIR R4)
+Alias: $adxp-houseNumber = http://hl7.org/fhir/StructureDefinition/iso21090-ADXP-houseNumber
+Alias: $adxp-streetNameType = http://hl7.org/fhir/StructureDefinition/iso21090-ADXP-streetNameType
+Alias: $adxp-streetNameBase = http://hl7.org/fhir/StructureDefinition/iso21090-ADXP-streetNameBase

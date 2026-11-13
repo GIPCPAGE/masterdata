@@ -5,7 +5,7 @@
 CodeSystem: TiersRoleCodeSystem
 Id: tiers-role-cs
 Title: "Rôles Tiers (Générique)"
-Description: "Rôles génériques d'un tiers (débiteur, fournisseur, payeur)."
+Description: "Rôle d'un tiers : fournisseur (F), débiteur (D) ou mixte (M, les deux). Le rôle payeur n'existe pas."
 * ^status = #active
 * ^experimental = false
 * ^content = #complete
@@ -13,4 +13,4 @@ Description: "Rôles génériques d'un tiers (débiteur, fournisseur, payeur)."
 * ^meta.profile = "http://hl7.org/fhir/StructureDefinition/shareablecodesystem"
 * #supplier "Fournisseur" "Le tiers est un fournisseur"
 * #debtor "Débiteur" "Le tiers est un débiteur"
-* #payer "Payeur" "Le tiers est un organisme payeur (Sécurité sociale, mutuelle, etc.)"
+* #mixed "Mixte" "Le tiers est à la fois fournisseur et débiteur"

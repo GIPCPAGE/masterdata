@@ -1,9 +1,9 @@
 ﻿# Téléchargements
 
 Ce guide d'implémentation regroupe les ressources FHIR du socle commun CPage MasterData :
-- **Profils Organization** — Tiers, Fournisseur, Débiteur, PayeurSanté, Succursale
-- **Extensions** — rôles, identifiants, coordonnées bancaires, Chorus, conditions de paiement, etc.
-- **Terminologies** — CodeSystems et ValueSets (catégories, civilités, natures juridiques, moyens de paiement, régimes SS, communes COG)
+- **Profils Organization** — Tiers, Établissement secondaire
+- **Extensions** — rôle, restriction de rôle, identifiants, comptes bancaires, personne physique, etc.
+- **Terminologies** — CodeSystems et ValueSets (catégories, civilités, natures juridiques, communes COG)
 - **Paramètres de recherche** personnalisés
 
 Le package NPM de cet IG est [téléchargeable ici](package.tgz). Il permet de valider des instances FHIR contre les profils qu'il contient.
@@ -37,12 +37,10 @@ Vous pourrez ensuite utiliser l'opération [$validate](https://www.hl7.org/fhir/
 | Ressource | Identifiant |
 |-----------|-------------|
 | TiersProfile (StructureDefinition) | `tiers-profile` |
-| FournisseurProfile (StructureDefinition) | `fournisseur-profile` |
-| DebiteurProfile (StructureDefinition) | `debiteur-profile` |
-| PayeurSanteProfile (StructureDefinition) | `payeur-sante-profile` |
-| 19 extensions (StructureDefinition) | — |
-| 10 SearchParameter | — |
-| 10 CodeSystems | — |
+| TiersEtablissementSecondaireProfile (StructureDefinition) | `tiers-etablissement-secondaire-profile` |
+| 8 extensions (StructureDefinition) | — |
+| 4 SearchParameter | — |
+| 6 CodeSystems | — |
 
 ### Axe Nomenclatures
 
