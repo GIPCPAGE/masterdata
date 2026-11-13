@@ -111,6 +111,7 @@ leurs UF membres, sur le même modèle que `GHTProfile` qui liste ses Entités J
 | `GHTProfile` | `FRCoreOrganizationProfile` | *(aucune — le GHT est l'instance MDM elle-même)* | Groupement hospitalier de territoire ; niveau racine, portée GLOBAL |
 | `EntiteJuridiqueProfile` | `FRCoreOrganizationEtablissementProfile` (FR Core) | `STR.CHO` | Établissement, personne morale (SIRET/FINESS de tête, statut juridique) |
 | `EntiteGeographiqueProfile` | `FRCoreOrganizationEtablissementProfile` (FR Core) | `STR.ETA` | Site géographique d'un établissement |
+| `GroupementHospitalierProfile` | `StructureHospitaliereOrganizationProfile` | absent d'Oracle (équivalent ETA + SETG) | Regroupement d'entités géographiques d'une EJ, parent des secteurs budgétaires ; propre aux très grands établissements multi-sites |
 | `StructureHospitaliereOrganizationProfile` | `FRCoreOrganizationProfile` | *(socle, non instancié directement)* | Profil de base commun à Pôle, Service, CR, CAC, Département, UM |
 | `PoleProfile` | `StructureHospitaliereOrganizationProfile` | `STR.POA` | Macro-structure médicale (loi HPST) |
 | `ServiceProfile` | `StructureHospitaliereOrganizationProfile` | `STR.SER` | Hiérarchie historique parallèle au Pôle |
