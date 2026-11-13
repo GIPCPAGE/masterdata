@@ -3,30 +3,6 @@
 // =============================================
 // Champs génériques issus de STR.ETA applicables à tout site hospitalier.
 
-// ── Période de validité (DATDET / DATFET) ─────────────────────────────────────
-// Le modèle ETA est temporel : chaque instance = une période de validité du site.
-
-Extension: EGPeriodeValiditeExtension
-Id: eg-periode-validite
-Title: "Période de validité du site géographique"
-Description: """
-Période de validité de l'enregistrement du site géographique (table STR.ETA).
-La PK Oracle est composite (NUETET + DATDET) — chaque version du site a sa propre période.
-"""
-Context: Organization
-
-* extension contains
-    dateDebut 1..1 MS and
-    dateFin   0..1 MS
-
-* extension[dateDebut].value[x] only date
-* extension[dateDebut] ^short = "Date de début de période (DATDET)"
-* extension[dateDebut] ^definition = "Date à partir de laquelle cet enregistrement est valide."
-
-* extension[dateFin].value[x] only date
-* extension[dateFin] ^short = "Date de fin de période (DATFET)"
-* extension[dateFin] ^definition = "Date à partir de laquelle cet enregistrement n'est plus valide. Vide si indéfini."
-
 // ── Code de validité (INVAET) ────────────────────────────────────────────────
 
 Extension: EGCodeValiditeExtension

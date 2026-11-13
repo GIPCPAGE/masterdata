@@ -16,8 +16,10 @@
 //   date_debut/fin_validite → extension[usePeriod]           (organization-period, hérité de FR Core)
 //   entite_juridique     → partOf                             (rattachement obligatoire)
 //   adresse (lignes, commune, code postal) → address         (fr-core-address)
+//   bureau_distributeur  → address.line.extension[bureauDistributeur] (HL7 ADXP deliveryInstallationArea)
+//   libelle_diffusion    → extension[libelleDiffusion]       (strh-libelle-diffusion, hérité du profil socle)
 //   entités géographiques et secteurs budgétaires rattachés → extension[membres] (FR Core member)
-//   non exposés : code de validité, libellé de diffusion, bureau distributeur
+//   non exposé : code de validité
 
 Profile: GroupementHospitalierProfile
 Parent: StructureHospitaliereOrganizationProfile
@@ -79,6 +81,8 @@ La notion n'existe pas en propre dans CPage.
 * address.city ^short = "Commune"
 * address.postalCode 0..1 MS
 * address.postalCode ^short = "Code postal (5 chiffres)"
+* address.line.extension contains $adxp-deliveryInstallationArea named bureauDistributeur 0..1 MS
+* address.line.extension[bureauDistributeur] ^short = "Bureau distributeur, quand il diffère de la commune"
 
 // ── Hiérarchie : entité juridique parente (obligatoire) ───────────────────────
 

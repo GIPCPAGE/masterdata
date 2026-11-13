@@ -34,3 +34,4 @@ Alias: $pays-cs             = https://www.cpage.fr/ig/masterdata/common/CodeSyst
 Alias: $adxp-houseNumber = http://hl7.org/fhir/StructureDefinition/iso21090-ADXP-houseNumber
 Alias: $adxp-streetNameType = http://hl7.org/fhir/StructureDefinition/iso21090-ADXP-streetNameType
 Alias: $adxp-streetNameBase = http://hl7.org/fhir/StructureDefinition/iso21090-ADXP-streetNameBase
+Alias: $adxp-deliveryInstallationArea = http://hl7.org/fhir/StructureDefinition/iso21090-ADXP-deliveryInstallationArea

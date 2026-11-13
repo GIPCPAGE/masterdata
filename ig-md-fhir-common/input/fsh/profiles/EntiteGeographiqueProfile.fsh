@@ -7,13 +7,16 @@
 // Colonnes Oracle entité géographique → FHIR :
 //   entiteJuridique       → partOf (référence Entité Juridique)
 //   NUETET (PK)      → identifier[etaCode]
-//   DATDET/DATFET    → extension[periodValidite]  (modèle temporel)
+//   DATDET/DATFET    → extension[usePeriod]  (organization-period, hérité de FR Core)
 //   INVAET (F/I/V)   → active + extension[codeValidite]
 //   LIETET           → name
-//   LRETET           → alias[0]
+//   LRETET           → alias[0] + extension[shortName] (FR Core)
 //   NUFIET           → identifier[finess]
 //   SIREET           → identifier[siret]
-//   SCET_CAETCET     → fr-core-organization-sae-categorie
+//   SCET_CAETCET     → extension[sae] (FR Core fr-core-organization-sae-categorie, sous-ensemble de TRE_R66)
+//   TVAIET           → identifier[tva]
+//   (libellé de diffusion) → extension[libelleDiffusion] (strh-libelle-diffusion, commune à la structure)
+//   (bureau distributeur)  → address.line.extension[bureauDistributeur] (HL7 ADXP deliveryInstallationArea)
 //   SSSA_SESASSA     → extension[secteurSanitaire]
 //   CNAFET           → extension[codeNaf]
 //   EANGET           → identifier[eanGencod]
@@ -45,7 +48,7 @@ Hérite de `FRCoreOrganizationEtablissementProfile` (FR Core 2.2.0).
 
 **Modèle temporel** : la table ETA utilise un PK composé.
 Chaque instance représente UNE PÉRIODE de validité d'un site géographique.
-La période est portée par `extension[periodValidite]` et le code de validité par `extension[codeValidite]`.
+La période est portée par l'extension `usePeriod` (organization-period, héritée de FR Core) et le code de validité par `extension[codeValidite]`.
 
 **Scope** : TENANT uniquement.
 **Profil CPage** : `CPageEntiteGeographiqueProfile` (ig-md-fhir-cpage) — dates T2A, TVA, coefficients.
@@ -60,7 +63,8 @@ La période est portée par `extension[periodValidite]` et le code de validité 
 * identifier contains
     strHId     1..1 MS and
     etaCode    1..1 MS and
-    eanGencod  0..1 MS
+    eanGencod  0..1 MS and
+    tva        0..1 MS
 
 // UUID MDM interne
 * identifier[strHId].system = "https://www.cpage.fr/ig/masterdata/common/identifiers/strh" (exactly)
@@ -73,6 +77,7 @@ La période est portée par `extension[periodValidite]` et le code de validité 
 * identifier[etaCode] ^short = "Code site géographique CPage"
 
 // FINESS (NUFIET) — system déjà fixé par le parent FR Core (patternUri https://finess.esante.gouv.fr)
+* identifier[finess].type.coding.code = #FINEG
 * identifier[finess].value 1..1
 * identifier[finess] ^short = "Numéro FINESS du site (NUFIET)"
 
@@ -84,6 +89,11 @@ La période est portée par `extension[periodValidite]` et le code de validité 
 * identifier[eanGencod].system = "https://www.gs1.org/gln" (exactly)
 * identifier[eanGencod].value 1..1
 * identifier[eanGencod] ^short = "Code EAN GENCOD (EANGET — 13 chars)"
+
+// TVA intracommunautaire (TVAIET)
+* identifier[tva].system = "urn:oid:1.2.250.1.69.1.1011" (exactly)
+* identifier[tva].value 1..1
+* identifier[tva] ^short = "Numéro TVA intracommunautaire (TVAIET)"
 
 // ── Type organisationnel ──────────────────────────────────────────────────────
 
@@ -118,6 +128,8 @@ La période est portée par `extension[periodValidite]` et le code de validité 
 * address.city 0..1 MS
 * address.city ^short = "Ville (BUDEET)"
 * address.country = "FR" (exactly)
+* address.line.extension contains $adxp-deliveryInstallationArea named bureauDistributeur 0..1 MS
+* address.line.extension[bureauDistributeur] ^short = "Bureau distributeur, quand il diffère de la commune"
 
 // ── Télécoms ──────────────────────────────────────────────────────────────────
 
@@ -143,7 +155,6 @@ La période est portée par `extension[periodValidite]` et le code de validité 
 // ── Extensions spécifiques (Common IG) ───────────────────────────────────────
 
 * extension contains
-    EGPeriodeValiditeExtension       named periodValidite         0..1 MS and
     EGCodeValiditeExtension          named codeValidite           0..1 MS and
     EGSecteurSanitaireExtension      named secteurSanitaire       0..1 MS and
     EGCodeNafExtension               named codeNaf                0..1 MS and
@@ -153,7 +164,6 @@ La période est portée par `extension[periodValidite]` et le code de validité 
     EGCoeffGeoT2AExtension           named coefficientGeoT2A      0..1 MS and
     EGCoeffTransitionT2AExtension    named coefficientTransitionT2A 0..1 MS
 
-* extension[periodValidite]          ^short = "Période de validité (DATDET/DATFET)"
 * extension[codeValidite]            ^short = "Code validité (INVAET : F=Fermé / I=Invalide / V=Valide)"
 * extension[secteurSanitaire]        ^short = "Secteur sanitaire (SSSA_SESASSA — FK SSSA)"
 * extension[codeNaf]                 ^short = "Code NAF (CNAFET — 6 chars)"
@@ -162,6 +172,18 @@ La période est portée par `extension[periodValidite]` et le code de validité 
 * extension[horaires]                ^short = "Horaires d'ouverture (HORAIRES_OUVERTURE — 38 chars)"
 * extension[coefficientGeoT2A]       ^short = "Coefficient géographique T2A (CGEOET — entre 1 et 2)"
 * extension[coefficientTransitionT2A] ^short = "Coefficient de transition T2A (CTRAET — entre 0 et 2)"
+
+// Extensions FR Core héritées du parent : catégorie d'établissement, période de validité, libellé réduit
+* extension[sae] MS
+* extension[sae] ^short = "Catégorie d'établissement (SCET_CAETCET), extension FR Core sae-categorie"
+* extension[usePeriod] MS
+* extension[usePeriod] ^short = "Période de validité du site (DATDET/DATFET)"
+* extension[shortName] MS
+* extension[shortName] ^short = "Libellé réduit (LRETET), extension FR Core short-name"
+
+// Libellé de diffusion : extension commune à la structure
+* extension contains StrHLibelleDiffusionExtension named libelleDiffusion 0..1 MS
+* extension[libelleDiffusion] ^short = "Libellé de diffusion"
 
 // ── Hiérarchie : rattachement à l'Entité Juridique ────────────────────────────
 

@@ -120,6 +120,10 @@ CPage : receveur comptable, numéros sociaux (URSSAF/CNRACL/IRCANTEC), TVA, TPG,
 * extension[usePeriod] MS
 * extension[usePeriod] ^short = "Période de validité de l'entité (date de début et de fin)"
 
+// Libellé de diffusion : extension commune à la structure
+* extension contains StrHLibelleDiffusionExtension named libelleDiffusion 0..1 MS
+* extension[libelleDiffusion] ^short = "Libellé de diffusion"
+
 // Libellé réduit : l'extension FR Core shortName, héritée du parent, porte aussi LRCHCH
 * extension[shortName] MS
 * extension[shortName] ^short = "Libellé réduit (LRCHCH), extension FR Core short-name"
@@ -140,6 +144,8 @@ CPage : receveur comptable, numéros sociaux (URSSAF/CNRACL/IRCANTEC), TVA, TPG,
 * address.city ^short = "Ville / bureau distributeur (BUDCCH)"
 * address.country = "FR" (exactly)
 * address.extension[inseeCode] MS
+* address.line.extension contains $adxp-deliveryInstallationArea named bureauDistributeur 0..1 MS
+* address.line.extension[bureauDistributeur] ^short = "Bureau distributeur, quand il diffère de la commune"
 * address.extension[inseeCode] ^short = "Code commune INSEE (COCOCH), extension FR Core fr-core-address-insee-code"
 
 // ── Télécoms ──────────────────────────────────────────────────────────────────

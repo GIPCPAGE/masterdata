@@ -126,9 +126,12 @@ principalement en trois familles :
 
 - **Tiers** (8 extensions) : rôle, restriction de rôle d'une adresse, compte bancaire, spécificités,
   catégorie TG, nature juridique, type d'identifiant, personne physique.
-- **Structure hospitalière** (~58 extensions) : pour chaque entité (EJ, EG, Pôle, Service, CR, UF,
-  Chambre, Lit), une paire récurrente `periodValidite` / `codeValidite` qui porte le modèle temporel
-  des tables Oracle sources (clé primaire composite avec date de début), plus les attributs métier
+- **Structure hospitalière** (~58 extensions) : les champs communs à toutes les entités réutilisent
+  d'abord FR Core et HL7 (période de validité par l'extension `usePeriod`, libellé réduit par `shortName`,
+  bureau distributeur par l'extension d'adresse `deliveryInstallationArea`) ; le libellé de diffusion
+  (`strh-libelle-diffusion`) et le code interne (`strh-code-interne`) sont des extensions communes de cet IG.
+  Les entités qui n'ont pas encore été alignées (Pôle, Service, CR, UF, Chambre, Lit) portent encore une
+  extension propre `periodValidite`, à remplacer par `usePeriod`. S'y ajoutent les attributs métier
   propres à chaque entité (ex. lettre budgétaire du CR, type UF médicale, type de lit, etc.).
 - **Communes** (6 extensions) : codes postaux (répétables), code département, code région, dates de
   validité et de mise à jour du référentiel INSEE.

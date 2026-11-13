@@ -47,6 +47,13 @@ Profil socle pour les entités organisationnelles de la structure hospitalière 
 * active 0..1 MS
 * active ^short = "Entité active (false = suppression logique)"
 
+// Champs communs à toutes les entités de la structure (réutilisation de FR Core d'abord)
+* extension[shortName] MS
+* extension[shortName] ^short = "Libellé réduit, extension FR Core short-name"
+* extension[usePeriod] MS
+* extension[usePeriod] ^short = "Période de validité de l'entité (date de début et de fin)"
+* extension contains StrHLibelleDiffusionExtension named libelleDiffusion 0..1 MS
+* extension[libelleDiffusion] ^short = "Libellé de diffusion"
 // Code interne SIH
 * extension contains StrHCodeInterneExtension named codeInterne 0..1 MS
 * extension[codeInterne] ^short = "Code interne dans le SIH source"
