@@ -8,13 +8,14 @@
 // Colonnes Oracle → FHIR :
 //   NUCHCH (PK)         → identifier[choCode]       Code interne CPage (2 chars)
 //   LICHCH              → name                       Libellé complet
-//   LRCHCH              → alias[0]                   Libellé réduit
+//   LRCHCH              → alias[0] + extension[shortName] (FR Core)   Libellé réduit
 //   LBTCCH              → alias[1]                   Libellé très court
 //   NUFICH              → identifier[finess]         FINESS
 //   SIRECH              → identifier[siret]          SIRET
 //   TVAICH              → identifier[tva]            TVA intracommunautaire
 //   FISICH              → identifier[finessHQ]       FINESS siège (si différent)
-//   SCET_CAETCET        → fr-core-organization-sae-categorie
+//   SCET_CAETCET        → extension[sae] (FR Core fr-core-organization-sae-categorie, sous-ensemble de TRE_R66)
+//   (dates de validité) → extension[usePeriod] (extension standard organization-period, héritée de FR Core)
 //   STATCH/LIBJCH       → extension[statutJuridique]
 //   CAPECH              → extension[codeApe]
 //   CPCMCH              → extension[codeCpcm]
@@ -23,9 +24,9 @@
 //   COP_NCPOPO          → address[0].postalCode
 //   BUDCCH              → address[0].city
 //   COCECH              → extension[codeCedex]
-//   COCOCH              → address[0].extension:communeInsee (FR Core)
+//   COCOCH              → address[0].extension:inseeCode (FR Core fr-core-address-insee-code, TRE_R13)
 //   CDOMCH              → extension[localisationDomTom]
-//   CREGCH              → address[0].extension:regionInsee (FR Core)
+//   CREGCH              → non exposé (FR Core n'a pas d'extension de région)
 //   NROTCH              → telecom[0] phone
 //   NFAXCH              → telecom[1] fax
 //   WEBCCH              → telecom[2] url
@@ -78,6 +79,7 @@ CPage : receveur comptable, numéros sociaux (URSSAF/CNRACL/IRCANTEC), TVA, TPG,
 * identifier[siret] ^short = "Numéro SIRET (14 chiffres)"
 
 // FINESS établissement (NUFICH) — system déjà fixé par le parent FR Core (patternUri https://finess.esante.gouv.fr)
+* identifier[finess].type.coding.code = #FINEJ
 * identifier[finess].value 1..1
 * identifier[finess] ^short = "Numéro FINESS de l'établissement (NUFICH)"
 
@@ -111,6 +113,17 @@ CPage : receveur comptable, numéros sociaux (URSSAF/CNRACL/IRCANTEC), TVA, TPG,
 * alias ^short = "Libellé réduit (LRCHCH) et libellé très court (LBTCCH)"
 * alias ^definition = "alias[0] = LRCHCH (libellé réduit 20 chars), alias[1] = LBTCCH (libellé très court 15 chars)."
 
+// Réutilisation d'extensions FR Core héritées du parent : catégorie d'établissement (valeurs = sous-ensemble
+// de TRE_R66, liaison obligatoire) et période de validité (organization-period)
+* extension[sae] MS
+* extension[sae] ^short = "Catégorie d'établissement (SCET_CAETCET), extension FR Core sae-categorie"
+* extension[usePeriod] MS
+* extension[usePeriod] ^short = "Période de validité de l'entité (date de début et de fin)"
+
+// Libellé réduit : l'extension FR Core shortName, héritée du parent, porte aussi LRCHCH
+* extension[shortName] MS
+* extension[shortName] ^short = "Libellé réduit (LRCHCH), extension FR Core short-name"
+
 // ── Statut actif ──────────────────────────────────────────────────────────────
 
 * active 0..1 MS
@@ -126,8 +139,8 @@ CPage : receveur comptable, numéros sociaux (URSSAF/CNRACL/IRCANTEC), TVA, TPG,
 * address.city 0..1 MS
 * address.city ^short = "Ville / bureau distributeur (BUDCCH)"
 * address.country = "FR" (exactly)
-* address.district 0..1 MS
-* address.district ^short = "Code commune INSEE (COCOCH)"
+* address.extension[inseeCode] MS
+* address.extension[inseeCode] ^short = "Code commune INSEE (COCOCH), extension FR Core fr-core-address-insee-code"
 
 // ── Télécoms ──────────────────────────────────────────────────────────────────
 

@@ -27,7 +27,8 @@
 //   TBICCH  → extension[indicateurBic]
 //   CM22CH  → extension[comptabiliteM22]
 //   ITPGCH  → extension[identifiantTpg]
-//   CATGCH/NATJCH → ASAP (categories) — déjà dans FR Core legal nature / type
+//   CATGCH/NATJCH/CATTCH/NATTCH → non portés par ce profil : ce sont des constantes de l'export ASAP
+//     du PES v2 (CH : catégorie 27, nature 09 ; TG : 20 et 07, à confirmer), pas des données de l'entité
 
 Profile: CPageEntiteJuridiqueProfile
 Parent: EntiteJuridiqueProfile
