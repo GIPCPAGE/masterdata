@@ -123,8 +123,8 @@ leurs UF membres, sur le même modèle que `GHTProfile` qui liste ses Entités J
 | `CentreResponsabiliteProfile` | `StructureHospitaliereOrganizationProfile` | `STR.CRE` | Unité budgétaire (M21/M22), rattachée à un pôle, un secteur budgétaire, une direction transversale ou, à défaut, à l'entité juridique |
 | `CentreActiviteProfile` | `StructureHospitaliereOrganizationProfile` | `CAC` (et attribut `CAC_NUACAC` de `STR.UFO`) | Regroupement analytique d'UF, rattaché à un centre de responsabilité ; entité propre à CPage ; type activé par tenant, hors modèle minimal |
 | `DepartementProfile` | `StructureHospitaliereOrganizationProfile` | absent d'Oracle, ajouté pour PMSI/DPI | Niveau intermédiaire optionnel pôle ↔ services (certains CHU) |
-| `UniteMedicaleProfile` | `StructureHospitaliereOrganizationProfile` | absent d'Oracle, ajouté pour PMSI/DPI | Unité médicale au sens MOS/DGOS, référencée par les DPI |
-| `UFProfile` | `FRCoreOrganizationUFProfile` (FR Core) | `STR.UFO` | Unité Fonctionnelle — plus petite unité de production médicale |
+| `UniteMedicaleProfile` | `StructureHospitaliereOrganizationProfile` | absent d'Oracle, ajouté pour PMSI/DPI | Unité médicale au sens MOS/DGOS, référencée par les DPI ; liste les UF rattachées (`member`) |
+| `UFProfile` | `FRCoreOrganizationUFProfile` (FR Core) | `STR.UFO` | Unité Fonctionnelle — plus petite unité de production médicale ; attributs locaux (bâtiment, section d'analyse, compte analytique, discipline détaillée, médecin chef, pénibilité, chambre particulière) portés par des extensions de l'IG common |
 | `PacUacProfile` | `FRCoreOrganizationUACProfile` (FR Core) | absent d'Oracle, ajouté pour PMSI/DPI | Unité élémentaire de facturation PMSI (discipline + tarif TNJP) |
 | `StructureHospitaliereSiteProfile` | `FRCoreLocationProfile` (FR Core) | *(socle, non instancié directement)* | Profil de base commun à Chambre et Lit |
 | `BatimentOphelieProfile` | `StructureHospitaliereSiteProfile` | absent d'Oracle | Bâtiment, entité physique rattachée à une entité géographique et référencée par les UF ; type FR Core `BAT` ; type activé par tenant, hors modèle minimal |

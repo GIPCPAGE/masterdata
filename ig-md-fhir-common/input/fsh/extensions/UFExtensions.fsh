@@ -3,18 +3,8 @@
 // =============================================
 // Source Oracle : STR.UFO — champs génériques
 
-// ── Période de validité (DATDUF / DATFUF) ─────────────────────────────────────
-
-Extension: UFPeriodeValiditeExtension
-Id: uf-periode-validite
-Title: "Période de validité de l'UF"
-Description: "Période de validité de l'UF (STR.UFO — PK composite NUUFUF+DATDUF)."
-Context: Organization
-* extension contains dateDebut 1..1 MS and dateFin 0..1 MS
-* extension[dateDebut].value[x] only date
-* extension[dateDebut] ^short = "Date de début de période (DATDUF)"
-* extension[dateFin].value[x] only date
-* extension[dateFin] ^short = "Date de fin de période (DATFUF)"
+// La période de validité de l'UF est portée par l'extension standard organization-period
+// (usePeriod), héritée de FR Core : pas d'extension propre.
 
 // ── Code de validité (INVAUF) ─────────────────────────────────────────────────
 

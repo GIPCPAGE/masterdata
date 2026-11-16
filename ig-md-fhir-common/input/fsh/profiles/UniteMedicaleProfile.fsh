@@ -43,3 +43,9 @@ FR Core n'a pas de profil dédié — type = UM (fr-core-cs-v2-3307).
 // Ne pas contraindre à UFProfile — la relation UM/UF n'est pas une simple hiérarchie.
 * partOf only Reference(StructureHospitaliereOrganizationProfile)
 * partOf ^short = "Structure parente dans la hiérarchie CPage (CR, Service ou EG selon établissement)"
+
+// Membres : unités fonctionnelles rattachées à l'unité médicale. Lien horizontal porté par le
+// parent, conformément à FR Core (extension member).
+
+* extension contains fr-core-organization-member named membres 0..* MS
+* extension[membres] ^short = "Unités fonctionnelles rattachées à l'unité médicale"
