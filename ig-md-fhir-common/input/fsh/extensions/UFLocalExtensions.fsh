@@ -37,14 +37,6 @@ Context: Organization
 * value[x] only string
 * valueString ^short = "Code du compte analytique"
 
-Extension: UFDisciplineEquipementDetailExtension
-Id: uf-discipline-equipement-detail
-Title: "Discipline d'équipement détaillée de l'UF"
-Description: "Code de la discipline d'équipement détaillée (3 à 4 caractères) ; la discipline d'équipement FR Core porte le référentiel SNDS. Attribut de portée LOCAL, actif selon le tenant."
-Context: Organization
-* value[x] only string
-* valueString ^short = "Code de la discipline d'équipement détaillée"
-
 Extension: UFMedecinChefExtension
 Id: uf-medecin-chef
 Title: "Médecin chef de l'UF"
