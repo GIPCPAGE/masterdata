@@ -11,8 +11,3 @@ Invariant: tiers-contact-adresse
 Description: "Un contact sans purpose est une adresse d'ordre supérieur à 1 : il porte une adresse."
 Severity: #error
 Expression: "purpose.exists() or address.exists()"
-
-Invariant: tiers-restriction-role
-Description: "La restriction de rôle d'une adresse ou d'un compte bancaire doit faire partie du rôle du tiers : un tiers fournisseur ne porte que des restrictions fournisseur, un tiers débiteur que des restrictions débiteur ; un tiers mixte peut porter les deux."
-Severity: #error
-Expression: "extension('https://www.cpage.fr/ig/masterdata/common/StructureDefinition/tiers-role-extension').value.code = 'mixed' or (address.extension('https://www.cpage.fr/ig/masterdata/common/StructureDefinition/tiers-role-restriction-extension').value.code | contact.address.extension('https://www.cpage.fr/ig/masterdata/common/StructureDefinition/tiers-role-restriction-extension').value.code | extension('https://www.cpage.fr/ig/masterdata/common/StructureDefinition/tiers-bank-account').extension('role').value.code).all($this = %resource.extension('https://www.cpage.fr/ig/masterdata/common/StructureDefinition/tiers-role-extension').value.code)"

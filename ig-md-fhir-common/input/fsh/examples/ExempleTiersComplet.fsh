@@ -19,8 +19,6 @@ Description: "Exemple d'un tiers fournisseur illustrant le modèle Tiers : étab
 * extension[shortName].valueString = "Division hospitalière"
 * alias = "MSL France"
 
-// Rôle unique : fournisseur
-* extension[tiersRole].valueCoding = https://www.cpage.fr/ig/masterdata/common/CodeSystem/tiers-role-cs#supplier
 * extension[periodeValidite].valuePeriod.start = "1900-01-01"
 
 // Spécificités
@@ -63,8 +61,6 @@ Description: "Exemple d'un tiers fournisseur illustrant le modèle Tiers : étab
 * extension[tgCategory].valueCodeableConcept = https://www.cpage.fr/ig/masterdata/common/CodeSystem/tiers-category-cs#50 "Personne morale de droit privé"
 
 
-// Restriction de rôle sur la seconde adresse : réservée au circuit fournisseur
-* contact[0].address.extension[roleRestriction].valueCoding = https://www.cpage.fr/ig/masterdata/common/CodeSystem/tiers-role-cs#supplier
 
 // Compte bancaire commun à toute la société (porté par l'établissement principal)
 * extension[bankAccount][0].extension[titulaire].valueString = "Multiservices Santé et Logistique"
@@ -77,5 +73,4 @@ Description: "Exemple d'un tiers fournisseur illustrant le modèle Tiers : étab
 * extension[bankAccount][1].extension[titulaire].valueString = "Multiservices Santé et Logistique"
 * extension[bankAccount][1].extension[iban].valueString = "FR7630004000031234567890143"
 * extension[bankAccount][1].extension[actif].valueBoolean = true
-* extension[bankAccount][1].extension[role].valueCoding = https://www.cpage.fr/ig/masterdata/common/CodeSystem/tiers-role-cs#supplier
 * extension[bankAccount][1].extension[communSociete].valueBoolean = false
