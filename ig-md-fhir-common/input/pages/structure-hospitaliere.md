@@ -116,7 +116,7 @@ leurs UF membres, sur le même modèle que `GHTProfile` qui liste ses Entités J
 | `UniteGestionProfile` | `StructureHospitaliereOrganizationProfile` | absent d'Oracle (voisin : SETG) | Niveau de gestion rattaché à une entité géographique, parent des unités fonctionnelles (`member`) ; type activé par tenant, hors modèle minimal |
 | `DirectionTransversaleProfile` | `StructureHospitaliereOrganizationProfile` | `SDTR` | Direction fonctionnelle qui traverse les pôles et regroupe des centres de responsabilité (`member`) ; rattachée à une entité juridique ; type activé par tenant, hors modèle minimal |
 | `StructureHospitaliereOrganizationProfile` | `FRCoreOrganizationProfile` | *(socle, non instancié directement)* | Profil de base commun à Pôle, Service, CR, CAC, Département, UM |
-| `PoleProfile` | `StructureHospitaliereOrganizationProfile` | `STR.POA` | Macro-structure médicale (loi HPST) |
+| `PoleProfile` | `StructureHospitaliereOrganizationProfile` | `STR.POA` | Macro-structure médicale (loi HPST), rattachée à une entité juridique |
 | `ServiceProfile` | `StructureHospitaliereOrganizationProfile` | `STR.SER` | Hiérarchie historique parallèle au Pôle |
 | `SecteurProfile` | `StructureHospitaliereOrganizationProfile` | absent d'Oracle, aucun cas réel à ce jour | Secteur psychiatrique (CSP art. R3221-1) — couverture du type FR Core `SECTEUR` |
 | `CentreResponsabiliteProfile` | `StructureHospitaliereOrganizationProfile` | `STR.CRE` | Unité budgétaire (M21/M22) |
@@ -153,7 +153,7 @@ consommateurs.
 |---|---|
 | Entité Juridique | Statut juridique, code APE/NAF, numéro CPCM, catégorie PMSI (10/20/21/22/30/40), code CEDEX, localisation DOM/TOM, numéros émetteur EH, indicateur arrondissement, Centres de Responsabilité membres (`member`) |
 | Entité Géographique | Secteur sanitaire, code NAF, libellé de localisation, indicateur SAE, horaires d'ouverture, coefficients géographique et de transition T2A |
-| Pôle | UF membres (`member`) |
+| Pôle | Code de validité, date CME et médecin coordonnateur (attributs locaux), UF membres (`member`) |
 | Service | Sigle, type de service (Direction/Service), UF membres (`member`) |
 | Secteur | Responsable du secteur (contact), UF membres (`member`) |
 | Centre d'Activité | UF membres (`member`) |
