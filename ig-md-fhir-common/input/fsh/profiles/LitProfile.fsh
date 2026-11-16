@@ -8,7 +8,7 @@
 //   NULLLL (PK) → identifier[litCode]   (5 chars)
 //   LIBCLL       → name
 //   LIBRLL       → alias[0] (libelleReduit)
-//   DAEFLL/DAFILL → extension[periodValidite]
+//   DAEFLL/DAFILL → extension[periodeValidite] (strh-periode-validite, socle des entités physiques)
 //   VALILL (F/I/V) → status + extension[codeValidite]
 //   DAINLL        → extension[dateIndisponibilite] (optionnel)
 //   NUTELL        → telecom.phone
@@ -72,6 +72,9 @@ Hérite de `StructureHospitaliereSiteProfile` (issu de `FRCoreLocationProfile`).
 * name 1..1 MS
 * name ^short = "Libellé complet du lit (LIBCLL — 40 chars)"
 
+* alias 0..1 MS
+* alias ^short = "Libellé réduit (LIBRLL — 20 chars)"
+
 // ── Statut ────────────────────────────────────────────────────────────────────
 
 * status 0..1 MS
@@ -86,14 +89,14 @@ Hérite de `StructureHospitaliereSiteProfile` (issu de `FRCoreLocationProfile`).
 // ── Extensions ────────────────────────────────────────────────────────────────
 
 * extension contains
-    LitPeriodeValiditeExtension       named periodValidite        0..1 MS and
     LitCodeValiditeExtension          named codeValidite          0..1 MS and
     LitTypeLitExtension               named typeLit               0..1 MS and
     LitIndicateurSeancesExtension     named indicateurSeances     0..1 MS and
     LitDateIndisponibiliteExtension   named dateIndisponibilite   0..1 MS and
     LitTypeAutorisationExtension      named typeAutorisation      0..1 MS
 
-* extension[periodValidite]      ^short = "Période de validité (DAEFLL / DAFILL)"
+* extension[periodeValidite]     ^short = "Période de validité (DAEFLL / DAFILL), extension commune aux entités physiques"
+* extension[libelleDiffusion]    ^short = "Libellé de diffusion"
 * extension[codeValidite]        ^short = "Code validité (VALILL : F=Fermé / I=Invalide / V=Valide)"
 * extension[typeLit]             ^short = "Type de lit (CARALL : A/B/H/I/P/S/U/C/R)"
 * extension[indicateurSeances]   ^short = "Lit de séances (LISELL : O/N)"
