@@ -26,7 +26,8 @@ IG Socle Commun (ig-md-fhir-common)
         │
         ▼
 IG CPage (ce guide)
-  CPageEntiteJuridiqueProfile, CPageEntiteGeographiqueProfile, CPageUFProfile
+  CPageEntiteJuridiqueProfile, CPageEntiteGeographiqueProfile, CPageUFProfile,
+  CPageSecteurBudgetaireProfile
   + terminologies CPage (paramètres applicatifs)
 ```
 
@@ -42,6 +43,7 @@ adresse, hiérarchie organisationnelle, etc.).
 | `CPageEntiteJuridiqueProfile` | `EntiteJuridiqueProfile` | `STR.CHO` | Commentaires FSH uniquement |
 | `CPageEntiteGeographiqueProfile` | `EntiteGeographiqueProfile` | `STR.ETA` | Commentaires FSH uniquement |
 | `CPageUFProfile` | `UFProfile` | `STR.UFO` | Commentaires FSH uniquement |
+| `CPageSecteurBudgetaireProfile` | `SecteurBudgetaireProfile` | `SSBU` | Modèle Master Data uniquement (aucun DDL ni export de SSBU) |
 | `CPageParametresApplicatifProfile` | *(aucun — `Parent: Parameters`)* | *(aucune — source Java `master-data-api`)* | Voir [Paramètres techniques](parametres-techniques.html) |
 
 Pour les trois profils de structure hospitalière, aucun export DDL équivalent n'existe pour `STR.CHO`,
@@ -73,6 +75,14 @@ Ajoute, depuis `STR.UFO`, les trois modules métier historiques : **MAL** (lits,
 étiquettes, options cliniques, fermetures automatiques, PMSI), **ECO** (TVA,
 magasin, UF prestataire, paramètres comptables) et **PER** (personnel/RH,
 indicateurs de paie).
+
+### CPageSecteurBudgetaireProfile
+
+Ajoute, depuis `SSBU`, le code de l'établissement de rattachement du secteur
+(`ETA_NUETET`), copie du lien de hiérarchie (`partOf`) qui fait foi. Le profil parent
+`SecteurBudgetaireProfile` (IG commun) porte le reste : identité administrative,
+URSSAF, lettre budgétaire, rattachement à une entité géographique ou à un groupement
+hospitalier. Le mapping vient du modèle Master Data : aucun DDL de `SSBU` n'existe dans ce dépôt.
 
 ### CPageParametresApplicatifProfile
 

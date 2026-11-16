@@ -112,7 +112,7 @@ fusions (communes nouvelles / communes déléguées). Détails dans la page
 | Domaine | Profils | Nombre |
 |---|---|---|
 | Tiers financiers | `TiersProfile`, `TiersEtablissementSecondaireProfile` | 2 |
-| Structure hospitalière | `EntiteJuridiqueProfile`, `EntiteGeographiqueProfile`, `GHTProfile`, `StructureHospitaliereOrganizationProfile` (socle), `PoleProfile`, `ServiceProfile`, `CentreResponsabiliteProfile`, `CentreActiviteProfile`, `DepartementProfile`, `UniteMedicaleProfile`, `UFProfile`, `PacUacProfile`, `StructureHospitaliereSiteProfile` (socle), `ChambreProfile`, `LitProfile`, `SalleExamenProfile` | 16 |
+| Structure hospitalière | `EntiteJuridiqueProfile`, `EntiteGeographiqueProfile`, `GHTProfile`, `StructureHospitaliereOrganizationProfile` (socle), `PoleProfile`, `ServiceProfile`, `SecteurBudgetaireProfile`, `CentreResponsabiliteProfile`, `CentreActiviteProfile`, `DepartementProfile`, `UniteMedicaleProfile`, `UFProfile`, `PacUacProfile`, `StructureHospitaliereSiteProfile` (socle), `ChambreProfile`, `LitProfile`, `SalleExamenProfile` | 17 |
 | Référentiel géographique | `CommuneFrancaiseProfile` | 1 |
 | **Total** | | **21** |
 

@@ -9,14 +9,16 @@ ig-md-fhir-cpage/
 ├── FSH-LIMITATIONS.md             # Limitation FSH/SUSHI (contraintes string)
 └── input/
     ├── fsh/
-    │   ├── profiles/                       # 4 fichiers, 1 profil chacun
+    │   ├── profiles/                       # 5 fichiers, 1 profil chacun
     │   │   ├── CPageEntiteJuridiqueProfile.fsh    # Parent : EntiteJuridiqueProfile (commun)
     │   │   ├── CPageEntiteGeographiqueProfile.fsh # Parent : EntiteGeographiqueProfile (commun)
-    │   │   └── CPageUFProfile.fsh                 # Parent : UFProfile (commun)
-    │   ├── extensions/                     # 3 fichiers, 12 définitions Extension
+    │   │   ├── CPageUFProfile.fsh                 # Parent : UFProfile (commun)
+    │   │   └── CPageSecteurBudgetaireProfile.fsh  # Parent : SecteurBudgetaireProfile (commun)
+    │   ├── extensions/                     # 4 fichiers, 13 définitions Extension
     │   │   ├── CPageEntiteJuridiqueExtensions.fsh    # 6 extensions (receveur, organismes patronaux, TVA, BIC, M22, TPG)
     │   │   ├── CPageEntiteGeographiqueExtensions.fsh # 3 extensions (dates T2A, coefficients, TVA)
-    │   │   └── CPageUFExtensions.fsh                 # 3 extensions (modules MAL / ECO / PER)
+    │   │   ├── CPageUFExtensions.fsh                 # 3 extensions (modules MAL / ECO / PER)
+    │   │   └── CPageSecteurBudgetaireExtensions.fsh  # 1 extension (code de l'établissement de rattachement)
     │   ├── codesystems/                    # 2 fichiers (paramètres applicatifs)
     │   ├── valuesets/                      # 2 fichiers, un par CodeSystem
     │   ├── examples/                       # vide à ce jour — aucun exemple FSH publié
@@ -33,6 +35,7 @@ ig-md-fhir-cpage/
 | `CPageEntiteJuridiqueProfile` | `EntiteJuridiqueProfile` | `STR.CHO` | Commentaires FSH uniquement (pas de DDL indépendant) |
 | `CPageEntiteGeographiqueProfile` | `EntiteGeographiqueProfile` | `STR.ETA` | Commentaires FSH uniquement (pas de DDL indépendant) |
 | `CPageUFProfile` | `UFProfile` | `STR.UFO` | Commentaires FSH uniquement (pas de DDL indépendant) |
+| `CPageSecteurBudgetaireProfile` | `SecteurBudgetaireProfile` | `SSBU` | Modèle Master Data uniquement (aucun DDL ni export de SSBU) |
 
 Détail complet colonne par colonne, y compris les points de vigilance identifiés
 (annotations FSH imprécises, colonnes non câblées, chevauchements avec l'IG

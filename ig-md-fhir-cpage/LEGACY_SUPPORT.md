@@ -386,6 +386,28 @@ alignés sur les trois familles applicatives historiques (MAL/ECO/PER).
 
 ---
 
+## 6. CPageSecteurBudgetaireProfile
+
+- **Parent** : `SecteurBudgetaireProfile` (`ig-md-fhir-common`), lui-même dérivé de
+  `StructureHospitaliereOrganizationProfile` puis de `FRCoreOrganizationProfile` (FR Core 2.2.0).
+- **Table source** : `SSBU`.
+- **Vérification** : **modèle Master Data uniquement**. Aucun export `CREATE TABLE` de `SSBU` n'existe
+  dans ce dépôt, et aucun commentaire FSH antérieur ne la décrit : le nom de colonne provient du
+  modèle Master Data du secteur budgétaire (`md:attributeSourceCpage`).
+
+`SecteurBudgetaireProfile` (IG commun) porte l'essentiel : identité administrative, URSSAF,
+lettre budgétaire, rattachement à une entité géographique ou à un groupement hospitalier.
+`CPageSecteurBudgetaireProfile` n'ajoute qu'un champ :
+
+| Colonne `SSBU` | Élément FHIR |
+|---|---|
+| `ETA_NUETET` | `extension[codeEtablissementRattachement]` (`cpage-sb-code-etablissement-rattachement`) |
+
+Cette clé est une copie du lien de hiérarchie, qui fait foi : le rattachement à l'établissement est
+porté par `Organization.partOf` (profil commun).
+
+---
+
 ## Terminologies CPage
 
 | CodeSystem / ValueSet | Codes | Utilisé par |
