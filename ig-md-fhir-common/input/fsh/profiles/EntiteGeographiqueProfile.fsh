@@ -187,6 +187,6 @@ La période est portée par l'extension `usePeriod` (organization-period, hérit
 
 // ── Hiérarchie : rattachement à l'Entité Juridique ────────────────────────────
 
-* partOf 0..1 MS
+* partOf 1..1 MS
 * partOf only Reference(EntiteJuridiqueProfile)
-* partOf ^short = "Entité Juridique parente "
+* partOf ^short = "Entité juridique parente (rattachement principal obligatoire)"
