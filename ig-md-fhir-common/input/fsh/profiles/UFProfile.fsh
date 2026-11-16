@@ -125,7 +125,6 @@ indicateur UF HEB/SOIN/ADMIN/MED, UF externe, demandeuse/exécutante acte).
     UFSectionAnalyseExtension            named sectionAnalyse      0..1 MS and
     UFChambreParticuliereExtension       named chambreParticuliere 0..1 MS and
     UFCompteAnalytiqueExtension          named compteAnalytique    0..1 MS and
-    UFDisciplineEquipementDetailExtension named disciplineEquipementDetail 0..1 MS and
     UFMedecinChefExtension               named medecinChef         0..1 MS and
     UFMedecinResponsableExtension        named medecinResponsable  0..1 MS and
     UFPenibiliteExtension                named penibilite          0..1 MS
@@ -138,7 +137,6 @@ indicateur UF HEB/SOIN/ADMIN/MED, UF externe, demandeuse/exécutante acte).
 * extension[sectionAnalyse]     ^short = "Section d'analyse, à titre indicatif (attribut LOCAL)"
 * extension[chambreParticuliere] ^short = "Chambre particulière (attribut LOCAL)"
 * extension[compteAnalytique]   ^short = "Compte analytique (attribut LOCAL)"
-* extension[disciplineEquipementDetail] ^short = "Discipline d'équipement détaillée (attribut LOCAL)"
 * extension[medecinChef]        ^short = "Médecin chef (attribut LOCAL)"
 * extension[medecinResponsable] ^short = "Médecin responsable (UFO.MED_NUMEME)"
 * extension[penibilite]         ^short = "Typologie de pénibilité (attribut LOCAL)"
