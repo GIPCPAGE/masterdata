@@ -1,27 +1,42 @@
 // =============================================
-// Profil : Centre d'Activité (UAC/PAC)
+// Profil : Centre d'Activité
 // =============================================
-// Hérite de FRCoreOrganizationUACProfile (FR Core 2.2.0).
+// Hérite de StructureHospitaliereOrganizationProfile (parent FR Core : FRCoreOrganizationProfile).
 // Correspond à CAC_NUACAC dans unité fonctionnelle (attribut des UF).
 //
-// Le Centre d'Activité est un regroupement analytique des UF,
-// distinct du Pôle (structurel) et du CR (budgétaire).
-// FR Core définit FRCoreOrganizationUACProfile pour cette entité.
+// Le Centre d'Activité est un regroupement analytique des UF, distinct du Pôle (structurel)
+// et du CR (budgétaire). Entité propre à CPage (table CAC), sans équivalent STETHOS.
+// Appartient à l'axe budgétaire ; son parent est le centre de responsabilité.
 //
-// Référence Oracle : unité fonctionnelle.CAC_NUACAC = 'Code Centre d activité'
+// Attributs Master Data → FHIR (réutilisation maximale de FR Core) :
+//   identifiant          → identifier[strHId]                (hérité du profil socle)
+//   code_interne         → identifier[cacCode]               (CAC.NUACAC)
+//   libelle              → name                              (CAC.LIBEAC)
+//   libelle_reduit       → alias + extension[shortName]      (CAC.LIBRAC ; FR Core short-name)
+//   date_debut/fin_validite → extension[usePeriod]           (CAC.DATDAC/DATFAC ; organization-period, hérité de FR Core)
+//   code_validite        → extension[codeValidite]           (CAC.INVAAC ; F/I/V) ; active en est déduit
+//   libelle_diffusion    → extension[libelleDiffusion]       (strh-libelle-diffusion, hérité du profil socle)
+//   parent_centre_responsabilite → partOf                     (CAC.CRE_NUCRCR)
+//   unités fonctionnelles rattachées → extension[membres]    (FR Core member)
+//
+// Ne pas confondre avec PAC/UAC (Poste / Unité d'Activité Complémentaire, facturation PMSI) :
+// voir PacUacProfile.
 
 Profile: CentreActiviteProfile
-Parent: FRCoreOrganizationProfile
+Parent: StructureHospitaliereOrganizationProfile
 Id: strh-centre-activite-profile
 Title: "Centre d'Activité"
 Description: """
 Profil FHIR R4 représentant un Centre d'Activité hospitalier.
 
-Hérite de `FRCoreOrganizationProfile` (FR Core 2.2.0).
+Hérite de `StructureHospitaliereOrganizationProfile`.
 
 Le Centre d'Activité est un regroupement analytique d'UF, distinct du Pôle
-(organisationnel) et du Centre de Responsabilité (budgétaire).
-Il est référencé dans les UF via `CAC_NUACAC` (champ analytique `unité fonctionnelle`).
+(organisationnel) et du Centre de Responsabilité (budgétaire). Il est référencé dans les UF
+via `CAC_NUACAC`. Entité propre à CPage : aucun équivalent STETHOS.
+
+La période de validité est portée par l'extension `usePeriod` (organization-period, héritée de
+FR Core) et le code de validité par `extension[codeValidite]` (F/I/V).
 
 Ne pas confondre avec PAC/UAC (Poste / Unité d'Activité Complémentaire, facturation PMSI)
 qui hérite de `FRCoreOrganizationUACProfile` → voir `PacUacProfile`.
@@ -30,22 +45,14 @@ qui hérite de `FRCoreOrganizationUACProfile` → voir `PacUacProfile`.
 """
 
 // ── Identifiants ──────────────────────────────────────────────────────────────
-
-* identifier ^slicing.discriminator.type = #value
-* identifier ^slicing.discriminator.path = "system"
-* identifier ^slicing.rules = #open
+// Slicing déjà défini par le profil socle (discriminator value:system) — ne pas redéclarer.
 
 * identifier contains
-    strHId  1..1 MS and
     cacCode 1..1 MS
-
-* identifier[strHId].system = "https://www.cpage.fr/ig/masterdata/common/identifiers/strh" (exactly)
-* identifier[strHId].value 1..1 MS
-* identifier[strHId] ^short = "Identifiant MDM interne (UUID)"
 
 * identifier[cacCode].system = "https://www.cpage.fr/ig/masterdata/common/identifiers/cac-code" (exactly)
 * identifier[cacCode].value 1..1 MS
-* identifier[cacCode] ^short = "Code centre d'activité (CAC_NUACAC — 4 chars)"
+* identifier[cacCode] ^short = "Code centre d'activité (CAC.NUACAC)"
 
 // ── Type organisationnel ──────────────────────────────────────────────────────
 
@@ -61,22 +68,32 @@ qui hérite de `FRCoreOrganizationUACProfile` → voir `PacUacProfile`.
 
 // ── Dénomination ─────────────────────────────────────────────────────────────
 
-* name 1..1 MS
-* name ^short = "Libellé du centre d'activité"
+* name ^short = "Libellé du centre d'activité (CAC.LIBEAC — 40 caractères)"
+
+* alias 0..1 MS
+* alias ^short = "Libellé réduit (CAC.LIBRAC — 20 caractères)"
+
+// Libellé réduit et période de validité : extensions FR Core héritées du parent
+* extension[shortName] MS
+* extension[shortName] ^short = "Libellé réduit (CAC.LIBRAC), extension FR Core short-name"
+* extension[usePeriod] MS
+* extension[usePeriod] ^short = "Période de validité du centre d'activité (CAC.DATDAC / DATFAC)"
+
+// ── Statut et code de validité ───────────────────────────────────────────────
 
 * active 0..1 MS
+* active ^short = "Centre d'activité actif — false si INVAAC=F (Fermé) ou INVAAC=I (Invalide)"
 
-// ── Code interne SIH ─────────────────────────────────────────────────────────
-
-* extension contains StrHCodeInterneExtension named codeInterne 0..1 MS
-* extension[codeInterne] ^short = "Code interne SIH (CAC_NUACAC)"
+* extension contains CACCodeValiditeExtension named codeValidite 0..1 MS
+* extension[codeValidite] ^short = "Code validité (INVAAC : F=Fermé / I=Invalide / V=Valide)"
 
 // ── Hiérarchie ────────────────────────────────────────────────────────────────
 
 * partOf 0..1 MS
-// Conforme centre d'activité.CRE_NUCRCR — le Centre d'Activité est sous un CR (pas sous EG)
+// Conforme centre d'activité.CRE_NUCRCR — le Centre d'Activité est sous un CR (pas sous EG).
+// Facultatif dans le profil ; obligatoire en présence d'un module CPage.
 * partOf only Reference(CentreResponsabiliteProfile)
-* partOf ^short = "Centre de Responsabilité parent"
+* partOf ^short = "Centre de Responsabilité parent (obligatoire en présence d'un module CPage)"
 
 // ── Membres : Unités Fonctionnelles ───────────────────────────────────────────
 // Conforme FR Core structure_relations.html (STRU-1/STRU-6) : une UF peut être
