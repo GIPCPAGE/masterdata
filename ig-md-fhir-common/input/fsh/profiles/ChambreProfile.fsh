@@ -7,8 +7,8 @@
 //   UFO_NUUFUF (FK) → managingOrganization (UF parente — obligatoire)
 //   NUPIPI (PK)     → identifier[chambreCode]  (4 chars)
 //   LIBCPI          → name
-//   LIBRPI          → alias[0] (via extension StrHCodeInterneExtension.codeInterne)
-//   DAEFPI/DAFIPI   → extension[periodValidite]
+//   LIBRPI          → alias
+//   DAEFPI/DAFIPI   → extension[periodeValidite]  (strh-periode-validite, socle des entités physiques)
 //   VALIPI (F/I/V)  → status + extension[codeValidite]
 //   INDIVIDUELLE    → extension[indicateurIndividuelle] (boolean)
 //
@@ -78,17 +78,18 @@ Hérite de `StructureHospitaliereSiteProfile` (issu de `FRCoreLocationProfile`).
 // ── Extensions ────────────────────────────────────────────────────────────────
 
 * extension contains
-    ChambrePeriodeValiditeExtension      named periodValidite         0..1 MS and
     ChambreCodeValiditeExtension         named codeValidite           0..1 MS and
     ChambreIndividuelleExtension         named indicateurIndividuelle 0..1 MS
 
-* extension[periodValidite]          ^short = "Période de validité (DAEFPI / DAFIPI)"
+* extension[periodeValidite]         ^short = "Période de validité (DAEFPI / DAFIPI), extension commune aux entités physiques"
+* extension[libelleDiffusion]        ^short = "Libellé de diffusion"
 * extension[codeValidite]            ^short = "Code validité (VALIPI : F=Fermée / I=Invalide / V=Valide)"
 * extension[indicateurIndividuelle]  ^short = "Chambre individuelle (INDIVIDUELLE : 1=true / 0=false)"
 
-// ── Libellé réduit → StrHCodeInterneExtension ────────────────────────────────
+// ── Libellé réduit → alias ───────────────────────────────────────────────────
 
-* extension[codeInterne] ^short = "Libellé réduit (LIBRPI — 20 chars)"
+* alias 0..1 MS
+* alias ^short = "Libellé réduit (LIBRPI — 20 chars)"
 
 // ── Hiérarchie : UF responsable ──────────────────────────────────────────────
 

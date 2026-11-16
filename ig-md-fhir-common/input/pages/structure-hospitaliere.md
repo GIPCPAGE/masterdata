@@ -128,7 +128,7 @@ leurs UF membres, sur le même modèle que `GHTProfile` qui liste ses Entités J
 | `PacUacProfile` | `FRCoreOrganizationUACProfile` (FR Core) | absent d'Oracle, ajouté pour PMSI/DPI | Unité élémentaire de facturation PMSI (discipline + tarif TNJP) |
 | `StructureHospitaliereSiteProfile` | `FRCoreLocationProfile` (FR Core) | *(socle, non instancié directement)* | Profil de base commun à Chambre et Lit |
 | `BatimentOphelieProfile` | `StructureHospitaliereSiteProfile` | absent d'Oracle | Bâtiment, entité physique rattachée à une entité géographique et référencée par les UF ; type FR Core `BAT` ; type activé par tenant, hors modèle minimal |
-| `ChambreProfile` | `StructureHospitaliereSiteProfile` | `PAT.PIE` | Chambre d'hospitalisation, gérée par une UF |
+| `ChambreProfile` | `StructureHospitaliereSiteProfile` | `PAT.PIE` | Chambre d'hospitalisation, gérée par une UF ; fait partie du modèle minimal |
 | `LitProfile` | `StructureHospitaliereSiteProfile` | `PAT.LLI` | Lit, rattaché à une chambre |
 | `SalleExamenProfile` | `StructureHospitaliereSiteProfile` | absent d'Oracle, ajouté pour PMSI/DPI | Salle de consultation/examen, gérée par une UF |
 
@@ -160,7 +160,7 @@ consommateurs.
 | Centre d'Activité | Code de validité, UF membres (`member`) |
 | Centre de Responsabilité | Code de validité, lettre budgétaire (obligatoire dans CPage), code secteur budgétaire, code direction transversale ; attributs locaux : discipline d'équipement (extension FR Core), code du groupement hospitalier, nom du responsable (contact) |
 | Unité Fonctionnelle | Site de localisation géographique (obligatoire), pôle optionnel, type d'UF médicale, indicateur séances, classe dominante, lits urgence, activité libérale, maternité, confidentialité, UF de responsabilité, lettre budgétaire (obligatoire), domaine d'activité, libellé très long, type d'autorisation UM, type d'autorisation urgence, catégorie d'UF, regroupements analytiques (RU1/RU2/urgence, centre d'activité, département, section de prix de revient...) |
-| Chambre | Indicateur chambre individuelle |
+| Chambre | Indicateur chambre individuelle, code de validité ; période de validité par l'extension commune aux entités physiques |
 | Lit | Type de lit (9 valeurs : standard, bébé, hospitalisation, isolement, pédiatrie, soins, urgences, chirurgie, rééducation), indicateur lit de séances, date d'indisponibilité, type d'autorisation |
 | Toutes (Organization et Location) | `StrHCodeInterneExtension` — code interne SIH source, générique |
 
