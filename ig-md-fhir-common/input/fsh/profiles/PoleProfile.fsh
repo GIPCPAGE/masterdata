@@ -83,7 +83,7 @@ entité géographique.
 
 * extension contains
     POACodeValiditeExtension          named codeValidite          0..1 MS and
-    POADateCmeExtension               named dateCme               0..1 MS and
+    StrHDateCmeExtension              named dateCme               0..1 MS and
     POAMedecinCoordonnateurExtension  named medecinCoordonnateur  0..1 MS
 
 * extension[codeValidite]         ^short = "Code validité (INVAPA : F=Fermé / I=Invalide / V=Valide)"
@@ -113,4 +113,4 @@ entité géographique.
 // qui liste ses UF membres — jamais par l'UF elle-même (voir UFProfile).
 
 * extension contains fr-core-organization-member named membres 0..* MS
-* extension[membres] ^short = "Unités Fonctionnelles membres de ce pôle (POA_NUPAPA)"
+* extension[membres] ^short = "Unités Fonctionnelles et services membres de ce pôle (POA_NUPAPA)"

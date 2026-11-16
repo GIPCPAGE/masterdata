@@ -2,7 +2,8 @@
 // Extensions : Pôle d'activité (Common IG)
 // =============================================
 // La période de validité du pôle est portée par l'extension standard organization-period
-// (usePeriod), héritée de FR Core : pas d'extension propre.
+// (usePeriod), héritée de FR Core : pas d'extension propre. La date CME réutilise l'extension
+// commune strh-date-cme (StrHDateCmeExtension.fsh).
 
 // ── Code de validité (INVAPA) ─────────────────────────────────────────────────
 
@@ -16,17 +17,6 @@ Context: Organization
 // Réutilise le même ValueSet que EGCodeValiditeVS (F/I/V)
 * valueCode from EGCodeValiditeVS (required)
 * valueCode ^short = "Code validité (INVAPA)"
-
-// ── Date CME (attribut LOCAL) ────────────────────────────────────────────────
-
-Extension: POADateCmeExtension
-Id: poa-date-cme
-Title: "Date CME du pôle"
-Description: "Date associée à la commission médicale d'établissement (CME) pour le pôle. Attribut de portée LOCAL, sans équivalent FR Core ni HL7, actif selon le tenant."
-Context: Organization
-
-* value[x] only date
-* valueDate ^short = "Date de la commission médicale d'établissement"
 
 // ── Médecin coordonnateur (attribut LOCAL) ───────────────────────────────────
 
