@@ -113,6 +113,7 @@ leurs UF membres, sur le même modèle que `GHTProfile` qui liste ses Entités J
 | `EntiteGeographiqueProfile` | `FRCoreOrganizationEtablissementProfile` (FR Core) | `STR.ETA` | Site géographique d'un établissement |
 | `GroupementHospitalierProfile` | `StructureHospitaliereOrganizationProfile` | absent d'Oracle (équivalent ETA + SETG) | Regroupement d'entités géographiques d'une EJ, parent des secteurs budgétaires ; propre aux très grands établissements multi-sites |
 | `SecteurBudgetaireProfile` | `StructureHospitaliereOrganizationProfile` | `SSBU` (non vérifiée contre un DDL indépendant) | Regroupement budgétaire à identité administrative propre (adresse, SIRET, FINESS, APE, URSSAF) ; parent des centres de responsabilité ; rattaché à une entité géographique ou à un groupement hospitalier, jamais aux deux ; facultatif |
+| `UniteGestionProfile` | `StructureHospitaliereOrganizationProfile` | absent d'Oracle (voisin : SETG) | Niveau de gestion rattaché à une entité géographique, parent des unités fonctionnelles (`member`) ; type activé par tenant, hors modèle minimal |
 | `StructureHospitaliereOrganizationProfile` | `FRCoreOrganizationProfile` | *(socle, non instancié directement)* | Profil de base commun à Pôle, Service, CR, CAC, Département, UM |
 | `PoleProfile` | `StructureHospitaliereOrganizationProfile` | `STR.POA` | Macro-structure médicale (loi HPST) |
 | `ServiceProfile` | `StructureHospitaliereOrganizationProfile` | `STR.SER` | Hiérarchie historique parallèle au Pôle |
