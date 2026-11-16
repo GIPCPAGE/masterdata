@@ -114,7 +114,7 @@ FR Core) et le code de validité par `extension[codeValidite]` (F/I/V).
     CRECodeSecteurBudgetaireExtension    named codeSecteurBudgetaire  0..1 MS and
     CRECodeDirectionTransversaleExtension named codeDirectionTransversale 0..1 MS and
     fr-core-organization-discipline-equipement named disciplineEquipement 0..1 MS and
-    CRECodeGroupementHospitalierExtension named codeGroupementHospitalier 0..1 MS
+    StrHCodeGroupementHospitalierExtension named codeGroupementHospitalier 0..1 MS
 
 * extension[codeValidite]              ^short = "Code validité (INVACR : F=Fermé / I=Invalide / V=Valide)"
 * extension[lettreBudgetaire]          ^short = "Lettre budgétaire (SBUD_CODEBUD — 1 char), autorisée pour l'entité juridique du CR ; obligatoire dans CPage"

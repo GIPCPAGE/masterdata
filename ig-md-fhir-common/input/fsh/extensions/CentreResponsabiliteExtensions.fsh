@@ -55,16 +55,8 @@ Context: Organization
 * value[x] only string
 * valueString ^short = "Code direction transversale (SDTR_NUDTSD — 10 chars)"
 
-// ── Code du groupement hospitalier (attribut LOCAL) ──────────────────────────
-
-Extension: CRECodeGroupementHospitalierExtension
-Id: cre-code-groupement-hospitalier
-Title: "Code du groupement hospitalier du CR"
-Description: "Code du groupement hospitalier du centre de responsabilité (2 caractères). Attribut de portée LOCAL, actif selon le tenant."
-Context: Organization
-
-* value[x] only string
-* valueString ^short = "Code du groupement hospitalier (2 caractères)"
+// Le code du groupement hospitalier (attribut LOCAL) réutilise l'extension commune
+// strh-code-groupement-hospitalier (StrHCodeGroupementHospitalierExtension.fsh).
 
 // Note : le rattachement à l'entité juridique parente quand partOf ne référence
 // pas l'EJ n'est pas porté par une extension sur ce profil — conforme FR Core
