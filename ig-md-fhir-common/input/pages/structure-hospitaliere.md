@@ -119,7 +119,7 @@ leurs UF membres, sur le même modèle que `GHTProfile` qui liste ses Entités J
 | `PoleProfile` | `StructureHospitaliereOrganizationProfile` | `STR.POA` | Macro-structure médicale (loi HPST), rattachée à une entité juridique |
 | `ServiceProfile` | `StructureHospitaliereOrganizationProfile` | `STR.SER` | Hiérarchie historique parallèle au Pôle |
 | `SecteurProfile` | `StructureHospitaliereOrganizationProfile` | absent d'Oracle, aucun cas réel à ce jour | Secteur psychiatrique (CSP art. R3221-1) — couverture du type FR Core `SECTEUR` |
-| `CentreResponsabiliteProfile` | `StructureHospitaliereOrganizationProfile` | `STR.CRE` | Unité budgétaire (M21/M22) |
+| `CentreResponsabiliteProfile` | `StructureHospitaliereOrganizationProfile` | `STR.CRE` | Unité budgétaire (M21/M22), rattachée à un pôle, un secteur budgétaire, une direction transversale ou, à défaut, à l'entité juridique |
 | `CentreActiviteProfile` | `FRCoreOrganizationProfile` | attribut `CAC_NUACAC` de `STR.UFO` | Regroupement analytique d'UF |
 | `DepartementProfile` | `StructureHospitaliereOrganizationProfile` | absent d'Oracle, ajouté pour PMSI/DPI | Niveau intermédiaire optionnel pôle ↔ services (certains CHU) |
 | `UniteMedicaleProfile` | `StructureHospitaliereOrganizationProfile` | absent d'Oracle, ajouté pour PMSI/DPI | Unité médicale au sens MOS/DGOS, référencée par les DPI |
@@ -157,7 +157,7 @@ consommateurs.
 | Service | Sigle, type de service (Direction/Service), UF membres (`member`) |
 | Secteur | Responsable du secteur (contact), UF membres (`member`) |
 | Centre d'Activité | UF membres (`member`) |
-| Centre de Responsabilité | Lettre budgétaire (obligatoire), code secteur budgétaire, code direction transversale |
+| Centre de Responsabilité | Code de validité, lettre budgétaire (obligatoire dans CPage), code secteur budgétaire, code direction transversale ; attributs locaux : discipline d'équipement (extension FR Core), code du groupement hospitalier, nom du responsable (contact) |
 | Unité Fonctionnelle | Site de localisation géographique (obligatoire), pôle optionnel, type d'UF médicale, indicateur séances, classe dominante, lits urgence, activité libérale, maternité, confidentialité, UF de responsabilité, lettre budgétaire (obligatoire), domaine d'activité, libellé très long, type d'autorisation UM, type d'autorisation urgence, catégorie d'UF, regroupements analytiques (RU1/RU2/urgence, centre d'activité, département, section de prix de revient...) |
 | Chambre | Indicateur chambre individuelle |
 | Lit | Type de lit (9 valeurs : standard, bébé, hospitalisation, isolement, pédiatrie, soins, urgences, chirurgie, rééducation), indicateur lit de séances, date d'indisponibilité, type d'autorisation |
