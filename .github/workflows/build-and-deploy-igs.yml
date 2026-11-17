@@ -7,6 +7,14 @@ on:
     branches: [ main, master ]
   workflow_dispatch:
 
+# Un seul déploiement à la fois par branche : sans cela, deux pushes rapprochés sur master lancent deux builds
+# en parallèle et le plus lent, donc potentiellement le plus ancien, remplace l'autre sur GitHub Pages.
+# Un run en cours n'est pas annulé (déploiement Pages jamais interrompu) ; un seul run reste en attente,
+# toujours le plus récent.
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: false
+
 jobs:
   build-and-deploy:
     runs-on: ubuntu-latest
