@@ -1,5 +1,3 @@
-# Paramètres techniques (CPageParametresApplicatifProfile)
-
 Ce profil est d'une nature différente des autres profils de cet IG. Les profils
 `CPageEntiteJuridiqueProfile`,
 `CPageEntiteGeographiqueProfile` et `CPageUFProfile` **spécialisent** un profil
@@ -13,7 +11,7 @@ pourquoi il fait l'objet de cette page dédiée plutôt que d'une section dans
 [`LEGACY_SUPPORT.md`](https://github.com/GIPCPAGE/masterdata/blob/master/ig-md-fhir-cpage/LEGACY_SUPPORT.md),
 qui reste réservé au mapping legacy Oracle → FHIR.
 
-## Ce que ce profil représente
+### Ce que ce profil représente
 
 Un « paramètre applicatif » est une valeur de configuration fonctionnelle d'un
 module — CPage (délai de session, taux de TVA, timeout d'un connecteur...) ou
@@ -33,7 +31,7 @@ Le profil hérite directement de la ressource FHIR standard `Parameters` (pas
 d'`Organization` ni de `Location`) : chaque instance encode **un seul**
 paramètre, sous forme d'une liste de `parameter` nommés.
 
-## Structure
+### Structure
 
 | `parameter.name` | Cardinalité | Rôle |
 |---|---|---|
@@ -51,7 +49,7 @@ paramètre, sous forme d'une liste de `parameter` nommés.
 | `mots_cle` | 0..* | Mots-clés de recherche/classification, répétable |
 | `periodes` | 0..* | Périodes de validité d'une valeur — uniquement pour `typeParametre = D` ou `P` (voir ci-dessous) |
 
-### Terminologies
+#### Terminologies
 
 **`CPageParametresApplicatifTypeCodeSystem`** (type fonctionnel — gouvernance) :
 
@@ -68,14 +66,14 @@ paramètre, sous forme d'une liste de `parameter` nommés.
 `B` (Boolean), `D` (Date, ISO-8601), `I` (Integer), `S` (String), `F` (Float),
 `C` (Character).
 
-### Sourcing des CodeSystems
+#### Sourcing des CodeSystems
 
 Contrairement au reste du guide, ces deux CodeSystems ne dérivent pas d'une
 table Oracle : leur en-tête FSH indique explicitement `TypeParametreEnum` et
 `TypeDonneeEnum`, deux énumérations Java du code applicatif `master-data-api`.
 Toute évolution de ces énumérations côté code doit se répercuter ici.
 
-### Périodes de validité (`periodes`)
+#### Périodes de validité (`periodes`)
 
 Pour un paramètre à révision périodique (`typeParametre = D` ou `P`), `periodes`
 porte une ou plusieurs périodes, chacune avec :
@@ -86,14 +84,14 @@ porte une ou plusieurs périodes, chacune avec :
 | `date_fin` | 0..1 | Date de fin — absente pour la période actuellement en vigueur |
 | `valeur` | 1..1 | Valeur applicable sur cette période, max 255 caractères |
 
-## Portée : GLOBAL vs TENANT
+### Portée : GLOBAL vs TENANT
 
 Rien dans la structure FHIR ne porte explicitement un `tenantId` — la portée
 d'un paramètre (partagé à tout le GHT, ou propre à un établissement) se déduit
 du contexte de publication (cf. `ig-md-fhir-operations`, scopes `GLOBAL`/`CLIENT`
 des lots de publication), pas d'un champ de ce profil.
 
-## Exemples
+### Exemples
 
 Trois instances illustrent les trois cas d'usage principaux (`input/fsh/examples/`) :
 
@@ -110,6 +108,6 @@ Trois instances illustrent les trois cas d'usage principaux (`input/fsh/examples
   connecteur `HL7` pour le module `CORE`, `typeParametre = C` (Connecteur),
   propre à un établissement, avec `controle_parametre` renseigné.
 
-## Retour
+### Retour
 
 [Accueil](index.html) · [Ressources de conformité](artifacts.html)

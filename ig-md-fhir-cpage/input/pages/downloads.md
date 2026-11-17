@@ -1,5 +1,3 @@
-# Téléchargements
-
 Ce guide d'implémentation contient les profils, extensions et terminologies FHIR spécifiques à CPage MasterData (structure hospitalière et paramètres applicatifs).
 
 Le package NPM de cet IG est [téléchargeable ici](package.tgz). Il permet de valider des instances FHIR contre les profils qu'il contient.
@@ -10,18 +8,18 @@ Vous pourrez ensuite utiliser l'opération [$validate](https://www.hl7.org/fhir/
 
 ---
 
-## Ressources téléchargeables
+### Ressources téléchargeables
 
 * [Spécification complète (zip)](full-ig.zip)
 * [Package NPM (tgz)](package.tgz)
 
-### Définitions
+#### Définitions
 
 * [Définitions JSON (zip)](definitions.json.zip)
 * [Définitions XML (zip)](definitions.xml.zip)
 * [Définitions Turtle (zip)](definitions.ttl.zip)
 
-### Exemples
+#### Exemples
 
 * [Exemples XML (zip)](examples.xml.zip)
 * [Exemples JSON (zip)](examples.json.zip)

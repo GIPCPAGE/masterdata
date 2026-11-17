@@ -1,5 +1,3 @@
-# Masterdata — IG FHIR CPage
-
 Cet Implementation Guide (IG) FHIR R4 définit les profils et extensions
 **spécifiques à CPage** pour le Master Data Management (MDM) hospitalier : les
 Tiers et les structures hospitalières (Entité Juridique,
@@ -11,7 +9,7 @@ porte déjà les profils génériques, les contraintes FR Core et la majorité d
 extensions. Ce guide n'ajoute que ce qui est propre au système CPage : les champs
 issus des tables Oracle historiques `STR.CHO`, `STR.ETA` et `STR.UFO`.
 
-## Architecture multi-IG
+### Architecture multi-IG
 
 ```text
 FR Core 2.2.0 (HL7 France)
@@ -36,7 +34,7 @@ manquantes issues du legacy Oracle CPage ; il n'entre jamais en contradiction av
 son parent commun et ne redéfinit rien de ce que celui-ci porte déjà (identifiants,
 adresse, hiérarchie organisationnelle, etc.).
 
-## Catalogue des profils
+### Catalogue des profils
 
 | Profil CPage | Parent (IG commun) | Table Oracle source | Fiabilité du mapping |
 |---|---|---|---|
@@ -52,7 +50,7 @@ commentaires déjà présents dans le FSH, sans pouvoir les confronter à un sch
 Oracle indépendant. Cette différence de niveau de confiance est rappelée à chaque
 section du document de mapping détaillé.
 
-### CPageEntiteJuridiqueProfile
+#### CPageEntiteJuridiqueProfile
 
 Ajoute, depuis `STR.CHO`, le receveur comptable (raison sociale, adresse, RIB,
 BIC/IBAN, poste comptable, téléphones), les numéros d'organismes patronaux
@@ -62,21 +60,21 @@ parent `EntiteJuridiqueProfile` (IG commun) porte déjà, indépendamment de CPa
 rattachement à un GHT et la liste des Centres de Responsabilité membres — ce guide
 ne les redéfinit pas.
 
-### CPageEntiteGeographiqueProfile
+#### CPageEntiteGeographiqueProfile
 
 Ajoute, depuis `STR.ETA`, les 14 dates d'activation T2A par type de séjour
 (MCO/HAD, SSR, PSY, Long séjour, chacune en Externe et en Hospitalisation, pour les
 bases de remboursement et pour la facturation individuelle), les paramètres de TVA
 et quatre coefficients tarifaires (prudentiel, MCO, CFISC, SEGUR).
 
-### CPageUFProfile
+#### CPageUFProfile
 
 Ajoute, depuis `STR.UFO`, les trois modules métier historiques : **MAL** (lits,
 étiquettes, options cliniques, fermetures automatiques, PMSI), **ECO** (TVA,
 magasin, UF prestataire, paramètres comptables) et **PER** (personnel/RH,
 indicateurs de paie).
 
-### CPageSecteurBudgetaireProfile
+#### CPageSecteurBudgetaireProfile
 
 Ajoute, depuis `SSBU`, le code de l'établissement de rattachement du secteur
 (`ETA_NUETET`), copie du lien de hiérarchie (`partOf`) qui fait foi. Le profil parent
@@ -84,7 +82,7 @@ Ajoute, depuis `SSBU`, le code de l'établissement de rattachement du secteur
 URSSAF, lettre budgétaire, rattachement à une entité géographique ou à un groupement
 hospitalier. Le mapping vient du modèle Master Data : aucun DDL de `SSBU` n'existe dans ce dépôt.
 
-### CPageParametresApplicatifProfile
+#### CPageParametresApplicatifProfile
 
 Profil d'une nature différente des cinq précédents : il ne spécialise aucun
 profil du socle commun (`Parent: Parameters`, ressource FHIR standard) et sa
@@ -95,7 +93,7 @@ CPage ou **legacy** —, avec gestion optionnelle de périodes de validité
 successives. Voir la page dédiée
 [Paramètres techniques](parametres-techniques.html) pour le détail complet.
 
-## Terminologies CPage
+### Terminologies CPage
 
 | CodeSystem | Codes | Rôle |
 |---|---|---|
@@ -104,7 +102,7 @@ successives. Voir la page dédiée
 
 Chaque CodeSystem est accompagné d'un ValueSet `required` du même nom.
 
-## Mapping Oracle → FHIR détaillé
+### Mapping Oracle → FHIR détaillé
 
 Le tableau ci-dessus donne un résumé de premier niveau. Le mapping complet,
 colonne Oracle par colonne, avec le niveau de vérification et les points de
@@ -113,7 +111,7 @@ vigilance identifiés pour chaque profil, est maintenu dans
 à la racine du dépôt source. Toute décision d'implémentation ou de migration doit
 s'y référer directement plutôt qu'à ce résumé.
 
-## Limitations connues
+### Limitations connues
 
 Les contraintes de longueur (`maxLength`) et de motif sur les champs `string` de
 cet IG ne sont, à ce jour, documentées que dans les annotations `^short` des
@@ -122,7 +120,7 @@ extensions CPage, pas appliquées comme contrainte FHIR de validation. Voir
 pour le détail technique et les solutions FSH disponibles (`^maxLength`,
 Invariant).
 
-## Ressources de conformité
+### Ressources de conformité
 
 L'ensemble des profils, extensions, terminologies et exemples publiés par cet IG
 est disponible sur la page [Ressources de conformité](artifacts.html).
