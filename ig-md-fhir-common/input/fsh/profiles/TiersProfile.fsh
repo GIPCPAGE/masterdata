@@ -189,13 +189,13 @@ Une Organization représente l'**établissement principal** du tiers : son SIRET
 * active ^definition = "Statut actif ou inactif du tiers. Désactivation logique sans suppression physique."
 
 
-// Période de validité : extension standard HL7 organization-period (déjà utilisée par FR Core), début obligatoire,
+// Période de validité : tranche usePeriod héritée de FR Core (extension standard organization-period), début obligatoire,
 // fin facultative (absente = pas de date de fin de validité). Dates sans heure (AAAA-MM-JJ).
-* extension contains http://hl7.org/fhir/StructureDefinition/organization-period named periodeValidite 1..1 MS
-* extension[periodeValidite] ^short = "Période de validité du tiers"
-* extension[periodeValidite] ^definition = "Période pendant laquelle le tiers est en vigueur : start = date de début (obligatoire), end = date de fin, postérieure ou égale au début (absente : pas de date de fin de validité)."
-* extension[periodeValidite].valuePeriod.start 1..1 MS
-* extension[periodeValidite].valuePeriod.end MS
+* extension[usePeriod] 1..1 MS
+* extension[usePeriod] ^short = "Période de validité du tiers"
+* extension[usePeriod] ^definition = "Période pendant laquelle le tiers est en vigueur : start = date de début (obligatoire), end = date de fin, postérieure ou égale au début (absente : pas de date de fin de validité)."
+* extension[usePeriod].valuePeriod.start 1..1 MS
+* extension[usePeriod].valuePeriod.end MS
 
 // Spécificités (laboratoire, locataire, agent, débiteur mortuaire, hospitalier)
 * extension contains TiersSpecificityExtension named specificite 0..* MS
