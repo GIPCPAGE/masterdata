@@ -72,6 +72,7 @@ Id: ser-type-service-cs
 Title: "Type de service"
 Description: "Code de type de service hospitalier (TYPESE) : D=Direction, S=Service standard."
 * ^experimental = false
+* ^caseSensitive = true
 * ^meta.profile = "http://hl7.org/fhir/StructureDefinition/shareablecodesystem"
 * #D "Direction"
 * #S "Service"

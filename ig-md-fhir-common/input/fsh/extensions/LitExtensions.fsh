@@ -48,6 +48,7 @@ Id: lit-type-cs
 Title: "Type de lit (CARALL)"
 Description: "Code de type de lit (CARALL) : A=Standard, B=Bébé, H=Hospitalisation, I=Isolement, P=Pédiatrie, S=Soins, U=Urgences, C=Chirurgie, R=Rééducation."
 * ^experimental = false
+* ^caseSensitive = true
 * ^meta.profile = "http://hl7.org/fhir/StructureDefinition/shareablecodesystem"
 * #A "Standard"
 * #B "Bébé"

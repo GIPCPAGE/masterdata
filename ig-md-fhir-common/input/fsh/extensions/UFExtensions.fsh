@@ -68,6 +68,7 @@ Id: uf-type-uf-medicale-cs
 Title: "Type d'UF médicale"
 Description: "Code de type d'unité fonctionnelle médicale (TYPEUF) : H=Hospitalisation, E=Externe, D=Divers, A=Autre."
 * ^experimental = false
+* ^caseSensitive = true
 * ^meta.profile = "http://hl7.org/fhir/StructureDefinition/shareablecodesystem"
 * #H "Hospitalisation"
 * #E "Externe"

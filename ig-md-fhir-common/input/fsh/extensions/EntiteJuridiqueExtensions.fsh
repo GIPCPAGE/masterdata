@@ -78,6 +78,7 @@ Id: ej-categorie-pmsi-cs
 Title: "Catégorie PMSI"
 Description: "Catégories d'établissement PMSI (CAPMCH) : MCO public, Psychiatrie publique, Psychiatrie privée, MCO privé, SSR public, SSR privé."
 * ^experimental = false
+* ^caseSensitive = true
 * ^meta.profile = "http://hl7.org/fhir/StructureDefinition/shareablecodesystem"
 * #10 "MCO public"
 * #20 "Psychiatrie publique"
@@ -129,6 +130,7 @@ Id: ej-localisation-dom-tom-cs
 Title: "Localisation DOM/TOM"
 Description: "Code de localisation de l'établissement en métropole ou dans un département/région d'outre-mer (CDOMCH) : 970=Métropole, 971=Guadeloupe, 972=Martinique, 973=Guyane, 974=La Réunion."
 * ^experimental = false
+* ^caseSensitive = true
 * ^meta.profile = "http://hl7.org/fhir/StructureDefinition/shareablecodesystem"
 * #970 "Métropole"
 * #971 "Guadeloupe"

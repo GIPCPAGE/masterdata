@@ -30,6 +30,7 @@ Id: eg-code-validite-cs
 Title: "Code de validité du site"
 Description: "Code de validité du site géographique (INVAET) : F=Fermé, I=Invalide, V=Valide."
 * ^experimental = false
+* ^caseSensitive = true
 * ^meta.profile = "http://hl7.org/fhir/StructureDefinition/shareablecodesystem"
 * #F "Fermé"
 * #I "Invalide"
