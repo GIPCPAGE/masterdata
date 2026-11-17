@@ -19,7 +19,7 @@ Description: "Exemple d'un tiers fournisseur illustrant le modèle Tiers : étab
 * extension[shortName].valueString = "Division hospitalière"
 * alias = "MSL France"
 
-* extension[periodeValidite].valuePeriod.start = "2020-01-01"
+* extension[usePeriod].valuePeriod.start = "2020-01-01"
 
 // Spécificités
 * extension[specificite][0].valueCoding = https://www.cpage.fr/ig/masterdata/common/CodeSystem/tiers-specificity-cs#LABORATOIRE

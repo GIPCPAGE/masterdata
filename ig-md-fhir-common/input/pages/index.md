@@ -1,5 +1,3 @@
-# IG FHIR Commun — Socle Master Data CPage
-
 Cet Implementation Guide (IG) définit le **socle FHIR générique** du Master Data CPage : les profils,
 extensions et terminologies **communs, vendor-neutral**, réutilisés par les IG spécialisés du système
 d'information hospitalier (SIH) CPage — notamment `ig-md-fhir-cpage` (extensions propriétaires CPage)
@@ -20,7 +18,7 @@ prise en charge patient. Ce positionnement le distingue d'IG français centrés 
 exemple les IG FHIR de l'APHP ou de FHIR France), qui exposent des parcours de soins et des données
 cliniques individuelles.
 
-## Architecture
+### Architecture
 
 ```text
 ┌──────────────────────────────────────────────────────────┐
@@ -54,9 +52,9 @@ d'un profil FR Core (`FRCoreOrganizationProfile`, `FRCoreOrganizationEtablisseme
 `FRCoreOrganizationUFProfile`, `FRCoreOrganizationUACProfile`, `FRCoreLocationProfile`) et n'ajoutent
 que les éléments spécifiques au Master Data CPage.
 
-## Les deux domaines métier
+### Les deux domaines métier
 
-### 1. Tiers financiers
+#### 1. Tiers financiers
 
 Un **Tiers** (au sens de la comptabilité publique française) est toute personne physique ou morale
 avec laquelle l'établissement entretient une relation financière : elle lui doit de l'argent ou elle en
@@ -70,7 +68,7 @@ v2, DGFiP) pour les catégories, natures juridiques et types d'identifiants.
 
 **Détail complet** : [Tiers financiers](tiers-financiers.html).
 
-### 2. Structure hospitalière
+#### 2. Structure hospitalière
 
 La **structure hospitalière** est la hiérarchie organisationnelle et physique d'un établissement de
 santé, du groupement de territoire jusqu'au lit :
@@ -99,7 +97,7 @@ quand CPage ne les gère pas nativement.
 
 **Détail complet** : [Structure hospitalière](structure-hospitaliere.html).
 
-### Un référentiel transverse : les communes françaises
+#### Un référentiel transverse : les communes françaises
 
 Les deux domaines ci-dessus partagent un besoin commun : qualifier une adresse par sa commune
 française. Le profil `CommuneFrancaiseProfile` (ressource `Location`) expose le Code Officiel
@@ -107,7 +105,7 @@ Géographique (COG) de l'INSEE — environ 35 000 communes actives, avec gestion
 fusions (communes nouvelles / communes déléguées). Détails dans la page
 [Structure hospitalière](structure-hospitaliere.html#référentiel-communes-françaises-cog-insee).
 
-## Catalogue résumé des profils
+### Catalogue résumé des profils
 
 | Domaine | Profils | Nombre |
 |---|---|---|
@@ -119,7 +117,7 @@ fusions (communes nouvelles / communes déléguées). Détails dans la page
 Le détail (parent FHIR, table Oracle source ou absence, rôle métier) est présenté profil par profil
 dans les deux pages de domaine.
 
-## Extensions et terminologies
+### Extensions et terminologies
 
 Cet IG définit environ **70 extensions** FHIR (StructureDefinition de type Extension) réparties
 principalement en trois familles :
@@ -146,7 +144,7 @@ Le détail complet de chaque extension et terminologie est présenté dans les p
 la liste exhaustive de tous les artefacts est disponible sur la page
 [Ressources de conformité](artifacts.html).
 
-## L'opération `$hierarchy`
+### L'opération `$hierarchy`
 
 `Organization/$hierarchy` est une opération FHIR **personnalisée** (sans équivalent natif dans FHIR
 R4) qui retourne, en un seul appel, l'intégralité de la hiérarchie organisationnelle d'un
@@ -164,9 +162,9 @@ Service et à un Centre d'Activité). Elle accepte un paramètre `_since` (delta
 pour que le consommateur obtienne la hiérarchie dans le vocabulaire de son choix. Voir le détail
 complet dans [Structure hospitalière](structure-hospitaliere.html#lopération-hierarchy).
 
-## Méthodologie et gouvernance
+### Méthodologie et gouvernance
 
-### Méthode de construction des profils
+#### Méthode de construction des profils
 
 Les profils de cet IG n'ont pas été élaborés par recueil de besoin structuré au moyen de
 `Questionnaire`/SDC (Structured Data Capture) — méthodologie plus lourde utilisée par exemple par
@@ -187,7 +185,7 @@ Cette approche est volontairement plus légère qu'une démarche de recueil stru
 un référentiel de données déjà stabilisées dans un système source (Oracle), et non à la découverte
 itérative d'un besoin clinique nouveau.
 
-### Traçabilité des publications, pas de `Provenance`
+#### Traçabilité des publications, pas de `Provenance`
 
 Cet IG n'utilise pas la ressource FHIR `Provenance`. Ce choix est délibéré et documenté, pas un oubli.
 Le rôle de traçabilité est tenu par les modèles logiques `PublicationBatch` et `PublicationBatchItem`
@@ -204,7 +202,7 @@ ressource et le *pourquoi*, avec signatures, agents, politiques). C'est une limi
 assumée : le Master Data CPage trace la publication technique des objets, pas l'audit métier complet
 de leur cycle de vie.
 
-### Gouvernance
+#### Gouvernance
 
 - **Éditeur** : CPage.
 - **Dépendance FHIR** : `hl7.fhir.fr.core` version **2.2.0** — cet IG est construit directement sur
@@ -215,7 +213,7 @@ de leur cycle de vie.
   tenants membres du groupement).
 - **Statut** : Draft, version 0.1.0.
 
-## Pour aller plus loin
+### Pour aller plus loin
 
 - [Tiers financiers](tiers-financiers.html) — catalogue détaillé des profils, extensions et
   terminologies du domaine Tiers.

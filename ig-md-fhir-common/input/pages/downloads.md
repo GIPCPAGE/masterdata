@@ -1,6 +1,4 @@
-﻿# Téléchargements
-
-Ce guide d'implémentation regroupe les ressources FHIR du socle commun CPage MasterData :
+﻿Ce guide d'implémentation regroupe les ressources FHIR du socle commun CPage MasterData :
 - **Profils Organization** — Tiers, Établissement secondaire
 - **Extensions** — rôle, restriction de rôle, identifiants, comptes bancaires, personne physique, etc.
 - **Terminologies** — CodeSystems et ValueSets (catégories, civilités, natures juridiques, communes COG)
@@ -14,25 +12,25 @@ Vous pourrez ensuite utiliser l'opération [$validate](https://www.hl7.org/fhir/
 
 ---
 
-## Ressources téléchargeables
+### Ressources téléchargeables
 
 * [Spécification complète (zip)](full-ig.zip)
 * [Package NPM (tgz)](package.tgz)
 
-### Définitions
+#### Définitions
 
 * [Définitions JSON (zip)](definitions.json.zip)
 * [Définitions XML (zip)](definitions.xml.zip)
 * [Définitions Turtle (zip)](definitions.ttl.zip)
 
-### Exemples
+#### Exemples
 
 * [Exemples XML (zip)](examples.xml.zip)
 * [Exemples JSON (zip)](examples.json.zip)
 
-## Contenu du package
+### Contenu du package
 
-### Axe Concepts Métiers — Tiers (Organization)
+#### Axe Concepts Métiers — Tiers (Organization)
 
 | Ressource | Identifiant |
 |-----------|-------------|
@@ -42,7 +40,7 @@ Vous pourrez ensuite utiliser l'opération [$validate](https://www.hl7.org/fhir/
 | 4 SearchParameter | — |
 | 6 CodeSystems | — |
 
-### Axe Nomenclatures
+#### Axe Nomenclatures
 
 | Ressource | Identifiant |
 |-----------|-------------|
@@ -55,6 +53,6 @@ Vous pourrez ensuite utiliser l'opération [$validate](https://www.hl7.org/fhir/
 
 ---
 
-## Voir aussi
+### Voir aussi
 
 - [Artefacts de conformité](artifacts.html) — liste complète de toutes les ressources FHIR définies dans cet IG
