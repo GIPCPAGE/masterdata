@@ -1,10 +1,8 @@
-# Tiers financiers
-
 Cette page détaille le domaine **Tiers financiers** de l'IG Commun CPage MasterData : les profils,
 extensions et terminologies modélisant les organisations (et, ponctuellement, les personnes
 physiques) avec lesquelles un établissement de santé entretient une relation financière.
 
-## Qu'est-ce qu'un « Tiers » ?
+### Qu'est-ce qu'un « Tiers » ?
 
 Dans la comptabilité publique française, un **Tiers** est toute personne physique ou morale externe
 à l'établissement avec laquelle celui-ci a une relation financière : elle lui vend des biens ou
@@ -24,14 +22,14 @@ Toutes les nomenclatures de catégorie, nature juridique et type d'identifiant s
 **Protocole d'Échange Standard v2 (PESv2)**, publié par la DGFiP (Direction Générale des Finances
 Publiques) pour les échanges dématérialisés entre ordonnateurs et comptables publics.
 
-## Catalogue des profils
+### Catalogue des profils
 
 | Profil | Parent FHIR | Rôle métier |
 |---|---|---|
 | `TiersProfile` | `FRCoreOrganizationProfile` (FR Core) | Le tiers, représenté par son **établissement principal**. Porte l'identité (raison sociale, complément de nom, alias, actif), les identifiants (SIRET de l'établissement principal, SIREN, FINESS, TVA, NIR, hors UE, Tahiti, RIDET, FRWF, IREP, NFP), le rôle unique, les spécificités, la catégorie TG, la nature juridique, l'adresse d'ordre 1 (`address`, contacts en `telecom`), les autres adresses (`contact`), la personne physique (`contact[personnePhysique]`) et les comptes bancaires de l'établissement principal. |
 | `TiersEtablissementSecondaireProfile` | `FRCoreOrganizationProfile` (FR Core) | Un site du tiers distinct de l'établissement principal, rattaché à celui-ci par `partOf`. Porte son SIRET (facultatif), son adresse, ses contacts et ses comptes bancaires propres. Il n'a pas de rôle : le rôle est celui du tiers. |
 
-### Établissements
+#### Établissements
 
 Tout tiers a exactement un établissement principal (la fiche tiers de la GEF) : c'est l'instance
 de `TiersProfile`. Chaque autre site est une instance de `TiersEtablissementSecondaireProfile`,
@@ -46,7 +44,7 @@ SIRET ou, à défaut, l'identifiant de l'établissement chez l'émetteur.
 Règle de contrôle : quand il est renseigné, les 9 premiers chiffres du SIRET d'un établissement sont
 le SIREN du tiers.
 
-### Adresses et contacts
+#### Adresses et contacts
 
 Pour chaque établissement, l'adresse d'ordre 1 est portée par `address` et ses contacts
 (téléphone, email, télécopie, télex, site internet) par `telecom`. Les adresses d'ordre supérieur
@@ -67,7 +65,7 @@ Le destinataire de l'adresse d'ordre 1 dépend de l'établissement :
 Le CEDEX d'une adresse est porté à la suite de la ville dans `city`, tel qu'il s'écrit sur la
 dernière ligne de l'adresse postale : `DIJON CEDEX 9`.
 
-### Comptes bancaires
+#### Comptes bancaires
 
 Un compte bancaire est toujours porté par un établissement, via l'extension `TiersBankAccount`.
 L'IBAN est la valeur maître : le RIB français s'en déduit.
@@ -77,7 +75,7 @@ L'IBAN est la valeur maître : le RIB français s'en déduit.
 - Un compte propre à un site est porté par l'établissement secondaire concerné.
 - Un site utilise ses propres comptes et les comptes communs de l'établissement principal.
 
-### Identifiants
+#### Identifiants
 
 `TiersProfile` redéfinit le slicing `identifier` (FR Core 2.2.0 ne le fournit plus nativement pour
 `Organization`) avec un discriminateur `system` :
@@ -99,7 +97,7 @@ L'IBAN est la valeur maître : le RIB français s'en déduit.
 Ces identifiants ultramarins (Tahiti, RIDET, Wallis-et-Futuna, IREP) reflètent le fait que le SIH
 CPage couvre des établissements en dehors du régime SIRET/SIREN métropolitain classique.
 
-## Extensions
+### Extensions
 
 | Extension | Contexte | Rôle |
 |---|---|---|
@@ -114,7 +112,7 @@ CPage couvre des établissements en dehors du régime SIRET/SIREN métropolitain
 Le complément de nom utilise l'extension FR Core `shortName`, et le statut actif l'élément
 `Organization.active`.
 
-### Personne physique
+#### Personne physique
 
 L'identité d'un tiers personne physique (catégorie TG = 01) est portée par le contact
 `personnePhysique`, identifié par son `purpose` (`TiersContactPurposeCS#personne-physique`) :
@@ -123,9 +121,9 @@ la civilité dans `name.prefix` (codes `TiersCivilityVS`), le prénom dans `name
 n'ayant pas d'élément date de naissance. Les contacts sans `purpose` restent les adresses
 d'ordre supérieur à 1 et portent obligatoirement une adresse.
 
-## Terminologies
+### Terminologies
 
-### CodeSystems
+#### CodeSystems
 
 | CodeSystem | Source | Contenu |
 |---|---|---|
@@ -141,7 +139,7 @@ Chaque CodeSystem est accompagné de son ValueSet (`TiersCategoryVS`, `TiersLega
 chacun un simple `include codes from system`. `TiersContactPurposeCS` n'a pas de ValueSet : son
 unique code est fixé sur le contact `personnePhysique`.
 
-### SearchParameter
+#### SearchParameter
 
 | SearchParameter | Code de recherche | Usage |
 |---|---|---|
@@ -149,7 +147,7 @@ unique code est fixé sur le contact `personnePhysique`.
 | `TiersCategorySearchParameter` | — | Filtrer par catégorie TG |
 | `TiersLegalNatureSearchParameter` | — | Filtrer par nature juridique |
 
-## Exemples
+### Exemples
 
 | Exemple | Profil | Illustre |
 |---|---|---|
@@ -157,7 +155,7 @@ unique code est fixé sur le contact `personnePhysique`.
 | `ExempleTiersPersonnePhysique` | `TiersProfile` | Tiers personne physique : NIR, contact `personnePhysique` (civilité, prénom, nom, date de naissance) |
 | `ExempleTiersEtablissementSecondaire` | `TiersEtablissementSecondaireProfile` | Site rattaché à `ExempleTiersComplet` : SIRET propre, adresse restreinte au circuit débiteur, compte propre au site |
 
-## NamingSystem
+### NamingSystem
 
 | NamingSystem | Objet |
 |---|---|
@@ -165,7 +163,7 @@ unique code est fixé sur le contact `personnePhysique`.
 | `ridet-identifier-ns` | RIDET — Nouvelle-Calédonie (URI provisoire, en attente d'OID officiel) |
 | *(Tahiti)* | Identifiant Tahiti — Polynésie française (même statut provisoire) |
 
-## Retour
+### Retour
 
 [Accueil](index.html) · [Structure hospitalière](structure-hospitaliere.html) ·
 [Ressources de conformité](artifacts.html)

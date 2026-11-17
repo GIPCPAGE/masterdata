@@ -1,10 +1,8 @@
-# Structure hospitalière
-
 Cette page détaille le domaine **Structure hospitalière** de l'IG Commun CPage MasterData : la
 hiérarchie organisationnelle et physique complète d'un établissement de santé, du groupement de
 territoire jusqu'au lit.
 
-## Note sur le niveau de vérification des mappings
+### Note sur le niveau de vérification des mappings
 
 Les mappings Oracle → FHIR de ce domaine sont documentés à partir des **commentaires d'en-tête des
 fichiers FSH** (mapping colonne par colonne, souvent très détaillé). Contrairement au domaine
@@ -15,7 +13,7 @@ disponible** pour les tables `STR.CHO`, `STR.ETA`, `STR.POA`, `STR.SER`, `STR.CR
 « vérifiées contre le DDL Oracle » — une nuance de fiabilité assumée plutôt que de faux garantir un
 niveau de vérification identique aux deux domaines.
 
-## La hiérarchie hospitalière : explication métier
+### La hiérarchie hospitalière : explication métier
 
 ```text
 GHT (groupement de territoire)
@@ -104,7 +102,7 @@ leurs UF membres, sur le même modèle que `GHTProfile` qui liste ses Entités J
   référentiel de chaque établissement. C'est pourquoi ces deux profils ne contraignent pas strictement
   leur `partOf` à une seule autre entité de la hiérarchie.
 
-## Catalogue des profils
+### Catalogue des profils
 
 | Profil | Parent FHIR | Table Oracle source | Rôle métier |
 |---|---|---|---|
@@ -127,7 +125,7 @@ leurs UF membres, sur le même modèle que `GHTProfile` qui liste ses Entités J
 | `LitProfile` | `StructureHospitaliereSiteProfile` | `PAT.LLI` | Lit, rattaché à une chambre |
 | `SalleExamenProfile` | `StructureHospitaliereSiteProfile` | absent d'Oracle, ajouté pour PMSI/DPI | Salle de consultation/examen, gérée par une UF |
 
-## Modèle temporel récurrent
+### Modèle temporel récurrent
 
 La plupart des tables Oracle sources de ce domaine ont une **clé primaire composite incluant une date
 de début de période** (ex. `STR.UFO` : `NUUFUF + DATDUF`). Chaque profil concerné (EG, Pôle, Service,
@@ -143,7 +141,7 @@ volonté de conserver le code métier Oracle d'origine (utile pour la traçabili
 consommateurs legacy) tout en exposant la sémantique FHIR standard attendue par les nouveaux
 consommateurs.
 
-## Extensions par entité
+### Extensions par entité
 
 | Entité | Extensions propres (hors paire période/validité) |
 |---|---|
@@ -159,7 +157,7 @@ consommateurs.
 | Lit | Type de lit (9 valeurs : standard, bébé, hospitalisation, isolement, pédiatrie, soins, urgences, chirurgie, rééducation), indicateur lit de séances, date d'indisponibilité, type d'autorisation |
 | Toutes (Organization et Location) | `StrHCodeInterneExtension` — code interne SIH source, générique |
 
-## L'opération `$hierarchy`
+### L'opération `$hierarchy`
 
 `GET /Organization/$hierarchy` est une **opération FHIR personnalisée**, sans équivalent natif dans
 FHIR R4 (`OperationDefinition` : `strh-hierarchy-operation`). Elle retourne, en un seul appel,
@@ -178,7 +176,7 @@ qu'il préfère :
 - `GET /fhir/cpage/strh/Organization/$hierarchy`
 - `GET /fhir/frcore/strh/Organization/$hierarchy`
 
-### Paramètres
+#### Paramètres
 
 | Paramètre | Type | Rôle |
 |---|---|---|
@@ -189,7 +187,7 @@ qu'il préfère :
 Le cloisonnement tenant est appliqué automatiquement à partir du claim JWT `tenant_id` ; un
 administrateur sans `tenant_id` obtient tous les établissements.
 
-### Pourquoi une opération personnalisée plutôt que `_include`/`_revinclude` ?
+#### Pourquoi une opération personnalisée plutôt que `_include`/`_revinclude` ?
 
 Reconstituer cette hiérarchie par une succession de requêtes `_include`/`_revinclude` récursives sur
 `partOf` serait possible en théorie, mais coûteux (autant d'aller-retours que de niveaux) et fragile
@@ -203,7 +201,7 @@ FHIR R4 `GET /Organization/_history` (avec le paramètre standard `_since`) — 
 duplique pas cette fonctionnalité, elle la complète en ajoutant la reconstruction de l'arbre
 hiérarchique, que `_history` ne fournit pas.
 
-## Référentiel Communes françaises (COG INSEE)
+### Référentiel Communes françaises (COG INSEE)
 
 Bien que rattaché aux deux domaines de cet IG (une adresse de tiers comme une adresse de site
 hospitalier peut référencer une commune), le référentiel des communes françaises est décrit ici car
@@ -231,7 +229,7 @@ Trois patrons d'usage, illustrés dans `ExemplesCommunesCOG.fsh` sur l'exemple r
 | B — Commune nouvelle active | Belleville-en-Beaujolais (69264), créée le 01/01/2019 | `active` | `commune-nouvelle` |
 | B' — Commune déléguée | Belleville-sur-Saône (69019), déléguée sous 69264 | `active` (conserve une existence administrative) | `commune-deleguee`, `partOf` renseigné |
 
-### Deux CodeSystems, deux usages différents
+#### Deux CodeSystems, deux usages différents
 
 Ce référentiel s'appuie sur **deux CodeSystems distincts**, à ne pas confondre :
 
@@ -251,7 +249,7 @@ Le `NamingSystem` `insee-cog-commune` relie l'URI canonique CPage à l'**OID off
 Le ValueSet `CommunesFrancaisesActivesValueSet` (`communes-fr-actives-vs`) filtre les communes dont
 la propriété `inactive = false`, pour l'usage courant (saisie/validation d'adresse).
 
-## Retour
+### Retour
 
 [Accueil](index.html) · [Tiers financiers](tiers-financiers.html) ·
 [Ressources de conformité](artifacts.html)
