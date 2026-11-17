@@ -8,34 +8,30 @@
 // Alias déjà déclaré dans aliases.fsh si besoin; on utilise l'URL directement.
 
 // =============================================
-// Exemple 1 : Patient résidant dans une commune déléguée
+// Exemple 1 : Patient — code INSEE de la commune de résidence
 // =============================================
-// Patron : Adresse avec code de commune déléguée sur _city
+// Patron : adresse dont le code INSEE de la commune est porté par l'extension FR Core
+//          fr-core-address-insee-code, valeur dans la nomenclature TRE_R13 (ANS).
 //
-// Contexte : M. Durand habite à Saint-Jean-d'Ardières, quartier historique
-// maintenant intégré à la commune nouvelle Belleville-en-Beaujolais (2019).
-//
-// Le code 69282 dans l'extension est celui de la commune DÉLÉGUÉE.
-// Un $lookup sur la propriété `communeNouvelle` remonte immédiatement 69264.
-//
-// Extension utilisée : fr-core-address-insee-code (FR Core 2.1.0)
+// Extension utilisée : fr-core-address-insee-code (FR Core 2.2.0)
 //   URL : https://hl7.fr/ig/fhir/core/StructureDefinition/fr-core-address-insee-code
-//   Type valeur : Coding
+//   Type valeur : Coding, liaison obligatoire au jeu de valeurs fr-core-vs-insee-code
+//
+// Les codes et libellés de cet exemple sont ceux de TRE_R13-CommuneOM : le validateur
+// contrôle le libellé contre la terminologie de l'ANS.
 
 Instance: ExemplePatientCommuneDeleguee
 InstanceOf: Patient
 Usage: #example
-Title: "Patient — Commune déléguée (Saint-Jean-d'Ardières / 69282)"
+Title: "Patient — Code INSEE de la commune de résidence (Meyzieu / 69282)"
 Description: """
-Exemple d'un patient dont l'adresse est dans une **commune déléguée**.
+Exemple d'un patient dont l'adresse porte le **code INSEE de sa commune de résidence**.
 
-Le champ `city` contient le nom de la commune nouvelle (Belleville-en-Beaujolais).
-L'extension `fr-core-address-insee-code` posée sur `_city` référence le code INSEE
-de la **commune déléguée** (69282 — Saint-Jean-d'Ardières), soit le périmètre
-géographique réel du patient.
+L'extension `fr-core-address-insee-code` posée sur l'adresse référence le code 69282
+(Meyzieu) dans la nomenclature TRE_R13-CommuneOM de l'ANS.
 
-Un `$lookup` sur le CodeSystem TRE-R13 avec `code=69282&property=communeNouvelle`
-retourne immédiatement `69264`, sans ambiguïté et sans table de jointure externe.
+Le cas d'une commune déléguée ou d'une commune fusionnée, avec résolution vers la commune
+nouvelle par `$lookup`, est illustré avec le CodeSystem communes-fr-cs de l'IG (exemple 3).
 """
 
 * name.family = "Durand"
@@ -46,36 +42,32 @@ retourne immédiatement `69264`, sans ambiguïté et sans table de jointure exte
 
 * address.use = #home
 * address.type = #physical
-// Nom de la commune nouvelle (affichage utilisateur)
-* address.city = "Belleville-en-Beaujolais"
-// Extension fr-core sur l'adresse → code INSEE de la COMMUNE DÉLÉGUÉE
+* address.city = "Meyzieu"
+// Extension fr-core sur l'adresse → code INSEE de la commune de résidence
 * address.extension[+].url = "https://hl7.fr/ig/fhir/core/StructureDefinition/fr-core-address-insee-code"
 * address.extension[=].valueCoding.system = "https://mos.esante.gouv.fr/NOS/TRE_R13-CommuneOM/FHIR/TRE-R13-CommuneOM"
 * address.extension[=].valueCoding.code = #69282
-* address.extension[=].valueCoding.display = "Saint-Jean-d'Ardières"
+* address.extension[=].valueCoding.display = "Meyzieu"
 * address.line = "14 Route des Vignes"
-* address.postalCode = "69220"
+* address.postalCode = "69330"
 * address.country = "FR"
 
 // =============================================
-// Exemple 2 : Organization localisée dans une commune nouvelle active
+// Exemple 2 : Organization — code INSEE de la commune d'implantation
 // =============================================
-// Patron : Adresse avec code de commune nouvelle (cas standard post-fusion)
-//
-// Contexte : Établissement de santé créé après la fusion de 2019,
-// enregistré directement sous le code de la commune nouvelle 69264.
+// Patron : adresse d'une organisation avec le code INSEE de sa commune (nomenclature TRE_R13).
 
 Instance: ExempleOrganisationCommuneNouvelle
 InstanceOf: Organization
 Usage: #example
-Title: "Organisation — Commune nouvelle active (Belleville-en-Beaujolais / 69264)"
+Title: "Organisation — Code INSEE de la commune d'implantation (Villefranche-sur-Saône / 69264)"
 Description: """
-Exemple d'une organisation dont l'adresse référence directement la **commune nouvelle**
-Belleville-en-Beaujolais (code INSEE 69264), créée au 01/01/2019.
+Exemple d'une organisation dont l'adresse référence le **code INSEE de sa commune
+d'implantation** : Villefranche-sur-Saône (69264), dans la nomenclature TRE_R13-CommuneOM
+de l'ANS.
 
-Ce patron est utilisé lorsque l'entité a été créée ou mise à jour après la fusion :
-le code 69264 est actif, valide dans le ValueSet `fr-communes-actives`, et ne
-nécessite aucune résolution de commune déléguée.
+Pour une commune nouvelle (fusion de communes) et la résolution de ses communes déléguées,
+voir le CodeSystem communes-fr-cs de l'IG (exemples 3 et 4).
 """
 
 * name = "Cabinet Médical Beaujolais"
@@ -83,14 +75,14 @@ nécessite aucune résolution de commune déléguée.
 
 * address.use = #work
 * address.type = #physical
-* address.city = "Belleville-en-Beaujolais"
-// Extension fr-core sur l'adresse → code INSEE de la commune NOUVELLE
+* address.city = "Villefranche-sur-Saône"
+// Extension fr-core sur l'adresse → code INSEE de la commune d'implantation
 * address.extension[+].url = "https://hl7.fr/ig/fhir/core/StructureDefinition/fr-core-address-insee-code"
 * address.extension[=].valueCoding.system = "https://mos.esante.gouv.fr/NOS/TRE_R13-CommuneOM/FHIR/TRE-R13-CommuneOM"
 * address.extension[=].valueCoding.code = #69264
-* address.extension[=].valueCoding.display = "Belleville-en-Beaujolais"
+* address.extension[=].valueCoding.display = "Villefranche-sur-Saône"
 * address.line = "3 Place de l'Église"
-* address.postalCode = "69220"
+* address.postalCode = "69400"
 * address.country = "FR"
 
 // =============================================
