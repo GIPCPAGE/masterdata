@@ -30,8 +30,8 @@ Alias: $tre-r20-pays        = https://mos.esante.gouv.fr/NOS/TRE_R20-Pays/FHIR/T
 Alias: $pays-type-entite-cs = https://www.cpage.fr/ig/masterdata/common/CodeSystem/pays-type-entite-cs
 Alias: $pays-cs             = https://www.cpage.fr/ig/masterdata/common/CodeSystem/pays-cs
 
-// Parties d'adresse ISO 21090 (extensions du standard FHIR R4)
-Alias: $adxp-houseNumber = http://hl7.org/fhir/StructureDefinition/iso21090-ADXP-houseNumber
-Alias: $adxp-streetNameType = http://hl7.org/fhir/StructureDefinition/iso21090-ADXP-streetNameType
-Alias: $adxp-streetNameBase = http://hl7.org/fhir/StructureDefinition/iso21090-ADXP-streetNameBase
-Alias: $adxp-deliveryInstallationArea = http://hl7.org/fhir/StructureDefinition/iso21090-ADXP-deliveryInstallationArea
+// Parties d'adresse ISO 21090 (extensions du standard FHIR R4), version du cœur R4 épinglée : sans elle le validateur signale plusieurs versions candidates
+Alias: $adxp-houseNumber = http://hl7.org/fhir/StructureDefinition/iso21090-ADXP-houseNumber|4.0.1
+Alias: $adxp-streetNameType = http://hl7.org/fhir/StructureDefinition/iso21090-ADXP-streetNameType|4.0.1
+Alias: $adxp-streetNameBase = http://hl7.org/fhir/StructureDefinition/iso21090-ADXP-streetNameBase|4.0.1
+Alias: $adxp-deliveryInstallationArea = http://hl7.org/fhir/StructureDefinition/iso21090-ADXP-deliveryInstallationArea|4.0.1
