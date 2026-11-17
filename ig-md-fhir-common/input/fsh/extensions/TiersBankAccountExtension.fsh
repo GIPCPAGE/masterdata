@@ -21,7 +21,6 @@ L'IBAN est la valeur maître : le RIB français s'en déduit et n'est pas porté
     iban 1..1 MS and
     bic 0..1 MS and
     actif 0..1 MS and
-    role 0..1 MS and
     communSociete 0..1 MS
 
 * extension[titulaire] ^short = "Titulaire du compte"
@@ -45,12 +44,6 @@ L'IBAN est la valeur maître : le RIB français s'en déduit et n'est pas porté
 * extension[actif] ^definition = "Indique si le compte est actif."
 * extension[actif].value[x] only boolean
 * extension[actif].valueBoolean 1..1
-
-* extension[role] ^short = "Restriction de rôle (F ou D)"
-* extension[role] ^definition = "Restreint le compte au circuit fournisseur (supplier) ou débiteur (debtor). Vide : compte commun aux deux circuits. La restriction doit faire partie du rôle du tiers."
-* extension[role].value[x] only Coding
-* extension[role].valueCoding 1..1
-* extension[role].valueCoding from TiersRestrictionRoleValueSet (required)
 
 * extension[communSociete] ^short = "Compte commun à toute la société"
 * extension[communSociete] ^definition = "Vrai si le compte est commun à toute la société. Autorisé uniquement sur l'établissement principal. Un compte propre à un site a communSociete = false."

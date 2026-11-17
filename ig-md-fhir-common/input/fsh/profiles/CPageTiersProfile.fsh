@@ -9,12 +9,12 @@ Id: tiers-profile
 Title: "Tiers"
 Description: """Profil du Tiers du Master Data (modèle de concept model_tiers), basé sur FR Core Organization.
 
-Une Organization représente l'**établissement principal** du tiers : son SIRET, son adresse d'ordre 1 (`address`) et les contacts de cette adresse (`telecom`). Les adresses suivantes de l'établissement principal, avec leurs contacts, sont portées par `contact`. Les comptes bancaires sont portés par l'extension `bankAccount`. Les établissements secondaires sont des Organization de profil `TiersEtablissementSecondaireProfile`, rattachées à l'établissement principal par `partOf`. Le rôle du tiers (fournisseur, débiteur ou mixte) est obligatoire et unique. Les données de gouvernance (cycle de vie, statut d'harmonisation, liens source) ne sont pas exposées par ce profil."""
+Une Organization représente l'**établissement principal** du tiers : son SIRET, son adresse d'ordre 1 (`address`) et les contacts de cette adresse (`telecom`). Les adresses suivantes de l'établissement principal, avec leurs contacts, sont portées par `contact`. Les comptes bancaires sont portés par l'extension `bankAccount`. Les établissements secondaires sont des Organization de profil `TiersEtablissementSecondaireProfile`, rattachées à l'établissement principal par `partOf`. Le tiers ne porte aucun rôle : être fournisseur ou débiteur est une relation propre à chaque établissement utilisateur, qui reste dans son module. Les données de gouvernance (cycle de vie, statut d'harmonisation, liens source) ne sont pas exposées par ce profil."""
 
 // FR Core 2.2.0 ne définit plus le slicing sur Organization.identifier
 // On le redéfinit ici avec un discriminateur standard (system)
 
-* obeys tiers-siret-siren and tiers-restriction-role
+* obeys tiers-siret-siren
 
 * identifier ^slicing.discriminator.type = #value
 * identifier ^slicing.discriminator.path = "system"
@@ -188,10 +188,14 @@ Une Organization représente l'**établissement principal** du tiers : son SIRET
 * active ^short = "Tiers actif"
 * active ^definition = "Statut actif ou inactif du tiers. Désactivation logique sans suppression physique."
 
-// Rôle du tiers : un seul, obligatoire (supplier = F, debtor = D, mixed = M)
-* extension contains TiersRoleExtension named tiersRole 1..1 MS
-* extension[tiersRole] ^short = "Rôle du tiers"
-* extension[tiersRole] ^definition = "Rôle unique du tiers : fournisseur (supplier, circuit dépense), débiteur (debtor, circuit recette) ou mixte (mixed, les deux). Correspond aux valeurs F, D et M du modèle."
+
+// Période de validité : extension standard HL7 organization-period (déjà utilisée par FR Core), début obligatoire,
+// fin facultative (absente = pas de date de fin de validité). Dates sans heure (AAAA-MM-JJ).
+* extension contains http://hl7.org/fhir/StructureDefinition/organization-period named periodeValidite 1..1 MS
+* extension[periodeValidite] ^short = "Période de validité du tiers"
+* extension[periodeValidite] ^definition = "Période pendant laquelle le tiers est en vigueur : start = date de début (obligatoire ; 1900-01-01 pour un tiers venu de la GEF, qui ne connaît pas cette date), end = date de fin, postérieure ou égale au début (absente : pas de date de fin de validité)."
+* extension[periodeValidite].valuePeriod.start 1..1 MS
+* extension[periodeValidite].valuePeriod.end MS
 
 // Spécificités (laboratoire, locataire, agent, débiteur mortuaire, hospitalier)
 * extension contains TiersSpecificityExtension named specificite 0..* MS

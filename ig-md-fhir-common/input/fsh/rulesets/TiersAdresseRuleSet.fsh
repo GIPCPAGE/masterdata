@@ -22,6 +22,3 @@ RuleSet: TiersAdresse(path)
 * {path}.extension[inseeCode] ^short = "Commune (référentiel Communes du Master Data, code INSEE)"
 * {path}.country MS
 * {path}.country ^short = "Pays (référentiel Pays du Master Data)"
-* {path}.extension contains TiersRoleRestrictionExtension named roleRestriction 0..1 MS
-* {path}.extension[roleRestriction] ^short = "Restriction de rôle de l'adresse (F ou D)"
-* {path}.extension[roleRestriction] ^definition = "Restreint l'adresse au circuit fournisseur ou débiteur. Vide : adresse commune aux deux circuits. La restriction doit faire partie du rôle du tiers."

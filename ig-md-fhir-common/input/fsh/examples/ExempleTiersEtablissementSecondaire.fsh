@@ -29,7 +29,6 @@ Description: "Exemple d'un établissement secondaire rattaché à l'établisseme
 * contact[0].address.city = "Lyon"
 * contact[0].address.postalCode = "69003"
 * contact[0].address.country = "FR"
-* contact[0].address.extension[roleRestriction].valueCoding = https://www.cpage.fr/ig/masterdata/common/CodeSystem/tiers-role-cs#debtor
 
 // Compte bancaire propre au site
 * extension[bankAccount][0].extension[titulaire].valueString = "Multiservices Santé et Logistique - Site de Lyon"
