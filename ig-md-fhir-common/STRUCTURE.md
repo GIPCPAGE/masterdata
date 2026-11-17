@@ -43,10 +43,7 @@ ig-md-fhir-common/
 
 ## Conventions de nommage observées dans ce dépôt
 
-- **Profils** : `<Concept>Profile.fsh` dans `input/fsh/profiles/`. Attention, une exception existe :
-  le profil `TiersProfile` est défini dans le fichier `CPageTiersProfile.fsh` (nom de fichier
-  historique non aligné avec le nom du profil qu'il contient) — se fier au contenu du fichier
-  (`Profile: TiersProfile`), pas à son nom.
+- **Profils** : `<Concept>Profile.fsh` dans `input/fsh/profiles/`.
 - **Extensions** : `<Concept>Extension.fsh` ou `<Concept>Extensions.fsh` (au pluriel quand le fichier
   regroupe plusieurs extensions liées, ex. `EntiteJuridiqueExtensions.fsh`,
   `CentreResponsabiliteExtensions.fsh`, `UFExtensions.fsh`).
