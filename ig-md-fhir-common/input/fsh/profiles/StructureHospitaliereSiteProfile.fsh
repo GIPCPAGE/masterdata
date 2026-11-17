@@ -1,7 +1,7 @@
 // =============================================
 // Profil base : Structure Hospitalière — Location (site physique)
 // =============================================
-// Profil socle pour les entités physiques (Bâtiment Ophélie, Chambre, Lit).
+// Profil socle pour les entités physiques (Bâtiment, Chambre, Lit).
 // Hérite de FRCoreLocationProfile (FR Core 2.2.0).
 
 Profile: StructureHospitaliereSiteProfile
@@ -9,11 +9,11 @@ Parent: FRCoreLocationProfile
 Id: strh-site-profile
 Title: "Structure Hospitalière — Location (base)"
 Description: """
-Profil socle pour les entités physiques de la structure hospitalière : Bâtiment Ophélie, Chambre, Lit.
+Profil socle pour les entités physiques de la structure hospitalière : Bâtiment, Chambre, Lit.
 
 Hérite de `FRCoreLocationProfile` (FR Core 2.2.0).
 
-**Profils dérivés** : BatimentOphelieProfile, ChambreProfile, LitProfile.
+**Profils dérivés** : BatimentProfile, ChambreProfile, LitProfile.
 **Scope** : TENANT uniquement.
 """
 

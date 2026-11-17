@@ -110,7 +110,7 @@ fusions (communes nouvelles / communes déléguées). Détails dans la page
 | Domaine | Profils | Nombre |
 |---|---|---|
 | Tiers financiers | `TiersProfile`, `TiersEtablissementSecondaireProfile` | 2 |
-| Structure hospitalière | `EntiteJuridiqueProfile`, `EntiteGeographiqueProfile`, `GHTProfile`, `StructureHospitaliereOrganizationProfile` (socle), `PoleProfile`, `ServiceProfile`, `SecteurBudgetaireProfile`, `UniteGestionProfile`, `DirectionTransversaleProfile`, `SectionAnalyseProfile`, `CentreResponsabiliteProfile`, `CentreActiviteProfile`, `DepartementProfile`, `UniteMedicaleProfile`, `UFProfile`, `PacUacProfile`, `StructureHospitaliereSiteProfile` (socle), `BatimentOphelieProfile`, `ChambreProfile`, `LitProfile`, `SalleExamenProfile` | 21 |
+| Structure hospitalière | `EntiteJuridiqueProfile`, `EntiteGeographiqueProfile`, `GHTProfile`, `StructureHospitaliereOrganizationProfile` (socle), `PoleProfile`, `ServiceProfile`, `SecteurBudgetaireProfile`, `UniteGestionProfile`, `DirectionTransversaleProfile`, `SectionAnalyseProfile`, `CentreResponsabiliteProfile`, `CentreActiviteProfile`, `DepartementProfile`, `UniteMedicaleProfile`, `UFProfile`, `PacUacProfile`, `StructureHospitaliereSiteProfile` (socle), `BatimentProfile`, `ChambreProfile`, `LitProfile`, `SalleExamenProfile` | 21 |
 | Référentiel géographique | `CommuneFrancaiseProfile` | 1 |
 | **Total** | | **24** |
 

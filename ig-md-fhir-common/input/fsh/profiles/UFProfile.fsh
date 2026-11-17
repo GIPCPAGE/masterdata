@@ -127,7 +127,7 @@ indicateur UF HEB/SOIN/ADMIN/MED, UF externe, demandeuse/exécutante acte).
     UFRegroupementsExtension             named regroupements       0..1 MS and
     StrHLibelleDiffusionExtension        named libelleDiffusion    0..1 MS and
     StrHCodeGroupementHospitalierExtension named codeGroupementHospitalier 0..1 MS and
-    UFBatimentOphelieExtension           named batimentOphelie     0..1 MS and
+    UFBatimentExtension           named batiment     0..1 MS and
     UFSectionAnalyseExtension            named sectionAnalyse      0..1 MS and
     UFChambreParticuliereExtension       named chambreParticuliere 0..1 MS and
     UFCompteAnalytiqueExtension          named compteAnalytique    0..1 MS and
@@ -141,7 +141,7 @@ indicateur UF HEB/SOIN/ADMIN/MED, UF externe, demandeuse/exécutante acte).
 * extension[shortName]          ^short = "Libellé réduit (LIBRUF), extension FR Core short-name"
 * extension[libelleDiffusion]   ^short = "Libellé de diffusion"
 * extension[codeGroupementHospitalier] ^short = "Code du groupement hospitalier (attribut LOCAL)"
-* extension[batimentOphelie]    ^short = "Bâtiment Ophélie (attribut LOCAL)"
+* extension[batiment]    ^short = "Bâtiment (attribut LOCAL)"
 * extension[sectionAnalyse]     ^short = "Section d'analyse, à titre indicatif (attribut LOCAL)"
 * extension[chambreParticuliere] ^short = "Chambre particulière (attribut LOCAL)"
 * extension[compteAnalytique]   ^short = "Compte analytique (attribut LOCAL)"

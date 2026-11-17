@@ -5,13 +5,13 @@
 // le tenant. Le code du groupement hospitalier réutilise l'extension commune
 // strh-code-groupement-hospitalier (StrHCodeGroupementHospitalierExtension.fsh).
 
-Extension: UFBatimentOphelieExtension
-Id: uf-batiment-ophelie
-Title: "Bâtiment Ophélie de l'UF"
-Description: "Bâtiment Ophélie dans lequel se trouve l'unité fonctionnelle. Attribut de portée LOCAL, actif selon le tenant."
+Extension: UFBatimentExtension
+Id: uf-batiment
+Title: "Bâtiment de l'UF"
+Description: "Bâtiment dans lequel se trouve l'unité fonctionnelle. Attribut de portée LOCAL, actif selon le tenant."
 Context: Organization
-* value[x] only Reference(BatimentOphelieProfile)
-* valueReference ^short = "Bâtiment Ophélie"
+* value[x] only Reference(BatimentProfile)
+* valueReference ^short = "Bâtiment"
 
 Extension: UFSectionAnalyseExtension
 Id: uf-section-analyse

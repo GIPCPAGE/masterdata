@@ -125,7 +125,7 @@ leurs UF membres, sur le même modèle que `GHTProfile` qui liste ses Entités J
 | `UFProfile` | `FRCoreOrganizationUFProfile` (FR Core) | `STR.UFO` | Unité Fonctionnelle — plus petite unité de production médicale ; attributs locaux (bâtiment, section d'analyse, compte analytique, médecin chef, pénibilité, chambre particulière) portés par des extensions de l'IG common |
 | `PacUacProfile` | `FRCoreOrganizationUACProfile` (FR Core) | absent d'Oracle, ajouté pour PMSI/DPI | Unité élémentaire de facturation PMSI (discipline + tarif TNJP) |
 | `StructureHospitaliereSiteProfile` | `FRCoreLocationProfile` (FR Core) | *(socle, non instancié directement)* | Profil de base commun à Chambre et Lit |
-| `BatimentOphelieProfile` | `StructureHospitaliereSiteProfile` | absent d'Oracle | Bâtiment, entité physique rattachée à une entité géographique et référencée par les UF ; type FR Core `BAT` ; type activé par tenant, hors modèle minimal |
+| `BatimentProfile` | `StructureHospitaliereSiteProfile` | absent d'Oracle | Bâtiment, entité physique rattachée à une entité géographique et référencée par les UF ; type FR Core `BAT` ; type activé par tenant, hors modèle minimal |
 | `ChambreProfile` | `StructureHospitaliereSiteProfile` | `PAT.PIE` | Chambre d'hospitalisation, gérée par une UF ; fait partie du modèle minimal |
 | `LitProfile` | `StructureHospitaliereSiteProfile` | `PAT.LLI` | Lit, rattaché à une chambre ; fait partie du modèle minimal ; période de validité par l'extension commune aux entités physiques |
 | `SalleExamenProfile` | `StructureHospitaliereSiteProfile` | absent d'Oracle, ajouté pour PMSI/DPI | Salle de consultation/examen, gérée par une UF |

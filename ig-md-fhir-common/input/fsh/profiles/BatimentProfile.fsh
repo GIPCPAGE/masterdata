@@ -1,5 +1,5 @@
 // =============================================
-// Profil : Bâtiment Ophélie
+// Profil : Bâtiment
 // =============================================
 // Hérite de StructureHospitaliereSiteProfile (parent FR Core : FRCoreLocationProfile).
 //
@@ -9,7 +9,7 @@
 //
 // Attributs Master Data → FHIR (réutilisation maximale de FR Core et de FHIR natif) :
 //   identifiant          → identifier[strHId]                (hérité du profil socle)
-//   code_interne         → identifier[batimentOphelieCode]
+//   code_interne         → identifier[batimentCode]
 //   libelle              → name
 //   libelle_reduit       → alias                              (élément natif de Location)
 //   date_debut/fin_validite → extension[periodeValidite]     (strh-periode-validite, hérité du profil socle)
@@ -17,12 +17,12 @@
 //   entite_geographique  → managingOrganization               (rattachement facultatif)
 //   non exposé : code de validité (l'état actif est porté par status)
 
-Profile: BatimentOphelieProfile
+Profile: BatimentProfile
 Parent: StructureHospitaliereSiteProfile
-Id: strh-batiment-ophelie-profile
-Title: "Bâtiment Ophélie"
+Id: strh-batiment-profile
+Title: "Bâtiment"
 Description: """
-Profil FHIR R4 représentant un bâtiment Ophélie : entité physique de la structure hospitalière,
+Profil FHIR R4 représentant un bâtiment : entité physique de la structure hospitalière,
 rattachée à une entité géographique et référencée par les unités fonctionnelles. Appartient à
 l'axe géographique.
 
@@ -36,11 +36,11 @@ La notion n'existe pas dans CPage.
 // Slicing déjà défini par le profil socle (discriminator value:system) — ne pas redéclarer.
 
 * identifier contains
-    batimentOphelieCode 1..1 MS
+    batimentCode 1..1 MS
 
-* identifier[batimentOphelieCode].system = "https://www.cpage.fr/ig/masterdata/common/identifiers/batiment-ophelie-code" (exactly)
-* identifier[batimentOphelieCode].value 1..1 MS
-* identifier[batimentOphelieCode] ^short = "Code interne du bâtiment Ophélie (20 caractères au plus)"
+* identifier[batimentCode].system = "https://www.cpage.fr/ig/masterdata/common/identifiers/batiment-code" (exactly)
+* identifier[batimentCode].value 1..1 MS
+* identifier[batimentCode] ^short = "Code interne du bâtiment (20 caractères au plus)"
 
 // ── Type Location ─────────────────────────────────────────────────────────────
 // Le binding de Location.type est required dans FR Core (fr-core-vs-location-type) :
@@ -58,7 +58,7 @@ La notion n'existe pas dans CPage.
 
 // ── Dénomination ─────────────────────────────────────────────────────────────
 
-* name ^short = "Libellé du bâtiment Ophélie (40 caractères)"
+* name ^short = "Libellé du bâtiment (40 caractères)"
 
 * alias 0..1 MS
 * alias ^short = "Libellé réduit (20 caractères)"
