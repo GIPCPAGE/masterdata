@@ -193,7 +193,7 @@ Une Organization représente l'**établissement principal** du tiers : son SIRET
 // fin facultative (absente = pas de date de fin de validité). Dates sans heure (AAAA-MM-JJ).
 * extension contains http://hl7.org/fhir/StructureDefinition/organization-period named periodeValidite 1..1 MS
 * extension[periodeValidite] ^short = "Période de validité du tiers"
-* extension[periodeValidite] ^definition = "Période pendant laquelle le tiers est en vigueur : start = date de début (obligatoire ; 1900-01-01 pour un tiers venu de la GEF, qui ne connaît pas cette date), end = date de fin, postérieure ou égale au début (absente : pas de date de fin de validité)."
+* extension[periodeValidite] ^definition = "Période pendant laquelle le tiers est en vigueur : start = date de début (obligatoire), end = date de fin, postérieure ou égale au début (absente : pas de date de fin de validité)."
 * extension[periodeValidite].valuePeriod.start 1..1 MS
 * extension[periodeValidite].valuePeriod.end MS
 

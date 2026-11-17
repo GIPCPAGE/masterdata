@@ -12,7 +12,7 @@ Description: "Exemple d'une personne physique de rôle débiteur, avec NIR, civi
 * active = true
 
 * name = "Dupont"
-* extension[periodeValidite].valuePeriod.start = "1900-01-01"
+* extension[periodeValidite].valuePeriod.start = "2020-01-01"
 * extension[tgCategory].valueCodeableConcept = https://www.cpage.fr/ig/masterdata/common/CodeSystem/tiers-category-cs#01 "Personne physique"
 * extension[legalNature].valueCodeableConcept = https://www.cpage.fr/ig/masterdata/common/CodeSystem/tiers-legal-nature-cs#01 "Particulier"
 
