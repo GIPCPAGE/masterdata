@@ -3,16 +3,8 @@
 // =============================================
 // Source Oracle : PAT.LLI
 
-Extension: LitPeriodeValiditeExtension
-Id: lit-periode-validite
-Title: "Période de validité du lit"
-Description: "Période de validité du lit (PAT.LLI — PK composite ... + DAEFLL)."
-Context: Location
-* extension contains dateDebut 1..1 MS and dateFin 0..1 MS
-* extension[dateDebut].value[x] only date
-* extension[dateDebut] ^short = "Date de début de période (DAEFLL)"
-* extension[dateFin].value[x] only date
-* extension[dateFin] ^short = "Date de fin de période (DAFILL)"
+// La période de validité du lit est portée par l'extension commune aux entités physiques
+// strh-periode-validite (StrHPeriodeValiditeExtension.fsh) : pas d'extension propre.
 
 Extension: LitCodeValiditeExtension
 Id: lit-code-validite

@@ -112,19 +112,24 @@ leurs UF membres, sur le même modèle que `GHTProfile` qui liste ses Entités J
 | `EntiteJuridiqueProfile` | `FRCoreOrganizationEtablissementProfile` (FR Core) | `STR.CHO` | Établissement, personne morale (SIRET/FINESS de tête, statut juridique) |
 | `EntiteGeographiqueProfile` | `FRCoreOrganizationEtablissementProfile` (FR Core) | `STR.ETA` | Site géographique d'un établissement |
 | `GroupementHospitalierProfile` | `StructureHospitaliereOrganizationProfile` | absent d'Oracle (équivalent ETA + SETG) | Regroupement d'entités géographiques d'une EJ, parent des secteurs budgétaires ; propre aux très grands établissements multi-sites |
+| `SecteurBudgetaireProfile` | `StructureHospitaliereOrganizationProfile` | `SSBU` (non vérifiée contre un DDL indépendant) | Regroupement budgétaire à identité administrative propre (adresse, SIRET, FINESS, APE, URSSAF) ; parent des centres de responsabilité ; rattaché à une entité géographique ou à un groupement hospitalier, jamais aux deux ; facultatif |
+| `UniteGestionProfile` | `StructureHospitaliereOrganizationProfile` | absent d'Oracle (voisin : SETG) | Niveau de gestion rattaché à une entité géographique, parent des unités fonctionnelles (`member`) ; type activé par tenant, hors modèle minimal |
+| `DirectionTransversaleProfile` | `StructureHospitaliereOrganizationProfile` | `SDTR` | Direction fonctionnelle qui traverse les pôles et regroupe des centres de responsabilité (`member`) ; rattachée à une entité juridique ; type activé par tenant, hors modèle minimal |
+| `SectionAnalyseProfile` | `StructureHospitaliereOrganizationProfile` | `SAN` | Dimension de comptabilité analytique, rattachée à un centre de responsabilité (facultatif) ; compte analytique et code du groupement hospitalier en attributs locaux ; type activé par tenant, hors modèle minimal |
 | `StructureHospitaliereOrganizationProfile` | `FRCoreOrganizationProfile` | *(socle, non instancié directement)* | Profil de base commun à Pôle, Service, CR, CAC, Département, UM |
-| `PoleProfile` | `StructureHospitaliereOrganizationProfile` | `STR.POA` | Macro-structure médicale (loi HPST) |
-| `ServiceProfile` | `StructureHospitaliereOrganizationProfile` | `STR.SER` | Hiérarchie historique parallèle au Pôle |
+| `PoleProfile` | `StructureHospitaliereOrganizationProfile` | `STR.POA` | Macro-structure médicale (loi HPST), rattachée à une entité juridique |
+| `ServiceProfile` | `StructureHospitaliereOrganizationProfile` | `STR.SER` | Hiérarchie historique parallèle au Pôle ; fait partie du modèle minimal |
 | `SecteurProfile` | `StructureHospitaliereOrganizationProfile` | absent d'Oracle, aucun cas réel à ce jour | Secteur psychiatrique (CSP art. R3221-1) — couverture du type FR Core `SECTEUR` |
-| `CentreResponsabiliteProfile` | `StructureHospitaliereOrganizationProfile` | `STR.CRE` | Unité budgétaire (M21/M22) |
-| `CentreActiviteProfile` | `FRCoreOrganizationProfile` | attribut `CAC_NUACAC` de `STR.UFO` | Regroupement analytique d'UF |
+| `CentreResponsabiliteProfile` | `StructureHospitaliereOrganizationProfile` | `STR.CRE` | Unité budgétaire (M21/M22), rattachée à un pôle, un secteur budgétaire, une direction transversale ou, à défaut, à l'entité juridique |
+| `CentreActiviteProfile` | `StructureHospitaliereOrganizationProfile` | `CAC` (et attribut `CAC_NUACAC` de `STR.UFO`) | Regroupement analytique d'UF, rattaché à un centre de responsabilité ; entité propre à CPage ; type activé par tenant, hors modèle minimal |
 | `DepartementProfile` | `StructureHospitaliereOrganizationProfile` | absent d'Oracle, ajouté pour PMSI/DPI | Niveau intermédiaire optionnel pôle ↔ services (certains CHU) |
-| `UniteMedicaleProfile` | `StructureHospitaliereOrganizationProfile` | absent d'Oracle, ajouté pour PMSI/DPI | Unité médicale au sens MOS/DGOS, référencée par les DPI |
-| `UFProfile` | `FRCoreOrganizationUFProfile` (FR Core) | `STR.UFO` | Unité Fonctionnelle — plus petite unité de production médicale |
+| `UniteMedicaleProfile` | `StructureHospitaliereOrganizationProfile` | absent d'Oracle, ajouté pour PMSI/DPI | Unité médicale au sens MOS/DGOS, référencée par les DPI ; liste les UF rattachées (`member`) ; rattachée à un centre de responsabilité ou à une entité géographique ; attributs PMSI et d'autorisation portés par des extensions de l'IG common ; type activé par tenant, hors modèle minimal |
+| `UFProfile` | `FRCoreOrganizationUFProfile` (FR Core) | `STR.UFO` | Unité Fonctionnelle — plus petite unité de production médicale ; attributs locaux (bâtiment, section d'analyse, compte analytique, médecin chef, pénibilité, chambre particulière) portés par des extensions de l'IG common |
 | `PacUacProfile` | `FRCoreOrganizationUACProfile` (FR Core) | absent d'Oracle, ajouté pour PMSI/DPI | Unité élémentaire de facturation PMSI (discipline + tarif TNJP) |
 | `StructureHospitaliereSiteProfile` | `FRCoreLocationProfile` (FR Core) | *(socle, non instancié directement)* | Profil de base commun à Chambre et Lit |
-| `ChambreProfile` | `StructureHospitaliereSiteProfile` | `PAT.PIE` | Chambre d'hospitalisation, gérée par une UF |
-| `LitProfile` | `StructureHospitaliereSiteProfile` | `PAT.LLI` | Lit, rattaché à une chambre |
+| `BatimentOphelieProfile` | `StructureHospitaliereSiteProfile` | absent d'Oracle | Bâtiment, entité physique rattachée à une entité géographique et référencée par les UF ; type FR Core `BAT` ; type activé par tenant, hors modèle minimal |
+| `ChambreProfile` | `StructureHospitaliereSiteProfile` | `PAT.PIE` | Chambre d'hospitalisation, gérée par une UF ; fait partie du modèle minimal |
+| `LitProfile` | `StructureHospitaliereSiteProfile` | `PAT.LLI` | Lit, rattaché à une chambre ; fait partie du modèle minimal ; période de validité par l'extension commune aux entités physiques |
 | `SalleExamenProfile` | `StructureHospitaliereSiteProfile` | absent d'Oracle, ajouté pour PMSI/DPI | Salle de consultation/examen, gérée par une UF |
 
 ## Modèle temporel récurrent
@@ -149,13 +154,13 @@ consommateurs.
 |---|---|
 | Entité Juridique | Statut juridique, code APE/NAF, numéro CPCM, catégorie PMSI (10/20/21/22/30/40), code CEDEX, localisation DOM/TOM, numéros émetteur EH, indicateur arrondissement, Centres de Responsabilité membres (`member`) |
 | Entité Géographique | Secteur sanitaire, code NAF, libellé de localisation, indicateur SAE, horaires d'ouverture, coefficients géographique et de transition T2A |
-| Pôle | UF membres (`member`) |
-| Service | Sigle, type de service (Direction/Service), UF membres (`member`) |
+| Pôle | Code de validité, UF et services membres (`member`) ; attributs locaux : date CME (extension commune), médecin coordonnateur |
+| Service | Sigle, type de service (Direction/Service), code de validité, UF membres (`member`) ; attributs locaux : disciplines médicales, chefs adjoints, date CME, site internet |
 | Secteur | Responsable du secteur (contact), UF membres (`member`) |
-| Centre d'Activité | UF membres (`member`) |
-| Centre de Responsabilité | Lettre budgétaire (obligatoire), code secteur budgétaire, code direction transversale |
+| Centre d'Activité | Code de validité, UF membres (`member`) |
+| Centre de Responsabilité | Code de validité, lettre budgétaire (obligatoire dans CPage), code secteur budgétaire, code direction transversale ; attributs locaux : discipline d'équipement (extension FR Core), code du groupement hospitalier, nom du responsable (contact) |
 | Unité Fonctionnelle | Site de localisation géographique (obligatoire), pôle optionnel, type d'UF médicale, indicateur séances, classe dominante, lits urgence, activité libérale, maternité, confidentialité, UF de responsabilité, lettre budgétaire (obligatoire), domaine d'activité, libellé très long, type d'autorisation UM, type d'autorisation urgence, catégorie d'UF, regroupements analytiques (RU1/RU2/urgence, centre d'activité, département, section de prix de revient...) |
-| Chambre | Indicateur chambre individuelle |
+| Chambre | Indicateur chambre individuelle, code de validité ; période de validité par l'extension commune aux entités physiques |
 | Lit | Type de lit (9 valeurs : standard, bébé, hospitalisation, isolement, pédiatrie, soins, urgences, chirurgie, rééducation), indicateur lit de séances, date d'indisponibilité, type d'autorisation |
 | Toutes (Organization et Location) | `StrHCodeInterneExtension` — code interne SIH source, générique |
 

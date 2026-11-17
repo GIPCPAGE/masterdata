@@ -1,54 +1,52 @@
 // =============================================
 // Profil : Pôle d'activité (pôle)
 // =============================================
-// Hérite de StructureHospitaliereOrganizationProfile.
+// Hérite de StructureHospitaliereOrganizationProfile (parent FR Core : FRCoreOrganizationProfile).
 //
-// Colonnes Oracle pôle → FHIR :
-//   entiteJuridique  → conforme FR Core, rattachement via partOf → EntiteGeographiqueProfile
-//                       (pas de rattachement direct à l'EJ — voir section Hiérarchie en bas de fichier)
-//   NUPAPA (PK) → identifier[poaCode]
-//   LIBEPA      → name
-//   LIBRPA      → alias[0]
-//   DATDPA/DATFPA → extension[periodValidite]
-//   INVAPA (F/I/V) → active + extension[codeValidite]
-//   SAGE_NUAGAGE → contact[0].name.text (matricule agent responsable)
+// Attributs Master Data → FHIR (réutilisation maximale de FR Core) :
+//   identifiant          → identifier[strHId]                (hérité du profil socle)
+//   code_interne         → identifier[poaCode]               (POA.NUPAPA)
+//   libelle              → name                              (POA.LIBEPA)
+//   libelle_reduit       → alias + extension[shortName]      (POA.LIBRPA ; FR Core short-name)
+//   date_debut/fin_validite → extension[usePeriod]           (POA.DATDPA/DATFPA ; organization-period, hérité de FR Core)
+//   code_validite        → extension[codeValidite]           (POA.INVAPA ; F/I/V) ; active en est déduit
+//   libelle_diffusion    → extension[libelleDiffusion]       (strh-libelle-diffusion, hérité du profil socle)
+//   matricule_responsable → contact[0].name.text             (POA.SAGE_NUAGAGE)
+//   parent_entite_juridique → partOf                          (POA.CHO_NUCHCH)
+//   date_cme             → extension[dateCme]                (attribut LOCAL)
+//   rattachement_menu    → extension[medecinCoordonnateur]   (attribut LOCAL)
+//   unités fonctionnelles rattachées → extension[membres]    (FR Core member)
 
 Profile: PoleProfile
 Parent: StructureHospitaliereOrganizationProfile
 Id: strh-pole-profile
 Title: "Pôle d'activité"
 Description: """
-Profil FHIR R4 représentant un pôle d'activité hospitalier.
+Profil FHIR R4 représentant un pôle d'activité hospitalier : il regroupe des services, des
+départements, des unités fonctionnelles et des centres de responsabilité sous une même
+responsabilité médicale. Appartient à l'axe médical.
 
 Hérite de `StructureHospitaliereOrganizationProfile`.
 
-**Modèle temporel** : PK composite.
-La période de validité est portée par `extension[periodValidite]`,
-le code de validité par `extension[codeValidite]` (F/I/V).
+La période de validité est portée par l'extension `usePeriod` (organization-period, héritée de
+FR Core) et le code de validité par `extension[codeValidite]` (F/I/V).
 
-**Important** : le pôle est rattaché directement à l'**Entité Juridique** ,
-pas à l'Entité Géographique.
+Le pôle dépend d'une **entité juridique** ; un tenant peut aussi autoriser le rattachement à une
+entité géographique.
 
 **Scope** : TENANT uniquement.
 """
 
 // ── Identifiants ──────────────────────────────────────────────────────────────
-
-* identifier ^slicing.discriminator.type = #value
-* identifier ^slicing.discriminator.path = "system"
-* identifier ^slicing.rules = #open
+// Slicing déjà défini par le profil socle (discriminator value:system) — ne pas redéclarer.
 
 * identifier contains
     poaCode 1..1 MS
 
-* identifier[strHId].system = "https://www.cpage.fr/ig/masterdata/common/identifiers/strh" (exactly)
-* identifier[strHId].value 1..1 MS
-* identifier[strHId] ^short = "Identifiant MDM interne (UUID)"
-
 // Code pôle
 * identifier[poaCode].system = "https://www.cpage.fr/ig/masterdata/common/identifiers/poa-code" (exactly)
 * identifier[poaCode].value 1..1 MS
-* identifier[poaCode] ^short = "Code pôle d'activité"
+* identifier[poaCode] ^short = "Code pôle d'activité (POA.NUPAPA)"
 
 // ── Type organisationnel ──────────────────────────────────────────────────────
 
@@ -70,6 +68,12 @@ pas à l'Entité Géographique.
 * alias 0..1 MS
 * alias ^short = "Libellé réduit (LIBRPA — 20 chars)"
 
+// Libellé réduit et période de validité : extensions FR Core héritées du parent
+* extension[shortName] MS
+* extension[shortName] ^short = "Libellé réduit (LIBRPA), extension FR Core short-name"
+* extension[usePeriod] MS
+* extension[usePeriod] ^short = "Période de validité du pôle (DATDPA / DATFPA)"
+
 // ── Statut ────────────────────────────────────────────────────────────────────
 
 * active 0..1 MS
@@ -78,27 +82,29 @@ pas à l'Entité Géographique.
 // ── Extensions ────────────────────────────────────────────────────────────────
 
 * extension contains
-    POAPeriodeValiditeExtension    named periodValidite  0..1 MS and
-    POACodeValiditeExtension       named codeValidite    0..1 MS
+    POACodeValiditeExtension          named codeValidite          0..1 MS and
+    StrHDateCmeExtension              named dateCme               0..1 MS and
+    POAMedecinCoordonnateurExtension  named medecinCoordonnateur  0..1 MS
 
-* extension[periodValidite]  ^short = "Période de validité (DATDPA / DATFPA)"
-* extension[codeValidite]    ^short = "Code validité (INVAPA : F=Fermé / I=Invalide / V=Valide)"
+* extension[codeValidite]         ^short = "Code validité (INVAPA : F=Fermé / I=Invalide / V=Valide)"
+* extension[dateCme]              ^short = "Date de la commission médicale d'établissement (attribut LOCAL)"
+* extension[medecinCoordonnateur] ^short = "Médecin coordonnateur du pôle (attribut LOCAL, texte libre)"
 
 // ── Agent responsable → contact ───────────────────────────────────────────────
 // Le matricule SAGE_NUAGAGE est stocké comme contact[0].name.text
 
 * contact 0..1 MS
 * contact.name.text 0..1 MS
-* contact.name.text ^short = "Matricule de l'agent responsable (SAGE_NUAGAGE — 9 chars)"
+* contact.name.text ^short = "Matricule de l'agent responsable (SAGE_NUAGAGE)"
 
-// ── Hiérarchie : rattachement à l'Entité Géographique ───────────────────────
-// Conforme FR Core : le pôle est rattaché à l'EG (site géographique), pas directement à l'EJ.
-// La table POA contient entiteJuridique (FK vers EJ) mais c'est une référence de traçabilité ;
-// la hiérarchie FHIR exprime le lien organisationnel via l'EG.
+// ── Hiérarchie : entité juridique de rattachement ─────────────────────────────
+// Le pôle dépend d'une entité juridique (POA.CHO_NUCHCH) : rattachement obligatoire en
+// présence d'un module CPage. Les liens autorisés étant paramétrables par tenant, un tenant
+// peut rattacher le pôle à une entité géographique.
 
 * partOf 0..1 MS
-* partOf only Reference(EntiteGeographiqueProfile)
-* partOf ^short = "Entité Géographique parente (site où est localisé le pôle)"
+* partOf only Reference(EntiteJuridiqueProfile or EntiteGeographiqueProfile)
+* partOf ^short = "Entité juridique de rattachement (ou entité géographique, selon les liens autorisés du tenant)"
 
 // ── Membres : Unités Fonctionnelles ───────────────────────────────────────────
 // Conforme FR Core structure_relations.html (STRU-1/STRU-6) : une UF peut être
@@ -107,4 +113,4 @@ pas à l'Entité Géographique.
 // qui liste ses UF membres — jamais par l'UF elle-même (voir UFProfile).
 
 * extension contains fr-core-organization-member named membres 0..* MS
-* extension[membres] ^short = "Unités Fonctionnelles membres de ce pôle (POA_NUPAPA)"
+* extension[membres] ^short = "Unités Fonctionnelles et services membres de ce pôle (POA_NUPAPA)"

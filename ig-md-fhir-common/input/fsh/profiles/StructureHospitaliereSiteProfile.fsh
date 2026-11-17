@@ -1,7 +1,7 @@
 // =============================================
 // Profil base : Structure Hospitalière — Location (site physique)
 // =============================================
-// Profil socle pour les entités physiques (Chambre, Lit).
+// Profil socle pour les entités physiques (Bâtiment Ophélie, Chambre, Lit).
 // Hérite de FRCoreLocationProfile (FR Core 2.2.0).
 
 Profile: StructureHospitaliereSiteProfile
@@ -9,11 +9,11 @@ Parent: FRCoreLocationProfile
 Id: strh-site-profile
 Title: "Structure Hospitalière — Location (base)"
 Description: """
-Profil socle pour les entités physiques de la structure hospitalière : Chambre, Lit.
+Profil socle pour les entités physiques de la structure hospitalière : Bâtiment Ophélie, Chambre, Lit.
 
 Hérite de `FRCoreLocationProfile` (FR Core 2.2.0).
 
-**Profils dérivés** : ChambreProfile, LitProfile.
+**Profils dérivés** : BatimentOphelieProfile, ChambreProfile, LitProfile.
 **Scope** : TENANT uniquement.
 """
 
@@ -36,6 +36,12 @@ Hérite de `FRCoreLocationProfile` (FR Core 2.2.0).
 // Statut
 * status 0..1 MS
 * status ^short = "active | inactive"
+
+// Champs communs aux entités physiques de la structure, sans équivalent FR Core ni HL7
+* extension contains StrHPeriodeValiditeExtension named periodeValidite 0..1 MS
+* extension[periodeValidite] ^short = "Période de validité de l'entité (date de début et de fin)"
+* extension contains StrHLibelleDiffusionExtension named libelleDiffusion 0..1 MS
+* extension[libelleDiffusion] ^short = "Libellé de diffusion"
 
 // Code interne SIH
 * extension contains StrHCodeInterneExtension named codeInterne 0..1 MS

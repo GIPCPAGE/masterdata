@@ -1,29 +1,9 @@
 // =============================================
 // Extensions : Pôle d'activité (Common IG)
 // =============================================
-// Le pôle partage le même modèle temporel (DATD*/DATF* + INV*) que l'entité géographique.
-// Ces extensions sont déclarées ici car POA est un concept à part entière.
-
-// ── Période de validité (DATDPA / DATFPA) ─────────────────────────────────────
-
-Extension: POAPeriodeValiditeExtension
-Id: poa-periode-validite
-Title: "Période de validité du pôle"
-Description: """
-Période de validité de l'enregistrement du pôle (table STR.POA).
-La PK Oracle est composite (NUPAPA + DATDPA).
-"""
-Context: Organization
-
-* extension contains
-    dateDebut 1..1 MS and
-    dateFin   0..1 MS
-
-* extension[dateDebut].value[x] only date
-* extension[dateDebut] ^short = "Date de début de période (DATDPA)"
-
-* extension[dateFin].value[x] only date
-* extension[dateFin] ^short = "Date de fin de période (DATFPA)"
+// La période de validité du pôle est portée par l'extension standard organization-period
+// (usePeriod), héritée de FR Core : pas d'extension propre. La date CME réutilise l'extension
+// commune strh-date-cme (StrHDateCmeExtension.fsh).
 
 // ── Code de validité (INVAPA) ─────────────────────────────────────────────────
 
@@ -37,3 +17,14 @@ Context: Organization
 // Réutilise le même ValueSet que EGCodeValiditeVS (F/I/V)
 * valueCode from EGCodeValiditeVS (required)
 * valueCode ^short = "Code validité (INVAPA)"
+
+// ── Médecin coordonnateur (attribut LOCAL) ───────────────────────────────────
+
+Extension: POAMedecinCoordonnateurExtension
+Id: poa-medecin-coordonnateur
+Title: "Médecin coordonnateur du pôle"
+Description: "Médecin coordonnateur du pôle, en texte libre (255 caractères au plus) : la valeur n'est pas contrôlée contre un répertoire des médecins. Attribut de portée LOCAL, actif selon le tenant."
+Context: Organization
+
+* value[x] only string
+* valueString ^short = "Médecin coordonnateur (texte libre)"

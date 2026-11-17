@@ -3,23 +3,8 @@
 // =============================================
 // Source Oracle : STR.CRE
 
-// ── Période de validité (DATDCR / DATFCR) ─────────────────────────────────────
-
-Extension: CREPeriodeValiditeExtension
-Id: cre-periode-validite
-Title: "Période de validité du CR"
-Description: "Période de validité du centre de responsabilité (STR.CRE — PK composite NUCRCR+DATDCR)."
-Context: Organization
-
-* extension contains
-    dateDebut 1..1 MS and
-    dateFin   0..1 MS
-
-* extension[dateDebut].value[x] only date
-* extension[dateDebut] ^short = "Date de début de période (DATDCR)"
-
-* extension[dateFin].value[x] only date
-* extension[dateFin] ^short = "Date de fin de période (DATFCR)"
+// La période de validité du CR est portée par l'extension standard organization-period
+// (usePeriod), héritée de FR Core : pas d'extension propre.
 
 // ── Code de validité (INVACR) ─────────────────────────────────────────────────
 
@@ -70,7 +55,10 @@ Context: Organization
 * value[x] only string
 * valueString ^short = "Code direction transversale (SDTR_NUDTSD — 10 chars)"
 
-// Note : le rattachement à l'entité juridique parente quand partOf référence un
-// Pôle n'est plus porté par une extension sur ce profil — conforme FR Core
+// Le code du groupement hospitalier (attribut LOCAL) réutilise l'extension commune
+// strh-code-groupement-hospitalier (StrHCodeGroupementHospitalierExtension.fsh).
+
+// Note : le rattachement à l'entité juridique parente quand partOf ne référence
+// pas l'EJ n'est pas porté par une extension sur ce profil — conforme FR Core
 // (structure_relations.html, STRU-1), c'est EntiteJuridiqueProfile qui liste ce
 // CR comme membre via extension[membres] (fr-core-organization-member).

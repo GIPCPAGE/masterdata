@@ -112,9 +112,9 @@ fusions (communes nouvelles / communes déléguées). Détails dans la page
 | Domaine | Profils | Nombre |
 |---|---|---|
 | Tiers financiers | `TiersProfile`, `TiersEtablissementSecondaireProfile` | 2 |
-| Structure hospitalière | `EntiteJuridiqueProfile`, `EntiteGeographiqueProfile`, `GHTProfile`, `StructureHospitaliereOrganizationProfile` (socle), `PoleProfile`, `ServiceProfile`, `CentreResponsabiliteProfile`, `CentreActiviteProfile`, `DepartementProfile`, `UniteMedicaleProfile`, `UFProfile`, `PacUacProfile`, `StructureHospitaliereSiteProfile` (socle), `ChambreProfile`, `LitProfile`, `SalleExamenProfile` | 16 |
+| Structure hospitalière | `EntiteJuridiqueProfile`, `EntiteGeographiqueProfile`, `GHTProfile`, `StructureHospitaliereOrganizationProfile` (socle), `PoleProfile`, `ServiceProfile`, `SecteurBudgetaireProfile`, `UniteGestionProfile`, `DirectionTransversaleProfile`, `SectionAnalyseProfile`, `CentreResponsabiliteProfile`, `CentreActiviteProfile`, `DepartementProfile`, `UniteMedicaleProfile`, `UFProfile`, `PacUacProfile`, `StructureHospitaliereSiteProfile` (socle), `BatimentOphelieProfile`, `ChambreProfile`, `LitProfile`, `SalleExamenProfile` | 21 |
 | Référentiel géographique | `CommuneFrancaiseProfile` | 1 |
-| **Total** | | **21** |
+| **Total** | | **24** |
 
 Le détail (parent FHIR, table Oracle source ou absence, rôle métier) est présenté profil par profil
 dans les deux pages de domaine.

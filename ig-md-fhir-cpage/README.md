@@ -23,9 +23,9 @@ publié sur <https://gipcpage.github.io/masterdata/>.
 
 ## Contenu
 
-- `input/fsh/profiles/` — 3 profils de structure hospitalière : `CPageEntiteJuridiqueProfile`,
-  `CPageEntiteGeographiqueProfile`, `CPageUFProfile`.
-- `input/fsh/extensions/` — 3 fichiers portant 12 définitions d'`Extension`
+- `input/fsh/profiles/` — 4 profils de structure hospitalière : `CPageEntiteJuridiqueProfile`,
+  `CPageEntiteGeographiqueProfile`, `CPageUFProfile`, `CPageSecteurBudgetaireProfile`.
+- `input/fsh/extensions/` — 4 fichiers portant 13 définitions d'`Extension`
   (certains fichiers en regroupent plusieurs, un par table/module Oracle : voir
   [`STRUCTURE.md`](STRUCTURE.md)).
 - `input/fsh/codesystems/` et `input/fsh/valuesets/` — 2 terminologies CPage

@@ -3,18 +3,8 @@
 // =============================================
 // Source Oracle : PAT.PIE
 
-// ── Période de validité (DAEFPI / DAFIPI) ─────────────────────────────────────
-
-Extension: ChambrePeriodeValiditeExtension
-Id: chambre-periode-validite
-Title: "Période de validité de la chambre"
-Description: "Période de validité de la chambre (PAT.PIE — PK composite UFO_NUUFUF+NUPIPI+DAEFPI)."
-Context: Location
-* extension contains dateDebut 1..1 MS and dateFin 0..1 MS
-* extension[dateDebut].value[x] only date
-* extension[dateDebut] ^short = "Date de début de période (DAEFPI)"
-* extension[dateFin].value[x] only date
-* extension[dateFin] ^short = "Date de fin de période (DAFIPI)"
+// La période de validité de la chambre est portée par l'extension commune aux entités physiques
+// strh-periode-validite (StrHPeriodeValiditeExtension.fsh) : pas d'extension propre.
 
 // ── Code de validité (VALIPI) ─────────────────────────────────────────────────
 
