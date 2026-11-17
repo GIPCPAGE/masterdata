@@ -9,6 +9,10 @@
 //   fr-core-organization-uf-externe, fr-core-organization-demandeuse-acte,
 //   fr-core-organization-executante-acte.
 //
+// Extensions FR Core de l'UAC reprises ici (leur contexte est Organization) :
+//   fr-core-organization-discipline-prestation : discipline de prestation de la SAE
+//   fr-core-organization-tarif                 : tarif national (nomenclature TNJP)
+//
 // CPage ajoute (Common IG) :
 //   Core          : ufCode (NUUFUF), validité temporelle (DATDUF/DATFUF/INVAUF)
 //   Sites/parents : ETA_NUETET (site localisation), CRE_NUCRCR (partOf CR),
@@ -101,6 +105,8 @@ indicateur UF HEB/SOIN/ADMIN/MED, UF externe, demandeuse/exécutante acte).
 // ── Extensions CPage Common IG ────────────────────────────────────────────────
 
 * extension contains
+    FRCoreOrganizationDisciplinePrestationExtension named disciplinePrestation 0..1 MS and
+    FRCoreOrganizationTarifExtension     named tarif               0..1 MS and
     UFCodeValiditeExtension              named codeValidite        0..1 MS and
     UFSiteLocalisationExtension          named siteLocalisation    1..1 MS and
     UFPoleExtension                      named pole                0..1 MS and
@@ -129,6 +135,8 @@ indicateur UF HEB/SOIN/ADMIN/MED, UF externe, demandeuse/exécutante acte).
     UFMedecinResponsableExtension        named medecinResponsable  0..1 MS and
     UFPenibiliteExtension                named penibilite          0..1 MS
 
+* extension[disciplinePrestation] ^short = "Discipline de prestation de la SAE (FR Core, jeu de valeurs extensible) : porte les codes de la discipline de l'UF qui appartiennent à cette nomenclature"
+* extension[tarif]              ^short = "Tarif national de l'UF (FR Core, nomenclature TNJP, jeu de valeurs extensible) : code tarif national d'appartenance du tarif de base de l'UF"
 * extension[usePeriod]          ^short = "Période de validité (DATDUF / DATFUF), organization-period hérité de FR Core"
 * extension[shortName]          ^short = "Libellé réduit (LIBRUF), extension FR Core short-name"
 * extension[libelleDiffusion]   ^short = "Libellé de diffusion"
