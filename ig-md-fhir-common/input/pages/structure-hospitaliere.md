@@ -153,7 +153,7 @@ consommateurs.
 | Entité Juridique | Statut juridique, code APE/NAF, numéro CPCM, catégorie PMSI (10/20/21/22/30/40), code CEDEX, localisation DOM/TOM, numéros émetteur EH, indicateur arrondissement, Centres de Responsabilité membres (`member`) |
 | Entité Géographique | Secteur sanitaire, code NAF, libellé de localisation, indicateur SAE, horaires d'ouverture, coefficients géographique et de transition T2A |
 | Pôle | Code de validité, UF et services membres (`member`) ; attributs locaux : date CME (extension commune), médecin coordonnateur |
-| Service | Sigle, type de service (Direction/Service), code de validité, UF membres (`member`) ; attributs locaux : disciplines médicales, chefs adjoints, date CME, site internet |
+| Service | Sigle, type de service (Direction/Service), code de validité, UF membres (`member`) ; attributs locaux : disciplines d'équipement, chef adjoint, date CME, site internet |
 | Secteur | Responsable du secteur (contact), UF membres (`member`) |
 | Centre d'Activité | Code de validité, UF membres (`member`) |
 | Centre de Responsabilité | Code de validité, lettre budgétaire (obligatoire dans CPage), code secteur budgétaire, code direction transversale ; attributs locaux : discipline d'équipement (extension FR Core), code du groupement hospitalier, nom du responsable (contact) |

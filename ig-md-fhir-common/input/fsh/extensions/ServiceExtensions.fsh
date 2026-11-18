@@ -34,18 +34,10 @@ Context: Organization
 
 // ── Attributs LOCAL du service (actifs selon le tenant) ──────────────────────
 
-Extension: SERDisciplineMedicaleExtension
-Id: ser-discipline-medicale
-Title: "Discipline médicale du service"
-Description: "Discipline médicale du service : code de la nomenclature DISMED. Une extension par discipline, plusieurs disciplines possibles. Attribut de portée LOCAL, actif selon le tenant."
-Context: Organization
-* value[x] only string
-* valueString ^short = "Code de la discipline médicale (nomenclature DISMED)"
-
 Extension: SERChefAdjointExtension
 Id: ser-chef-adjoint
 Title: "Chef de service adjoint"
-Description: "Matricule d'un chef de service adjoint (20 caractères au plus). Une extension par adjoint, plusieurs adjoints possibles, sans historique des périodes d'exercice. Attribut de portée LOCAL, actif selon le tenant."
+Description: "Matricule du chef de service adjoint (20 caractères au plus). Un service n'a qu'un chef adjoint ; l'historique des affectations est porté par les versions du service. Attribut de portée LOCAL, actif selon le tenant."
 Context: Organization
 * value[x] only string
 * valueString ^short = "Matricule du chef de service adjoint"

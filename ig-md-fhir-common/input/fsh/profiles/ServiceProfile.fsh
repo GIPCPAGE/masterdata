@@ -20,8 +20,9 @@
 //   matricule_chef_service → contact[0].name.text            (SER.SAGE_NUAGAGE)
 //   parent_eg            → partOf                             (SER.ETA_NUETET)
 //   parent_pole          → lien horizontal : le pôle liste le service par FR Core member
-//   attributs LOCAL      → extension[disciplinesMedicales], extension[chefsAdjoints],
-//                          extension[dateCme], extension[siteInternet]
+//   attributs LOCAL      → extension[disciplinesEquipement] (FR Core discipline-equipement, plusieurs
+//                          disciplines simultanées), extension[chefAdjoint], extension[dateCme],
+//                          extension[siteInternet]
 //   unités fonctionnelles rattachées → extension[membres]    (FR Core member)
 
 Profile: ServiceProfile
@@ -104,16 +105,16 @@ et les UF sont rattachées au service via `serviceId`.
     SERCodeValiditeExtension          named codeValidite         0..1 MS and
     SERSigleExtension                 named sigle                0..1 MS and
     SERTypeServiceExtension           named typeService          0..1 MS and
-    SERDisciplineMedicaleExtension    named disciplinesMedicales 0..* MS and
-    SERChefAdjointExtension           named chefsAdjoints        0..* MS and
+    fr-core-organization-discipline-equipement named disciplinesEquipement 0..* MS and
+    SERChefAdjointExtension           named chefAdjoint          0..1 MS and
     StrHDateCmeExtension              named dateCme              0..1 MS and
     SERSiteInternetExtension          named siteInternet         0..1 MS
 
 * extension[codeValidite]         ^short = "Code validité (INVASE : F=Fermé / I=Invalide / V=Valide)"
 * extension[sigle]                ^short = "Sigle du service"
 * extension[typeService]          ^short = "Type service (TYPESE : D=Direction / S=Service)"
-* extension[disciplinesMedicales] ^short = "Disciplines médicales du service, nomenclature DISMED (attribut LOCAL)"
-* extension[chefsAdjoints]        ^short = "Matricules des chefs de service adjoints (attribut LOCAL)"
+* extension[disciplinesEquipement] ^short = "Disciplines d'équipement du service, plusieurs simultanément (attribut LOCAL), extension FR Core discipline-equipement"
+* extension[chefAdjoint]          ^short = "Matricule du chef de service adjoint, un seul par service (attribut LOCAL)"
 * extension[dateCme]              ^short = "Date de la commission médicale d'établissement (attribut LOCAL)"
 * extension[siteInternet]         ^short = "Service visible sur le site internet (attribut LOCAL)"
 
