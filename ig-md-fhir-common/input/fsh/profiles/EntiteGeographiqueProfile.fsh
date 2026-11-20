@@ -155,23 +155,9 @@ La période est portée par l'extension `usePeriod` (organization-period, hérit
 // ── Extensions spécifiques (Common IG) ───────────────────────────────────────
 
 * extension contains
-    EGCodeValiditeExtension          named codeValidite           0..1 MS and
-    EGSecteurSanitaireExtension      named secteurSanitaire       0..1 MS and
-    EGCodeNafExtension               named codeNaf                0..1 MS and
-    EGLibelleLocalisationExtension   named libelleLocalisation    0..1 MS and
-    EGIndicateurSaeExtension         named indicateurSae          0..1 MS and
-    EGHorairesExtension              named horaires               0..1 MS and
-    EGCoeffGeoT2AExtension           named coefficientGeoT2A      0..1 MS and
-    EGCoeffTransitionT2AExtension    named coefficientTransitionT2A 0..1 MS
+    EGCodeValiditeExtension          named codeValidite           0..1 MS
 
 * extension[codeValidite]            ^short = "Code validité (INVAET : F=Fermé / I=Invalide / V=Valide)"
-* extension[secteurSanitaire]        ^short = "Secteur sanitaire (SSSA_SESASSA — FK SSSA)"
-* extension[codeNaf]                 ^short = "Code NAF (CNAFET — 6 chars)"
-* extension[libelleLocalisation]     ^short = "Libellé de localisation (LILOET — 40 chars)"
-* extension[indicateurSae]           ^short = "Déclarer séparément dans la SAE (DSAEET : O/N)"
-* extension[horaires]                ^short = "Horaires d'ouverture (HORAIRES_OUVERTURE — 38 chars)"
-* extension[coefficientGeoT2A]       ^short = "Coefficient géographique T2A (CGEOET — entre 1 et 2)"
-* extension[coefficientTransitionT2A] ^short = "Coefficient de transition T2A (CTRAET — entre 0 et 2)"
 
 // Extensions FR Core héritées du parent : catégorie d'établissement, période de validité, libellé réduit
 * extension[sae] MS

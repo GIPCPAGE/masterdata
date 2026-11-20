@@ -175,23 +175,9 @@ CPage : receveur comptable, numéros sociaux (URSSAF/CNRACL/IRCANTEC), TVA, TPG,
 // ── Extensions spécifiques entité juridique (Common IG) ──────────────────────
 
 * extension contains
-    EJStatutJuridiqueExtension       named statutJuridique       0..1 MS and
-    EJCodeApeExtension               named codeApe               0..1 MS and
-    EJCodeCpcmExtension              named codeCpcm              0..1 MS and
-    EJCategoriePmsiExtension         named categoriePmsi         0..1 MS and
-    EJCodeCedexExtension             named codeCedex             0..1 MS and
-    EJLocalisationDomTomExtension    named localisationDomTom    0..1 MS and
-    EJNumerosEmetteurExtension       named numerosEmetteur       0..1 MS and
-    EJIndicateurArrondissementExtension named indicateurArrondissement 0..1 MS
+    EJCodeApeExtension               named codeApe               0..1 MS
 
-* extension[statutJuridique]        ^short = "Statut juridique (STATCH/LIBJCH)"
 * extension[codeApe]                ^short = "Code APE / NAF (CAPECH)"
-* extension[codeCpcm]               ^short = "Numéro CPCM (CPCMCH)"
-* extension[categoriePmsi]          ^short = "Catégorie PMSI (CAPMCH : 10/20/21/22/30/40)"
-* extension[codeCedex]              ^short = "Code CEDEX (COCECH)"
-* extension[localisationDomTom]     ^short = "Localisation DOM/TOM 970-974 (CDOMCH)"
-* extension[numerosEmetteur]        ^short = "Numéros émetteur EH (NNETCH/NNECCH)"
-* extension[indicateurArrondissement] ^short = "Indicateur arrondissement O/N (ARROCH)"
 
 // ── Hiérarchie : GHT parent ──────────────────────────────────────────────────
 // Conforme FR Core structure_entites.html : l'EJ est membre d'un GHT.

@@ -103,16 +103,12 @@ et les UF sont rattachées au service via `serviceId`.
 
 * extension contains
     SERCodeValiditeExtension          named codeValidite         0..1 MS and
-    SERSigleExtension                 named sigle                0..1 MS and
-    SERTypeServiceExtension           named typeService          0..1 MS and
     fr-core-organization-discipline-equipement named disciplinesEquipement 0..* MS and
     SERChefAdjointExtension           named chefAdjoint          0..1 MS and
     StrHDateCmeExtension              named dateCme              0..1 MS and
     SERSiteInternetExtension          named siteInternet         0..1 MS
 
 * extension[codeValidite]         ^short = "Code validité (INVASE : F=Fermé / I=Invalide / V=Valide)"
-* extension[sigle]                ^short = "Sigle du service"
-* extension[typeService]          ^short = "Type service (TYPESE : D=Direction / S=Service)"
 * extension[disciplinesEquipement] ^short = "Disciplines d'équipement du service, plusieurs simultanément (attribut LOCAL), extension FR Core discipline-equipement"
 * extension[chefAdjoint]          ^short = "Matricule du chef de service adjoint, un seul par service (attribut LOCAL)"
 * extension[dateCme]              ^short = "Date de la commission médicale d'établissement (attribut LOCAL)"

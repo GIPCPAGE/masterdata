@@ -15,23 +15,6 @@ Context: Organization
 * valueCode from EGCodeValiditeVS (required)
 * valueCode ^short = "Code validité (INVASE)"
 
-Extension: SERSigleExtension
-Id: ser-sigle
-Title: "Sigle du service"
-Description: "Sigle du service hospitalier (SIGLSE — 10 chars)."
-Context: Organization
-* value[x] only string
-* valueString ^short = "Sigle (SIGLSE)"
-
-Extension: SERTypeServiceExtension
-Id: ser-type-service
-Title: "Type de service"
-Description: "Type de service (TYPESE : D=Direction / S=Service standard)."
-Context: Organization
-* value[x] only code
-* valueCode from SERTypeServiceVS (required)
-* valueCode ^short = "Type service (TYPESE)"
-
 // ── Attributs LOCAL du service (actifs selon le tenant) ──────────────────────
 
 Extension: SERChefAdjointExtension
@@ -49,22 +32,3 @@ Description: "Indique si le service est visible sur le site internet de l'établ
 Context: Organization
 * value[x] only boolean
 * valueBoolean ^short = "Visible sur le site internet"
-
-ValueSet: SERTypeServiceVS
-Id: ser-type-service-vs
-Title: "Type de service (TYPESE)"
-Description: "Type de service hospitalier selon le code TYPESE : Direction ou Service standard."
-* ^experimental = false
-* ^meta.profile = "http://hl7.org/fhir/StructureDefinition/shareablevalueset"
-* SERTypeServiceCS#D "Direction"
-* SERTypeServiceCS#S "Service"
-
-CodeSystem: SERTypeServiceCS
-Id: ser-type-service-cs
-Title: "Type de service"
-Description: "Code de type de service hospitalier (TYPESE) : D=Direction, S=Service standard."
-* ^experimental = false
-* ^caseSensitive = true
-* ^meta.profile = "http://hl7.org/fhir/StructureDefinition/shareablecodesystem"
-* #D "Direction"
-* #S "Service"
