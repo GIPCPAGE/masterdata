@@ -17,11 +17,13 @@
 //   Core          : ufCode (NUUFUF), validité temporelle (DATDUF/DATFUF/INVAUF)
 //   Sites/parents : ETA_NUETET (site localisation), CRE_NUCRCR (partOf CR),
 //                   POA_NUPAPA (pôle optionnel)
-//   Clinique      : TYPEUF, SEANUF, CLDOUF, LURGUF, ACLIUF, UFMAUF, CONFUF,
-//                   CURMUF, DOACUF, LITLUF, REACUF, AUTOUF
-//   Budget        : SBUD_CODEBUD, regroupements RU1/RU2/URG, SCUF (catégorie)
+//   Clinique      : CLDOUF, LITLUF
+//   Budget        : SBUD_CODEBUD
 //
-// CPage-spécifiques (ig-md-fhir-cpage) :
+// CPage-spécifiques (ig-md-fhir-cpage), attributs de portée CPAGE :
+//   Clinique      : TYPEUF, SEANUF, LURGUF, ACLIUF, UFMAUF, CONFUF, CURMUF, DOACUF,
+//                   REACUF, AUTOUF
+//   Budget        : regroupements RU1/RU2/URG, SCUF (catégorie)
 //   Module UFM : lits, étiquettes, options patients/clinique
 //   Module UFE : TVA, comptabilité ECO
 //   Module UFP : personnel/RH
@@ -110,21 +112,9 @@ indicateur UF HEB/SOIN/ADMIN/MED, UF externe, demandeuse/exécutante acte).
     UFCodeValiditeExtension              named codeValidite        0..1 MS and
     UFSiteLocalisationExtension          named siteLocalisation    1..1 MS and
     UFPoleExtension                      named pole                0..1 MS and
-    UFTypeUFMedicaleExtension            named typeUFMedicale      0..1 MS and
-    UFIndicateurSeancesExtension         named indicateurSeances   0..1 MS and
     UFClasseDominanteExtension           named classeDominante     0..1 MS and
-    UFLitsUrgenceExtension               named litsUrgence         0..1 MS and
-    UFActiviteLiberaleExtension          named activiteLiberale    0..1 MS and
-    UFMaterniteExtension                 named materniteLits       0..1 MS and
-    UFConfidentialiteExtension           named confidentialite     0..1 MS and
-    UFResponsabiliteExtension            named ufResponsabilite    0..1 MS and
     UFLettreBudgetaireExtension          named lettreBudgetaire    1..1 MS and
-    UFDomaineActiviteExtension           named domaineActivite     0..1 MS and
     UFLibelleTresLongExtension           named libelleTresLong     0..1 MS and
-    UFReacExtension                      named typeAutorisationUM  0..1 MS and
-    UFAutorisationUrgenceExtension       named typeAutorisationUrg 0..1 MS and
-    UFCategorieCUFExtension              named categorieUF         0..1 MS and
-    UFRegroupementsExtension             named regroupements       0..1 MS and
     StrHLibelleDiffusionExtension        named libelleDiffusion    0..1 MS and
     StrHCodeGroupementHospitalierExtension named codeGroupementHospitalier 0..1 MS and
     UFBatimentExtension           named batiment     0..1 MS and
@@ -151,21 +141,9 @@ indicateur UF HEB/SOIN/ADMIN/MED, UF externe, demandeuse/exécutante acte).
 * extension[codeValidite]       ^short = "Code validité (INVAUF : F=Fermé / I=Invalide / V=Valide)"
 * extension[siteLocalisation]   ^short = "Site géographique de localisation — obligatoire"
 * extension[pole]               ^short = "Pôle d'activité optionnel du pôle"
-* extension[typeUFMedicale]     ^short = "Type UF médicale (TYPEUF : H=Hosp / E=Externe / D=Divers / A=Autre)"
-* extension[indicateurSeances]  ^short = "UF à séances (SEANUF : O/N)"
 * extension[classeDominante]    ^short = "Classe dominante UF médicale (CLDOUF)"
-* extension[litsUrgence]        ^short = "Lits réservés urgence (LURGUF : O/N)"
-* extension[activiteLiberale]   ^short = "Activité libérale (ACLIUF : O/N)"
-* extension[materniteLits]      ^short = "UF où peuvent naître des bébés (UFMAUF : O/N)"
-* extension[confidentialite]    ^short = "Confidentialité de l'UF (CONFUF : O/N)"
-* extension[ufResponsabilite]   ^short = "UF de responsabilité (CURMUF : O/N)"
 * extension[lettreBudgetaire]   ^short = "Lettre budgétaire du CR (SBUD_CODEBUD — obligatoire)"
-* extension[domaineActivite]    ^short = "Domaine d'activité (DOACUF : M/C/O/N/D/P/S)"
 * extension[libelleTresLong]    ^short = "Libellé très long (LITLUF — 80 chars)"
-* extension[typeAutorisationUM] ^short = "Type autorisation unité médicale (REACUF — 3 chars)"
-* extension[typeAutorisationUrg] ^short = "Type autorisation urgence (AUTOUF — 2 chars)"
-* extension[categorieUF]        ^short = "Catégorie d'UF (SCUF_CATGCUF — FK SCUF)"
-* extension[regroupements]      ^short = "Regroupements UF (RU1/RU2/URG) et codes analytiques"
 
 // ── Hiérarchie : Centre de Responsabilité → UF ───────────────────────────────
 
