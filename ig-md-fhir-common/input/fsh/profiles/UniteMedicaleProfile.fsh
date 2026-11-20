@@ -68,7 +68,6 @@ FR Core n'a pas de profil dédié — type = UM (fr-core-cs-v2-3307).
     UMCategoriePmsiExtension       named categoriePmsi       0..1 MS and
     UMModeHospitalisationExtension named modeHospitalisation 0..1 MS and
     UMTypeAutorisationExtension    named typeAutorisation    0..1 MS and
-    UMCodeCpmExtension             named codeCpm             0..1 MS and
     UMCodePmsiExtension            named codePmsi            0..1 MS and
     UMDateAutorisationExtension    named dateAutorisation    0..1 MS and
     UMSoinsPalliatifsExtension     named soinsPalliatifs     0..1 MS and
@@ -80,7 +79,6 @@ FR Core n'a pas de profil dédié — type = UM (fr-core-cs-v2-3307).
 * extension[categoriePmsi]       ^short = "Catégorie PMSI (nomenclature CATEGORIE_PMSI_UM)"
 * extension[modeHospitalisation] ^short = "Mode d'hospitalisation (nomenclature MODE_HOSPITALISATION)"
 * extension[typeAutorisation]    ^short = "Type d'autorisation (nomenclature TYPE_AUTORISATION_UM)"
-* extension[codeCpm]             ^short = "Code CPM (attribut LOCAL)"
 * extension[codePmsi]            ^short = "Code PMSI (attribut LOCAL)"
 * extension[dateAutorisation]    ^short = "Date d'autorisation (attribut LOCAL)"
 * extension[soinsPalliatifs]     ^short = "Lits de soins palliatifs (attribut LOCAL)"
