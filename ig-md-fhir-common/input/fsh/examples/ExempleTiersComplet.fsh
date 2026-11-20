@@ -6,7 +6,7 @@ Instance: ExempleTiersComplet
 InstanceOf: TiersProfile
 Usage: #example
 Title: "Tiers complet (fournisseur, établissement principal)"
-Description: "Exemple d'un tiers fournisseur illustrant le modèle Tiers : établissement principal (SIRET, adresse d'ordre 1, contacts), seconde adresse portée par contact, complément de nom, alias, spécificité, identifiants légaux, catégorie TG et nature juridique."
+Description: "Exemple d'un tiers fournisseur illustrant le modèle Tiers : établissement principal (SIRET, adresse d'ordre 1, contacts), seconde adresse portée par contact, complément de nom, alias, spécificité, identifiants légaux, catégorie de tiers et nature juridique."
 
 * identifier[etierId].value = "TIERS000123456"
 * identifier[siren].value = "852112345"
@@ -57,7 +57,7 @@ Description: "Exemple d'un tiers fournisseur illustrant le modèle Tiers : étab
 // Nature juridique
 * extension[legalNature].valueCodeableConcept = https://www.cpage.fr/ig/masterdata/common/CodeSystem/tiers-legal-nature-cs#03 "Société"
 
-// Catégorie TG
+// Catégorie de tiers
 * extension[tgCategory].valueCodeableConcept = https://www.cpage.fr/ig/masterdata/common/CodeSystem/tiers-category-cs#50 "Personne morale de droit privé"
 
 

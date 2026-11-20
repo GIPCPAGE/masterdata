@@ -1,13 +1,13 @@
 // =============================================
-// SearchParameter: Tiers Category (TG)
-// Permet de rechercher un tiers par sa catégorie TG (codes 00-74)
+// SearchParameter: Catégorie de tiers
+// Permet de rechercher un tiers par sa catégorie de tiers (codes 00-74)
 // =============================================
 
 Instance: tiers-category-search-parameter
 InstanceOf: SearchParameter
 Usage: #definition
-Title: "Search Tiers by TG Category"
-Description: "Permet de rechercher un tiers par sa catégorie TG selon la nomenclature: État, collectivités territoriales, établissements publics, organismes sociaux, personnes morales de droit privé, personnes physiques..."
+Title: "Recherche de tiers par catégorie de tiers"
+Description: "Permet de rechercher un tiers par sa catégorie de tiers selon la nomenclature DGFiP TCatTiers : État, collectivités territoriales, établissements publics, organismes sociaux, personnes morales de droit privé, personnes physiques..."
 
 * url = "https://www.cpage.fr/ig/masterdata/common/SearchParameter/tiers-category-search-parameter"
 * version = "1.0.0"
@@ -20,7 +20,7 @@ Description: "Permet de rechercher un tiers par sa catégorie TG selon la nomenc
 * contact.telecom.system = #email
 * contact.telecom.value = "support@cpage.org"
 
-* description = "Recherche un tiers par sa catégorie TG. Correspond aux codes 00-74 (État, collectivités, établissements publics de santé, organismes sociaux, entreprises, personnes physiques)."
+* description = "Recherche un tiers par sa catégorie de tiers. Correspond aux codes 00-74 (État, collectivités, établissements publics de santé, organismes sociaux, entreprises, personnes physiques)."
 
 * code = #tiers-category
 * base = #Organization
@@ -32,7 +32,7 @@ Description: "Permet de rechercher un tiers par sa catégorie TG selon la nomenc
 * multipleAnd = false
 
 // Exemples d'usage:
-// GET [base]/Organization?tiers-category=01 (État)
-// GET [base]/Organization?tiers-category=02 (Collectivité territoriale)
-// GET [base]/Organization?tiers-category=16 (Établissement public de santé)
-// GET [base]/Organization?tiers-category=60 (Assurance maladie)
+// GET [base]/Organization?tiers-category=01 (Personne physique)
+// GET [base]/Organization?tiers-category=23 (Commune)
+// GET [base]/Organization?tiers-category=27 (Établissement public de santé)
+// GET [base]/Organization?tiers-category=60 (Caisse de sécurité sociale régime général)

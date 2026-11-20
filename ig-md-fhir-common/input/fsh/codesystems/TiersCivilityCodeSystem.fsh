@@ -5,7 +5,7 @@
 CodeSystem: TiersCivilityCS
 Id: tiers-civility-cs
 Title: "Civilité"
-Description: "Codes de civilité selon la nomenclature. Utilisé pour les débiteurs de Catégorie TG = 01 (Personne physique)."
+Description: "Codes de civilité selon la nomenclature. Utilisé pour les débiteurs de Catégorie de tiers = 01 (Personne physique)."
 * ^version = "1.0.0"
 * ^status = #active
 * ^experimental = false

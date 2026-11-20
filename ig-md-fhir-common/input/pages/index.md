@@ -123,7 +123,7 @@ Cet IG définit environ **70 extensions** FHIR (StructureDefinition de type Exte
 principalement en trois familles :
 
 - **Tiers** (8 extensions) : rôle, restriction de rôle d'une adresse, compte bancaire, spécificités,
-  catégorie TG, nature juridique, type d'identifiant, personne physique.
+  catégorie de tiers, nature juridique, type d'identifiant, personne physique.
 - **Structure hospitalière** (~58 extensions) : les champs communs à toutes les entités réutilisent
   d'abord FR Core et HL7 (période de validité par l'extension `usePeriod`, libellé réduit par `shortName`,
   bureau distributeur par l'extension d'adresse `deliveryInstallationArea`) ; le libellé de diffusion
@@ -137,7 +137,7 @@ principalement en trois familles :
 Cet IG définit également une **vingtaine de CodeSystems/ValueSets** — nomenclatures PESv2 (catégorie
 tiers, nature juridique, type d'identifiant), nomenclatures internes CPage (type de lit, type de
 service, catégorie PMSI, etc.), et le CodeSystem des communes françaises COG INSEE — ainsi que
-**4 SearchParameter** personnalisés (recherche par rôle de tiers, par IBAN, par catégorie TG et par
+**4 SearchParameter** personnalisés (recherche par rôle de tiers, par IBAN, par catégorie de tiers et par
 nature juridique).
 
 Le détail complet de chaque extension et terminologie est présenté dans les pages de domaine, et
