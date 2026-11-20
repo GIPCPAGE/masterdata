@@ -26,7 +26,7 @@ Publiques) pour les échanges dématérialisés entre ordonnateurs et comptables
 
 | Profil | Parent FHIR | Rôle métier |
 |---|---|---|
-| `TiersProfile` | `FRCoreOrganizationProfile` (FR Core) | Le tiers, représenté par son **établissement principal**. Porte l'identité (raison sociale, complément de nom, alias, actif), les identifiants (SIRET de l'établissement principal, SIREN, FINESS, TVA, NIR, hors UE, Tahiti, RIDET, FRWF, IREP, NFP), le rôle unique, les spécificités, la catégorie TG, la nature juridique, l'adresse d'ordre 1 (`address`, contacts en `telecom`), les autres adresses (`contact`), la personne physique (`contact[personnePhysique]`) et les comptes bancaires de l'établissement principal. |
+| `TiersProfile` | `FRCoreOrganizationProfile` (FR Core) | Le tiers, représenté par son **établissement principal**. Porte l'identité (raison sociale, complément de nom, alias, actif), les identifiants (SIRET de l'établissement principal, SIREN, FINESS, TVA, NIR, hors UE, Tahiti, RIDET, FRWF, IREP, NFP), le rôle unique, les spécificités, la catégorie de tiers, la nature juridique, l'adresse d'ordre 1 (`address`, contacts en `telecom`), les autres adresses (`contact`), la personne physique (`contact[personnePhysique]`) et les comptes bancaires de l'établissement principal. |
 | `TiersEtablissementSecondaireProfile` | `FRCoreOrganizationProfile` (FR Core) | Un site du tiers distinct de l'établissement principal, rattaché à celui-ci par `partOf`. Porte son SIRET (facultatif), son adresse, ses contacts et ses comptes bancaires propres. Il n'a pas de rôle : le rôle est celui du tiers. |
 
 #### Établissements
@@ -104,7 +104,7 @@ CPage couvre des établissements en dehors du régime SIRET/SIREN métropolitain
 | `organization-period` (HL7, déjà utilisée par FR Core) | Organization | Période de validité du tiers : `start` obligatoire, `end` facultatif (absent : pas de date de fin de validité) |
 | `TiersBankAccount` | Organization | Compte bancaire : titulaire, IBAN, BIC, actif, compte commun à la société |
 | `TiersSpecificityExtension` | Organization | Spécificités (répétable) : laboratoire, locataire, agent, débiteur mortuaire, hospitalier |
-| `TiersCategory` | Organization | Catégorie TG (codes 00–74, nomenclature PESv2 `TCatTiers`) |
+| `TiersCategory` | Organization | Catégorie de tiers (codes 00–74, nomenclature PESv2 `TCatTiers`) |
 | `TiersLegalNature` | Organization | Nature juridique (codes 00–11, nomenclature PESv2 `TNatJur`) |
 | `TiersIdentifierType` | Identifier | Qualifie le type d'un identifiant |
 | `TiersBirthDate` | Organization.contact | Date de naissance d'un tiers personne physique, sur le contact `personnePhysique` |
@@ -114,7 +114,7 @@ Le complément de nom utilise l'extension FR Core `shortName`, et le statut acti
 
 #### Personne physique
 
-L'identité d'un tiers personne physique (catégorie TG = 01) est portée par le contact
+L'identité d'un tiers personne physique (catégorie de tiers = 01) est portée par le contact
 `personnePhysique`, identifié par son `purpose` (`TiersContactPurposeCS#personne-physique`) :
 la civilité dans `name.prefix` (codes `TiersCivilityVS`), le prénom dans `name.given`, le nom dans
 `name.family` et la date de naissance dans l'extension `TiersBirthDate`, `Organization.contact`
@@ -144,7 +144,7 @@ unique code est fixé sur le contact `personnePhysique`.
 | SearchParameter | Code de recherche | Usage |
 |---|---|---|
 | `BankAccountIbanSearchParameter` | `bank-account-iban` | Retrouver un tiers par IBAN |
-| `TiersCategorySearchParameter` | — | Filtrer par catégorie TG |
+| `TiersCategorySearchParameter` | — | Filtrer par catégorie de tiers |
 | `TiersLegalNatureSearchParameter` | — | Filtrer par nature juridique |
 
 ### Exemples

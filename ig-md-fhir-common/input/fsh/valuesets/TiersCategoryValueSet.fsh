@@ -1,10 +1,10 @@
 // =============================================
-// ValueSet: Catégorie TG
+// ValueSet: Catégorie de tiers
 // =============================================
 
 ValueSet: TiersCategoryVS
 Id: tiers-category-vs
-Title: "Catégorie TG ValueSet"
+Title: "Catégorie de tiers ValueSet"
 Description: "ValueSet des catégories de tiers selon la nomenclature. Permet de classifier les organisations (codes 00-74)."
 * ^version = "1.0.0"
 * ^status = #active

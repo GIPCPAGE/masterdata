@@ -169,7 +169,7 @@ Une Organization représente l'**établissement principal** du tiers : son SIRET
 // Personne physique : civilité, prénom et nom dans contact.name, date de naissance en extension
 * contact contains personnePhysique 0..1 MS
 * contact[personnePhysique] ^short = "Personne physique"
-* contact[personnePhysique] ^definition = "Identité du tiers personne physique (catégorie TG = 01) : civilité (name.prefix), prénom (name.given), nom (name.family) et date de naissance (extension birthDate)."
+* contact[personnePhysique] ^definition = "Identité du tiers personne physique (catégorie de tiers = 01) : civilité (name.prefix), prénom (name.given), nom (name.family) et date de naissance (extension birthDate)."
 * contact[personnePhysique].purpose = TiersContactPurposeCS#personne-physique
 * contact[personnePhysique].name 1..1 MS
 * contact[personnePhysique].name.family 1..1 MS
@@ -202,9 +202,9 @@ Une Organization représente l'**établissement principal** du tiers : son SIRET
 * extension[specificite] ^short = "Spécificités du tiers"
 * extension[specificite] ^definition = "Particularités du tiers cochées sur la fiche : laboratoire, locataire, agent, débiteur mortuaire, hospitalier."
 
-// Catégorie TG (codes 00-74)
+// Catégorie de tiers (codes 00-74)
 * extension contains TiersCategory named tgCategory 0..1 MS
-* extension[tgCategory] ^short = "Catégorie TG"
+* extension[tgCategory] ^short = "Catégorie de tiers"
 * extension[tgCategory] ^definition = "Catégorie du tiers selon nomenclature: État, collectivités, établissements publics, organismes sociaux, personne physique, etc. Codes 00-74."
 
 // Nature juridique (codes 00-11)

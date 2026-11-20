@@ -1,5 +1,5 @@
 // =============================================
-// CodeSystem: Catégorie TG
+// CodeSystem: Catégorie de tiers
 // =============================================
 
 CodeSystem: TiersCategoryCS
@@ -27,27 +27,27 @@ PESv2 disponible sur le portail de la DGFiP (https://www.collectivites-locales.g
 * ^count = 24
 * ^meta.profile = "http://hl7.org/fhir/StructureDefinition/shareablecodesystem"
 
-* #00 "Inconnue" "Catégorie non renseignée ou inconnue. Extension CPage — code absent de la définition normative TCatTiers du PESv2."
-* #01 "Personne physique" "Personne physique (particulier, artisan, commerçant, agriculteur)"
-* #20 "État et établissement public national" "État français et établissements publics nationaux"
-* #21 "Région" "Région (collectivité territoriale)"
-* #22 "Département" "Département (collectivité territoriale)"
-* #23 "Commune" "Commune"
-* #24 "Groupement de collectivités" "Groupement de collectivités territoriales"
-* #25 "Caisse des écoles" "Caisse des écoles"
+* #00 "Non renseigné" "Catégorie non renseignée. Extension CPage — code absent de la définition normative TCatTiers du PESv2."
+* #01 "Personnes physiques" "Personne physique (particulier, artisan, commerçant, agriculteur)"
+* #20 "Etat et établissements publics nationaux" "État français et établissements publics nationaux"
+* #21 "Régions" "Région (collectivité territoriale)"
+* #22 "Départements" "Département (collectivité territoriale)"
+* #23 "Communes" "Commune"
+* #24 "Groupements de collectivités" "Groupement de collectivités territoriales"
+* #25 "Caisses des écoles" "Caisse des écoles"
 * #26 "CCAS" "Centre Communal d'Action Sociale"
-* #27 "Établissement public de santé" "Établissement public de santé (hôpitaux, CHU, etc.)"
-* #28 "École nationale de la santé publique" "École Nationale de la Santé Publique (ENSP)"
-* #29 "Autre établissement public" "Autre établissement public et organisme international"
-* #50 "Personne morale de droit privé" "Personne morale de droit privé autre qu'organisme social"
-* #60 "Caisse de sécurité sociale régime général" "Caisse de Sécurité Sociale - régime général (CPAM, CRAM, etc.)"
-* #61 "Caisse de sécurité sociale régime agricole" "Caisse de Sécurité Sociale - régime agricole (MSA)"
-* #62 "Sécurité sociale TNS" "Sécurité sociale des travailleurs non-salariés et professions non agricoles"
-* #63 "Autre régime obligatoire de sécurité sociale" "Autre régime obligatoire de sécurité sociale"
+* #27 "Etablissements publics de santé" "Établissement public de santé (hôpitaux, CHU, etc.)"
+* #28 "Ecole nationale de la santé publique" "École Nationale de la Santé Publique (ENSP)"
+* #29 "Autres établissements publics et organismes internationaux" "Autre établissement public et organisme international"
+* #50 "Personnes morales de droit privé autres qu'organismes sociaux" "Personne morale de droit privé autre qu'organisme social"
+* #60 "Caisses de sécurité sociale régime général" "Caisse de Sécurité Sociale - régime général (CPAM, CRAM, etc.)"
+* #61 "Caisses de sécurité sociale régime agricole" "Caisse de Sécurité Sociale - régime agricole (MSA)"
+* #62 "Sécurité sociale des travailleurs non salariés et professions non agricoles" "Sécurité sociale des travailleurs non-salariés et professions non agricoles"
+* #63 "Autres régimes obligatoires de sécurité sociale" "Autre régime obligatoire de sécurité sociale"
 * #64 "Autres caisses de sécurité sociale" "Autres caisses de sécurité sociale (hors régimes général, agricole, TNS et autres régimes obligatoires)"
 * #65 "Caisses complémentaires et divers autres tiers payants" "Caisses de sécurité sociale complémentaires, mutuelles et divers autres tiers payants"
 * #70 "CNRACL" "Caisse Nationale de Retraites des Agents des Collectivités Locales"
 * #71 "IRCANTEC" "Institution de Retraite Complémentaire des Agents Non Titulaires de l'État et des Collectivités"
 * #72 "ASSEDIC" "ASSEDIC / Pôle Emploi"
-* #73 "Caisse mutualiste de retraite complémentaire" "Caisse mutualiste de retraite complémentaire"
-* #74 "Autre organisme social" "Autre organisme social"
+* #73 "Caisses mutualistes de retraite complémentaires" "Caisse mutualiste de retraite complémentaire"
+* #74 "Autres organismes sociaux" "Autre organisme social"

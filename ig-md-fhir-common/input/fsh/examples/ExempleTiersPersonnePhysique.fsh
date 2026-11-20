@@ -5,7 +5,7 @@ Instance: ExempleTiersPersonnePhysique
 InstanceOf: TiersProfile
 Usage: #example
 Title: "Tiers personne physique (débiteur)"
-Description: "Exemple d'une personne physique de rôle débiteur, avec NIR, civilité, prénom et date de naissance. Catégorie TG 01 (personne physique), nature juridique 01 (particulier)."
+Description: "Exemple d'une personne physique de rôle débiteur, avec NIR, civilité, prénom et date de naissance. Catégorie de tiers 01 (personne physique), nature juridique 01 (particulier)."
 
 * identifier[etierId].value = "TIERS345678"
 * identifier[nir].value = "123456789012345"
