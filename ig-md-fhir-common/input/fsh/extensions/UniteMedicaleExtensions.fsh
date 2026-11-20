@@ -39,14 +39,6 @@ Context: Organization
 * value[x] only string
 * valueString ^short = "Code du type d'autorisation"
 
-Extension: UMCodeCpmExtension
-Id: um-code-cpm
-Title: "Code CPM de l'unité médicale"
-Description: "Code CPM de l'unité médicale (3 caractères au plus), doublon probable de la catégorie PMSI. Attribut de portée LOCAL, actif selon le tenant."
-Context: Organization
-* value[x] only string
-* valueString ^short = "Code CPM"
-
 Extension: UMCodePmsiExtension
 Id: um-code-pmsi
 Title: "Code PMSI de l'unité médicale"
