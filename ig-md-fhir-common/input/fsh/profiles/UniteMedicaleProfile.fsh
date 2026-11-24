@@ -76,7 +76,7 @@ FR Core n'a pas de profil dédié — type = UM (fr-core-cs-v2-3307).
     UMCompteAnalytiqueExtension    named compteAnalytique    0..1 MS and
     UMSectionAnalyseExtension      named sectionAnalyse      0..1 MS
 
-* extension[codeValidite]        ^short = "Code validité (F=Fermé / I=Invalide / V=Valide)"
+* extension[codeValidite]        ^short = "Code validité (I=Invalide / V=Valide)"
 * extension[categoriePmsi]       ^short = "Catégorie PMSI (nomenclature CATEGORIE_PMSI_UM)"
 * extension[modeHospitalisation] ^short = "Mode d'hospitalisation (nomenclature MODE_HOSPITALISATION)"
 * extension[typeAutorisation]    ^short = "Type d'autorisation (nomenclature TYPE_AUTORISATION_UM)"

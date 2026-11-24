@@ -9,7 +9,7 @@
 //   libelle              → name                              (POA.LIBEPA)
 //   libelle_reduit       → alias + extension[shortName]      (POA.LIBRPA ; FR Core short-name)
 //   date_debut/fin_validite → extension[usePeriod]           (POA.DATDPA/DATFPA ; organization-period, hérité de FR Core)
-//   code_validite        → extension[codeValidite]           (POA.INVAPA ; F/I/V) ; active en est déduit
+//   code_validite        → extension[codeValidite]           (POA.INVAPA ; V/I, obligatoire) ; active ne reflète que la période
 //   libelle_diffusion    → extension[libelleDiffusion]       (strh-libelle-diffusion, hérité du profil socle)
 //   matricule_responsable → contact[0].name.text             (POA.SAGE_NUAGAGE)
 //   parent_entite_juridique → partOf                          (POA.CHO_NUCHCH)
@@ -29,7 +29,8 @@ responsabilité médicale. Appartient à l'axe médical.
 Hérite de `StructureHospitaliereOrganizationProfile`.
 
 La période de validité est portée par l'extension `usePeriod` (organization-period, héritée de
-FR Core) et le code de validité par `extension[codeValidite]` (F/I/V).
+FR Core) et le code de validité, obligatoire, par `extension[codeValidite]` (V ou I). `active`
+ne reflète que la période de validité, pas le code de validité.
 
 Le pôle dépend d'une **entité juridique** ; un tenant peut aussi autoriser le rattachement à une
 entité géographique.
@@ -77,16 +78,16 @@ entité géographique.
 // ── Statut ────────────────────────────────────────────────────────────────────
 
 * active 0..1 MS
-* active ^short = "Pôle actif — false si INVAPA=F (Fermé) ou INVAPA=I (Invalide)"
+* active ^short = "Pôle actif : false hors de la période de validité (le code de validité est porté par extension[codeValidite])"
 
 // ── Extensions ────────────────────────────────────────────────────────────────
 
 * extension contains
-    POACodeValiditeExtension          named codeValidite          0..1 MS and
+    POACodeValiditeExtension          named codeValidite          1..1 MS and
     StrHDateCmeExtension              named dateCme               0..1 MS and
     POAMedecinCoordonnateurExtension  named medecinCoordonnateur  0..1 MS
 
-* extension[codeValidite]         ^short = "Code validité (INVAPA : F=Fermé / I=Invalide / V=Valide)"
+* extension[codeValidite]         ^short = "Code validité, obligatoire (INVAPA : V=Valide / I=Invalide)"
 * extension[dateCme]              ^short = "Date de la commission médicale d'établissement (attribut LOCAL)"
 * extension[medecinCoordonnateur] ^short = "Médecin coordonnateur du pôle (attribut LOCAL, texte libre)"
 

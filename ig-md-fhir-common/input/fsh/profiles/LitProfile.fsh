@@ -9,7 +9,7 @@
 //   LIBCLL       → name
 //   LIBRLL       → alias[0] (libelleReduit)
 //   DAEFLL/DAFILL → extension[periodeValidite] (strh-periode-validite, socle des entités physiques)
-//   VALILL (F/I/V) → status + extension[codeValidite]
+//   VALILL (I/V) → status + extension[codeValidite]
 //   DAINLL        → extension[dateIndisponibilite] (optionnel)
 //   NUTELL        → telecom.phone
 //   CARALL (A/B/H/I/P/S/U/C/R) → extension[typeLit]
@@ -97,7 +97,7 @@ Hérite de `StructureHospitaliereSiteProfile` (issu de `FRCoreLocationProfile`).
 
 * extension[periodeValidite]     ^short = "Période de validité (DAEFLL / DAFILL), extension commune aux entités physiques"
 * extension[libelleDiffusion]    ^short = "Libellé de diffusion"
-* extension[codeValidite]        ^short = "Code validité (VALILL : F=Fermé / I=Invalide / V=Valide)"
+* extension[codeValidite]        ^short = "Code validité (VALILL : I=Invalide / V=Valide)"
 * extension[typeLit]             ^short = "Type de lit (CARALL : A/B/H/I/P/S/U/C/R)"
 * extension[indicateurSeances]   ^short = "Lit de séances (LISELL : O/N)"
 * extension[dateIndisponibilite] ^short = "Date d'indisponibilité (DAINLL)"

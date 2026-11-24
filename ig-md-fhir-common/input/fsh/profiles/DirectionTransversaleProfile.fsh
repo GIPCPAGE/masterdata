@@ -16,8 +16,8 @@
 //   date_debut/fin_validite → extension[usePeriod]           (SDTR.DATDSD/DATFSD ; organization-period, hérité de FR Core)
 //   libelle_diffusion    → extension[libelleDiffusion]       (strh-libelle-diffusion, hérité du profil socle)
 //   parent_entite_juridique → partOf                          (SDTR.CHO_NUCHCH)
+//   code_validite        → extension[codeValidite]           (SDTR.INVASD ; V/I, obligatoire) ; active ne reflète que la période
 //   centres de responsabilité rattachés → extension[membres] (FR Core member)
-//   non exposé : code de validité (SDTR.INVASD)
 
 Profile: DirectionTransversaleProfile
 Parent: StructureHospitaliereOrganizationProfile
@@ -30,6 +30,9 @@ des centres de responsabilité. Appartient à l'axe « direction transversale »
 entité juridique.
 
 Type de structure activé par tenant : il ne fait pas partie du modèle minimal de la structure.
+
+Le code de validité, obligatoire, est porté par `extension[codeValidite]` (V ou I). `active` ne
+reflète que la période de validité, pas le code de validité.
 
 **Scope** : TENANT uniquement.
 """
@@ -70,6 +73,11 @@ Type de structure activé par tenant : il ne fait pas partie du modèle minimal 
 * extension[shortName] ^short = "Libellé réduit, extension FR Core short-name"
 * extension[usePeriod] MS
 * extension[usePeriod] ^short = "Période de validité de la direction transversale (date de début et de fin)"
+
+// ── Code de validité ──────────────────────────────────────────────────────────
+
+* extension contains DTCodeValiditeExtension named codeValidite 1..1 MS
+* extension[codeValidite] ^short = "Code validité, obligatoire (INVASD : V=Valide / I=Invalide)"
 
 // ── Hiérarchie : entité juridique de rattachement ─────────────────────────────
 // Facultatif dans le profil ; obligatoire en présence d'un module CPage (hiérarchie

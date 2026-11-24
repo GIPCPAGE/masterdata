@@ -138,7 +138,7 @@ CR, UF, Chambre, Lit) reproduit donc systématiquement la même paire d'extensio
 
 - une extension **`*PeriodeValidite`** (`dateDebut` 1..1, `dateFin` 0..1) portant la période de
   validité de cette version de l'enregistrement ;
-- une extension **`*CodeValidite`**, valeur `F` (Fermé) / `I` (Invalide) / `V` (Valide), qui vient en
+- une extension **`*CodeValidite`**, valeur `I` (Invalide) / `V` (Valide), qui vient en
   complément du champ standard FHIR `active`/`status`.
 
 Ce doublement (extension de code de validité **et** élément FHIR standard `active`) reflète une
@@ -152,10 +152,11 @@ consommateurs.
 |---|---|
 | Entité Juridique | Statut juridique, code APE/NAF, numéro CPCM, catégorie PMSI (10/20/21/22/30/40), code CEDEX, localisation DOM/TOM, numéros émetteur EH, indicateur arrondissement, Centres de Responsabilité membres (`member`) |
 | Entité Géographique | Secteur sanitaire, code NAF, libellé de localisation, indicateur SAE, horaires d'ouverture, coefficients géographique et de transition T2A |
-| Pôle | Code de validité, UF et services membres (`member`) ; attributs locaux : date CME (extension commune), médecin coordonnateur |
+| Pôle | Code de validité (V ou I, obligatoire), UF et services membres (`member`) ; attributs locaux : date CME (extension commune), médecin coordonnateur |
 | Service | Sigle, type de service (Direction/Service), code de validité, UF membres (`member`) ; attributs locaux : disciplines d'équipement, chef adjoint, date CME, site internet |
 | Secteur | Responsable du secteur (contact), UF membres (`member`) |
 | Centre d'Activité | Code de validité, UF membres (`member`) |
+| Direction transversale | Code de validité (V ou I, obligatoire), Centres de Responsabilité membres (`member`) |
 | Centre de Responsabilité | Code de validité, lettre budgétaire (obligatoire dans CPage), code secteur budgétaire, code direction transversale ; attributs locaux : discipline d'équipement (extension FR Core), code du groupement hospitalier, nom du responsable (contact) |
 | Unité Fonctionnelle | Site de localisation géographique (obligatoire), pôle optionnel, type d'UF médicale, indicateur séances, classe dominante, lits urgence, activité libérale, maternité, confidentialité, UF de responsabilité, lettre budgétaire (obligatoire), domaine d'activité, libellé très long, type d'autorisation UM, type d'autorisation urgence, catégorie d'UF, regroupements analytiques (RU1/RU2/urgence, centre d'activité, département, section de prix de revient...) |
 | Chambre | Indicateur chambre individuelle, code de validité ; période de validité par l'extension commune aux entités physiques |

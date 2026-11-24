@@ -10,11 +10,11 @@
 Extension: POACodeValiditeExtension
 Id: poa-code-validite
 Title: "Code de validité du pôle"
-Description: "Code de validité du pôle (INVAPA : F=Fermé / I=Invalide / V=Valide)."
+Description: "Code de validité du pôle (INVAPA : I=Invalide / V=Valide)."
 Context: Organization
 
 * value[x] only code
-// Réutilise le même ValueSet que EGCodeValiditeVS (F/I/V)
+// Réutilise le même ValueSet que EGCodeValiditeVS (I/V)
 * valueCode from EGCodeValiditeVS (required)
 * valueCode ^short = "Code validité (INVAPA)"
 

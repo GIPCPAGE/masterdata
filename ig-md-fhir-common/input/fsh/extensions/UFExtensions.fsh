@@ -11,7 +11,7 @@
 Extension: UFCodeValiditeExtension
 Id: uf-code-validite
 Title: "Code de validité de l'UF"
-Description: "Code de validité (INVAUF : F=Fermé / I=Invalide / V=Valide)."
+Description: "Code de validité (INVAUF : I=Invalide / V=Valide)."
 Context: Organization
 * value[x] only code
 * valueCode from EGCodeValiditeVS (required)

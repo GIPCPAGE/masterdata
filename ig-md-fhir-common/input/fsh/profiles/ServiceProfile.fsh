@@ -12,7 +12,7 @@
 //   libelle              → name                              (SER.LIBESE)
 //   libelle_reduit       → alias + extension[shortName]      (SER.LIBRSE ; FR Core short-name)
 //   date_debut/fin_validite → extension[usePeriod]           (SER.DATDSE/DATFSE ; organization-period, hérité de FR Core)
-//   code_validite        → extension[codeValidite]           (SER.INVASE ; F/I/V) ; active en est déduit
+//   code_validite        → extension[codeValidite]           (SER.INVASE ; I/V) ; active en est déduit
 //   libelle_diffusion    → extension[libelleDiffusion]       (strh-libelle-diffusion, hérité du profil socle)
 //   sigle                → extension[sigle]                  (SER.SIGLSE)
 //   type_service         → extension[typeService]            (SER.TYPESE ; D/S)
@@ -36,7 +36,7 @@ d'une même activité médicale.
 Hérite de `StructureHospitaliereOrganizationProfile`.
 
 La période de validité est portée par l'extension `usePeriod` (organization-period, héritée de
-FR Core) et le code de validité par `extension[codeValidite]` (F/I/V).
+FR Core) et le code de validité par `extension[codeValidite]` (I/V).
 
 **Position dans la hiérarchie** : directement sous l'Entité Géographique.
 Structure parallèle au Pôle (historique) : un pôle peut lister le service parmi ses membres,
@@ -110,7 +110,7 @@ et les UF sont rattachées au service via `serviceId`.
     StrHDateCmeExtension              named dateCme              0..1 MS and
     SERSiteInternetExtension          named siteInternet         0..1 MS
 
-* extension[codeValidite]         ^short = "Code validité (INVASE : F=Fermé / I=Invalide / V=Valide)"
+* extension[codeValidite]         ^short = "Code validité (INVASE : I=Invalide / V=Valide)"
 * extension[sigle]                ^short = "Sigle du service"
 * extension[typeService]          ^short = "Type service (TYPESE : D=Direction / S=Service)"
 * extension[disciplinesEquipement] ^short = "Disciplines d'équipement du service, plusieurs simultanément (attribut LOCAL), extension FR Core discipline-equipement"

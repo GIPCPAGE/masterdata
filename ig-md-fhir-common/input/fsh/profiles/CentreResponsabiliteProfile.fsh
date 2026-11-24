@@ -9,7 +9,7 @@
 //   libelle              → name                              (CRE.LIBECR)
 //   libelle_reduit       → alias + extension[shortName]      (CRE.LIBRCR ; FR Core short-name)
 //   date_debut/fin_validite → extension[usePeriod]           (CRE.DATDCR/DATFCR ; organization-period, hérité de FR Core)
-//   code_validite        → extension[codeValidite]           (CRE.INVACR ; F/I/V) ; active en est déduit
+//   code_validite        → extension[codeValidite]           (CRE.INVACR ; I/V) ; active en est déduit
 //   libelle_diffusion    → extension[libelleDiffusion]       (strh-libelle-diffusion, hérité du profil socle)
 //   lettre_budgetaire    → extension[lettreBudgetaire]       (CRE.SBUD_CODEBUD)
 //   matricule_responsable → contact[0].name.text             (CRE.SAGE_NUAGAGE)
@@ -42,7 +42,7 @@ placée sous la responsabilité d'un agent.
 Hérite de `StructureHospitaliereOrganizationProfile`.
 
 La période de validité est portée par l'extension `usePeriod` (organization-period, héritée de
-FR Core) et le code de validité par `extension[codeValidite]` (F/I/V).
+FR Core) et le code de validité par `extension[codeValidite]` (I/V).
 
 **Hiérarchie** :
 - `partOf` porte le rattachement principal : pôle, secteur budgétaire, direction transversale,
@@ -116,7 +116,7 @@ FR Core) et le code de validité par `extension[codeValidite]` (F/I/V).
     fr-core-organization-discipline-equipement named disciplineEquipement 0..1 MS and
     StrHCodeGroupementHospitalierExtension named codeGroupementHospitalier 0..1 MS
 
-* extension[codeValidite]              ^short = "Code validité (INVACR : F=Fermé / I=Invalide / V=Valide)"
+* extension[codeValidite]              ^short = "Code validité (INVACR : I=Invalide / V=Valide)"
 * extension[lettreBudgetaire]          ^short = "Lettre budgétaire (SBUD_CODEBUD — 1 char), autorisée pour l'entité juridique du CR ; obligatoire dans CPage"
 * extension[codeSecteurBudgetaire]     ^short = "Code secteur budgétaire (SSBU_NUSBSB — 3 chars)"
 * extension[codeDirectionTransversale] ^short = "Code direction transversale (SDTR_NUDTSD — 10 chars)"

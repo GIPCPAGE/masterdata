@@ -87,6 +87,7 @@ Description: "Pôle Médecine du CHU Dijon."
 * type[poleType].coding.code = #POLE
 
 * extension[codeInterne].valueString = "P-MED"
+* extension[codeValidite].valueCode = #V
 
 * partOf = Reference(ExempleEntiteGeographiqueBocage)
 

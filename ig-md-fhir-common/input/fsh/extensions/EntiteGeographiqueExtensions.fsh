@@ -8,7 +8,7 @@
 Extension: EGCodeValiditeExtension
 Id: eg-code-validite
 Title: "Code de validité du site"
-Description: "Code de validité du site géographique (INVAET : F=Fermé / I=Invalide / V=Valide)."
+Description: "Code de validité du site géographique (INVAET : I=Invalide / V=Valide)."
 Context: Organization
 
 * value[x] only code
@@ -18,21 +18,19 @@ Context: Organization
 ValueSet: EGCodeValiditeVS
 Id: eg-code-validite-vs
 Title: "Code de validité (INVAET)"
-Description: "Codes de validité d'un site géographique (INVAET) : Fermé, Invalide ou Valide."
+Description: "Codes de validité d'une entité de la structure hospitalière : Invalide ou Valide. La valeur F (fictive) de CPage n'est pas reprise dans Master Data (MS-636)."
 * ^experimental = false
 * ^meta.profile = "http://hl7.org/fhir/StructureDefinition/shareablevalueset"
-* EGCodeValiditeCS#F "Fermé"
 * EGCodeValiditeCS#I "Invalide"
 * EGCodeValiditeCS#V "Valide"
 
 CodeSystem: EGCodeValiditeCS
 Id: eg-code-validite-cs
 Title: "Code de validité du site"
-Description: "Code de validité du site géographique (INVAET) : F=Fermé, I=Invalide, V=Valide."
+Description: "Code de validité d'une entité de la structure hospitalière : I=Invalide, V=Valide. La valeur F (fictive) de CPage n'est pas reprise dans Master Data (MS-636)."
 * ^experimental = false
 * ^caseSensitive = true
 * ^meta.profile = "http://hl7.org/fhir/StructureDefinition/shareablecodesystem"
-* #F "Fermé"
 * #I "Invalide"
 * #V "Valide"
 
