@@ -148,7 +148,7 @@ indicateur UF HEB/SOIN/ADMIN/MED, UF externe, demandeuse/exécutante acte).
 * extension[medecinChef]        ^short = "Médecin chef (attribut LOCAL)"
 * extension[medecinResponsable] ^short = "Médecin responsable (UFO.MED_NUMEME)"
 * extension[penibilite]         ^short = "Typologie de pénibilité (attribut LOCAL)"
-* extension[codeValidite]       ^short = "Code validité (INVAUF : F=Fermé / I=Invalide / V=Valide)"
+* extension[codeValidite]       ^short = "Code validité (INVAUF : I=Invalide / V=Valide)"
 * extension[siteLocalisation]   ^short = "Site géographique de localisation — obligatoire"
 * extension[pole]               ^short = "Pôle d'activité optionnel du pôle"
 * extension[typeUFMedicale]     ^short = "Type UF médicale (TYPEUF : H=Hosp / E=Externe / D=Divers / A=Autre)"

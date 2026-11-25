@@ -9,7 +9,7 @@
 Extension: LitCodeValiditeExtension
 Id: lit-code-validite
 Title: "Code de validité du lit"
-Description: "Code de validité (VALILL : F=Fermé / I=Invalide / V=Valide)."
+Description: "Code de validité (VALILL : I=Invalide / V=Valide)."
 Context: Location
 * value[x] only code
 * valueCode from EGCodeValiditeVS (required)

@@ -9,7 +9,7 @@
 Extension: UMCodeValiditeExtension
 Id: um-code-validite
 Title: "Code de validité de l'unité médicale"
-Description: "Code de validité de l'unité médicale (F=Fermé / I=Invalide / V=Valide)."
+Description: "Code de validité de l'unité médicale (I=Invalide / V=Valide)."
 Context: Organization
 * value[x] only code
 * valueCode from EGCodeValiditeVS (required)

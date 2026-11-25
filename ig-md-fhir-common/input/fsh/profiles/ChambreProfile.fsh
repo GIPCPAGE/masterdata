@@ -9,7 +9,7 @@
 //   LIBCPI          → name
 //   LIBRPI          → alias
 //   DAEFPI/DAFIPI   → extension[periodeValidite]  (strh-periode-validite, socle des entités physiques)
-//   VALIPI (F/I/V)  → status + extension[codeValidite]
+//   VALIPI (I/V)  → status + extension[codeValidite]
 //   INDIVIDUELLE    → extension[indicateurIndividuelle] (boolean)
 //
 // Audit (DATECREA/USERCREA/DATEMODI/USERMODI) : déjà géré par instance_concept.
@@ -83,7 +83,7 @@ Hérite de `StructureHospitaliereSiteProfile` (issu de `FRCoreLocationProfile`).
 
 * extension[periodeValidite]         ^short = "Période de validité (DAEFPI / DAFIPI), extension commune aux entités physiques"
 * extension[libelleDiffusion]        ^short = "Libellé de diffusion"
-* extension[codeValidite]            ^short = "Code validité (VALIPI : F=Fermée / I=Invalide / V=Valide)"
+* extension[codeValidite]            ^short = "Code validité (VALIPI : I=Invalide / V=Valide)"
 * extension[indicateurIndividuelle]  ^short = "Chambre individuelle (INDIVIDUELLE : 1=true / 0=false)"
 
 // ── Libellé réduit → alias ───────────────────────────────────────────────────

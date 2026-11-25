@@ -11,7 +11,7 @@
 Extension: CRECodeValiditeExtension
 Id: cre-code-validite
 Title: "Code de validité du CR"
-Description: "Code de validité du CR (INVACR : F=Fermé / I=Invalide / V=Valide)."
+Description: "Code de validité du CR (INVACR : I=Invalide / V=Valide)."
 Context: Organization
 
 * value[x] only code

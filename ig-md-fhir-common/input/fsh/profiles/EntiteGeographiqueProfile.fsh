@@ -8,7 +8,7 @@
 //   entiteJuridique       → partOf (référence Entité Juridique)
 //   NUETET (PK)      → identifier[etaCode]
 //   DATDET/DATFET    → extension[usePeriod]  (organization-period, hérité de FR Core)
-//   INVAET (F/I/V)   → active + extension[codeValidite]
+//   INVAET (I/V)   → active + extension[codeValidite]
 //   LIETET           → name
 //   LRETET           → alias[0] + extension[shortName] (FR Core)
 //   NUFIET           → identifier[finess]
@@ -116,7 +116,7 @@ La période est portée par l'extension `usePeriod` (organization-period, hérit
 // ── Statut actif ──────────────────────────────────────────────────────────────
 
 * active 0..1 MS
-* active ^short = "Site actif — false si INVAET=F (Fermé) ou INVAET=I (Invalide)"
+* active ^short = "Site actif — false si INVAET=I (Invalide)"
 
 // ── Adresse ───────────────────────────────────────────────────────────────────
 
@@ -164,7 +164,7 @@ La période est portée par l'extension `usePeriod` (organization-period, hérit
     EGCoeffGeoT2AExtension           named coefficientGeoT2A      0..1 MS and
     EGCoeffTransitionT2AExtension    named coefficientTransitionT2A 0..1 MS
 
-* extension[codeValidite]            ^short = "Code validité (INVAET : F=Fermé / I=Invalide / V=Valide)"
+* extension[codeValidite]            ^short = "Code validité (INVAET : I=Invalide / V=Valide)"
 * extension[secteurSanitaire]        ^short = "Secteur sanitaire (SSSA_SESASSA — FK SSSA)"
 * extension[codeNaf]                 ^short = "Code NAF (CNAFET — 6 chars)"
 * extension[libelleLocalisation]     ^short = "Libellé de localisation (LILOET — 40 chars)"

@@ -11,7 +11,7 @@
 Extension: ChambreCodeValiditeExtension
 Id: chambre-code-validite
 Title: "Code de validité de la chambre"
-Description: "Code de validité de la chambre (VALIPI : F=Fermée / I=Invalide / V=Valide)."
+Description: "Code de validité de la chambre (VALIPI : I=Invalide / V=Valide)."
 Context: Location
 * value[x] only code
 * valueCode from EGCodeValiditeVS (required)

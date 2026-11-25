@@ -9,7 +9,7 @@
 Extension: SERCodeValiditeExtension
 Id: ser-code-validite
 Title: "Code de validité du service"
-Description: "Code de validité du service (INVASE : F=Fermé / I=Invalide / V=Valide)."
+Description: "Code de validité du service (INVASE : I=Invalide / V=Valide)."
 Context: Organization
 * value[x] only code
 * valueCode from EGCodeValiditeVS (required)

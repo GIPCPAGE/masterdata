@@ -9,10 +9,10 @@
 Extension: CACCodeValiditeExtension
 Id: cac-code-validite
 Title: "Code de validité du centre d'activité"
-Description: "Code de validité du centre d'activité (INVAAC : F=Fermé / I=Invalide / V=Valide)."
+Description: "Code de validité du centre d'activité (INVAAC : I=Invalide / V=Valide)."
 Context: Organization
 
 * value[x] only code
-// Réutilise le même ValueSet que EGCodeValiditeVS (F/I/V)
+// Réutilise le même ValueSet que EGCodeValiditeVS (I/V)
 * valueCode from EGCodeValiditeVS (required)
 * valueCode ^short = "Code validité (INVAAC)"

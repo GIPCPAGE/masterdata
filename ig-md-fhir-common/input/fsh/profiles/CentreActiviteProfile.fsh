@@ -14,7 +14,7 @@
 //   libelle              → name                              (CAC.LIBEAC)
 //   libelle_reduit       → alias + extension[shortName]      (CAC.LIBRAC ; FR Core short-name)
 //   date_debut/fin_validite → extension[usePeriod]           (CAC.DATDAC/DATFAC ; organization-period, hérité de FR Core)
-//   code_validite        → extension[codeValidite]           (CAC.INVAAC ; F/I/V) ; active en est déduit
+//   code_validite        → extension[codeValidite]           (CAC.INVAAC ; I/V) ; active en est déduit
 //   libelle_diffusion    → extension[libelleDiffusion]       (strh-libelle-diffusion, hérité du profil socle)
 //   parent_centre_responsabilite → partOf                     (CAC.CRE_NUCRCR)
 //   unités fonctionnelles rattachées → extension[membres]    (FR Core member)
@@ -36,7 +36,7 @@ Le Centre d'Activité est un regroupement analytique d'UF, distinct du Pôle
 via `CAC_NUACAC`. Entité propre à CPage : aucun équivalent STETHOS.
 
 La période de validité est portée par l'extension `usePeriod` (organization-period, héritée de
-FR Core) et le code de validité par `extension[codeValidite]` (F/I/V).
+FR Core) et le code de validité par `extension[codeValidite]` (I/V).
 
 Ne pas confondre avec PAC/UAC (Poste / Unité d'Activité Complémentaire, facturation PMSI)
 qui hérite de `FRCoreOrganizationUACProfile` → voir `PacUacProfile`.
@@ -82,10 +82,10 @@ qui hérite de `FRCoreOrganizationUACProfile` → voir `PacUacProfile`.
 // ── Statut et code de validité ───────────────────────────────────────────────
 
 * active 0..1 MS
-* active ^short = "Centre d'activité actif — false si INVAAC=F (Fermé) ou INVAAC=I (Invalide)"
+* active ^short = "Centre d'activité actif — false si INVAAC=I (Invalide)"
 
 * extension contains CACCodeValiditeExtension named codeValidite 0..1 MS
-* extension[codeValidite] ^short = "Code validité (INVAAC : F=Fermé / I=Invalide / V=Valide)"
+* extension[codeValidite] ^short = "Code validité (INVAAC : I=Invalide / V=Valide)"
 
 // ── Hiérarchie ────────────────────────────────────────────────────────────────
 
